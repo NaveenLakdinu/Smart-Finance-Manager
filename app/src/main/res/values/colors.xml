@@ -1,5 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Backgrounds -->
+    <color name="background_light">#F0F4F8</color>
+    <color name="nav_background">#D8DFE8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#040000</color>
+
+    <!-- Text -->
+    <color name="text_nav">#6B7C93</color>
+    <color name="text_secondary">#5A6470</color>
+    <color name="btn_signup_text">#2D4A7A</color>
+
+    <!-- Buttons -->
+    <color name="btn_login_dark">#1E3A6E</color>
+    <color name="btn_login_dark_pressed">#16305D</color>
+    <color name="btn_signup_bg">#C8D8EF</color>
+    <color name="btn_signup_bg_pressed">#B0C6E0</color>
+
+    <!-- Additional colors -->
+    <color name="dark_background">#1A1A2E</color>
+    <color name="button_blue">#1E3A6E</color>
+    <color name="button_light_blue">#C8D8EF</color>
+    <color name="text_gray">#B0B0B0</color>
 </resources>
