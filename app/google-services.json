@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "748858256335",
+    "project_id": "smart-financial-management",
+    "storage_bucket": "smart-financial-management.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748858256335:android:1a20c72d2260d3fe3a00ba",
+        "android_client_info": {
+          "package_name": "com.example.smartfinancialmanagement"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKhVOYg55VaVLjzDM2N6_1SG6nwiVGCy8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
