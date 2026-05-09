@@ -5,6 +5,7 @@
 
 package com.example.smartfinancialmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -24,7 +25,8 @@ public class MainActivity extends AppCompatActivity {
 
         // Button click listeners
         findViewById(R.id.loginButton).setOnClickListener(v -> {
-            // Navigate to login functionality
+            Intent intent = new Intent(MainActivity.this, LoginFormActivity.class);
+            startActivity(intent);
         });
 
         findViewById(R.id.signUpButton).setOnClickListener(v -> {
