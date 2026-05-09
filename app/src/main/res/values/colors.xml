@@ -22,4 +22,6 @@
     <color name="button_blue">#1E3A6E</color>
     <color name="button_light_blue">#C8D8EF</color>
     <color name="text_gray">#B0B0B0</color>
+    <color name="brand_dark_blue">#1E3A6E</color>
+    <color name="brand_green">#4CAF50</color>
 </resources>
