@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F2F4F7"
+    android:fillViewport="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <ImageView
+            android:id="@+id/bannerImage"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/hero_finance_banner"
+            android:contentDescription="Banner"
+            android:background="@drawable/banner_rounded_bottom"
+            android:clipToOutline="true"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        
+        <LinearLayout
+            android:id="@+id/contentCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#FFFFFF"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="28dp"
+            android:paddingBottom="32dp"
+            app:layout_constraintTop_toBottomOf="@id/bannerImage"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent">
+
+            <!-- Welcome Back -->
+            <TextView
+                android:id="@+id/welcomeText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Welcome Back!"
+                android:textColor="#111827"
+                android:textSize="28sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <!-- Subtitle -->
+            <TextView
+                android:id="@+id/subtitleText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Login to manage your subscription"
+                android:textColor="#6B7280"
+                android:textSize="14sp"
+                android:layout_marginBottom="24dp" />
+
+            <!-- Enter details label -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter your details below"
+                android:textColor="#374151"
+                android:textSize="14sp"
+                android:textStyle="normal"
+                android:layout_marginBottom="12dp" />
+
+            <!-- ── USERNAME FIELD ── -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Username, Email &amp; Phone Number"
+                app:startIconDrawable="@drawable/ic_person"
+                app:startIconTint="#9CA3AF"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxStrokeColor="#D1D5DB"
+                app:boxStrokeWidth="1dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:hintTextColor="#9CA3AF"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="text"
+                    android:textColor="#111827"
+                    android:textSize="15sp"
+                    android:background="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ── PASSWORD FIELD ── -->
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="8dp"
+                android:hint="Password"
+                app:startIconDrawable="@drawable/ic_lock"
+                app:startIconTint="#9CA3AF"
+                app:endIconMode="password_toggle"
+                app:endIconTint="#9CA3AF"
+                app:boxBackgroundColor="#FFFFFF"
+                app:boxStrokeColor="#D1D5DB"
+                app:boxStrokeWidth="1dp"
+                app:boxCornerRadiusTopStart="12dp"
+                app:boxCornerRadiusTopEnd="12dp"
+                app:boxCornerRadiusBottomStart="12dp"
+                app:boxCornerRadiusBottomEnd="12dp"
+                app:hintTextColor="#9CA3AF"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:inputType="textPassword"
+                    android:textColor="#111827"
+                    android:textSize="15sp"
+                    android:background="@android:color/transparent" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <!-- ── FORGET PASSWORD ── -->
+            <TextView
+                android:id="@+id/forgotPassword"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="end"
+                android:text="Forget Password?"
+                android:textColor="#3B82F6"
+                android:textSize="13sp"
+                android:layout_marginBottom="24dp"
+                android:paddingTop="4dp" />
+
+            <!-- ── LOGIN BUTTON ── -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/loginButton"
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:text="Login"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:background="@drawable/btn_login_black"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:gravity="center"
+                android:layout_marginBottom="28dp"
+                app:backgroundTint="@null"
+                app:cornerRadius="30dp"
+                app:elevation="0dp" />
+
+            <!-- ── DIVIDER: or continue with ── -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:layout_marginBottom="20dp">
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#E5E7EB" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="or continue with"
+                    android:textColor="#9CA3AF"
+                    android:textSize="13sp"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1"
+                    android:background="#E5E7EB" />
+            </LinearLayout>
+
+            <!-- ── SOCIAL ICONS ROW ── -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:gravity="center"
+                android:layout_marginBottom="24dp">
+
+                <!-- Google -->
+                <ImageView
+                    android:id="@+id/googleBtn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_google"
+                    android:background="@drawable/social_btn_bg"
+                    android:padding="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="Google login"
+                    android:scaleType="fitCenter" />
+
+                <!-- Facebook -->
+                <ImageView
+                    android:id="@+id/facebookBtn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_facebook"
+                    android:background="@drawable/social_btn_bg"
+                    android:padding="10dp"
+                    android:layout_marginEnd="16dp"
+                    android:contentDescription="Facebook login"
+                    android:scaleType="fitCenter" />
+
+                <!-- Apple -->
+                <ImageView
+                    android:id="@+id/appleBtn"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:src="@drawable/ic_apple"
+                    android:background="@drawable/social_btn_bg"
+                    android:padding="10dp"
+                    android:contentDescription="Apple login"
+                    android:scaleType="fitCenter" />
+            </LinearLayout>
+
+            <!-- ── SIGN UP LINK ── -->
+            <TextView
+                android:id="@+id/signUpText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="Don&#39;t have an account ? sign up"
+                android:textSize="14sp"
+                android:textColor="#6B7280" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
