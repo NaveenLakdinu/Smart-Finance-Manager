@@ -87,7 +87,7 @@
             </LinearLayout>
         </LinearLayout>
 
-        
+
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -162,7 +162,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter total loan amount"
-                                android:hintTextColor="#9CA3AF"
+                                android:textColorHint="#9CA3AF"
                                 android:textColor="#111827"
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal"
@@ -194,7 +194,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter monthly payment"
-                                android:hintTextColor="#9CA3AF"
+                                android:textColorHint="#9CA3AF"
                                 android:textColor="#111827"
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal"
@@ -226,7 +226,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter amount"
-                                android:hintTextColor="#9CA3AF"
+                                android:textColorHint="#9CA3AF"
                                 android:textColor="#111827"
                                 android:textSize="14sp"
                                 android:inputType="number"
