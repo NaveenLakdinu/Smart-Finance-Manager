@@ -19,5 +19,13 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        CheckBox termsCheckbox = findViewById(R.id.checkTerms);
+        termsCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Intent intent = new Intent(RegisterActivity.this, TermsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

@@ -29,6 +29,9 @@
         <activity
             android:name=".LoanDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".TermsActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
