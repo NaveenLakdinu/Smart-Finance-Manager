@@ -1,3 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <string name="app_name">Smart Financial Management</string>
+    <string name="app_name">Smart Financial</string>
+    <string name="select_payment">Select Payment Method</string>
+
+    <!-- Payment Method Spinner options -->
+    <string-array name="payment_methods">
+        <item>Select Payment Method</item>
+        <item>Cash</item>
+        <item>Bank Transfer</item>
+        <item>Credit Card</item>
+        <item>Debit Card</item>
+        <item>Online Payment</item>
+    </string-array>
 </resources>
