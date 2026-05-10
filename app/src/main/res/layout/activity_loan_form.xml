@@ -162,9 +162,12 @@
 
                         <!-- Compare Action -->
                         <LinearLayout
+                            android:id="@+id/btnCompareLoans"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -180,7 +183,8 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_compare"
-                                    app:tint="@color/action_green_icon" />
+                                    app:tint="@color/action_green_icon"
+                                    android:contentDescription="Compare Loans" />
                             </com.google.android.material.card.MaterialCardView>
 
                             <TextView
@@ -195,9 +199,12 @@
 
                         <!-- Report Action -->
                         <LinearLayout
+                            android:id="@+id/btnLoanReport"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -213,7 +220,8 @@
                                     android:layout_height="24dp"
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_report"
-                                    app:tint="@color/action_yellow_icon" />
+                                    app:tint="@color/action_yellow_icon"
+                                    android:contentDescription="Loan Report" />
                             </com.google.android.material.card.MaterialCardView>
 
                             <TextView
