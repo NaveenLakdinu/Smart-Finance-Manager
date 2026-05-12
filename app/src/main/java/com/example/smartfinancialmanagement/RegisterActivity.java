@@ -27,5 +27,13 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        CheckBox subscriptionCheckbox = findViewById(R.id.checkSubscription);
+        subscriptionCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Intent intent = new Intent(RegisterActivity.this, SubscriptionActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }

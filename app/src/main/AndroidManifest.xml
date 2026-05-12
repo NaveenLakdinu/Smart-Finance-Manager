@@ -32,6 +32,9 @@
         <activity
             android:name=".TermsActivity"
             android:exported="false" />
+        <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false" />
     </application>
 
 </manifest>
