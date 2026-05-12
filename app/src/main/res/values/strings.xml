@@ -13,4 +13,15 @@
         <item>Debit Card</item>
         <item>Online Payment</item>
     </string-array>
+
+
+    <!-- Saving frequency options -->
+    <string-array name="saving_frequencies">
+        <item>Daily</item>
+        <item>Weekly</item>
+        <item>Bi-Weekly</item>
+        <item>Monthly</item>
+        <item>Quarterly</item>
+        <item>Annually</item>
+    </string-array>
 </resources>

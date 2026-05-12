@@ -35,5 +35,13 @@ public class RegisterActivity extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+        CheckBox savingPlanCheckbox = findViewById(R.id.checkSaving);
+        savingPlanCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                Intent intent = new Intent(RegisterActivity.this, SavingPlanActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 }
