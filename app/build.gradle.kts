@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -46,4 +47,11 @@ dependencies {
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
+
+        // මේ පේළිය අනිවාර්යයෙන්ම තිබිය යුතුයි
+    implementation("com.google.firebase:firebase-firestore:25.0.0")
+
+        // ඔයා දැනටමත් Firebase Auth පාවිච්චි කරන නිසා මේකත් ඇති කියලා හිතනවා
+    implementation("com.google.firebase:firebase-auth:23.0.0")
+
 }

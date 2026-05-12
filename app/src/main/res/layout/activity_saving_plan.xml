@@ -81,7 +81,9 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:background="#FFFFFF"
-        android:overScrollMode="never">
+        android:overScrollMode="never"
+        app:cardCornerRadius="28dp"
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -91,6 +93,7 @@
             android:paddingEnd="20dp"
             android:paddingTop="28dp"
             android:paddingBottom="16dp">
+
 
             <!-- Page Title -->
             <TextView
@@ -406,14 +409,14 @@
         android:paddingBottom="36dp">
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/registerButton"
+            android:id="@+id/nextButton"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Register"
+            android:text="Next"
             android:textColor="#FFFFFF"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:background="@drawable/btn_register_dark"
+            android:background="@drawable/btn_next_green"
             android:insetTop="0dp"
             android:insetBottom="0dp"
             android:stateListAnimator="@null"

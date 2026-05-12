@@ -107,7 +107,7 @@
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_person" android:layout_marginEnd="10dp"
                         android:contentDescription="person" />
-                    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+                    <EditText android:id="@+id/etFullName" android:layout_width="match_parent" android:layout_height="match_parent"
                         android:hint="Username, Email &amp; Phone Number"
                         android:textColorHint="#9CA3AF" android:textColor="#111827"
                         android:textSize="14sp" android:background="@android:color/transparent"
@@ -136,7 +136,7 @@
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_cake" android:layout_marginEnd="10dp"
                         android:contentDescription="age" />
-                    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+                    <EditText android:id="@+id/etAge" android:layout_width="match_parent" android:layout_height="match_parent"
                         android:hint="Enter your age" android:textColorHint="#9CA3AF"
                         android:textColor="#111827" android:textSize="14sp"
                         android:background="@android:color/transparent" android:inputType="number" />
@@ -164,7 +164,7 @@
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_email" android:layout_marginEnd="10dp"
                         android:contentDescription="email" />
-                    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+                    <EditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="match_parent"
                         android:hint="Enter your email" android:textColorHint="#9CA3AF"
                         android:textColor="#111827" android:textSize="14sp"
                         android:background="@android:color/transparent"
@@ -193,7 +193,7 @@
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_phone" android:layout_marginEnd="10dp"
                         android:contentDescription="phone" />
-                    <EditText android:layout_width="match_parent" android:layout_height="match_parent"
+                    <EditText android:id="@+id/etMobile" android:layout_width="match_parent" android:layout_height="match_parent"
                         android:hint="Enter your mobile number" android:textColorHint="#9CA3AF"
                         android:textColor="#111827" android:textSize="14sp"
                         android:background="@android:color/transparent" android:inputType="phone" />
@@ -221,7 +221,7 @@
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_lock" android:layout_marginEnd="10dp"
                         android:contentDescription="lock" />
-                    <EditText android:id="@+id/passwordInput"
+                    <EditText android:id="@+id/etPassword"
                         android:layout_width="0dp" android:layout_height="match_parent"
                         android:layout_weight="1"
                         android:hint="Create password" android:textColorHint="#9CA3AF"
@@ -352,15 +352,15 @@
 
                 <!-- ── NEXT BUTTON ── -->
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/nextButton"
+                    android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
-                    android:text="Next"
+                    android:text="Register"
                     android:textAllCaps="false"
                     android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold"
-                    android:background="@drawable/btn_next_green"
+                    android:background="@drawable/btn_register_dark"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
                     android:gravity="center"

@@ -99,7 +99,7 @@
                 android:layout_marginStart="0dp"
                 android:layout_marginEnd="0dp"
                 android:outlineProvider="none"
-                app:cardCornerRadius="28dp"
+
                 app:cardElevation="0dp"
                 app:cardBackgroundColor="#FFFFFF">
 
@@ -158,7 +158,7 @@
                             android:layout_marginBottom="18dp">
 
                             <EditText
-                                android:id="@+id/loanAmountInput"
+                                android:id="@+id/etLoanAmount"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter total loan amount"
@@ -190,7 +190,7 @@
                             android:layout_marginBottom="18dp">
 
                             <EditText
-                                android:id="@+id/monthlyInstallmentInput"
+                                android:id="@+id/etMonthlyInstallment"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter monthly payment"
@@ -222,7 +222,7 @@
                             android:layout_marginBottom="18dp">
 
                             <EditText
-                                android:id="@+id/paidMonthsInput"
+                                android:id="@+id/etMonthsPaid"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter amount"
@@ -244,7 +244,7 @@
                             android:layout_marginBottom="8dp" />
 
                         <Spinner
-                            android:id="@+id/paymentMethodSpinner"
+                            android:id="@+id/spinnerPaymentMethod"
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
                             android:background="@drawable/spinner_bg"
@@ -256,7 +256,7 @@
                     </LinearLayout>
 
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/nextButton"
+                        android:id="@+id/btnNextLoan"
                         android:layout_width="match_parent"
                         android:layout_height="54dp"
                         android:text="Next"

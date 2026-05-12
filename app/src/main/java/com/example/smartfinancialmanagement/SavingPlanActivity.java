@@ -1,37 +1,50 @@
-// SavingPlanActivity.java
 package com.example.smartfinancialmanagement;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import java.util.Calendar;
 
 public class SavingPlanActivity extends AppCompatActivity {
 
-    EditText goalNameInput, targetAmountInput, currentSavingsInput, monthlyAmountInput;
-    TextView targetDateText, progressText;
-    LinearLayout targetDatePicker;
-    Spinner frequencySpinner;
-    ProgressBar savingsProgressBar;
-    MaterialButton registerButton;
-    ImageView backButton;
+    private EditText goalNameInput, targetAmountInput, currentSavingsInput, monthlyAmountInput;
+    private TextView targetDateText, progressText;
+    private LinearLayout targetDatePicker;
+    private Spinner frequencySpinner;
+    private ProgressBar savingsProgressBar;
+    private MaterialButton registerButton;
+    private ImageView backButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saving_plan);
 
-        // Views bind
+        // 1. Views Bind කිරීම
+        initViews();
+
+        // 2. කලින් සේව් කරපු දත්ත තිබේ නම් ඒවා පෙන්වීම
+        loadExistingData();
+
+        // 3. Setup Listeners
+        setupListeners();
+
+        // 4. Progress bar එක update වෙන්න TextWatchers දාමු
+        setupTextWatchers();
+    }
+
+    private void initViews() {
         goalNameInput        = findViewById(R.id.goalNameInput);
         targetAmountInput    = findViewById(R.id.targetAmountInput);
         currentSavingsInput  = findViewById(R.id.currentSavingsInput);
@@ -41,84 +54,66 @@ public class SavingPlanActivity extends AppCompatActivity {
         frequencySpinner     = findViewById(R.id.frequencySpinner);
         savingsProgressBar   = findViewById(R.id.savingsProgressBar);
         progressText         = findViewById(R.id.progressText);
-        registerButton       = findViewById(R.id.registerButton);
+        registerButton       = findViewById(R.id.nextButton);
         backButton           = findViewById(R.id.backButton);
 
-        // ── Back button ──
-        backButton.setOnClickListener(v -> onBackPressed());
-
-        // ── Setup Frequency Spinner ──
         setupFrequencySpinner();
+    }
 
-        // ── Date Picker ──
+    private void setupListeners() {
+        // Back button
+        backButton.setOnClickListener(v -> finish());
+
+        // Date Picker
         targetDatePicker.setOnClickListener(v -> showDatePicker());
 
-        // ── Progress bar real-time update ──
-        currentSavingsInput.addTextChangedListener(new android.text.TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateProgressBar();
-            }
-            public void afterTextChanged(android.text.Editable s) {}
-        });
-
-        targetAmountInput.addTextChangedListener(new android.text.TextWatcher() {
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateProgressBar();
-            }
-            public void afterTextChanged(android.text.Editable s) {}
-        });
-
-        // ── Register button ──
+        // "Register" (ඇත්තටම මේක Next) Button
         registerButton.setOnClickListener(v -> {
             if (validateForm()) {
-                // ✅ Registration complete — Dashboard navigate කරන්න
-                Toast.makeText(this,
-                        "Registration Successful! Welcome to Red Ants!",
-                        Toast.LENGTH_LONG).show();
-
-                Intent intent = new Intent(SavingPlanActivity.this, RegisterActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
+                saveToSingleton();
+                Toast.makeText(this, "Saving plan details saved!", Toast.LENGTH_SHORT).show();
+                finish(); // ආපහු Main Register page එකට යනවා
             }
         });
     }
 
-    // ── Setup Frequency Spinner ──
-    private void setupFrequencySpinner() {
-        // Create an ArrayAdapter using string array and custom spinner layout
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                this,
-                R.array.saving_frequencies,
-                R.layout.spinner_item);
-        
-        // Specify layout to use when list of choices appears
-        adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
-        
-        // Apply the adapter to the spinner
-        frequencySpinner.setAdapter(adapter);
+    private void saveToSingleton() {
+        UserRegistrationData data = UserRegistrationData.getInstance();
+        data.hasSavingPlan = true; // Checkbox එක ටික් වෙන්න මේක ඕනේ
+        data.goalName = goalNameInput.getText().toString().trim();
+        data.targetAmount = targetAmountInput.getText().toString().trim();
+        data.targetDate = targetDateText.getText().toString().trim();
+        data.currentSavings = currentSavingsInput.getText().toString().trim();
+        data.monthlySavingAmount = monthlyAmountInput.getText().toString().trim();
     }
 
-    // ── Date Picker Dialog ──
-    private void showDatePicker() {
-        Calendar calendar = Calendar.getInstance();
-        int year  = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day   = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog dialog = new DatePickerDialog(this,
-                (view, selectedYear, selectedMonth, selectedDay) -> {
-                    String date = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                    targetDateText.setText(date);
-                }, year, month, day);
-
-        // Future dates only
-        dialog.getDatePicker().setMinDate(System.currentTimeMillis());
-        dialog.show();
+    private void loadExistingData() {
+        UserRegistrationData data = UserRegistrationData.getInstance();
+        if (data.hasSavingPlan) {
+            goalNameInput.setText(data.goalName);
+            targetAmountInput.setText(data.targetAmount);
+            targetDateText.setText(data.targetDate);
+            currentSavingsInput.setText(data.currentSavings);
+            monthlyAmountInput.setText(data.monthlySavingAmount);
+            updateProgressBar();
+        }
     }
 
-    // ── Progress Bar Update ──
+    private void setupTextWatchers() {
+        TextWatcher watcher = new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                updateProgressBar();
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        };
+        currentSavingsInput.addTextChangedListener(watcher);
+        targetAmountInput.addTextChangedListener(watcher);
+    }
+
     private void updateProgressBar() {
         try {
             String currentStr = currentSavingsInput.getText().toString().trim();
@@ -140,45 +135,41 @@ public class SavingPlanActivity extends AppCompatActivity {
         }
     }
 
-    // ── Form Validation ──
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        DatePickerDialog dialog = new DatePickerDialog(this,
+                (view, year, month, day) -> {
+                    String date = day + "/" + (month + 1) + "/" + year;
+                    targetDateText.setText(date);
+                },
+                calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH));
+
+        dialog.getDatePicker().setMinDate(System.currentTimeMillis());
+        dialog.show();
+    }
+
+    private void setupFrequencySpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.saving_frequencies, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        frequencySpinner.setAdapter(adapter);
+    }
+
     private boolean validateForm() {
-        String goalName     = goalNameInput.getText().toString().trim();
-        String targetAmount = targetAmountInput.getText().toString().trim();
-        String targetDate   = targetDateText.getText().toString().trim();
-        String currentSav   = currentSavingsInput.getText().toString().trim();
-
-        if (goalName.isEmpty()) {
-            goalNameInput.setError("Please enter saving goal name");
-            goalNameInput.requestFocus();
+        if (goalNameInput.getText().toString().trim().isEmpty()) {
+            goalNameInput.setError("Enter goal name");
             return false;
         }
-        if (targetAmount.isEmpty()) {
-            targetAmountInput.setError("Please enter target amount");
-            targetAmountInput.requestFocus();
+        if (targetAmountInput.getText().toString().trim().isEmpty()) {
+            targetAmountInput.setError("Enter target amount");
             return false;
         }
-        if (targetDate.isEmpty() || targetDate.equals("Select goal deadline")) {
-            Toast.makeText(this, "Please select a target date", Toast.LENGTH_SHORT).show();
+        if (targetDateText.getText().toString().equals("Select goal deadline")) {
+            Toast.makeText(this, "Select a date", Toast.LENGTH_SHORT).show();
             return false;
         }
-        if (currentSav.isEmpty()) {
-            currentSavingsInput.setError("Please enter current savings");
-            currentSavingsInput.requestFocus();
-            return false;
-        }
-
-        try {
-            double current = Double.parseDouble(currentSav);
-            double target  = Double.parseDouble(targetAmount);
-            if (current > target) {
-                currentSavingsInput.setError("Current savings cannot exceed target amount");
-                currentSavingsInput.requestFocus();
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            return false;
-        }
-
         return true;
     }
 }
