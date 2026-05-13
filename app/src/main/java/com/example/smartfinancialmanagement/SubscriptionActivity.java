@@ -16,7 +16,7 @@ public class SubscriptionActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_subscription);
+        super.setContentView(R.layout.activity_subscription);
 
         // 1. Initialize Views
         checkEmail  = findViewById(R.id.checkEmail);

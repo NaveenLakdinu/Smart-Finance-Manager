@@ -29,7 +29,7 @@ public class SavingPlanActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_saving_plan);
+        super.setContentView(R.layout.activity_saving_plan);
 
         // 1. Views Bind කිරීම
         initViews();

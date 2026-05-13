@@ -16,7 +16,7 @@ public class TermsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_terms);
+        super.setContentView(R.layout.activity_terms);
 
         // Views Bind කිරීම
         agreeCheckbox = findViewById(R.id.agreeCheckbox);

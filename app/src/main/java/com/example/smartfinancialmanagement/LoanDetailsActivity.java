@@ -19,7 +19,7 @@ public class LoanDetailsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_loan_details);
+        super.setContentView(R.layout.activity_loan_details);
 
         // 1. XML එකේ ID සමඟ Java Variables සම්බන්ධ කිරීම
         etLoanAmount = findViewById(R.id.etLoanAmount);
