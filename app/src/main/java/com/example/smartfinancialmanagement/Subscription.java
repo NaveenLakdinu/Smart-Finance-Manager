@@ -1,4 +1,4 @@
-package com.example.subscriptionapp;
+package com.example.smartfinancialmanagement;
 
 public class Subscription {
 
