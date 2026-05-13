@@ -1,4 +1,4 @@
-package com.example.subscriptionapp;
+package com.example.smartfinancialmanagement;
 
 import android.content.Context;
 import android.graphics.Color;
