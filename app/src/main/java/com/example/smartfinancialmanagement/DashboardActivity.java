@@ -1,4 +1,4 @@
-package com.example.subscriptionapp;
+package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -121,32 +121,28 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageLoan.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this, ManageLoanActivity.class);
-                startActivity(intent);
+                Toast.makeText(DashboardActivity.this, "Loan Management - Coming Soon", Toast.LENGTH_SHORT).show();
             }
         });
 
         cardManageSubscription.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this, ManageSubscriptionActivity.class);
-                startActivity(intent);
+                Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show();
             }
         });
 
         cardManageUtility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this, ManageUtilityActivity.class);
-                startActivity(intent);
+                Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show();
             }
         });
 
         cardPaused.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this, PausedActivity.class);
-                startActivity(intent);
+                Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show();
             }
         });
     }
