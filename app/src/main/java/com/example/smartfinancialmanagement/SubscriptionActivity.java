@@ -48,8 +48,11 @@ public class SubscriptionActivity extends AppCompatActivity {
             // ✅ Singleton එකට දත්ත සේව් කිරීම
             UserRegistrationData data = UserRegistrationData.getInstance();
             data.receiveUpdates = true; // Main Page එකේ checkbox එක ටික් වෙන්න
-
-            // අවශ්‍ය නම් මෙතනින් හැම check එකක්ම සේව් කරන්න පුළුවන් (දැනට සරලව receiveUpdates එක විතරක් දැම්මා)
+            data.checkEmail = checkEmail.isChecked();
+            data.checkSms = checkSms.isChecked();
+            data.checkPush = checkPush.isChecked();
+            data.checkReport = checkReport.isChecked();
+            data.checkPromo = checkPromo.isChecked();
 
             Toast.makeText(this, "Preferences Saved!", Toast.LENGTH_SHORT).show();
 
@@ -60,9 +63,11 @@ public class SubscriptionActivity extends AppCompatActivity {
 
     private void loadExistingData() {
         UserRegistrationData data = UserRegistrationData.getInstance();
-        // මෙතනදී data.receiveUpdates අනුව කලින් check කරපු දත්ත load කළ හැකියි
-        if (data.receiveUpdates) {
-            // උදාහරණයකට මම ඔක්කොම check කරනවා, ඔයාට අවශ්‍ය නම් වෙනම variables Singleton එකට දාලා ගන්නත් පුළුවන්
-        }
+        // Restore checkbox states from singleton
+        checkEmail.setChecked(data.checkEmail);
+        checkSms.setChecked(data.checkSms);
+        checkPush.setChecked(data.checkPush);
+        checkReport.setChecked(data.checkReport);
+        checkPromo.setChecked(data.checkPromo);
     }
 }
