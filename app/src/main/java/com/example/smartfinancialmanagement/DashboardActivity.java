@@ -1,5 +1,6 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -116,7 +117,10 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupFunctionCards() {
 
-        cardManageLoan.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Loan Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageLoan.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, LoanFormActivity.class);
+            startActivity(intent);
+        });
 
         cardManageSubscription.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show());
 

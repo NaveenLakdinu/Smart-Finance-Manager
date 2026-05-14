@@ -45,6 +45,18 @@
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
+        <activity
+            android:name=".LoanFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanCompareActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanReportActivity"
+            android:exported="false" />
         
         <!-- Firebase services -->
         <service
