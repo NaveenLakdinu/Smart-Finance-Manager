@@ -1,6 +1,5 @@
 package com.example.smartfinancialmanagement;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -24,7 +23,6 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -118,33 +116,13 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupFunctionCards() {
 
-        cardManageLoan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Loan Management - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
+        cardManageLoan.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Loan Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        cardManageSubscription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
+        cardManageSubscription.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        cardManageUtility.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
+        cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        cardPaused.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
+        cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
     }
 
     private void loadUserSubscriptions() {
@@ -208,12 +186,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         txtSubMessage.setText("Manage your plans easily");
 
-        Collections.sort(allSubscriptions, new Comparator<Subscription>() {
-            @Override
-            public int compare(Subscription s1, Subscription s2) {
-                return Long.compare(s2.getCreatedAt(), s1.getCreatedAt());
-            }
-        });
+        Collections.sort(allSubscriptions, (s1, s2) -> Long.compare(s2.getCreatedAt(), s1.getCreatedAt()));
 
         recentList.clear();
 

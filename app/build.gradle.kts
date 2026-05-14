@@ -44,6 +44,7 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.cardview)
     implementation(libs.firebase.auth)
+    implementation(libs.firebase.database)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
@@ -51,11 +52,7 @@ dependencies {
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
 
-        // මේ පේළිය අනිවාර්යයෙන්ම තිබිය යුතුයි
-    implementation("com.google.firebase:firebase-firestore:25.0.0")
 
-        // ඔයා දැනටමත් Firebase Auth පාවිච්චි කරන නිසා මේකත් ඇති කියලා හිතනවා
-    implementation("com.google.firebase:firebase-auth:23.0.0")
-    implementation("com.google.firebase:firebase-database:21.0.0")
+    implementation("com.google.firebase:firebase-firestore:25.0.0")
 
 }

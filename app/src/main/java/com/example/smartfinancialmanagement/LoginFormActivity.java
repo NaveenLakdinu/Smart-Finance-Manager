@@ -114,9 +114,6 @@ public class LoginFormActivity extends AppCompatActivity {
                                 checkUserInFirestore(user.getUid());
                             }
                         } else {
-                            System.out.println("Firebase Auth failed");
-                            loginButton.setEnabled(true);
-                            loginButton.setText("LOGIN");
                             String errorMessage = task.getException() != null 
                                     ? task.getException().getMessage() 
                                     : "Login failed";
