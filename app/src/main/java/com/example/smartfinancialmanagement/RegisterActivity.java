@@ -55,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
         savingPlanCheckbox = findViewById(R.id.checkSaving);
         btnRegister = findViewById(R.id.btnRegister);
 
-        // 2. CheckBox Click Listeners (Loop එක වැළැක්වීමට ClickListener පාවිච්චි කරමු)
+        // 2. CheckBox Click Listeners ( ClickListener use loop stop)
         loanCheckbox.setOnClickListener(v -> {
             saveDataToSingleton();
             if (loanCheckbox.isChecked()) {
@@ -108,7 +108,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        // වෙනත් පිටුවල සිට එන විට දත්ත ආපසු පිරවීම
+
+        //back to other pages come show data again
+
         UserRegistrationData data = UserRegistrationData.getInstance();
 
         etFullName.setText(data.fullName);
@@ -117,7 +119,7 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile.setText(data.mobile);
         etPassword.setText(data.password);
 
-        // UI එක update කිරීමේදී Listener එක trigger නොවන ලෙස OnClickListener හොඳින් ක්‍රියා කරයි
+        // UI එක update karanakota Listener එක trigger venne nethuva OnClickListener
         loanCheckbox.setChecked(data.hasLoan);
         termsCheckbox.setChecked(data.isTermsAccepted);
         subscriptionCheckbox.setChecked(data.receiveUpdates);
@@ -125,7 +127,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        saveDataToSingleton(); // අන්තිම මොහොතේත් දත්ත සේව් කරගනිමු
+        saveDataToSingleton(); // last movemt save data
         UserRegistrationData data = UserRegistrationData.getInstance();
 
         String email = etEmail.getText().toString().trim();
@@ -150,7 +152,7 @@ public class RegisterActivity extends AppCompatActivity {
                         String uid = mAuth.getCurrentUser().getUid();
                         System.out.println("User UID: " + uid);
 
-                        // Firestore එකට ඔක්කොම දත්ත ටික සේව් කිරීම
+                        // Firestore save all data
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("uid", uid);
                         userMap.put("name", data.fullName);
@@ -162,7 +164,9 @@ public class RegisterActivity extends AppCompatActivity {
                         // Loan Details
                         userMap.put("hasLoan", data.hasLoan);
                         userMap.put("loanAmount", data.loanAmount != null ? data.loanAmount : "");
-                        userMap.put("loanType", data.loanType != null ? data.loanType : "");
+                        userMap.put("monthlyInstallment", data.monthlyInstallment != null ? data.monthlyInstallment : "");
+                        userMap.put("monthsPaid", data.monthsPaid != null ? data.monthsPaid : "");
+                        userMap.put("paymentMethod", data.paymentMethod != null ? data.paymentMethod : "");
 
                         // Saving Plan Details
                         userMap.put("hasSavingPlan", data.hasSavingPlan);
@@ -170,9 +174,15 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("savingTargetAmount", data.targetAmount != null ? data.targetAmount : "");
                         userMap.put("savingTargetDate", data.targetDate != null ? data.targetDate : "");
                         userMap.put("monthlySavingAmount", data.monthlySavingAmount != null ? data.monthlySavingAmount : "");
+                        userMap.put("currentSavings", data.currentSavings != null ? data.currentSavings : "");
 
                         // Extras
                         userMap.put("receiveUpdates", data.receiveUpdates);
+                        userMap.put("checkEmail", data.checkEmail);
+                        userMap.put("checkSms", data.checkSms);
+                        userMap.put("checkPush", data.checkPush);
+                        userMap.put("checkReport", data.checkReport);
+                        userMap.put("checkPromo", data.checkPromo);
 
                         System.out.println("Saving to Firestore with UID: " + uid);
                         System.out.println("User data: " + userMap.toString());
@@ -184,9 +194,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
                                     data.clearData();
                                     clearAllFields();
-                                    // TODO: Navigate to Dashboard
-                                    // startActivity(new Intent(this, DashboardActivity.class));
-                                    // finish();
+                                    // Navigate to Dashboard
+                                    startActivity(new Intent(this, DashboardActivity.class));
+                                    finish();
                                 })
                                 .addOnFailureListener(e -> {
                                     System.err.println("❌ Firestore Error: " + e.getMessage());

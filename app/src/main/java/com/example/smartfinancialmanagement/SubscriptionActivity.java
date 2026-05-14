@@ -27,7 +27,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         nextButton  = findViewById(R.id.nextButton);
         backButton  = findViewById(R.id.backButton);
 
-        // 2. Load existing data (ආයෙත් ආවොත් කලින් ටික් කරපුවා පෙන්වන්න)
+        // 2. Load existing data
         loadExistingData();
 
         // 3. Back Button
@@ -35,7 +35,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         // 4. Next Button
         nextButton.setOnClickListener(v -> {
-            // අවම වශයෙන් 1ක් select කළ යුතුයි (Validation)
+            // minimum 1 select  (Validation)
             if (!checkEmail.isChecked() && !checkSms.isChecked()
                     && !checkPush.isChecked() && !checkReport.isChecked()
                     && !checkPromo.isChecked()) {
@@ -45,24 +45,29 @@ public class SubscriptionActivity extends AppCompatActivity {
                 return;
             }
 
-            // ✅ Singleton එකට දත්ත සේව් කිරීම
+            // ✅ Singleton save data
             UserRegistrationData data = UserRegistrationData.getInstance();
-            data.receiveUpdates = true; // Main Page එකේ checkbox එක ටික් වෙන්න
-
-            // අවශ්‍ය නම් මෙතනින් හැම check එකක්ම සේව් කරන්න පුළුවන් (දැනට සරලව receiveUpdates එක විතරක් දැම්මා)
+            data.receiveUpdates = true;
+            data.checkEmail = checkEmail.isChecked();
+            data.checkSms = checkSms.isChecked();
+            data.checkPush = checkPush.isChecked();
+            data.checkReport = checkReport.isChecked();
+            data.checkPromo = checkPromo.isChecked();
 
             Toast.makeText(this, "Preferences Saved!", Toast.LENGTH_SHORT).show();
 
-            // ආපහු Main Register page එකට යනවා
+
             finish();
         });
     }
 
     private void loadExistingData() {
         UserRegistrationData data = UserRegistrationData.getInstance();
-        // මෙතනදී data.receiveUpdates අනුව කලින් check කරපු දත්ත load කළ හැකියි
-        if (data.receiveUpdates) {
-            // උදාහරණයකට මම ඔක්කොම check කරනවා, ඔයාට අවශ්‍ය නම් වෙනම variables Singleton එකට දාලා ගන්නත් පුළුවන්
-        }
+        // Restore checkbox states from singleton
+        checkEmail.setChecked(data.checkEmail);
+        checkSms.setChecked(data.checkSms);
+        checkPush.setChecked(data.checkPush);
+        checkReport.setChecked(data.checkReport);
+        checkPromo.setChecked(data.checkPromo);
     }
 }

@@ -8,7 +8,7 @@ public class UserRegistrationData {
     public String paymentMethod;
 
     // --- Personal Details ---
-    public String fullName, email, mobile, password, age; // phoneNumber වෙනුවට mobile කියලා හැදුවා
+    public String fullName, email, mobile, password, age;
 
     // --- Loan Details ---
     public boolean hasLoan = false;
@@ -16,11 +16,18 @@ public class UserRegistrationData {
 
     // --- Saving Details ---
     public boolean hasSavingPlan = false;
-    public String goalName, targetAmount, targetDate, currentSavings, monthlySavingAmount; // monthlySavingAmount එකතු කළා
+    public String goalName, targetAmount, targetDate, currentSavings, monthlySavingAmount;
 
     // --- Terms & Updates ---
-    public boolean isTermsAccepted = false; // agreedToTerms වෙනුවට RegisterActivity එකේ නම දැම්මා
-    public boolean receiveUpdates = false;   // wantsSubUpdates වෙනුවට RegisterActivity එකේ නම දැම්මා
+    public boolean isTermsAccepted = false;
+    public boolean receiveUpdates = false;
+
+    // --- Subscription Notification Preferences ---
+    public boolean checkEmail = false;
+    public boolean checkSms = false;
+    public boolean checkPush = false;
+    public boolean checkReport = false;
+    public boolean checkPromo = false;
 
     private UserRegistrationData() {} // Private constructor
 
@@ -31,7 +38,7 @@ public class UserRegistrationData {
         return instance;
     }
 
-    // දත්ත ඔක්කොම clear කරන්න
+    // clear all data
     public void clearData() { // reset වෙනුවට clearData නම දැම්මා
         instance = new UserRegistrationData();
     }

@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/values/styles.xml -->
-<!-- ඔබේ existing styles.xml එකට මේ style block එක add කරන්න -->
+
 <resources>
 
     <style name="Theme.YourAppName" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- ඔබේ existing theme items මෙතන තියෙනවා -->
+
     </style>
 
-    <!-- ✅ මේ style එක add කරන්න — Logo circular කරනවා -->
+
     <style name="CircleImageView">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>

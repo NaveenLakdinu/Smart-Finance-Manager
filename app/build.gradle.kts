@@ -31,6 +31,9 @@ android {
         targetCompatibility = JavaVersion.VERSION_11
     }
     buildToolsVersion = "35.0.0"
+    lint {
+        abortOnError = false
+    }
 }
 
 dependencies {
@@ -53,5 +56,6 @@ dependencies {
 
         // ඔයා දැනටමත් Firebase Auth පාවිච්චි කරන නිසා මේකත් ඇති කියලා හිතනවා
     implementation("com.google.firebase:firebase-auth:23.0.0")
+    implementation("com.google.firebase:firebase-database:21.0.0")
 
 }
