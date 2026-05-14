@@ -162,7 +162,9 @@ public class RegisterActivity extends AppCompatActivity {
                         // Loan Details
                         userMap.put("hasLoan", data.hasLoan);
                         userMap.put("loanAmount", data.loanAmount != null ? data.loanAmount : "");
-                        userMap.put("loanType", data.loanType != null ? data.loanType : "");
+                        userMap.put("monthlyInstallment", data.monthlyInstallment != null ? data.monthlyInstallment : "");
+                        userMap.put("monthsPaid", data.monthsPaid != null ? data.monthsPaid : "");
+                        userMap.put("paymentMethod", data.paymentMethod != null ? data.paymentMethod : "");
 
                         // Saving Plan Details
                         userMap.put("hasSavingPlan", data.hasSavingPlan);
@@ -170,9 +172,15 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("savingTargetAmount", data.targetAmount != null ? data.targetAmount : "");
                         userMap.put("savingTargetDate", data.targetDate != null ? data.targetDate : "");
                         userMap.put("monthlySavingAmount", data.monthlySavingAmount != null ? data.monthlySavingAmount : "");
+                        userMap.put("currentSavings", data.currentSavings != null ? data.currentSavings : "");
 
                         // Extras
                         userMap.put("receiveUpdates", data.receiveUpdates);
+                        userMap.put("checkEmail", data.checkEmail);
+                        userMap.put("checkSms", data.checkSms);
+                        userMap.put("checkPush", data.checkPush);
+                        userMap.put("checkReport", data.checkReport);
+                        userMap.put("checkPromo", data.checkPromo);
 
                         System.out.println("Saving to Firestore with UID: " + uid);
                         System.out.println("User data: " + userMap.toString());
@@ -184,9 +192,9 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
                                     data.clearData();
                                     clearAllFields();
-                                    // TODO: Navigate to Dashboard
-                                    // startActivity(new Intent(this, DashboardActivity.class));
-                                    // finish();
+                                    // Navigate to Dashboard
+                                    startActivity(new Intent(this, DashboardActivity.class));
+                                    finish();
                                 })
                                 .addOnFailureListener(e -> {
                                     System.err.println("❌ Firestore Error: " + e.getMessage());
