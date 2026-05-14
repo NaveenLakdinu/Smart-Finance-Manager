@@ -27,7 +27,7 @@ public class SubscriptionActivity extends AppCompatActivity {
         nextButton  = findViewById(R.id.nextButton);
         backButton  = findViewById(R.id.backButton);
 
-        // 2. Load existing data (ආයෙත් ආවොත් කලින් ටික් කරපුවා පෙන්වන්න)
+        // 2. Load existing data
         loadExistingData();
 
         // 3. Back Button
@@ -35,7 +35,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
         // 4. Next Button
         nextButton.setOnClickListener(v -> {
-            // අවම වශයෙන් 1ක් select කළ යුතුයි (Validation)
+            // minimum 1 select  (Validation)
             if (!checkEmail.isChecked() && !checkSms.isChecked()
                     && !checkPush.isChecked() && !checkReport.isChecked()
                     && !checkPromo.isChecked()) {
@@ -45,9 +45,9 @@ public class SubscriptionActivity extends AppCompatActivity {
                 return;
             }
 
-            // ✅ Singleton එකට දත්ත සේව් කිරීම
+            // ✅ Singleton save data
             UserRegistrationData data = UserRegistrationData.getInstance();
-            data.receiveUpdates = true; // Main Page එකේ checkbox එක ටික් වෙන්න
+            data.receiveUpdates = true;
             data.checkEmail = checkEmail.isChecked();
             data.checkSms = checkSms.isChecked();
             data.checkPush = checkPush.isChecked();
@@ -56,7 +56,7 @@ public class SubscriptionActivity extends AppCompatActivity {
 
             Toast.makeText(this, "Preferences Saved!", Toast.LENGTH_SHORT).show();
 
-            // ආපහු Main Register page එකට යනවා
+
             finish();
         });
     }

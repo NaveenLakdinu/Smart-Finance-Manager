@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
+
     <style name="Theme.SmartFinancialManagement" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <!-- Customize your theme here. -->
+
     </style>
 
     <style name="Widget.App.Button.Green" parent="Widget.Material3.Button">

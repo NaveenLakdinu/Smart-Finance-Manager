@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- res/layout/activity_loan_details.xml -->
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -14,10 +14,8 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-             TOP GRADIENT CARD
-             40% Complete + progress bar
-        ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+        <!-- TOP GRADIENT CARD
+             40% Complete + progress bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -123,9 +121,7 @@
                         android:layout_gravity="center_horizontal"
                         android:layout_marginBottom="28dp" />
 
-                    <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━
-                         GRAY FORM CARD
-                    ━━━━━━━━━━━━━━━━━━━━━━━━━━ -->
+                    <!-- GRAY FORM CARD -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -233,7 +229,7 @@
                                 android:background="@null" />
                         </LinearLayout>
 
-                        <!-- ── PAYMENT METHOD SPINNER ── -->
+                        <!-- ── PAYMENT METHOD SPINNER ─ -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

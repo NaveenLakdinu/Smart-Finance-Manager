@@ -18,12 +18,12 @@ public class TermsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_terms);
 
-        // Views Bind කිරීම
+        // Views Bind
         agreeCheckbox = findViewById(R.id.agreeCheckbox);
         nextButton    = findViewById(R.id.nextButton);
         backButton    = findViewById(R.id.backButton);
 
-        // කලින් Agree වෙලා හිටියා නම් ඒක පෙන්වන්න
+
         if (UserRegistrationData.getInstance().isTermsAccepted) {
             agreeCheckbox.setChecked(true);
         }
@@ -38,12 +38,12 @@ public class TermsActivity extends AppCompatActivity {
                         "Please agree to the Terms and Conditions to continue",
                         Toast.LENGTH_SHORT).show();
             } else {
-                // ✅ Singleton එකේ අගය Update කිරීම
+                // ✅ Singleton value Update
                 UserRegistrationData.getInstance().isTermsAccepted = true;
 
                 Toast.makeText(this, "Terms Accepted", Toast.LENGTH_SHORT).show();
 
-                // ආපහු Main Register page එකට යනවා
+                // back to Main Register page
                 finish();
             }
         });
@@ -52,7 +52,7 @@ public class TermsActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        // User එකඟ නොවී ආපසු ගියොත් checkbox එක uncheck විය යුතු නම්:
+
         if (!agreeCheckbox.isChecked()) {
             UserRegistrationData.getInstance().isTermsAccepted = false;
         }

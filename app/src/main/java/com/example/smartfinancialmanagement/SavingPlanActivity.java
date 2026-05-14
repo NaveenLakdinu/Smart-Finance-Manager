@@ -31,16 +31,16 @@ public class SavingPlanActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.activity_saving_plan);
 
-        // 1. Views Bind කිරීම
+        // 1. Views Bind
         initViews();
 
-        // 2. කලින් සේව් කරපු දත්ත තිබේ නම් ඒවා පෙන්වීම
+        // 2. before saving data show
         loadExistingData();
 
         // 3. Setup Listeners
         setupListeners();
 
-        // 4. Progress bar එක update වෙන්න TextWatchers දාමු
+        // 4. Progress bar  update  TextWatchers
         setupTextWatchers();
     }
 
@@ -67,19 +67,19 @@ public class SavingPlanActivity extends AppCompatActivity {
         // Date Picker
         targetDatePicker.setOnClickListener(v -> showDatePicker());
 
-        // "Register" (ඇත්තටම මේක Next) Button
+        // "Register"  Button
         registerButton.setOnClickListener(v -> {
             if (validateForm()) {
                 saveToSingleton();
                 Toast.makeText(this, "Saving plan details saved!", Toast.LENGTH_SHORT).show();
-                finish(); // ආපහු Main Register page එකට යනවා
+                finish(); // back to Main Register page
             }
         });
     }
 
     private void saveToSingleton() {
         UserRegistrationData data = UserRegistrationData.getInstance();
-        data.hasSavingPlan = true; // Checkbox එක ටික් වෙන්න මේක ඕනේ
+        data.hasSavingPlan = true; // Checkbox tik show
         data.goalName = goalNameInput.getText().toString().trim();
         data.targetAmount = targetAmountInput.getText().toString().trim();
         data.targetDate = targetDateText.getText().toString().trim();
