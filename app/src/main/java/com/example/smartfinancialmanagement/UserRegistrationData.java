@@ -22,6 +22,13 @@ public class UserRegistrationData {
     public boolean isTermsAccepted = false; // agreedToTerms වෙනුවට RegisterActivity එකේ නම දැම්මා
     public boolean receiveUpdates = false;   // wantsSubUpdates වෙනුවට RegisterActivity එකේ නම දැම්මා
 
+    // --- Subscription Notification Preferences ---
+    public boolean checkEmail = false;
+    public boolean checkSms = false;
+    public boolean checkPush = false;
+    public boolean checkReport = false;
+    public boolean checkPromo = false;
+
     private UserRegistrationData() {} // Private constructor
 
     public static synchronized UserRegistrationData getInstance() {
