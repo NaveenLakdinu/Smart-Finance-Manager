@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- res/drawable/btn_register_dark.xml -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="30dp" />
-            <solid android:color="#388E3C" />
+            <corners android:radius="14dp" />
+            <solid android:color="#1F2937" />
         </shape>
     </item>
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="30dp" />
-            <solid android:color="#4CAF50" />
+            <corners android:radius="14dp" />
+            <solid android:color="#111827" />
         </shape>
     </item>
 </selector>
