@@ -62,7 +62,6 @@
                     android:paddingTop="24dp"
                     android:paddingBottom="40dp">
 
-                    <!-- Title Section -->
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
@@ -75,344 +74,64 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:layout_marginBottom="20dp"
-                        android:text="Swipe to compare multiple bank offers."
+                        android:layout_marginBottom="24dp"
+                        android:text="Add bank details to compare monthly EMI and total payback."
                         android:textColor="#64748B"
                         android:textSize="13sp" />
 
-                    <!-- Ongoing Commitments Summary -->
-                    <com.google.android.material.card.MaterialCardView
+                    <!-- Container for dynamic loan cards -->
+                    <LinearLayout
+                        android:id="@+id/loanCardsContainer"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
-                        app:cardBackgroundColor="#F8FAFC"
+                        android:orientation="vertical" />
+
+                    <!-- Add New Option Button (The Plus Button) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/btnAddOption"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_marginBottom="32dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        app:cardBackgroundColor="#F1F5F9"
                         app:cardCornerRadius="12dp"
                         app:cardElevation="0dp"
-                        app:strokeColor="#E2E8F0"
+                        app:strokeColor="#CBD5E1"
                         app:strokeWidth="1dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:padding="12dp"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Current Monthly Commitment"
-                                android:textColor="#64748B"
-                                android:textSize="13sp" />
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="$450.00"
-                                android:textColor="#1E293B"
-                                android:textStyle="bold"
-                                android:textSize="15sp" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Horizontal Comparison Scroll -->
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="24dp"
-                        android:scrollbars="none"
-                        android:overScrollMode="never">
-
+                        
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:paddingVertical="4dp">
-
-                            <!-- Option A Card -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="260dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="12dp"
-                                app:cardBackgroundColor="@color/white"
-                                app:cardCornerRadius="16dp"
-                                app:cardElevation="2dp"
-                                app:strokeColor="#2563EB"
-                                app:strokeWidth="2dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:padding="16dp">
-
-                                    <RelativeLayout
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content">
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:text="Option A"
-                                            android:textColor="#1E293B"
-                                            android:textSize="15sp"
-                                            android:textStyle="bold" />
-                                        <TextView
-                                            android:layout_width="wrap_content"
-                                            android:layout_height="wrap_content"
-                                            android:layout_alignParentEnd="true"
-                                            android:background="#DCFCE7"
-                                            android:paddingHorizontal="8dp"
-                                            android:paddingVertical="2dp"
-                                            android:text="Best Value"
-                                            android:textColor="#166534"
-                                            android:textSize="10sp"
-                                            android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="4dp"
-                                        android:text="Bank of Finance"
-                                        android:textColor="#94A3B8"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="$15,000 Loan"
-                                        android:textColor="#1E293B"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="12dp" android:background="#F1F5F9" />
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Interest Rate" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="4.5%" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Monthly EMI" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$342.15" android:textColor="#2563EB" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="#F8FAFC" android:padding="8dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Monthly" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$792.15" android:textColor="#1E293B" android:textSize="13sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="Total Payback"
-                                        android:textColor="#64748B"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="$16,418.51"
-                                        android:textColor="#10B981"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Option B Card -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="260dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="12dp"
-                                app:cardBackgroundColor="@color/white"
-                                app:cardCornerRadius="16dp"
-                                app:cardElevation="2dp"
-                                app:strokeColor="#E2E8F0"
-                                app:strokeWidth="1dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:padding="16dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Option B"
-                                        android:textColor="#1E293B"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="4dp"
-                                        android:text="Credit Union"
-                                        android:textColor="#94A3B8"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="$15,000 Loan"
-                                        android:textColor="#1E293B"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="12dp" android:background="#F1F5F9" />
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Interest Rate" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="5.2%" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Monthly EMI" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$365.10" android:textColor="#2563EB" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="#F8FAFC" android:padding="8dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Monthly" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$815.10" android:textColor="#1E293B" android:textSize="13sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="Total Payback"
-                                        android:textColor="#64748B"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="$17,066.70"
-                                        android:textColor="#EF4444"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                            <!-- Option C Card -->
-                            <com.google.android.material.card.MaterialCardView
-                                android:layout_width="260dp"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="12dp"
-                                app:cardBackgroundColor="@color/white"
-                                app:cardCornerRadius="16dp"
-                                app:cardElevation="2dp"
-                                app:strokeColor="#E2E8F0"
-                                app:strokeWidth="1dp">
-
-                                <LinearLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:orientation="vertical"
-                                    android:padding="16dp">
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="Option C"
-                                        android:textColor="#1E293B"
-                                        android:textSize="15sp"
-                                        android:textStyle="bold" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="4dp"
-                                        android:text="City Bank"
-                                        android:textColor="#94A3B8"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="$15,000 Loan"
-                                        android:textColor="#1E293B"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-
-                                    <View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginVertical="12dp" android:background="#F1F5F9" />
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Interest Rate" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="6.0%" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="New Monthly EMI" android:textColor="#64748B" android:textSize="12sp" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$386.65" android:textColor="#2563EB" android:textSize="12sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <RelativeLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="#F8FAFC" android:padding="8dp">
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Total Monthly" android:textColor="#1E293B" android:textSize="12sp" android:textStyle="bold" />
-                                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentEnd="true" android:text="$836.65" android:textColor="#1E293B" android:textSize="13sp" android:textStyle="bold" />
-                                    </RelativeLayout>
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_marginTop="12dp"
-                                        android:text="Total Payback"
-                                        android:textColor="#64748B"
-                                        android:textSize="11sp" />
-
-                                    <TextView
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:text="$18,559.20"
-                                        android:textColor="#EF4444"
-                                        android:textSize="16sp"
-                                        android:textStyle="bold" />
-                                </LinearLayout>
-                            </com.google.android.material.card.MaterialCardView>
-
-                        </LinearLayout>
-                    </HorizontalScrollView>
-
-                    <!-- Info Banner -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
-                        app:cardBackgroundColor="#F0F9FF"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#BAE6FD"
-                        app:strokeWidth="1dp">
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:padding="12dp">
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:orientation="horizontal">
+                            
                             <ImageView
                                 android:layout_width="20dp"
                                 android:layout_height="20dp"
-                                android:src="@drawable/ic_info" />
+                                android:src="@drawable/ic_plus"
+                                app:tint="#64748B" />
+                            
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginStart="10dp"
-                                android:text="Option A is your best choice."
-                                android:textColor="#0369A1"
-                                android:textSize="13sp" />
+                                android:layout_marginStart="8dp"
+                                android:text="Add Another Option"
+                                android:textColor="#64748B"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
                         </LinearLayout>
                     </com.google.android.material.card.MaterialCardView>
 
-                    <!-- Action Button -->
+                    <!-- Compare/Report Button -->
                     <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnChooseOption"
+                        android:id="@+id/btnCompare"
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:backgroundTint="#2563EB"
-                        android:text="Proceed with Selected"
+                        android:text="Generate Comparison Report"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
                         android:textSize="16sp"

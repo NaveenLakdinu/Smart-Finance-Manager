@@ -55,11 +55,56 @@ public class LoanAddActivity extends AppCompatActivity {
         // Validate and save loan data when 'Add New Loan' is clicked
         btnAddLoan.setOnClickListener(v -> {
             if (validateInputs()) {
-                // TODO: Logic to save loan data to Firebase or Local DB
-                Toast.makeText(this, "Loan '" + etLoanName.getText().toString() + "' added successfully!", Toast.LENGTH_SHORT).show();
-                finish();
+                saveLoanToFirestore();
             }
         });
+    }
+
+    /**
+     * Saves the loan data to Firebase Firestore under the current user's document.
+     */
+    private void saveLoanToFirestore() {
+        com.google.firebase.auth.FirebaseUser user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Please login to add a loan", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String uid = user.getUid();
+        String name = etLoanName.getText().toString().trim();
+        double principal = Double.parseDouble(etPrincipalAmount.getText().toString().trim());
+        double rate = Double.parseDouble(etInterestRate.getText().toString().trim());
+        int duration = Integer.parseInt(etDuration.getText().toString().trim());
+        String emiText = estimatedMonthlyPayment.getText().toString().replace("$", "");
+        double emi = Double.parseDouble(emiText);
+
+        // Disable button to prevent multiple clicks
+        btnAddLoan.setEnabled(false);
+        btnAddLoan.setText("Saving...");
+
+        // Create loan object
+        java.util.Map<String, Object> loan = new java.util.HashMap<>();
+        loan.put("loanName", name);
+        loan.put("principalAmount", principal);
+        loan.put("interestRate", rate);
+        loan.put("durationMonths", duration);
+        loan.put("monthlyEmi", emi);
+        loan.put("createdAt", System.currentTimeMillis());
+
+        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        
+        // Save to a 'loans' sub-collection under the user
+        db.collection("users").document(uid).collection("loans")
+                .add(loan)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(this, "Loan '" + name + "' added successfully!", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    btnAddLoan.setEnabled(true);
+                    btnAddLoan.setText("Add New Loan");
+                    Toast.makeText(this, "Failed to add loan: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 
     /**

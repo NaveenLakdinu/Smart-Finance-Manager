@@ -15,11 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -37,9 +33,6 @@ public class DashboardActivity extends AppCompatActivity {
 
     private ArrayList<Subscription> recentList;
     private RecentSubscriptionAdapter adapter;
-
-    private DatabaseReference subscriptionsRef;
-    private ValueEventListener subscriptionsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,39 +132,28 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        subscriptionsRef = FirebaseDatabase.getInstance()
-                .getReference("Users")
-                .child(uid)
-                .child("subscriptions");
+        // Query Firestore instead of Realtime Database
+        db.collection("users").document(uid).collection("subscriptions")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        resetDashboard();
+                        Toast.makeText(DashboardActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        subscriptionsListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                ArrayList<Subscription> allSubscriptions = new ArrayList<>();
-
-                if (snapshot.exists()) {
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        Subscription subscription = child.getValue(Subscription.class);
-
-                        if (subscription != null) {
-                            allSubscriptions.add(subscription);
+                    ArrayList<Subscription> allSubscriptions = new ArrayList<>();
+                    if (value != null && !value.isEmpty()) {
+                        for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
+                            Subscription subscription = doc.toObject(Subscription.class);
+                            if (subscription != null) {
+                                allSubscriptions.add(subscription);
+                            }
                         }
                     }
-                }
-
-                updateDashboard(allSubscriptions);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                resetDashboard();
-                Toast.makeText(DashboardActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        subscriptionsRef.addValueEventListener(subscriptionsListener);
+                    updateDashboard(allSubscriptions);
+                });
     }
 
     private void updateDashboard(ArrayList<Subscription> allSubscriptions) {
@@ -213,13 +195,4 @@ public class DashboardActivity extends AppCompatActivity {
 
         recentSection.setVisibility(View.GONE);
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (subscriptionsRef != null && subscriptionsListener != null) {
-            subscriptionsRef.removeEventListener(subscriptionsListener);
-        }
     }
-}
