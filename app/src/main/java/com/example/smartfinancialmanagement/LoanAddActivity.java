@@ -9,6 +9,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Locale;
 
 /**
@@ -20,13 +23,22 @@ public class LoanAddActivity extends AppCompatActivity {
     // UI elements
     private ImageView btnBack;
     private EditText etLoanName, etPrincipalAmount, etInterestRate, etDuration;
-    private TextView estimatedMonthlyPayment;
+    private TextView estimatedMonthlyPayment, txtTitle;
     private MaterialButton btnAddLoan;
+
+    private Loan existingLoan;
+    private boolean isEditMode = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loan_add_loan);
+
+        // Check if we are in edit mode
+        if (getIntent().hasExtra("loan")) {
+            existingLoan = (Loan) getIntent().getSerializableExtra("loan");
+            isEditMode = true;
+        }
 
         // 1. Initialize all UI components
         initViews();
@@ -36,6 +48,10 @@ public class LoanAddActivity extends AppCompatActivity {
 
         // 3. Setup real-time EMI calculation whenever input changes
         setupCalculationLogic();
+
+        if (isEditMode && existingLoan != null) {
+            populateFields();
+        }
     }
 
     private void initViews() {
@@ -46,6 +62,20 @@ public class LoanAddActivity extends AppCompatActivity {
         etDuration = findViewById(R.id.etDuration);
         estimatedMonthlyPayment = findViewById(R.id.estimatedMonthlyPayment);
         btnAddLoan = findViewById(R.id.btnAddLoan);
+        txtTitle = findViewById(R.id.txtTitle);
+
+        if (isEditMode) {
+            txtTitle.setText("Edit Loan");
+            btnAddLoan.setText("Update Loan");
+        }
+    }
+
+    private void populateFields() {
+        etLoanName.setText(existingLoan.getLoanName());
+        etPrincipalAmount.setText(String.valueOf(existingLoan.getPrincipalAmount()));
+        etInterestRate.setText(String.valueOf(existingLoan.getInterestRate()));
+        etDuration.setText(String.valueOf(existingLoan.getDurationMonths()));
+        calculateEMI();
     }
 
     private void setupListeners() {
@@ -64,7 +94,7 @@ public class LoanAddActivity extends AppCompatActivity {
      * Saves the loan data to Firebase Firestore under the current user's document.
      */
     private void saveLoanToFirestore() {
-        com.google.firebase.auth.FirebaseUser user = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
             Toast.makeText(this, "Please login to add a loan", Toast.LENGTH_SHORT).show();
             return;
@@ -80,31 +110,49 @@ public class LoanAddActivity extends AppCompatActivity {
 
         // Disable button to prevent multiple clicks
         btnAddLoan.setEnabled(false);
-        btnAddLoan.setText("Saving...");
+        btnAddLoan.setText(isEditMode ? "Updating..." : "Saving...");
 
         // Create loan object
-        java.util.Map<String, Object> loan = new java.util.HashMap<>();
-        loan.put("loanName", name);
-        loan.put("principalAmount", principal);
-        loan.put("interestRate", rate);
-        loan.put("durationMonths", duration);
-        loan.put("monthlyEmi", emi);
-        loan.put("createdAt", System.currentTimeMillis());
+        java.util.Map<String, Object> loanData = new java.util.HashMap<>();
+        loanData.put("loanName", name);
+        loanData.put("principalAmount", principal);
+        loanData.put("interestRate", rate);
+        loanData.put("durationMonths", duration);
+        loanData.put("monthlyEmi", emi);
+        if (!isEditMode) {
+            loanData.put("createdAt", System.currentTimeMillis());
+        }
 
-        com.google.firebase.firestore.FirebaseFirestore db = com.google.firebase.firestore.FirebaseFirestore.getInstance();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         
-        // Save to a 'loans' sub-collection under the user
-        db.collection("users").document(uid).collection("loans")
-                .add(loan)
-                .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(this, "Loan '" + name + "' added successfully!", Toast.LENGTH_SHORT).show();
-                    finish();
-                })
-                .addOnFailureListener(e -> {
-                    btnAddLoan.setEnabled(true);
-                    btnAddLoan.setText("Add New Loan");
-                    Toast.makeText(this, "Failed to add loan: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                });
+        if (isEditMode && existingLoan != null) {
+            // Update existing loan
+            db.collection("users").document(uid).collection("loans")
+                    .document(existingLoan.getId())
+                    .update(loanData)
+                    .addOnSuccessListener(aVoid -> {
+                        Toast.makeText(this, "Loan updated successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        btnAddLoan.setEnabled(true);
+                        btnAddLoan.setText("Update Loan");
+                        Toast.makeText(this, "Failed to update loan: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+        } else {
+            // Add new loan
+            db.collection("users").document(uid).collection("loans")
+                    .add(loanData)
+                    .addOnSuccessListener(documentReference -> {
+                        Toast.makeText(this, "Loan '" + name + "' added successfully!", Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .addOnFailureListener(e -> {
+                        btnAddLoan.setEnabled(true);
+                        btnAddLoan.setText("Add New Loan");
+                        Toast.makeText(this, "Failed to add loan: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    });
+        }
     }
 
     /**
