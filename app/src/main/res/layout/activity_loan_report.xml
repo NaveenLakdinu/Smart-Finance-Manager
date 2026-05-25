@@ -122,124 +122,130 @@
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <!-- PDF Option -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/optionPdf"
+                    <RadioGroup
+                        android:id="@+id/radioGroupFormat"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="12dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#2563EB"
-                        app:strokeWidth="1.5dp">
+                        android:layout_height="wrap_content">
 
-                        <RelativeLayout
+                        <!-- PDF Option -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/optionPdf"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="#EFF6FF"
-                            android:padding="16dp">
+                            android:layout_marginBottom="12dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#2563EB"
+                            app:strokeWidth="1.5dp">
 
-                            <ImageView
-                                android:id="@+id/iconPdf"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:padding="8dp"
-                                android:background="@drawable/circle_white_bg"
-                                android:src="@drawable/ic_pdf" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_toEndOf="@id/iconPdf"
-                                android:orientation="vertical">
+                                android:background="#EFF6FF"
+                                android:padding="16dp">
 
-                                <TextView
+                                <ImageView
+                                    android:id="@+id/iconPdf"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:padding="8dp"
+                                    android:background="@drawable/circle_white_bg"
+                                    android:src="@drawable/ic_pdf" />
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="PDF Document"
-                                    android:textColor="#1E293B"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_toEndOf="@id/iconPdf"
+                                    android:orientation="vertical">
 
-                                <TextView
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="PDF Document"
+                                        android:textColor="#1E293B"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Best for sharing and printing"
+                                        android:textColor="#64748B"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
+                                <RadioButton
+                                    android:id="@+id/radioPdf"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Best for sharing and printing"
-                                    android:textColor="#64748B"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:checked="true" />
+                            </RelativeLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:checked="true"
-                                android:clickable="false" />
-                        </RelativeLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- CSV Option -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/optionCsv"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="32dp"
-                        app:cardBackgroundColor="@color/white"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#E2E8F0"
-                        app:strokeWidth="1dp">
-
-                        <RelativeLayout
+                        <!-- CSV Option -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/optionCsv"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:padding="16dp">
+                            android:layout_marginBottom="32dp"
+                            app:cardBackgroundColor="@color/white"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#E2E8F0"
+                            app:strokeWidth="1dp">
 
-                            <ImageView
-                                android:id="@+id/iconCsv"
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:padding="8dp"
-                                android:background="#F8FAFC"
-                                android:src="@drawable/ic_csv" />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
+                            <RelativeLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_centerVertical="true"
-                                android:layout_marginStart="16dp"
-                                android:layout_toEndOf="@id/iconCsv"
-                                android:orientation="vertical">
+                                android:padding="16dp">
 
-                                <TextView
+                                <ImageView
+                                    android:id="@+id/iconCsv"
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:padding="8dp"
+                                    android:background="#F8FAFC"
+                                    android:src="@drawable/ic_csv" />
+
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="CSV Excel"
-                                    android:textColor="#1E293B"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
+                                    android:layout_centerVertical="true"
+                                    android:layout_marginStart="16dp"
+                                    android:layout_toEndOf="@id/iconCsv"
+                                    android:orientation="vertical">
 
-                                <TextView
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="CSV Excel"
+                                        android:textColor="#1E293B"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Best for custom calculations"
+                                        android:textColor="#64748B"
+                                        android:textSize="12sp" />
+                                </LinearLayout>
+
+                                <RadioButton
+                                    android:id="@+id/radioCsv"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:text="Best for custom calculations"
-                                    android:textColor="#64748B"
-                                    android:textSize="12sp" />
-                            </LinearLayout>
-
-                            <RadioButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_alignParentEnd="true"
-                                android:layout_centerVertical="true"
-                                android:checked="false"
-                                android:clickable="false" />
-                        </RelativeLayout>
-                    </com.google.android.material.card.MaterialCardView>
+                                    android:layout_alignParentEnd="true"
+                                    android:layout_centerVertical="true"
+                                    android:checked="false" />
+                            </RelativeLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </RadioGroup>
 
                     <!-- Data to Include Section -->
                     <TextView
@@ -252,6 +258,7 @@
                         android:textStyle="bold" />
 
                     <CheckBox
+                        android:id="@+id/checkActiveLoans"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -261,6 +268,7 @@
                         android:textSize="14sp" />
 
                     <CheckBox
+                        android:id="@+id/checkPaymentHistory"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="8dp"
@@ -270,6 +278,7 @@
                         android:textSize="14sp" />
 
                     <CheckBox
+                        android:id="@+id/checkClosedLoans"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="32dp"
