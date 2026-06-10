@@ -78,7 +78,9 @@ public class LoginFormActivity extends AppCompatActivity {
     private void checkIfUserLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            navigateToDashboard();
+            // Verify the user has a Firestore profile before auto-navigating.
+            // This prevents stale Auth sessions from bypassing the login screen.
+            checkUserInFirestore(currentUser.getUid());
         }
     }
 
@@ -114,11 +116,11 @@ public class LoginFormActivity extends AppCompatActivity {
                                 checkUserInFirestore(user.getUid());
                             }
                         } else {
-                            String errorMessage = task.getException() != null 
-                                    ? task.getException().getMessage() 
-                                    : "Login failed";
-                            System.out.println("Error: " + errorMessage);
-                            Toast.makeText(this, "Login Failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                            loginButton.setEnabled(true);
+                            loginButton.setText("LOGIN");
+                            String errorMessage = getFriendlyErrorMessage(task.getException());
+                            System.out.println("Auth Error: " + (task.getException() != null ? task.getException().getMessage() : "unknown"));
+                            Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
                         }
                     })
                     .addOnFailureListener(e -> {
@@ -176,5 +178,25 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    /**
+     * Converts raw Firebase Auth exception messages into user-friendly strings.
+     */
+    private String getFriendlyErrorMessage(Exception e) {
+        if (e == null) return "Login failed. Please try again.";
+        String msg = e.getMessage();
+        if (msg == null) return "Login failed. Please try again.";
+        if (msg.contains("no user record") || msg.contains("user-not-found") || msg.contains("There is no user"))
+            return "No account found with this email. Please sign up first.";
+        if (msg.contains("password is invalid") || msg.contains("wrong-password") || msg.contains("The password is invalid"))
+            return "Incorrect password. Please try again.";
+        if (msg.contains("email address is badly formatted"))
+            return "Please enter a valid email address.";
+        if (msg.contains("too many requests") || msg.contains("too-many-requests"))
+            return "Too many failed attempts. Please try again later.";
+        if (msg.contains("network") || msg.contains("Network"))
+            return "Network error. Please check your internet connection.";
+        return "Login failed. Please check your credentials.";
     }
 }

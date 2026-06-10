@@ -100,11 +100,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void saveDataToSingleton() {
         UserRegistrationData data = UserRegistrationData.getInstance();
-        data.fullName = etFullName.getText().toString();
-        data.age = etAge.getText().toString();
-        data.email = etEmail.getText().toString();
-        data.mobile = etMobile.getText().toString();
-        data.password = etPassword.getText().toString();
+        data.fullName = etFullName.getText().toString().trim();
+        data.age = etAge.getText().toString().trim();
+        data.email = etEmail.getText().toString().trim();   // trim to match Firebase Auth email
+        data.mobile = etMobile.getText().toString().trim();
+        data.password = etPassword.getText().toString();    // do NOT trim passwords
     }
 
     @Override
@@ -144,6 +144,10 @@ public class RegisterActivity extends AppCompatActivity {
             Toast.makeText(this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        // Disable button to prevent double-clicks
+        btnRegister.setEnabled(false);
+        btnRegister.setText("Registering...");
 
         System.out.println("Starting registration for email: " + email);
         
@@ -218,14 +222,26 @@ public class RegisterActivity extends AppCompatActivity {
                                     finish();
                                 })
                                 .addOnFailureListener(e -> {
+                                    btnRegister.setEnabled(true);
+                                    btnRegister.setText("Register");
                                     System.err.println("❌ Firestore Error: " + e.getMessage());
                                     e.printStackTrace();
                                     Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 });
                     } else {
-                        System.err.println("❌ Auth Error: " + task.getException().getMessage());
-                        task.getException().printStackTrace();
-                        Toast.makeText(this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        btnRegister.setEnabled(true);
+                        btnRegister.setText("Register");
+                        
+                        Exception e = task.getException();
+                        String errorMessage = e != null ? e.getMessage() : "Unknown error";
+                        
+                        // Check specifically for "Email already in use"
+                        if (errorMessage != null && errorMessage.contains("already in use")) {
+                            errorMessage = "This email is already registered. Please Login instead.";
+                        }
+                        
+                        System.err.println("❌ Auth Error: " + errorMessage);
+                        Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
     }
