@@ -45,7 +45,25 @@
         <activity
             android:name=".DashboardActivity"
             android:exported="false" />
-        
+        <activity
+            android:name=".UtilityManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GetReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportListSelectionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportPanelActivity"
+            android:exported="false" />
+
         <!-- Firebase services -->
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"

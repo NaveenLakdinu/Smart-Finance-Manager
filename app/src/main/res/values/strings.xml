@@ -25,6 +25,20 @@
         <item>Annually</item>
     </string-array>
 
+    <string-array name="utility_type">
+    <item>Electricity</item>
+    <item>Water</item>
+    <item>Telephone</item>
+    <item>Internet</item>
+    <item>Rent</item>
+    </string-array>
+
+    <string-array name="choose_bill">
+        <item>Home Electricity</item>
+        <item>Home Water Bill</item>
+        <item>Telephone Bill</item>
+        <item>House Rent</item>
+    </string-array>
 
 
 

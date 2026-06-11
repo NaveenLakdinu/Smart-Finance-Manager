@@ -135,7 +135,8 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageUtility.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(DashboardActivity.this, UtilityManagerActivity.class);
+                startActivity(intent);
             }
         });
 
