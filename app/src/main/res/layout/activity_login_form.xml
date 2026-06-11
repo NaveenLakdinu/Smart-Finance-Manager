@@ -92,11 +92,11 @@
                     android:id="@+id/usernameInput"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:hint="Username, Email &amp; Phone Number"
+                    android:hint="Email Address"
                     android:textColorHint="#9CA3AF"
                     android:textColor="#111827"
                     android:textSize="14sp"
-                    android:inputType="text"
+                    android:inputType="textEmailAddress"
                     android:background="@null"
                     android:paddingStart="0dp"
                     android:paddingEnd="0dp" />

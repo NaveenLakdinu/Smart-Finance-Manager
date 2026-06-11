@@ -47,6 +47,12 @@
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
+            android:name=".WorkerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MultiAccountDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoanFormActivity"
             android:exported="false" />
         <activity
