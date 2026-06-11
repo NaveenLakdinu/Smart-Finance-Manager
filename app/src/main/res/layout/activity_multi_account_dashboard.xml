@@ -289,7 +289,7 @@
             android:id="@+id/btnLogout"
             android:layout_width="match_parent"
             android:layout_height="54dp"
-            android:text="Sign Out"
+            android:text="Logout"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:textStyle="bold"

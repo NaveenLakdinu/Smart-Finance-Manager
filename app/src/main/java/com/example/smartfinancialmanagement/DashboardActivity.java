@@ -13,6 +13,7 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -27,6 +28,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtTotalCount, txtSubMessage;
 
     private CardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
+    private MaterialButton btnLogout;
 
     private LinearLayout recentSection;
     private RecyclerView recyclerRecent;
@@ -58,6 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
         cardManageUtility = findViewById(R.id.cardManageUtility);
         cardPaused = findViewById(R.id.cardPaused);
+        btnLogout = findViewById(R.id.btnLogout);
 
         recentSection = findViewById(R.id.recentSection);
         recyclerRecent = findViewById(R.id.recyclerRecent);
@@ -120,6 +123,14 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
         cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
+
+        btnLogout.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(DashboardActivity.this, LoginFormActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
     }
 
     private void loadUserSubscriptions() {

@@ -377,7 +377,22 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="94dp" />
+            android:layout_height="30dp" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnLogout"
+            android:layout_width="match_parent"
+            android:layout_height="54dp"
+            android:text="Logout"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="#FF5252"
+            app:cornerRadius="15dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="64dp" />
 
     </LinearLayout>
 
