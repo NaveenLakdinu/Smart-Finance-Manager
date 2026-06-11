@@ -48,6 +48,9 @@
         <activity
             android:name=".MultiAccountActivity"
             android:exported="false" />
+        <activity
+            android:name=".ChooseRoleActivity"
+            android:exported="false" />
         
         <!-- Firebase services -->
         <service
