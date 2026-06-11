@@ -1,56 +1,70 @@
-# Smart Finance Manager (FinGuard)
+# Smart-Finance-Manager
 
 ## Project Overview
-Smart Finance Manager is a comprehensive personal financial management ecosystem designed to help users track income, manage subscriptions, monitor loans, and utility bills. It features automated reminders and detailed financial reporting.
+Smart-Finance-Manager is a comprehensive personal finance management Android application. It provides users with tools to track income, manage subscriptions, monitor loans, and utility bills. The app features automated reminders and financial reporting to help users maintain a healthy financial state.
 
-The project consists of two primary components:
-1.  **Android Mobile App:** A Java-based Android application (this directory) for end-users to manage their personal finances.
-2.  **Admin Web Portal:** A React-based web dashboard (referenced in `PROJECT_SUMMARY.md`) for administrators to monitor user activity and system metrics.
+### Main Technologies
+- **Platform:** Android
+- **Language:** Java
+- **Build System:** Gradle (Kotlin DSL)
+- **Backend Services:** Firebase (Authentication, Realtime Database, Firestore)
+- **UI Components:** Material Design 3, CardView, ConstraintLayout
 
-### Core Technologies
-- **Mobile:** Java, Android SDK, Gradle
-- **Web Portal:** React 19, Vite 8, Material UI
-- **Backend:** Firebase (Authentication, Firestore, Cloud Functions, Hosting)
-- **Security:** AES-256-GCM field-level encryption for sensitive data (shared between Mobile and Web)
+### Architecture
+The project follows a standard Android Activity-based architecture.
+- **Activities:** Handle UI logic and user interaction (e.g., `DashboardActivity`, `LoginFormActivity`, `RegisterActivity`, `MultiAccountActivity`).
+- **Layouts:** Defined in XML within `app/src/main/res/layout`.
+- **Resources:** Drawables, colors, strings, and themes are managed in `app/src/main/res/values`.
+
+---
 
 ## Building and Running
 
-### Android Mobile App
-The mobile app uses the Gradle build system.
+### Prerequisites
+- Android Studio Jellyfish or newer.
+- JDK 11 or newer.
+- Firebase `google-services.json` file in the `app/` directory (already present).
 
-- **Build Project:** `./gradlew build`
-- **Run Unit Tests:** `./gradlew test`
-- **Install on Device:** `./gradlew installDebug`
-- **Clean Project:** `./gradlew clean`
+### Key Commands
+- **Build the project:**
+  ```bash
+  ./gradlew assembleDebug
+  ```
+- **Run Unit Tests:**
+  ```bash
+  ./gradlew test
+  ```
+- **Run Instrumented Tests:**
+  ```bash
+  ./gradlew connectedAndroidTest
+  ```
+- **Install on Device:**
+  ```bash
+  ./gradlew installDebug
+  ```
+- **Clean the project:**
+  ```bash
+  ./gradlew clean
+  ```
 
-### Admin Web Portal
-(Note: Source files for the web portal may reside in a separate directory or submodule as per `PROJECT_SUMMARY.md`)
-
-- **Installation:** `npm install`
-- **Development:** `npm run dev`
-- **Production Build:** `npm run build`
-- **Deployment:** `npx firebase-tools deploy`
+---
 
 ## Development Conventions
 
 ### Coding Style
-- **Android (Java):** Follow standard Android Java coding conventions. Use PascalCase for classes, camelCase for methods and variables.
-- **Layouts:** Use XML-based layouts in `app/src/main/res/layout`. Follow Material Design guidelines.
-- **Firebase:** Use the modular Firebase SDK where applicable. Ensure all Firestore writes are protected by server-side rules.
+- **Language:** Java is the primary language for source code.
+- **Naming:** Follow standard Java and Android naming conventions (e.g., `activity_dashboard.xml` for layouts, `DashboardActivity.java` for classes).
+- **UI/UX:** 
+    - Maintain a consistent look using the "Smart Financial Management" theme.
+    - Use rounded `CardView` components with elevation (typically 8dp to 14dp).
+    - Use emoji-based icons within circular or rounded backgrounds for a modern feel.
+    - Primary colors: Dark Blue (`#071A33`), Brand Green (`#4CAF50`), and White (`#FFFFFF`).
 
-### Data Security
-- Sensitive fields (salary, loan balances, transaction amounts) must be encrypted using AES-256-GCM before storage in Firestore.
-- The encryption key is managed via environment variables (`VITE_ENCRYPTION_KEY`).
+### Testing Practices
+- Unit tests should be placed in `app/src/test/java`.
+- Instrumented tests (UI tests) should be placed in `app/src/androidTest/java`.
 
-### Error Handling
-- Use user-friendly error messages, especially for authentication and database failures.
-- Implement UI-level protections (e.g., disabling buttons during async operations) to prevent duplicate data submission.
-
-## Directory Structure
-- `app/`: Main Android application module.
-  - `src/main/java/`: Java source files.
-  - `src/main/res/`: Android resources (layouts, drawables, strings).
-  - `google-services.json`: Firebase configuration file.
-- `PROJECT_SUMMARY.md`: Detailed documentation for the Admin Web Portal.
-- `build.gradle.kts`: Root-level build configuration.
-- `settings.gradle.kts`: Project settings and module inclusion.
+### Contribution Guidelines
+- Before adding new features, ensure they align with the visual style established in existing activities like `DashboardActivity`.
+- Register all new activities in `app/src/main/AndroidManifest.xml`.
+- Use the `libs.versions.toml` file for dependency management.
