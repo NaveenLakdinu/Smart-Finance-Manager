@@ -420,6 +420,66 @@
 
         </LinearLayout>
 
+        <!-- ── Worker Cards Row 3 ─────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <!-- Loan Manager -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cardLoanManager"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_function_icon_orange"
+                        android:gravity="center"
+                        android:text="💰"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Loan Manager"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="20dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="6dp"
+                        android:background="#F59E0B" />
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <Space android:layout_width="14dp" android:layout_height="1dp" android:layout_weight="1" />
+
+        </LinearLayout>
+
         <!-- ── Pending Tasks Section ──────────────── -->
         <LinearLayout
             android:id="@+id/recentActivitySection"

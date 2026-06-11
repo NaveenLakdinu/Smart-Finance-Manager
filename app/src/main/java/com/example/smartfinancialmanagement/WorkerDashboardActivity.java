@@ -18,7 +18,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtEarnings, txtPayrollStatus;
-    private CardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips;
+    private CardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips, cardLoanManager;
     private MaterialButton btnLogout;
 
     @Override
@@ -42,6 +42,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         cardExpenseClaims = findViewById(R.id.cardExpenseClaims);
         cardAttendance = findViewById(R.id.cardAttendance);
         cardPayslips = findViewById(R.id.cardPayslips);
+        cardLoanManager = findViewById(R.id.cardLoanManager);
         
         btnLogout = findViewById(R.id.btnLogout);
     }
@@ -79,6 +80,10 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         cardExpenseClaims.setOnClickListener(v -> Toast.makeText(this, "Expense Claims - Coming Soon", Toast.LENGTH_SHORT).show());
         cardAttendance.setOnClickListener(v -> Toast.makeText(this, "Attendance Tracker - Coming Soon", Toast.LENGTH_SHORT).show());
         cardPayslips.setOnClickListener(v -> Toast.makeText(this, "Payslips & Reports - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardLoanManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoanFormActivity.class);
+            startActivity(intent);
+        });
 
         btnLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();

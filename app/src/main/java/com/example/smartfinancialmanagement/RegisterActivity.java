@@ -171,6 +171,10 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("mobile", data.mobile);
                         userMap.put("timestamp", System.currentTimeMillis());
 
+                        // Get user role from SharedPreferences (set in ChooseRoleActivity)
+                        String role = getSharedPreferences("UserData", MODE_PRIVATE).getString("user_role", "student");
+                        userMap.put("role", role);
+
                         // Loan Details (Summary in profile)
                         userMap.put("hasLoan", data.hasLoan);
                         userMap.put("loanAmount", data.loanAmount != null ? data.loanAmount : "");
@@ -217,8 +221,18 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
                                     data.clearData();
                                     clearAllFields();
-                                    // Navigate to Dashboard
-                                    startActivity(new Intent(this, DashboardActivity.class));
+                                    
+                                    // Navigate to correct dashboard based on role
+                                    Intent intent;
+                                    if ("worker".equalsIgnoreCase(role)) {
+                                        intent = new Intent(this, WorkerDashboardActivity.class);
+                                    } else if ("multi".equalsIgnoreCase(role)) {
+                                        intent = new Intent(this, MultiAccountDashboardActivity.class);
+                                    } else {
+                                        intent = new Intent(this, DashboardActivity.class);
+                                    }
+                                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                    startActivity(intent);
                                     finish();
                                 })
                                 .addOnFailureListener(e -> {

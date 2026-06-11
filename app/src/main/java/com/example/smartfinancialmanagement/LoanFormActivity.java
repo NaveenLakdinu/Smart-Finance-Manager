@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -19,7 +20,7 @@ import java.util.Locale;
 
 public class LoanFormActivity extends AppCompatActivity implements LoanAdapter.OnLoanClickListener {
 
-    private LinearLayout btnNewLoan, btnCompareLoans, btnLoanReport;
+    private MaterialCardView btnNewLoan, btnCompareLoans, btnLoanReport;
     private ImageView btnBack;
     private RecyclerView recyclerActiveLoans;
     private TextView totalActiveBalance;
