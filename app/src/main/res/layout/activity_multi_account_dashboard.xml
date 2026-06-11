@@ -4,26 +4,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="40dp">
 
-        <!-- Header with Account Switcher -->
+
+
+        <!-- ── Header ─────────────────────────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="52dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <TextView
                 android:id="@+id/txtProfileLetter"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
+                android:layout_width="54dp"
+                android:layout_height="54dp"
                 android:background="@drawable/bg_profile_circle"
                 android:gravity="center"
                 android:text="P"
@@ -34,7 +39,7 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="14dp"
                 android:layout_weight="1"
                 android:orientation="vertical">
 
@@ -43,10 +48,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Hello! 👋"
-                    android:textColor="#1B1E28"
-                    android:textSize="14sp" />
+                    android:textColor="#7A9CC0"
+                    android:textSize="13sp" />
 
-                <!-- Account Switcher Button -->
+                <!-- Account Switcher -->
                 <LinearLayout
                     android:id="@+id/btnSwitchAccount"
                     android:layout_width="wrap_content"
@@ -56,32 +61,33 @@
                     android:focusable="true"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingTop="2dp">
+                    android:paddingTop="3dp">
 
                     <TextView
                         android:id="@+id/txtCurrentAccountName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Personal Account"
-                        android:textColor="#1B1E28"
-                        android:textSize="18sp"
+                        android:textColor="#F0F6FF"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_marginStart="4dp"
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="6dp"
                         android:src="@drawable/ic_arrow_back"
                         android:rotation="-90"
-                        app:tint="#1B1E28" />
+                        app:tint="#00D4AA" />
+
                 </LinearLayout>
 
             </LinearLayout>
 
             <TextView
                 android:id="@+id/btnNotifications"
-                android:layout_width="42dp"
-                android:layout_height="42dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:background="@drawable/bg_notification"
                 android:gravity="center"
                 android:text="🔔"
@@ -89,61 +95,112 @@
 
         </LinearLayout>
 
-        <!-- Dynamic Balance Card -->
+        <!-- ── Balance Hero Card ──────────────────── -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:layout_marginTop="28dp"
-            app:cardBackgroundColor="#071A33"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="#00000000"
             app:cardCornerRadius="28dp"
-            app:cardElevation="14dp">
+            app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_hero_card"
                 android:orientation="vertical"
-                android:padding="22dp">
+                android:padding="24dp">
 
+                <!-- Label -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Current Balance"
-                    android:textColor="#B9C7D9"
-                    android:textSize="14sp" />
+                    android:text="CURRENT BALANCE"
+                    android:textColor="#7A9CC0"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.12" />
 
-                <TextView
-                    android:id="@+id/txtAccountBalance"
-                    android:layout_width="wrap_content"
+                <!-- Balance amount row -->
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="LKR 125,400.00"
-                    android:textColor="#FFFFFF"
-                    android:textSize="28sp"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
+                    <TextView
+                        android:id="@+id/txtAccountBalance"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="LKR 125,400.00"
+                        android:textColor="#FFFFFF"
+                        android:textSize="34sp"
+                        android:textStyle="bold" />
+
+                    <!-- Positive change pill -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="#0F3320"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingTop="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="▲ 2.4%"
+                        android:textColor="#4ADE80"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Account number -->
                 <TextView
                     android:id="@+id/txtAccountNumber"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="10dp"
                     android:text="**** **** 4290"
-                    android:textColor="#88FFFFFF"
+                    android:textColor="#4A6A8A"
                     android:textSize="14sp" />
+
+                <!-- Accent bar -->
+                <View
+                    android:layout_width="48dp"
+                    android:layout_height="3dp"
+                    android:layout_marginTop="16dp"
+                    android:background="#00D4AA" />
 
             </LinearLayout>
 
         </androidx.cardview.widget.CardView>
 
-        <!-- Action Grid -->
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- ── Section Title ──────────────────────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="26dp"
-            android:text="Quick Actions"
-            android:textColor="#1B1E28"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:layout_marginTop="28dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
+            <View
+                android:layout_width="4dp"
+                android:layout_height="18dp"
+                android:layout_marginEnd="10dp"
+                android:background="#00D4AA" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Quick Actions"
+                android:textColor="#F0F6FF"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <!-- ── Action Grid ────────────────────────── -->
         <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -156,30 +213,33 @@
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="#FFFFFF"
+                android:layout_margin="6dp"
+                app:cardBackgroundColor="#00000000"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+                app:cardElevation="0dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
                     android:gravity="center"
                     android:orientation="vertical">
                     <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/bg_function_icon_blue"
                         android:gravity="center"
                         android:text="💸"
-                        android:textSize="20sp" />
+                        android:textSize="22sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="Transfer"
-                        android:textColor="#111111"
-                        android:textSize="13sp"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
+                    <View android:layout_width="18dp" android:layout_height="2dp"
+                        android:layout_marginTop="5dp" android:background="#38BDF8" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -188,30 +248,33 @@
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="#FFFFFF"
+                android:layout_margin="6dp"
+                app:cardBackgroundColor="#00000000"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+                app:cardElevation="0dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
                     android:gravity="center"
                     android:orientation="vertical">
                     <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/bg_function_icon_green"
                         android:gravity="center"
                         android:text="📊"
-                        android:textSize="20sp" />
+                        android:textSize="22sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="Statements"
-                        android:textColor="#111111"
-                        android:textSize="13sp"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
+                    <View android:layout_width="18dp" android:layout_height="2dp"
+                        android:layout_marginTop="5dp" android:background="#4ADE80" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
@@ -220,81 +283,149 @@
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="#FFFFFF"
+                android:layout_margin="6dp"
+                app:cardBackgroundColor="#00000000"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+                app:cardElevation="0dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
                     android:gravity="center"
                     android:orientation="vertical">
                     <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/bg_function_icon_orange"
                         android:gravity="center"
                         android:text="➕"
-                        android:textSize="20sp" />
+                        android:textSize="22sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="Add Account"
-                        android:textColor="#111111"
-                        android:textSize="13sp"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
+                    <View android:layout_width="18dp" android:layout_height="2dp"
+                        android:layout_marginTop="5dp" android:background="#FCD34D" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
-            <!-- Manage Cards -->
+            <!-- Cards -->
             <androidx.cardview.widget.CardView
                 android:layout_width="0dp"
                 android:layout_height="100dp"
                 android:layout_columnWeight="1"
-                android:layout_margin="8dp"
-                app:cardBackgroundColor="#FFFFFF"
+                android:layout_margin="6dp"
+                app:cardBackgroundColor="#00000000"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="6dp">
+                app:cardElevation="0dp">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
                     android:gravity="center"
                     android:orientation="vertical">
                     <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:background="@drawable/bg_function_icon_dark"
                         android:gravity="center"
                         android:text="💳"
-                        android:textSize="20sp" />
+                        android:textSize="22sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
+                        android:layout_marginTop="8dp"
                         android:text="Cards"
-                        android:textColor="#111111"
-                        android:textSize="13sp"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
                         android:textStyle="bold" />
+                    <View android:layout_width="18dp" android:layout_height="2dp"
+                        android:layout_marginTop="5dp" android:background="#A78BFA" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
         </GridLayout>
 
-        <Space
+        <!-- ══ Divider with label ══ -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="30dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="36dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogout"
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#1A3050" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_marginEnd="14dp"
+                android:text="ACCOUNT"
+                android:textColor="#2A4A6A"
+                android:textSize="10sp"
+                android:letterSpacing="0.18" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1"
+                android:background="#1A3050" />
+
+        </LinearLayout>
+
+        <!-- ══ Creative Logout Button ══ -->
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="54dp"
-            android:text="Logout"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"
-            android:textStyle="bold"
-            app:backgroundTint="#FF5252"
-            app:cornerRadius="15dp" />
+            android:layout_height="60dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_logout_btn"
+            android:gravity="center"
+            android:orientation="horizontal"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_power"
+                android:layout_marginEnd="10dp" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Sign Out"
+                android:textColor="#FF4466"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.06"
+                app:backgroundTint="#00000000"
+                app:cornerRadius="0dp"
+                app:strokeWidth="0dp"
+                style="@style/Widget.MaterialComponents.Button.TextButton" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:gravity="center"
+            android:text="You will be signed out of all devices"
+            android:textColor="#2A4A6A"
+            android:textSize="11sp" />
+
+        <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
     </LinearLayout>
 

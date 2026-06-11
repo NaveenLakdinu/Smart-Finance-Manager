@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Teal vertical bar for section headers -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
-    android:shape="oval">
+    android:shape="rectangle">
     <gradient
         android:startColor="#00D4AA"
         android:endColor="#0891B2"
-        android:angle="135" />
+        android:angle="270" />
+    <corners android:radius="4dp" />
 </shape>
