@@ -23,6 +23,7 @@ public class LoginFormActivity extends AppCompatActivity {
     private ImageView passwordToggle;
     private TextView signUpLink, forgotPassword;
     private com.google.android.material.button.MaterialButton loginButton;
+    private ImageView googleBtn, facebookBtn, appleBtn;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -48,6 +49,9 @@ public class LoginFormActivity extends AppCompatActivity {
         signUpLink = findViewById(R.id.signUpLink);
         forgotPassword = findViewById(R.id.forgotPassword);
         loginButton = findViewById(R.id.loginButton);
+        googleBtn = findViewById(R.id.googleBtn);
+        facebookBtn = findViewById(R.id.facebookBtn);
+        appleBtn = findViewById(R.id.appleBtn);
     }
 
     private void setupListeners() {
@@ -71,14 +75,36 @@ public class LoginFormActivity extends AppCompatActivity {
         });
 
         forgotPassword.setOnClickListener(v -> {
-            Toast.makeText(this, "Forgot Password - Coming Soon", Toast.LENGTH_SHORT).show();
+            handleForgotPassword();
         });
+
+        googleBtn.setOnClickListener(v -> Toast.makeText(this, "Google Login - Configuration Required", Toast.LENGTH_SHORT).show());
+        facebookBtn.setOnClickListener(v -> Toast.makeText(this, "Facebook Login - Configuration Required", Toast.LENGTH_SHORT).show());
+        appleBtn.setOnClickListener(v -> Toast.makeText(this, "Apple Login - Configuration Required", Toast.LENGTH_SHORT).show());
+    }
+
+    private void handleForgotPassword() {
+        String email = usernameInput.getText().toString().trim();
+        if (email.isEmpty()) {
+            Toast.makeText(this, "Enter your email to reset password", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        mAuth.sendPasswordResetEmail(email)
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        Toast.makeText(this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void checkIfUserLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            navigateToDashboard();
+            // Check internet before deciding to sign out user
+            checkUserInFirestore(currentUser.getUid());
         }
     }
 
@@ -91,6 +117,11 @@ public class LoginFormActivity extends AppCompatActivity {
             return;
         }
 
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if (password.isEmpty()) {
             Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
             return;
@@ -99,49 +130,23 @@ public class LoginFormActivity extends AppCompatActivity {
         loginButton.setEnabled(false);
         loginButton.setText("Logging in...");
 
-        System.out.println("Attempting login with email: " + email);
-
-        try {
-            mAuth.signInWithEmailAndPassword(email, password)
-                    .addOnCompleteListener(this, task -> {
-                        System.out.println("Firebase Auth task completed");
-                        
-                        if (task.isSuccessful()) {
-                            System.out.println("Firebase Auth successful");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            if (user != null) {
-                                System.out.println("User authenticated: " + user.getEmail());
-                                checkUserInFirestore(user.getUid());
-                            }
-                        } else {
-                            System.out.println("Firebase Auth failed");
-                            loginButton.setEnabled(true);
-                            loginButton.setText("LOGIN");
-                            String errorMessage = task.getException() != null 
-                                    ? task.getException().getMessage() 
-                                    : "Login failed";
-                            System.out.println("Error: " + errorMessage);
-                            Toast.makeText(this, "Login Failed: " + errorMessage, Toast.LENGTH_LONG).show();
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
                         }
-                    })
-                    .addOnFailureListener(e -> {
-                        System.out.println("Auth failure listener: " + e.getMessage());
+                    } else {
                         loginButton.setEnabled(true);
                         loginButton.setText("LOGIN");
-                        Toast.makeText(this, "Login Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    });
-        } catch (Exception e) {
-            System.out.println("Exception during login: " + e.getMessage());
-            e.printStackTrace();
-            loginButton.setEnabled(true);
-            loginButton.setText("LOGIN");
-            Toast.makeText(this, "Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+                        String errorMessage = getFriendlyErrorMessage(task.getException());
+                        Toast.makeText(this, errorMessage, Toast.LENGTH_LONG).show();
+                    }
+                });
     }
 
     private void checkUserInFirestore(String uid) {
-        System.out.println("Checking user in Firestore with UID: " + uid);
-        
         db.collection("users").document(uid)
                 .get()
                 .addOnCompleteListener(task -> {
@@ -151,26 +156,26 @@ public class LoginFormActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null && document.exists()) {
-                            System.out.println("User found in Firestore");
                             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            navigateToDashboard();
+                            
+                            // Get user role from Firestore
+                            String role = document.getString("role");
+                            if ("worker".equalsIgnoreCase(role)) {
+                                navigateToWorkerDashboard();
+                            } else if ("multi".equalsIgnoreCase(role)) {
+                                navigateToMultiAccountDashboard();
+                            } else {
+                                navigateToDashboard();
+                            }
                         } else {
-                            System.out.println("User not found in Firestore");
                             mAuth.signOut();
-                            Toast.makeText(this, "User not found in database. Please register first.", Toast.LENGTH_LONG).show();
+                            Toast.makeText(this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        System.out.println("Firestore check failed: " + task.getException().getMessage());
-                        mAuth.signOut();
-                        Toast.makeText(this, "Database error: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        if (loginButton.isEnabled()) {
+                            Toast.makeText(this, "Database check failed: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
+                        }
                     }
-                })
-                .addOnFailureListener(e -> {
-                    System.out.println("Firestore failure: " + e.getMessage());
-                    loginButton.setEnabled(true);
-                    loginButton.setText("LOGIN");
-                    mAuth.signOut();
-                    Toast.makeText(this, "Database error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
@@ -179,5 +184,39 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
+    }
+
+    private void navigateToWorkerDashboard() {
+        Intent intent = new Intent(LoginFormActivity.this, WorkerDashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToMultiAccountDashboard() {
+        Intent intent = new Intent(LoginFormActivity.this, MultiAccountDashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    /**
+     * Converts raw Firebase Auth exception messages into user-friendly strings.
+     */
+    private String getFriendlyErrorMessage(Exception e) {
+        if (e == null) return "Login failed. Please try again.";
+        String msg = e.getMessage();
+        if (msg == null) return "Login failed. Please try again.";
+        if (msg.contains("no user record") || msg.contains("user-not-found") || msg.contains("There is no user"))
+            return "No account found with this email. Please sign up first.";
+        if (msg.contains("password is invalid") || msg.contains("wrong-password") || msg.contains("The password is invalid"))
+            return "Incorrect password. Please try again.";
+        if (msg.contains("email address is badly formatted"))
+            return "Please enter a valid email address.";
+        if (msg.contains("too many requests") || msg.contains("too-many-requests"))
+            return "Too many failed attempts. Please try again later.";
+        if (msg.contains("network") || msg.contains("Network"))
+            return "Network error. Please check your internet connection.";
+        return "Login failed. Please check your credentials.";
     }
 }

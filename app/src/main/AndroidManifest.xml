@@ -46,24 +46,30 @@
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".UtilityManagerActivity"
+            android:name=".WorkerDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".RegisterBillActivity"
+            android:name=".MultiAccountDashboardActivity"
             android:exported="false" />
         <activity
-            android:name=".GetReportActivity"
+            android:name=".LoanFormActivity"
             android:exported="false" />
         <activity
-            android:name=".UtilityBillActivity"
+            android:name=".MultiAccountActivity"
             android:exported="false" />
         <activity
-            android:name=".ReportListSelectionActivity"
+            android:name=".LoanAddActivity"
             android:exported="false" />
         <activity
-            android:name=".ReportPanelActivity"
+            android:name=".LoanCompareActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".LoanReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseRoleActivity"
+            android:exported="false" />
+        
         <!-- Firebase services -->
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"

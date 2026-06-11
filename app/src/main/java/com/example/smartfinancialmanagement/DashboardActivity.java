@@ -13,18 +13,14 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -32,15 +28,13 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtTotalCount, txtSubMessage;
 
     private CardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
+    private MaterialButton btnLogout;
 
     private LinearLayout recentSection;
     private RecyclerView recyclerRecent;
 
     private ArrayList<Subscription> recentList;
     private RecentSubscriptionAdapter adapter;
-
-    private DatabaseReference subscriptionsRef;
-    private ValueEventListener subscriptionsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
         cardManageUtility = findViewById(R.id.cardManageUtility);
         cardPaused = findViewById(R.id.cardPaused);
+        btnLogout = findViewById(R.id.btnLogout);
 
         recentSection = findViewById(R.id.recentSection);
         recyclerRecent = findViewById(R.id.recyclerRecent);
@@ -118,33 +113,24 @@ public class DashboardActivity extends AppCompatActivity {
 
     private void setupFunctionCards() {
 
-        cardManageLoan.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Loan Management - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
+        cardManageLoan.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, LoanFormActivity.class);
+            startActivity(intent);
         });
 
-        cardManageSubscription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
+        cardManageSubscription.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        cardManageUtility.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(DashboardActivity.this, UtilityManagerActivity.class);
-                startActivity(intent);
-            }
-        });
+        cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        cardPaused.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
+
+        cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
+
+        btnLogout.setOnClickListener(view -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(DashboardActivity.this, LoginFormActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
     }
 
@@ -158,39 +144,28 @@ public class DashboardActivity extends AppCompatActivity {
         }
 
         String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        subscriptionsRef = FirebaseDatabase.getInstance()
-                .getReference("Users")
-                .child(uid)
-                .child("subscriptions");
+        // Query Firestore instead of Realtime Database
+        db.collection("users").document(uid).collection("subscriptions")
+                .addSnapshotListener((value, error) -> {
+                    if (error != null) {
+                        resetDashboard();
+                        Toast.makeText(DashboardActivity.this, "Error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
+                    }
 
-        subscriptionsListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                ArrayList<Subscription> allSubscriptions = new ArrayList<>();
-
-                if (snapshot.exists()) {
-                    for (DataSnapshot child : snapshot.getChildren()) {
-                        Subscription subscription = child.getValue(Subscription.class);
-
-                        if (subscription != null) {
-                            allSubscriptions.add(subscription);
+                    ArrayList<Subscription> allSubscriptions = new ArrayList<>();
+                    if (value != null && !value.isEmpty()) {
+                        for (com.google.firebase.firestore.DocumentSnapshot doc : value.getDocuments()) {
+                            Subscription subscription = doc.toObject(Subscription.class);
+                            if (subscription != null) {
+                                allSubscriptions.add(subscription);
+                            }
                         }
                     }
-                }
-
-                updateDashboard(allSubscriptions);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-                resetDashboard();
-                Toast.makeText(DashboardActivity.this, error.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        };
-
-        subscriptionsRef.addValueEventListener(subscriptionsListener);
+                    updateDashboard(allSubscriptions);
+                });
     }
 
     private void updateDashboard(ArrayList<Subscription> allSubscriptions) {
@@ -209,12 +184,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         txtSubMessage.setText("Manage your plans easily");
 
-        Collections.sort(allSubscriptions, new Comparator<Subscription>() {
-            @Override
-            public int compare(Subscription s1, Subscription s2) {
-                return Long.compare(s2.getCreatedAt(), s1.getCreatedAt());
-            }
-        });
+        Collections.sort(allSubscriptions, (s1, s2) -> Long.compare(s2.getCreatedAt(), s1.getCreatedAt()));
 
         recentList.clear();
 
@@ -237,13 +207,4 @@ public class DashboardActivity extends AppCompatActivity {
 
         recentSection.setVisibility(View.GONE);
     }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-        if (subscriptionsRef != null && subscriptionsListener != null) {
-            subscriptionsRef.removeEventListener(subscriptionsListener);
-        }
     }
-}

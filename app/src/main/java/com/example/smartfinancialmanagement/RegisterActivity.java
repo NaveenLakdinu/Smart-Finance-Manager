@@ -8,7 +8,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,11 +100,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void saveDataToSingleton() {
         UserRegistrationData data = UserRegistrationData.getInstance();
-        data.fullName = etFullName.getText().toString();
-        data.age = etAge.getText().toString();
-        data.email = etEmail.getText().toString();
-        data.mobile = etMobile.getText().toString();
-        data.password = etPassword.getText().toString();
+        data.fullName = etFullName.getText().toString().trim();
+        data.age = etAge.getText().toString().trim();
+        data.email = etEmail.getText().toString().trim();   // trim to match Firebase Auth email
+        data.mobile = etMobile.getText().toString().trim();
+        data.password = etPassword.getText().toString();    // do NOT trim passwords
     }
 
     @Override
@@ -143,6 +145,10 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
+        // Disable button to prevent double-clicks
+        btnRegister.setEnabled(false);
+        btnRegister.setText("Registering...");
+
         System.out.println("Starting registration for email: " + email);
         
         mAuth.createUserWithEmailAndPassword(email, password)
@@ -152,7 +158,11 @@ public class RegisterActivity extends AppCompatActivity {
                         String uid = mAuth.getCurrentUser().getUid();
                         System.out.println("User UID: " + uid);
 
-                        // Firestore save all data
+                        // Use WriteBatch for atomic data persistence
+                        WriteBatch batch = db.batch();
+                        DocumentReference userRef = db.collection("users").document(uid);
+
+                        // Firestore save all data to user profile
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("uid", uid);
                         userMap.put("name", data.fullName);
@@ -161,14 +171,14 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("mobile", data.mobile);
                         userMap.put("timestamp", System.currentTimeMillis());
 
-                        // Loan Details
+                        // Loan Details (Summary in profile)
                         userMap.put("hasLoan", data.hasLoan);
                         userMap.put("loanAmount", data.loanAmount != null ? data.loanAmount : "");
                         userMap.put("monthlyInstallment", data.monthlyInstallment != null ? data.monthlyInstallment : "");
                         userMap.put("monthsPaid", data.monthsPaid != null ? data.monthsPaid : "");
                         userMap.put("paymentMethod", data.paymentMethod != null ? data.paymentMethod : "");
 
-                        // Saving Plan Details
+                        // Saving Plan Details (Summary in profile)
                         userMap.put("hasSavingPlan", data.hasSavingPlan);
                         userMap.put("savingGoalName", data.goalName != null ? data.goalName : "");
                         userMap.put("savingTargetAmount", data.targetAmount != null ? data.targetAmount : "");
@@ -184,13 +194,26 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("checkReport", data.checkReport);
                         userMap.put("checkPromo", data.checkPromo);
 
-                        System.out.println("Saving to Firestore with UID: " + uid);
-                        System.out.println("User data: " + userMap.toString());
+                        batch.set(userRef, userMap);
 
-                        // Use UID as document ID
-                        db.collection("users").document(uid).set(userMap)
+                        // ✅ CRITICAL FIX: Save loan to sub-collection so it shows in Loan Manager
+                        if (data.hasLoan) {
+                            DocumentReference loanRef = db.collection("users").document(uid).collection("loans").document();
+                            Map<String, Object> loanData = new HashMap<>();
+                            loanData.put("loanName", "Initial Loan");
+                            loanData.put("principalAmount", safeParseDouble(data.loanAmount));
+                            loanData.put("interestRate", 0.0); // Default
+                            loanData.put("durationMonths", safeParseInt(data.monthsPaid)); 
+                            loanData.put("monthlyEmi", safeParseDouble(data.monthlyInstallment));
+                            loanData.put("createdAt", System.currentTimeMillis());
+                            batch.set(loanRef, loanData);
+                        }
+
+                        System.out.println("Committing batch for UID: " + uid);
+
+                        batch.commit()
                                 .addOnSuccessListener(aVoid -> {
-                                    System.out.println("✅ Data saved to Firestore successfully");
+                                    System.out.println("✅ All data saved to Firestore successfully");
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
                                     data.clearData();
                                     clearAllFields();
@@ -199,16 +222,44 @@ public class RegisterActivity extends AppCompatActivity {
                                     finish();
                                 })
                                 .addOnFailureListener(e -> {
+                                    btnRegister.setEnabled(true);
+                                    btnRegister.setText("Register");
                                     System.err.println("❌ Firestore Error: " + e.getMessage());
                                     e.printStackTrace();
                                     Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 });
                     } else {
-                        System.err.println("❌ Auth Error: " + task.getException().getMessage());
-                        task.getException().printStackTrace();
-                        Toast.makeText(this, "Registration Failed: " + task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                        btnRegister.setEnabled(true);
+                        btnRegister.setText("Register");
+                        
+                        Exception e = task.getException();
+                        String errorMessage = e != null ? e.getMessage() : "Unknown error";
+                        
+                        // Check specifically for "Email already in use"
+                        if (errorMessage != null && errorMessage.contains("already in use")) {
+                            errorMessage = "This email is already registered. Please Login instead.";
+                        }
+                        
+                        System.err.println("❌ Auth Error: " + errorMessage);
+                        Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private double safeParseDouble(String value) {
+        try {
+            return Double.parseDouble(value);
+        } catch (Exception e) {
+            return 0.0;
+        }
+    }
+
+    private int safeParseInt(String value) {
+        try {
+            return Integer.parseInt(value);
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
     // Method to clear all input fields after successful registration
