@@ -81,7 +81,7 @@
             android:orientation="vertical" />
 
         <!-- Add Another Option Button -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:id="@+id/btnAddOption"
             android:layout_width="match_parent"
             android:layout_height="56dp"
@@ -115,7 +115,7 @@
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnCompare"

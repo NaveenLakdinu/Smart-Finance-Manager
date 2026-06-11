@@ -6,7 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import com.google.android.material.card.MaterialCardView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,7 +18,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtEarnings, txtPayrollStatus;
-    private CardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips, cardLoanManager;
+    private MaterialCardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips, cardLoanManager;
     private MaterialButton btnLogout;
 
     @Override

@@ -76,7 +76,7 @@
 
 
         <!-- ── Earnings Hero Card ─────────────────── -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -168,7 +168,7 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- ── Section Title ──────────────────────── -->
         <LinearLayout
@@ -210,7 +210,7 @@
             android:orientation="horizontal">
 
             <!-- My Tasks -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardWorkTasks"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -256,12 +256,12 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="14dp" android:layout_height="1dp" />
 
             <!-- Expense Claims -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardExpenseClaims"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -307,7 +307,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
@@ -319,7 +319,7 @@
             android:orientation="horizontal">
 
             <!-- Attendance -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAttendance"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -365,12 +365,12 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="14dp" android:layout_height="1dp" />
 
             <!-- Payslips -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPayslips"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -416,7 +416,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
@@ -428,7 +428,7 @@
             android:orientation="horizontal">
 
             <!-- Loan Manager -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLoanManager"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -474,7 +474,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="14dp" android:layout_height="1dp" android:layout_weight="1" />
 

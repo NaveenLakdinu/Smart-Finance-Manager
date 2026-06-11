@@ -56,7 +56,7 @@
         </LinearLayout>
 
         <!-- Summary Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
@@ -71,7 +71,7 @@
                 android:orientation="vertical"
                 android:padding="32dp">
 
-                <androidx.cardview.widget.CardView
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="56dp"
                     android:layout_height="56dp"
                     app:cardBackgroundColor="@color/qa_amber_bg"
@@ -83,7 +83,7 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_report"
                         app:tint="@color/qa_amber_icon" />
-                </androidx.cardview.widget.CardView>
+                </com.google.android.material.card.MaterialCardView>
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -103,7 +103,7 @@
                     android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- Report Format Section -->
         <TextView

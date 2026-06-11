@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import com.google.android.material.card.MaterialCardView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -22,7 +22,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtCurrentAccountName, txtAccountBalance, txtAccountNumber;
     private LinearLayout btnSwitchAccount;
     private MaterialButton btnLogout;
-    private CardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
+    private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
 
     // Simulated account data
     private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};

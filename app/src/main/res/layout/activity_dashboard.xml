@@ -276,7 +276,7 @@
             android:orientation="horizontal">
 
             <!-- Manage Loan -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardManageLoan"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -327,12 +327,12 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="14dp" android:layout_height="1dp" />
 
             <!-- Manage Subscription -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardManageSubscription"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -382,7 +382,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 
@@ -396,7 +396,7 @@
             android:orientation="horizontal">
 
             <!-- Manage Utility -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardManageUtility"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -446,12 +446,12 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <Space android:layout_width="14dp" android:layout_height="1dp" />
 
             <!-- Paused -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardPaused"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
@@ -501,7 +501,7 @@
 
                 </LinearLayout>
 
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
 

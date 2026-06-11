@@ -96,7 +96,7 @@
         </LinearLayout>
 
         <!-- ── Balance Hero Card ──────────────────── -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
@@ -173,7 +173,7 @@
 
             </LinearLayout>
 
-        </androidx.cardview.widget.CardView>
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- ── Section Title ──────────────────────── -->
         <LinearLayout
@@ -208,7 +208,7 @@
             android:columnCount="2">
 
             <!-- Transfer -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardTransfer"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -241,10 +241,10 @@
                     <View android:layout_width="18dp" android:layout_height="2dp"
                         android:layout_marginTop="5dp" android:background="#38BDF8" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Statements -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardStatements"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -277,10 +277,10 @@
                     <View android:layout_width="18dp" android:layout_height="2dp"
                         android:layout_marginTop="5dp" android:background="#4ADE80" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Loan Manager -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardLoanManager"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -313,10 +313,10 @@
                     <View android:layout_width="18dp" android:layout_height="2dp"
                         android:layout_marginTop="5dp" android:background="#F59E0B" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Cards -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardCards"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -349,10 +349,10 @@
                     <View android:layout_width="18dp" android:layout_height="2dp"
                         android:layout_marginTop="5dp" android:background="#A78BFA" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Add Account -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cardAddAccount"
                 android:layout_width="0dp"
                 android:layout_height="100dp"
@@ -385,7 +385,7 @@
                     <View android:layout_width="18dp" android:layout_height="2dp"
                         android:layout_marginTop="5dp" android:background="#38BDF8" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </GridLayout>
 

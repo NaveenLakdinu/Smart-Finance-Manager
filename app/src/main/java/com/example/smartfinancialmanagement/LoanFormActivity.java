@@ -92,13 +92,15 @@ public class LoanFormActivity extends AppCompatActivity implements LoanAdapter.O
                     if (value != null) {
                         for (QueryDocumentSnapshot doc : value) {
                             Loan loan = doc.toObject(Loan.class);
-                            loan.setId(doc.getId());
-                            loanList.add(loan);
-                            total += loan.getPrincipalAmount();
+                            if (loan != null) {
+                                loan.setId(doc.getId());
+                                loanList.add(loan);
+                                total += loan.getPrincipalAmount();
+                            }
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    totalActiveBalance.setText(String.format(Locale.US, "$%.2f", total));
+                    totalActiveBalance.setText(String.format(Locale.US, "LKR %.2f", total));
                 });
     }
 
