@@ -46,7 +46,6 @@
             android:name=".DashboardActivity"
             android:exported="false" />
         <activity
-<<<<<<< HEAD
             android:name=".WorkerDashboardActivity"
             android:exported="false" />
         <activity
@@ -54,9 +53,18 @@
             android:exported="false" />
         <activity
             android:name=".LoanFormActivity"
-=======
+            android:exported="false" />
+        <activity
             android:name=".MultiAccountActivity"
->>>>>>> 4d1ab8c66deddac8c8a1153a69d7517c78963c0a
+            android:exported="false" />
+        <activity
+            android:name=".LoanAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanCompareActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanReportActivity"
             android:exported="false" />
         <activity
             android:name=".ChooseRoleActivity"
