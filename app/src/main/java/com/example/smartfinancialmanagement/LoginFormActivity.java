@@ -103,7 +103,6 @@ public class LoginFormActivity extends AppCompatActivity {
     private void checkIfUserLoggedIn() {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            // Check internet before deciding to sign out user
             checkUserInFirestore(currentUser.getUid());
         }
     }
@@ -152,20 +151,42 @@ public class LoginFormActivity extends AppCompatActivity {
                 .addOnCompleteListener(task -> {
                     loginButton.setEnabled(true);
                     loginButton.setText("LOGIN");
-                    
+
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null && document.exists()) {
                             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
-                            
-                            // Get user role from Firestore
+
+                            // 💡 FIXED: Read the role and check against synchronized capitalized strings
                             String role = document.getString("role");
-                            if ("worker".equalsIgnoreCase(role)) {
-                                navigateToWorkerDashboard();
-                            } else if ("multi".equalsIgnoreCase(role)) {
-                                navigateToMultiAccountDashboard();
-                            } else {
-                                navigateToDashboard();
+                            System.out.println("✅ Login Role fetched from DB: " + role);
+
+                            if (role == null) {
+                                role = "Student"; // Default fallback
+                            }
+
+                            // Update local SharedPreferences state upon successful login fetch
+                            getSharedPreferences("UserData", MODE_PRIVATE)
+                                    .edit()
+                                    .putString("user_role", role)
+                                    .apply();
+
+                            // 💡 FIXED: Evaluated switch-case strings to align perfectly with DB values
+                            switch (role) {
+                                case "Company worker":
+                                    navigateToWorkerDashboard(role);
+                                    break;
+
+                                case "Multiple account holder":
+                                    navigateToMultiAccountDashboard(role);
+                                    break;
+
+                                case "Student":
+                                case "Business owner":
+                                default:
+                                    // Route to default dashboard since specific pages are pending creation
+                                    navigateToDashboard(role);
+                                    break;
                             }
                         } else {
                             mAuth.signOut();
@@ -179,22 +200,26 @@ public class LoginFormActivity extends AppCompatActivity {
                 });
     }
 
-    private void navigateToDashboard() {
+    // 💡 FIXED: Modified navigation methods to pass current user role as Intent extra to prevent dashboard state breaks
+    private void navigateToDashboard(String role) {
         Intent intent = new Intent(LoginFormActivity.this, DashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 
-    private void navigateToWorkerDashboard() {
+    private void navigateToWorkerDashboard(String role) {
         Intent intent = new Intent(LoginFormActivity.this, WorkerDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
     }
 
-    private void navigateToMultiAccountDashboard() {
+    private void navigateToMultiAccountDashboard(String role) {
         Intent intent = new Intent(LoginFormActivity.this, MultiAccountDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
         finish();
