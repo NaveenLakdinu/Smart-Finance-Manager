@@ -2,9 +2,12 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,12 +22,14 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etFullName, etAge, etEmail, etMobile, etPassword;
     private CheckBox loanCheckbox, termsCheckbox, subscriptionCheckbox, savingPlanCheckbox;
     private Button btnRegister;
+    private ImageView passwordToggle;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
     // Variable to store the passed user role from UserRoleActivity
     private String userRole;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etMobile = findViewById(R.id.etMobile);
         etPassword = findViewById(R.id.etPassword);
+        passwordToggle = findViewById(R.id.passwordToggle);
 
         loanCheckbox = findViewById(R.id.checkLoan);
         termsCheckbox = findViewById(R.id.checkTerms);
@@ -70,7 +76,20 @@ public class RegisterActivity extends AppCompatActivity {
         savingPlanCheckbox = findViewById(R.id.checkSaving);
         btnRegister = findViewById(R.id.btnRegister);
 
-        // 2. CheckBox Click Listeners
+        // 2. Password Toggle Listener
+        passwordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_eye);
+            } else {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_eye_off);
+            }
+            isPasswordVisible = !isPasswordVisible;
+            etPassword.setSelection(etPassword.getText().length());
+        });
+
+        // 3. CheckBox Click Listeners
         loanCheckbox.setOnClickListener(v -> {
             saveDataToSingleton();
             if (loanCheckbox.isChecked()) {
