@@ -58,7 +58,7 @@ public class LoginFormActivity extends AppCompatActivity {
         loginButton.setOnClickListener(v -> loginUser());
 
         signUpLink.setOnClickListener(v -> {
-            Intent intent = new Intent(LoginFormActivity.this, RegisterActivity.class);
+            Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
             startActivity(intent);
         });
 

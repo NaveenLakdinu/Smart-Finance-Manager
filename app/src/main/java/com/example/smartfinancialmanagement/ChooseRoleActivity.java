@@ -69,7 +69,7 @@ public class ChooseRoleActivity extends AppCompatActivity {
                     .putString("user_role", selectedRole)
                     .apply();
 
-            // Navigate to next page
+            // Navigate to next page (RegisterActivity)
             Intent intent = new Intent(this, RegisterActivity.class);
             startActivity(intent);
         });

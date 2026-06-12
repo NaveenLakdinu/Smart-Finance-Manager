@@ -217,8 +217,20 @@ public class RegisterActivity extends AppCompatActivity {
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
                                     data.clearData();
                                     clearAllFields();
-                                    // Navigate to Dashboard
-                                    startActivity(new Intent(this, DashboardActivity.class));
+                                    // Navigate based on selected role
+                                    String role = getSharedPreferences("UserData", MODE_PRIVATE)
+                                            .getString("user_role", "student");
+
+                                    Intent dashboardIntent;
+                                    if ("multi".equals(role)) {
+                                        dashboardIntent = new Intent(this, MultiAccountDashboardActivity.class);
+                                    } else if ("worker".equals(role)) {
+                                        dashboardIntent = new Intent(this, WorkerDashboardActivity.class);
+                                    } else {
+                                        dashboardIntent = new Intent(this, DashboardActivity.class);
+                                    }
+                                    
+                                    startActivity(dashboardIntent);
                                     finish();
                                 })
                                 .addOnFailureListener(e -> {
