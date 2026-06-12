@@ -34,12 +34,13 @@ public class RegisterActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
-        // Retrieve the selected user role passed via Intent from UserRoleActivity
+        // 💡 FIXED: Try to retrieve from Intent extra first
         userRole = getIntent().getStringExtra("USER_ROLE");
 
-        // Fallback default to "Student" if intent data is missing to prevent runtime errors
-        if (userRole == null) {
-            userRole = "Student";
+        // 💡 FIXED: Robust fallback fallback to SharedPreferences if intent extra was lost during activity state shifts
+        if (userRole == null || userRole.isEmpty()) {
+            userRole = getSharedPreferences("UserData", MODE_PRIVATE)
+                    .getString("user_role", "Student");
         }
 
         // Verify Firebase initialization
@@ -54,7 +55,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         System.out.println("✅ Firebase Auth initialized: " + (mAuth != null));
         System.out.println("✅ Firestore initialized: " + (db != null));
-        System.out.println("✅ Current User Role received: " + userRole);
+        System.out.println("✅ Current User Role finalized for DB entry: " + userRole);
 
         // 1. UI Views Initialize
         etFullName = findViewById(R.id.etFullName);
@@ -180,7 +181,7 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("age", data.age);
                         userMap.put("email", data.email);
                         userMap.put("mobile", data.mobile);
-                        userMap.put("role", userRole); // 👈 Saving the selected role into the root document
+                        userMap.put("role", userRole); // Saving the correctly synchronized role string
                         userMap.put("timestamp", System.currentTimeMillis());
 
                         // Loan Details Summary
@@ -307,6 +308,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void navigateToDashboard(String role) {
         Intent dashboardIntent;
 
+        // 💡 FIXED: Now perfectly matches synchronized capitalized strings coming from ChooseRoleActivity
         switch (role) {
             case "Company worker":
                 dashboardIntent = new Intent(this, WorkerDashboardActivity.class);
