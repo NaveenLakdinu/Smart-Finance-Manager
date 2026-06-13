@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import com.google.android.material.card.MaterialCardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -27,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtTotalCount, txtSubMessage;
 
-    private CardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
+    private MaterialCardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
     private MaterialButton btnLogout;
 
     private LinearLayout recentSection;

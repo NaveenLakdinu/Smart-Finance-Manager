@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hero card: rich multi-stop gradient, top-to-bottom diagonal -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#0E3A6E"
+        android:centerColor="#0A2A52"
+        android:endColor="#061828"
+        android:angle="150" />
+    <corners android:radius="28dp" />
+</shape>

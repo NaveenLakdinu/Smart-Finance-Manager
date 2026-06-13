@@ -105,8 +105,11 @@ public class LoanAddActivity extends AppCompatActivity {
         double principal = Double.parseDouble(etPrincipalAmount.getText().toString().trim());
         double rate = Double.parseDouble(etInterestRate.getText().toString().trim());
         int duration = Integer.parseInt(etDuration.getText().toString().trim());
-        String emiText = estimatedMonthlyPayment.getText().toString().replace("$", "");
-        double emi = Double.parseDouble(emiText);
+        String emiText = estimatedMonthlyPayment.getText().toString().replaceAll("[^0-9.]", "");
+        double emi = 0;
+        if (!emiText.isEmpty()) {
+            emi = Double.parseDouble(emiText);
+        }
 
         // Disable button to prevent multiple clicks
         btnAddLoan.setEnabled(false);
@@ -234,16 +237,16 @@ public class LoanAddActivity extends AppCompatActivity {
 
                 if (r == 0) {
                     double emi = p / n;
-                    estimatedMonthlyPayment.setText(String.format(Locale.US, "$%.2f", emi));
+                    estimatedMonthlyPayment.setText(String.format(Locale.US, "LKR %.2f", emi));
                 } else {
                     double emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-                    estimatedMonthlyPayment.setText(String.format(Locale.US, "$%.2f", emi));
+                    estimatedMonthlyPayment.setText(String.format(Locale.US, "LKR %.2f", emi));
                 }
             } else {
-                estimatedMonthlyPayment.setText("$0.00");
+                estimatedMonthlyPayment.setText("LKR 0.00");
             }
         } catch (Exception e) {
-            estimatedMonthlyPayment.setText("$0.00");
+            estimatedMonthlyPayment.setText("LKR 0.00");
         }
     }
 }
