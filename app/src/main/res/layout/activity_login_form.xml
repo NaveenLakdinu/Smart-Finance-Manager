@@ -42,6 +42,15 @@
             android:paddingTop="28dp"
             android:paddingBottom="40dp">
 
+            <!-- Logo -->
+            <ImageView
+                android:layout_width="140dp"
+                android:layout_height="42dp"
+                android:src="@drawable/logo"
+                android:scaleType="fitStart"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="24dp" />
+
             <!-- Welcome Back -->
             <TextView
                 android:layout_width="wrap_content"

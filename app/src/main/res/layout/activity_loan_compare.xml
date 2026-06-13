@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/loan_bg_dark"
+    android:background="@drawable/bg_dashboard"
     android:fillViewport="true"
     android:overScrollMode="never">
 
@@ -11,137 +10,128 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingTop="24dp">
+        android:padding="20dp">
 
-        <!-- Main Container Card -->
-        <com.google.android.material.card.MaterialCardView
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="16dp"
-            app:cardCornerRadius="24dp"
-            app:cardElevation="8dp"
-            app:cardBackgroundColor="@color/background_light">
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/btnBack"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_notification"
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_on_dark_primary" />
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
-                <!-- Header Bar -->
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:background="@color/loan_header_dark"
-                    android:paddingHorizontal="20dp">
-
-                    <ImageView
-                        android:id="@+id/btnBack"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_back"
-                        app:tint="@color/white" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerVertical="true"
-                        android:layout_marginStart="16dp"
-                        android:layout_toEndOf="@id/btnBack"
-                        android:text="Compare Loans"
-                        android:textColor="@color/white"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:paddingHorizontal="20dp"
-                    android:paddingTop="24dp"
-                    android:paddingBottom="40dp">
+                    android:text="Compare Loans"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Compare Loan Options"
-                        android:textColor="#1E293B"
-                        android:textSize="20sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:layout_marginBottom="24dp"
-                        android:text="Add bank details to compare monthly EMI and total payback."
-                        android:textColor="#64748B"
-                        android:textSize="13sp" />
-
-                    <!-- Container for dynamic loan cards -->
-                    <LinearLayout
-                        android:id="@+id/loanCardsContainer"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical" />
-
-                    <!-- Add New Option Button (The Plus Button) -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/btnAddOption"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginBottom="32dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        app:cardBackgroundColor="#F1F5F9"
-                        app:cardCornerRadius="12dp"
-                        app:cardElevation="0dp"
-                        app:strokeColor="#CBD5E1"
-                        app:strokeWidth="1dp">
-                        
-                        <LinearLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center"
-                            android:gravity="center"
-                            android:orientation="horizontal">
-                            
-                            <ImageView
-                                android:layout_width="20dp"
-                                android:layout_height="20dp"
-                                android:src="@drawable/ic_plus"
-                                app:tint="#64748B" />
-                            
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginStart="8dp"
-                                android:text="Add Another Option"
-                                android:textColor="#64748B"
-                                android:textSize="14sp"
-                                android:textStyle="bold" />
-                        </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <!-- Compare/Report Button -->
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnCompare"
-                        android:layout_width="match_parent"
-                        android:layout_height="56dp"
-                        android:backgroundTint="#2563EB"
-                        android:text="Generate Comparison Report"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="16sp"
-                        android:textStyle="bold"
-                        app:cornerRadius="12dp"
-                        app:elevation="4dp" />
-
-                </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Compare different loan options"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="12sp" />
 
             </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:text="Compare Loan Options"
+            android:textColor="@color/text_on_dark_primary"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginBottom="24dp"
+            android:text="Add bank details to compare monthly EMI and total payback."
+            android:textColor="@color/text_on_dark_secondary"
+            android:textSize="13sp" />
+
+        <!-- Container for dynamic loan cards -->
+        <LinearLayout
+            android:id="@+id/loanCardsContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+
+        <!-- Add Another Option Button -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btnAddOption"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="32dp"
+            android:clickable="true"
+            android:focusable="true"
+            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardCornerRadius="15dp"
+            app:cardElevation="0dp">
+            
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="horizontal">
+                
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:src="@drawable/ic_plus"
+                    app:tint="@color/hero_accent" />
+                
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Add Another Option"
+                    android:textColor="@color/hero_accent"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCompare"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:text="Generate Comparison Report"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:backgroundTint="@color/hero_accent"
+            app:cornerRadius="15dp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="40dp" />
+
     </LinearLayout>
 </ScrollView>

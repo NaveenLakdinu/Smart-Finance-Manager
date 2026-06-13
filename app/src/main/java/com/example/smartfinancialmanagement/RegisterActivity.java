@@ -2,9 +2,12 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,9 +22,14 @@ public class RegisterActivity extends AppCompatActivity {
     private EditText etFullName, etAge, etEmail, etMobile, etPassword;
     private CheckBox loanCheckbox, termsCheckbox, subscriptionCheckbox, savingPlanCheckbox;
     private Button btnRegister;
+    private ImageView passwordToggle;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+
+    // Variable to store the passed user role from UserRoleActivity
+    private String userRole;
+    private boolean isPasswordVisible = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +38,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
-        
+
+        // 💡 FIXED: Try to retrieve from Intent extra first
+        userRole = getIntent().getStringExtra("USER_ROLE");
+
+        // 💡 FIXED: Robust fallback fallback to SharedPreferences if intent extra was lost during activity state shifts
+        if (userRole == null || userRole.isEmpty()) {
+            userRole = getSharedPreferences("UserData", MODE_PRIVATE)
+                    .getString("user_role", "Student");
+        }
+
         // Verify Firebase initialization
         if (mAuth == null) {
             System.err.println("❌ Firebase Auth not initialized");
@@ -40,9 +57,10 @@ public class RegisterActivity extends AppCompatActivity {
             System.err.println("❌ Firestore not initialized");
             Toast.makeText(this, "Database initialization failed", Toast.LENGTH_LONG).show();
         }
-        
+
         System.out.println("✅ Firebase Auth initialized: " + (mAuth != null));
         System.out.println("✅ Firestore initialized: " + (db != null));
+        System.out.println("✅ Current User Role finalized for DB entry: " + userRole);
 
         // 1. UI Views Initialize
         etFullName = findViewById(R.id.etFullName);
@@ -50,6 +68,7 @@ public class RegisterActivity extends AppCompatActivity {
         etEmail = findViewById(R.id.etEmail);
         etMobile = findViewById(R.id.etMobile);
         etPassword = findViewById(R.id.etPassword);
+        passwordToggle = findViewById(R.id.passwordToggle);
 
         loanCheckbox = findViewById(R.id.checkLoan);
         termsCheckbox = findViewById(R.id.checkTerms);
@@ -57,7 +76,20 @@ public class RegisterActivity extends AppCompatActivity {
         savingPlanCheckbox = findViewById(R.id.checkSaving);
         btnRegister = findViewById(R.id.btnRegister);
 
-        // 2. CheckBox Click Listeners ( ClickListener use loop stop)
+        // 2. Password Toggle Listener
+        passwordToggle.setOnClickListener(v -> {
+            if (isPasswordVisible) {
+                etPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_eye);
+            } else {
+                etPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                passwordToggle.setImageResource(R.drawable.ic_eye_off);
+            }
+            isPasswordVisible = !isPasswordVisible;
+            etPassword.setSelection(etPassword.getText().length());
+        });
+
+        // 3. CheckBox Click Listeners
         loanCheckbox.setOnClickListener(v -> {
             saveDataToSingleton();
             if (loanCheckbox.isChecked()) {
@@ -102,16 +134,14 @@ public class RegisterActivity extends AppCompatActivity {
         UserRegistrationData data = UserRegistrationData.getInstance();
         data.fullName = etFullName.getText().toString().trim();
         data.age = etAge.getText().toString().trim();
-        data.email = etEmail.getText().toString().trim();   // trim to match Firebase Auth email
+        data.email = etEmail.getText().toString().trim();
         data.mobile = etMobile.getText().toString().trim();
-        data.password = etPassword.getText().toString();    // do NOT trim passwords
+        data.password = etPassword.getText().toString();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        //back to other pages come show data again
 
         UserRegistrationData data = UserRegistrationData.getInstance();
 
@@ -121,7 +151,6 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile.setText(data.mobile);
         etPassword.setText(data.password);
 
-        // UI එක update karanakota Listener එක trigger venne nethuva OnClickListener
         loanCheckbox.setChecked(data.hasLoan);
         termsCheckbox.setChecked(data.isTermsAccepted);
         subscriptionCheckbox.setChecked(data.receiveUpdates);
@@ -129,7 +158,7 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private void registerUser() {
-        saveDataToSingleton(); // last movemt save data
+        saveDataToSingleton();
         UserRegistrationData data = UserRegistrationData.getInstance();
 
         String email = etEmail.getText().toString().trim();
@@ -150,7 +179,7 @@ public class RegisterActivity extends AppCompatActivity {
         btnRegister.setText("Registering...");
 
         System.out.println("Starting registration for email: " + email);
-        
+
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
@@ -158,27 +187,30 @@ public class RegisterActivity extends AppCompatActivity {
                         String uid = mAuth.getCurrentUser().getUid();
                         System.out.println("User UID: " + uid);
 
-                        // Use WriteBatch for atomic data persistence
+                        // Use WriteBatch for atomic data persistence across multiple collections/documents
                         WriteBatch batch = db.batch();
+
+                        // Reference for the main Shared Base Profile document
                         DocumentReference userRef = db.collection("users").document(uid);
 
-                        // Firestore save all data to user profile
+                        // 1. Populate Shared Base Document Data
                         Map<String, Object> userMap = new HashMap<>();
                         userMap.put("uid", uid);
                         userMap.put("name", data.fullName);
                         userMap.put("age", data.age);
                         userMap.put("email", data.email);
                         userMap.put("mobile", data.mobile);
+                        userMap.put("role", userRole); // Saving the correctly synchronized role string
                         userMap.put("timestamp", System.currentTimeMillis());
 
-                        // Loan Details (Summary in profile)
+                        // Loan Details Summary
                         userMap.put("hasLoan", data.hasLoan);
                         userMap.put("loanAmount", data.loanAmount != null ? data.loanAmount : "");
                         userMap.put("monthlyInstallment", data.monthlyInstallment != null ? data.monthlyInstallment : "");
                         userMap.put("monthsPaid", data.monthsPaid != null ? data.monthsPaid : "");
                         userMap.put("paymentMethod", data.paymentMethod != null ? data.paymentMethod : "");
 
-                        // Saving Plan Details (Summary in profile)
+                        // Saving Plan Details Summary
                         userMap.put("hasSavingPlan", data.hasSavingPlan);
                         userMap.put("savingGoalName", data.goalName != null ? data.goalName : "");
                         userMap.put("savingTargetAmount", data.targetAmount != null ? data.targetAmount : "");
@@ -194,56 +226,132 @@ public class RegisterActivity extends AppCompatActivity {
                         userMap.put("checkReport", data.checkReport);
                         userMap.put("checkPromo", data.checkPromo);
 
+                        // Enqueue the root user document write operation
                         batch.set(userRef, userMap);
 
-                        // ✅ CRITICAL FIX: Save loan to sub-collection so it shows in Loan Manager
+                        // 2. Setup Role-Specific Profiles via Subcollections (Pattern 1)
+                        Map<String, Object> roleSpecificProfile = new HashMap<>();
+                        String subcollectionName = "";
+
+                        switch (userRole) {
+                            case "Student":
+                                subcollectionName = "student_profile";
+                                roleSpecificProfile.put("university", "");
+                                roleSpecificProfile.put("course", "");
+                                roleSpecificProfile.put("studentId", "");
+                                break;
+
+                            case "Company worker":
+                                subcollectionName = "worker_profile";
+                                roleSpecificProfile.put("companyName", "");
+                                roleSpecificProfile.put("designation", "");
+                                roleSpecificProfile.put("monthlySalary", 0.0);
+                                break;
+
+                            case "Business owner":
+                                subcollectionName = "business_profile";
+                                roleSpecificProfile.put("businessName", "");
+                                roleSpecificProfile.put("regNumber", "");
+                                roleSpecificProfile.put("industryType", "");
+                                break;
+
+                            case "Multiple account holder":
+                                subcollectionName = "multi_profile";
+                                roleSpecificProfile.put("linkedAccountsCount", 1);
+                                roleSpecificProfile.put("primaryWorkspace", "");
+                                break;
+                        }
+
+                        // Enqueue the subcollection profile document if valid subcollection exists
+                        if (!subcollectionName.isEmpty()) {
+                            DocumentReference roleRef = db.collection("users").document(uid)
+                                    .collection(subcollectionName).document("profile_data");
+                            batch.set(roleRef, roleSpecificProfile);
+                        }
+
+                        // 3. Save loan subcollection independently if checkbox is checked
                         if (data.hasLoan) {
                             DocumentReference loanRef = db.collection("users").document(uid).collection("loans").document();
                             Map<String, Object> loanData = new HashMap<>();
                             loanData.put("loanName", "Initial Loan");
                             loanData.put("principalAmount", safeParseDouble(data.loanAmount));
-                            loanData.put("interestRate", 0.0); // Default
-                            loanData.put("durationMonths", safeParseInt(data.monthsPaid)); 
+                            loanData.put("interestRate", 0.0);
+                            loanData.put("durationMonths", safeParseInt(data.monthsPaid));
                             loanData.put("monthlyEmi", safeParseDouble(data.monthlyInstallment));
                             loanData.put("createdAt", System.currentTimeMillis());
                             batch.set(loanRef, loanData);
                         }
 
-                        System.out.println("Committing batch for UID: " + uid);
+                        System.out.println("Committing atomic write batch for UID: " + uid);
 
+                        // Execute all database writes concurrently
                         batch.commit()
                                 .addOnSuccessListener(aVoid -> {
-                                    System.out.println("✅ All data saved to Firestore successfully");
+                                    System.out.println("✅ All base and subcollection data saved to Firestore successfully");
                                     Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
+
                                     data.clearData();
                                     clearAllFields();
-                                    // Navigate to Dashboard
-                                    startActivity(new Intent(this, DashboardActivity.class));
-                                    finish();
+
+                                    // Handle conditional routing based on dashboard page availability
+                                    navigateToDashboard(userRole);
                                 })
                                 .addOnFailureListener(e -> {
                                     btnRegister.setEnabled(true);
                                     btnRegister.setText("Register");
-                                    System.err.println("❌ Firestore Error: " + e.getMessage());
+                                    System.err.println("❌ Firestore Batch Commit Error: " + e.getMessage());
                                     e.printStackTrace();
                                     Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                 });
                     } else {
                         btnRegister.setEnabled(true);
                         btnRegister.setText("Register");
-                        
+
                         Exception e = task.getException();
                         String errorMessage = e != null ? e.getMessage() : "Unknown error";
-                        
-                        // Check specifically for "Email already in use"
+
                         if (errorMessage != null && errorMessage.contains("already in use")) {
                             errorMessage = "This email is already registered. Please Login instead.";
                         }
-                        
+
                         System.err.println("❌ Auth Error: " + errorMessage);
                         Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    /**
+     // Helper method to safely route users to their designated dashboards without crashes.
+     // Fallback to primary DashboardActivity occurs if role-specific screens are not yet created.
+     */
+    private void navigateToDashboard(String role) {
+        Intent dashboardIntent;
+
+        // 💡 FIXED: Now perfectly matches synchronized capitalized strings coming from ChooseRoleActivity
+        switch (role) {
+            case "Company worker":
+                dashboardIntent = new Intent(this, WorkerDashboardActivity.class);
+                break;
+
+            case "Multiple account holder":
+                dashboardIntent = new Intent(this, MultiAccountDashboardActivity.class);
+                break;
+
+            case "Student":
+            case "Business owner":
+            default:
+                // Redirecting Student and Business Owner to default dashboard temporarily since pages aren't built yet
+                dashboardIntent = new Intent(this, DashboardActivity.class);
+                break;
+        }
+
+        // Carry over the current user role explicitly to update conditional dashboard typography
+        dashboardIntent.putExtra("CURRENT_USER_ROLE", role);
+
+        // Clear activity stack completely to avoid navigation loop issues on back button press
+        dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(dashboardIntent);
+        finish();
     }
 
     private double safeParseDouble(String value) {
@@ -262,24 +370,19 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    // Method to clear all input fields after successful registration
     private void clearAllFields() {
-        // Clear EditText fields
         if (etFullName != null) etFullName.setText("");
         if (etAge != null) etAge.setText("");
         if (etEmail != null) etEmail.setText("");
         if (etMobile != null) etMobile.setText("");
         if (etPassword != null) etPassword.setText("");
 
-        // Uncheck all checkboxes
         if (loanCheckbox != null) loanCheckbox.setChecked(false);
         if (termsCheckbox != null) termsCheckbox.setChecked(false);
         if (subscriptionCheckbox != null) subscriptionCheckbox.setChecked(false);
         if (savingPlanCheckbox != null) savingPlanCheckbox.setChecked(false);
 
-        // Focus on first field for new registration
         if (etFullName != null) etFullName.requestFocus();
-
         System.out.println("✅ All input fields cleared after registration");
     }
 }

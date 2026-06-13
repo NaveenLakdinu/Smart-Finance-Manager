@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.card.MaterialCardView;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,6 +22,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtCurrentAccountName, txtAccountBalance, txtAccountNumber;
     private LinearLayout btnSwitchAccount;
     private MaterialButton btnLogout;
+    private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
 
     // Simulated account data
     private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};
@@ -56,6 +58,26 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         txtAccountNumber = findViewById(R.id.txtAccountNumber);
         btnSwitchAccount = findViewById(R.id.btnSwitchAccount);
         btnLogout = findViewById(R.id.btnLogout);
+
+        cardTransfer = findViewById(R.id.cardTransfer);
+        cardStatements = findViewById(R.id.cardStatements);
+        cardLoanManager = findViewById(R.id.cardLoanManager);
+        cardCards = findViewById(R.id.cardCards);
+        cardAddAccount = findViewById(R.id.cardAddAccount);
+
+        setupActionCards();
+    }
+
+    private void setupActionCards() {
+        cardTransfer.setOnClickListener(v -> Toast.makeText(this, "Transfer - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardStatements.setOnClickListener(v -> Toast.makeText(this, "Statements - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardCards.setOnClickListener(v -> Toast.makeText(this, "Card Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardAddAccount.setOnClickListener(v -> Toast.makeText(this, "Add New Account - Coming Soon", Toast.LENGTH_SHORT).show());
+
+        cardLoanManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, LoanFormActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupUserDetails() {

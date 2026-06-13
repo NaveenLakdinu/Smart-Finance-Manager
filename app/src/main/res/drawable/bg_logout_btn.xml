@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Creative logout button: animated-feel gradient border + inner glow -->
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Outer glow ring (rose gradient) -->
+    <item>
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#FF4466"
+                android:endColor="#CC2244"
+                android:angle="135" />
+            <corners android:radius="32dp" />
+        </shape>
+    </item>
+    <!-- Inner fill (offset inward by 1.5dp to create border effect) -->
+    <item
+        android:left="1.5dp"
+        android:top="1.5dp"
+        android:right="1.5dp"
+        android:bottom="1.5dp">
+        <shape android:shape="rectangle">
+            <gradient
+                android:startColor="#1C0A14"
+                android:centerColor="#240C18"
+                android:endColor="#1A0810"
+                android:angle="135" />
+            <corners android:radius="30dp" />
+        </shape>
+    </item>
+</layer-list>

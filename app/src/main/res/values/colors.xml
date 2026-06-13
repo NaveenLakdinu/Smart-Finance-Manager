@@ -45,4 +45,56 @@
     <!-- Status Colors -->
     <color name="loan_status_green_bg">#DCFCE7</color>
     <color name="loan_status_green_text">#16A34A</color>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- NEW PREMIUM DASHBOARD DESIGN TOKENS       -->
+    <!-- ══════════════════════════════════════════ -->
+
+    <!-- Deep Navy Background -->
+    <color name="dash_bg_deep">#0A1628</color>
+    <color name="dash_bg_mid">#0D1F3C</color>
+    <color name="dash_bg_light">#112244</color>
+
+    <!-- Hero Card accent -->
+    <color name="hero_start">#0F3460</color>
+    <color name="hero_end">#16213E</color>
+    <color name="hero_accent">#00D4AA</color>
+    <color name="hero_accent_dim">#0891B2</color>
+
+    <!-- Glass Card -->
+    <color name="glass_card_bg">#1A2F50</color>
+    <color name="glass_card_border">#2A4A70</color>
+
+    <!-- Quick-action icon backgrounds -->
+    <color name="qa_blue_bg">#162D4A</color>
+    <color name="qa_blue_icon">#38BDF8</color>
+    <color name="qa_teal_bg">#0F3330</color>
+    <color name="qa_teal_icon">#2DD4BF</color>
+    <color name="qa_purple_bg">#251840</color>
+    <color name="qa_purple_icon">#A78BFA</color>
+    <color name="qa_amber_bg">#2A1F0A</color>
+    <color name="qa_amber_icon">#FCD34D</color>
+    <color name="qa_rose_bg">#2D1020</color>
+    <color name="qa_rose_icon">#FB7185</color>
+    <color name="qa_green_bg">#0F2D1A</color>
+    <color name="qa_green_icon">#4ADE80</color>
+
+    <!-- Text on dark -->
+    <color name="text_on_dark_primary">#F0F6FF</color>
+    <color name="text_on_dark_secondary">#7A9CC0</color>
+    <color name="text_on_dark_muted">#4A6A8A</color>
+
+    <!-- Stat pills -->
+    <color name="pill_positive_bg">#0F3320</color>
+    <color name="pill_positive_text">#4ADE80</color>
+    <color name="pill_warning_bg">#2A1C08</color>
+    <color name="pill_warning_text">#FCD34D</color>
+
+    <!-- Danger -->
+    <color name="danger_bg">#2D0F1A</color>
+    <color name="danger_text">#FB7185</color>
+    <color name="danger_border">#4D1A2A</color>
+
+    <!-- Divider -->
+    <color name="divider_dark">#1A3050</color>
 </resources>
