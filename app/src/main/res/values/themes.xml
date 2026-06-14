@@ -23,5 +23,9 @@
         <item name="android:textSize">14sp</item>
     </style>
 
+    <style name="SwitchThemeBlue" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">#1E60FF</item>
+    </style>
+
 
 </resources>
