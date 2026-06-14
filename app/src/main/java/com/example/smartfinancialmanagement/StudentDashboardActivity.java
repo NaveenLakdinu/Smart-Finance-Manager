@@ -7,6 +7,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.student_dashboard);
+        setContentView(R.layout.activity_student_dashboard);
     }
 }
