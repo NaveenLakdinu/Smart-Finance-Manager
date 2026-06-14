@@ -7,11 +7,13 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import android.content.Intent;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
     // Top Profile Area Views
     private TextView txtNotificationBell;
+    private View btnTopLogout;
 
     // Business Feature Cards
     private CardView cardRevenue;
@@ -39,6 +41,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private void initViews() {
         // Notification Icon
         txtNotificationBell = findViewById(R.id.txtNotificationBell);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
 
         // Feature Grid Cards
         cardRevenue = findViewById(R.id.cardRevenue);
@@ -58,6 +61,17 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 showToast("Notifications clicked");
+            }
+        });
+
+        btnTopLogout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                FirebaseAuth.getInstance().signOut();
+                Intent intent = new Intent(BusinessDashboardActivity.this, LoginFormActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                finish();
             }
         });
 

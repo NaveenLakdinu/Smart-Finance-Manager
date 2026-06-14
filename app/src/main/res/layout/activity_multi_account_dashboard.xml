@@ -93,6 +93,24 @@
                 android:text="🔔"
                 android:textSize="20sp" />
 
+            <FrameLayout
+                android:id="@+id/btnTopLogout"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_power" />
+
+            </FrameLayout>
+
         </LinearLayout>
 
         <!-- ── Balance Hero Card ──────────────────── -->
@@ -388,81 +406,6 @@
             </com.google.android.material.card.MaterialCardView>
 
         </GridLayout>
-
-        <!-- ══ Divider with label ══ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="#1A3050" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp"
-                android:text="ACCOUNT"
-                android:textColor="#2A4A6A"
-                android:textSize="10sp"
-                android:letterSpacing="0.18" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="#1A3050" />
-
-        </LinearLayout>
-
-        <!-- ══ Creative Logout Button ══ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_logout_btn"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_power"
-                android:layout_marginEnd="10dp" />
-
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign Out"
-                android:textColor="#FF4466"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.06"
-                app:backgroundTint="#00000000"
-                app:cornerRadius="0dp"
-                app:strokeWidth="0dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-        </LinearLayout>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="You will be signed out of all devices"
-            android:textColor="#2A4A6A"
-            android:textSize="11sp" />
 
         <Space android:layout_width="match_parent" android:layout_height="32dp" />
 

@@ -72,6 +72,24 @@
                 android:text="🔔"
                 android:textSize="20sp" />
 
+            <FrameLayout
+                android:id="@+id/btnTopLogout"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_power" />
+
+            </FrameLayout>
+
         </LinearLayout>
 
 
@@ -528,28 +546,6 @@
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-
-        <!-- ── Divider ───────────────────────────── -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="24dp"
-            android:background="#1A3050" />
-
-        <!-- ── Logout Button ─────────────────────── -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnLogout"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:text="Sign Out"
-            android:textColor="#FB7185"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            app:backgroundTint="#2D0F1A"
-            app:cornerRadius="16dp"
-            app:strokeColor="#4D1A2A"
-            app:strokeWidth="1dp" />
 
         <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
