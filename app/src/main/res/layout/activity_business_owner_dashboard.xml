@@ -43,7 +43,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Good Morning 👋"
-                    android:textColor="#1B1E28"
+                    android:textColor="#F0F6FF"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -82,6 +82,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
+                android:background="@drawable/bg_hero_card"
                 android:orientation="horizontal"
                 android:padding="22dp">
 
@@ -146,7 +147,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="22dp"
             android:text="Business Features"
-            android:textColor="#1B1E28"
+            android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -435,7 +436,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Business Statistics"
-            android:textColor="#1B1E28"
+            android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
 

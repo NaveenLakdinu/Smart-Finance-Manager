@@ -69,12 +69,33 @@
         <activity
             android:name=".ChooseRoleActivity"
             android:exported="false" />
-        
+        <activity
+            android:name=".BusinessDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RevenueManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InventoryManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BudgetPlannerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ProfitLossActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
+
         <!-- Firebase services -->
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
             android:exported="false" />
-            
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />

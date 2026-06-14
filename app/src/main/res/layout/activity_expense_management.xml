@@ -35,7 +35,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="Expense Management"
-                android:textColor="#1B1E28"
+                android:textColor="#F0F6FF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -55,6 +55,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:background="@drawable/bg_hero_card"
                 android:padding="22dp">
 
                 <LinearLayout
@@ -118,7 +119,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Add Expense"
-            android:textColor="#1B1E28"
+            android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -216,7 +217,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Expense History"
-            android:textColor="#1B1E28"
+            android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
 

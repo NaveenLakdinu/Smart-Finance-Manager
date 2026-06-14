@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="Inventory Management"
-                android:textColor="#1B1E28"
+                android:textColor="#F0F6FF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -57,6 +57,7 @@
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
+                android:background="@drawable/bg_hero_card"
                 android:padding="22dp">
 
                 <!-- Left side - Text information -->
@@ -122,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Add Inventory Item"
-            android:textColor="#1B1E28"
+            android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -259,7 +260,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Inventory List"
-                android:textColor="#1B1E28"
+                android:textColor="#F0F6FF"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -268,7 +269,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0 items"
-                android:textColor="#5B6370"
+                android:textColor="#F0F6FF"
                 android:textSize="13sp" />
 
         </LinearLayout>

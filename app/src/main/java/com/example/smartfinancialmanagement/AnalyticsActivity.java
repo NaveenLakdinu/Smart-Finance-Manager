@@ -15,7 +15,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_analytic);
+        setContentView(R.layout.activity_business_analytic);
 
         // Initialize the interactive UI components
         initializeViews();

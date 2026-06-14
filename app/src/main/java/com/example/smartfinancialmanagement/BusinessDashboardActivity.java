@@ -6,6 +6,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
+import android.content.Intent;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
@@ -64,42 +65,48 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         cardRevenue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Revenue Management clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this,RevenueManagementActivity.class);
+                startActivity(intent);
             }
         });
 
         cardExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Expenses Tracker clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this, ExpenseManagementActivity.class);
+                startActivity(intent);
             }
         });
 
         cardInventory.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Inventory Management clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this,InventoryManagementActivity.class);
+                startActivity(intent);
             }
         });
 
         cardBudget.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Budget Planner clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this,BudgetPlannerActivity.class);
+                startActivity(intent);
             }
         });
 
         cardProfit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Profit and Loss clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this, ProfitLossActivity.class);
+                startActivity(intent);
             }
         });
 
         cardAnalytics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showToast("Analytics clicked");
+                Intent intent = new Intent(BusinessDashboardActivity.this,AnalyticsActivity.class);
+                startActivity(intent);
             }
         });
     }
