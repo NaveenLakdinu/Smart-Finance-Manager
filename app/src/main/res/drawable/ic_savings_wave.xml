@@ -1,0 +1,19 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="300dp"
+    android:height="80dp"
+    android:viewportWidth="300"
+    android:viewportHeight="80">
+
+    <!-- Filled Area under the curve -->
+    <path
+        android:fillColor="#33FFFFFF"
+        android:pathData="M 0,65 C 40,60 60,35 100,45 C 140,55 160,25 200,35 C 240,45 260,15 300,20 L 300,80 L 0,80 Z" />
+
+    <!-- Wave Stroke Line -->
+    <path
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2.5"
+        android:strokeLineCap="round"
+        android:pathData="M 0,65 C 40,60 60,35 100,45 C 140,55 160,25 200,35 C 240,45 260,15 300,20" />
+
+</vector>

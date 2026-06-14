@@ -1,7 +1,5 @@
 package com.example.smartfinancialmanagement;
 
-
-
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -25,7 +23,9 @@ public class ChooseRoleActivity extends AppCompatActivity {
     // Role card IDs mapped
     LinearLayout[] allCards;
     ImageView[] allRadios;
-    String[] roleKeys = {"student", "worker", "business", "multi"};
+
+    // 💡 FIXED: Mapped keys directly to match RegisterActivity switch cases precisely
+    String[] roleKeys = {"Student", "Company worker", "Business owner", "Multiple account holder"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,14 +63,16 @@ public class ChooseRoleActivity extends AppCompatActivity {
                 Toast.makeText(this, "Please select a role", Toast.LENGTH_SHORT).show();
                 return;
             }
-            // Save role to SharedPreferences
+
+            // Save role to SharedPreferences for persistent local storage
             getSharedPreferences("UserData", MODE_PRIVATE)
                     .edit()
                     .putString("user_role", selectedRole)
                     .apply();
 
-            // Navigate to next page
+            // 💡 FIXED: Sending the selected role explicitly via Intent Extra to RegisterActivity
             Intent intent = new Intent(this, RegisterActivity.class);
+            intent.putExtra("USER_ROLE", selectedRole);
             startActivity(intent);
         });
     }

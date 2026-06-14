@@ -25,8 +25,32 @@
         <item>Annually</item>
     </string-array>
 
+    <string-array name="utility_type">
+    <item>Electricity</item>
+    <item>Water</item>
+    <item>Telephone</item>
+    <item>Internet</item>
+    <item>Rent</item>
+    </string-array>
 
+    <string-array name="choose_bill">
+        <item>Home Electricity</item>
+        <item>Home Water Bill</item>
+        <item>Telephone Bill</item>
+        <item>House Rent</item>
+    </string-array>
 
-
+    <!-- Business Registration -->
+    <string name="business_details">Business Details</string>
+    <string name="business_name">Business Name</string>
+    <string name="business_category">Business Category</string>
+    <string name="business_address">Business Address</string>
+    <string name="reg_number">Registration Number</string>
+    <string name="continue_btn">Continue</string>
+    <string name="back_to_personal">Back to Personal Details</string>
+    <string name="hint_business_name">Legal Business Name</string>
+    <string name="hint_business_category">e.g. Retail, Tech, Agriculture</string>
+    <string name="hint_business_address">Primary Business Location</string>
+    <string name="hint_reg_number">BR Number / Tax ID</string>
 
 </resources>

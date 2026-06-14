@@ -122,6 +122,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
 
+
         cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
 
         btnLogout.setOnClickListener(view -> {
