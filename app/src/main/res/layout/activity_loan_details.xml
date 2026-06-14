@@ -159,7 +159,7 @@
                                 android:layout_height="match_parent"
                                 android:hint="Enter total loan amount"
                                 android:textColorHint="#9CA3AF"
-                                android:textColor="#111827"
+                                android:textColor="@color/black"
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
@@ -191,7 +191,7 @@
                                 android:layout_height="match_parent"
                                 android:hint="Enter monthly payment"
                                 android:textColorHint="#9CA3AF"
-                                android:textColor="#111827"
+                                android:textColor="@color/black"
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
@@ -223,7 +223,7 @@
                                 android:layout_height="match_parent"
                                 android:hint="Enter amount"
                                 android:textColorHint="#9CA3AF"
-                                android:textColor="#111827"
+                                android:textColor="@color/black"
                                 android:textSize="14sp"
                                 android:inputType="number"
                                 android:background="@null" />
