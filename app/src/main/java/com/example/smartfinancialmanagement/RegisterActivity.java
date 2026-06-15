@@ -408,9 +408,14 @@ public class RegisterActivity extends AppCompatActivity {
                 break;
 
             case "Student":
+                dashboardIntent = new Intent(this, StudentDashboardActivity.class);
+                break;
+
             case "Business owner":
+                dashboardIntent = new Intent(this, BusinessDashboardActivity.class);
+                break;
+
             default:
-                // Redirecting Student and Business Owner to default dashboard temporarily since pages aren't built yet
                 dashboardIntent = new Intent(this, DashboardActivity.class);
                 break;
         }
