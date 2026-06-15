@@ -19,7 +19,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtEarnings, txtPayrollStatus;
     private MaterialCardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips, cardLoanManager;
-    private MaterialButton btnLogout;
+    private android.view.View btnTopLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +44,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         cardPayslips = findViewById(R.id.cardPayslips);
         cardLoanManager = findViewById(R.id.cardLoanManager);
         
-        btnLogout = findViewById(R.id.btnLogout);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
     }
 
     private void setupUserDetails() {
@@ -85,7 +85,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        btnLogout.setOnClickListener(v -> {
+        btnTopLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

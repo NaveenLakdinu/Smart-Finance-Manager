@@ -28,7 +28,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtTotalCount, txtSubMessage;
 
     private MaterialCardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
-    private MaterialButton btnLogout;
+    private android.view.View btnTopLogout;
 
     private LinearLayout recentSection;
     private RecyclerView recyclerRecent;
@@ -60,7 +60,7 @@ public class DashboardActivity extends AppCompatActivity {
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
         cardManageUtility = findViewById(R.id.cardManageUtility);
         cardPaused = findViewById(R.id.cardPaused);
-        btnLogout = findViewById(R.id.btnLogout);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
 
         recentSection = findViewById(R.id.recentSection);
         recyclerRecent = findViewById(R.id.recyclerRecent);
@@ -125,7 +125,7 @@ public class DashboardActivity extends AppCompatActivity {
 
         cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
 
-        btnLogout.setOnClickListener(view -> {
+        btnTopLogout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(DashboardActivity.this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);

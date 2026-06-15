@@ -21,7 +21,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     private TextView txtProfileLetter, txtGreeting, txtCurrentAccountName, txtAccountBalance, txtAccountNumber;
     private LinearLayout btnSwitchAccount;
-    private MaterialButton btnLogout;
+    private View btnTopLogout;
     private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
 
     // Simulated account data
@@ -41,7 +41,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         
         btnSwitchAccount.setOnClickListener(v -> showAccountSwitchDialog());
         
-        btnLogout.setOnClickListener(v -> {
+        btnTopLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -57,7 +57,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         txtAccountBalance = findViewById(R.id.txtAccountBalance);
         txtAccountNumber = findViewById(R.id.txtAccountNumber);
         btnSwitchAccount = findViewById(R.id.btnSwitchAccount);
-        btnLogout = findViewById(R.id.btnLogout);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
 
         cardTransfer = findViewById(R.id.cardTransfer);
         cardStatements = findViewById(R.id.cardStatements);

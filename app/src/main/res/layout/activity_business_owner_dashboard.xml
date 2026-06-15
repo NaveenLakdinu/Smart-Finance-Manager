@@ -67,6 +67,24 @@
                 android:text="🔔"
                 android:textSize="20sp" />
 
+            <FrameLayout
+                android:id="@+id/btnTopLogout"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_power" />
+
+            </FrameLayout>
+
         </LinearLayout>
 
         <!-- Business Overview Card -->
