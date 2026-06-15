@@ -74,20 +74,36 @@ public class BudgetPlannerActivity extends AppCompatActivity {
         // Handle frontend form validation
         btnSaveBudget.setOnClickListener(v -> {
             String month = edtMonth.getText().toString().trim();
-            String amount = edtBudgetAmount.getText().toString().trim();
+            String amountStr = edtBudgetAmount.getText().toString().trim();
 
             if (month.isEmpty()) {
                 edtMonth.setError("Enter month");
+                edtMonth.requestFocus();
                 return;
             }
 
-            if (amount.isEmpty()) {
+            if (amountStr.isEmpty()) {
                 edtBudgetAmount.setError("Enter budget amount");
+                edtBudgetAmount.requestFocus();
+                return;
+            }
+
+            try {
+                double amount = Double.parseDouble(amountStr);
+                if (amount <= 0) {
+                    edtBudgetAmount.setError("Budget amount must be greater than zero");
+                    edtBudgetAmount.requestFocus();
+                    return;
+                }
+            } catch (NumberFormatException e) {
+                edtBudgetAmount.setError("Enter a valid numeric amount");
+                edtBudgetAmount.requestFocus();
                 return;
             }
 
             // Form inputs are clean, wipe the inputs for the next entry
             clearFields();
+            Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show();
         });
     }
 

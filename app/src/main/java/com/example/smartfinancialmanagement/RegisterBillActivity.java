@@ -107,13 +107,17 @@ public class RegisterBillActivity extends AppCompatActivity {
 
                 // Validation checking conditions
                 if (billName.isEmpty()) {
-                    Toast.makeText(RegisterBillActivity.this, "Please enter Bill Name", Toast.LENGTH_SHORT).show();
+                    editBillName.setError("Please enter Bill Name");
+                    editBillName.requestFocus();
                 } else if (accountNo.isEmpty()) {
-                    Toast.makeText(RegisterBillActivity.this, "Please enter Account Number", Toast.LENGTH_SHORT).show();
+                    editAccountNo.setError("Please enter Account Number");
+                    editAccountNo.requestFocus();
                 } else if (place.isEmpty()) {
-                    Toast.makeText(RegisterBillActivity.this, "Please enter Place location", Toast.LENGTH_SHORT).show();
+                    editPlace.setError("Please enter Place location");
+                    editPlace.requestFocus();
                 } else if (paymentDate.isEmpty()) {
-                    Toast.makeText(RegisterBillActivity.this, "Please select a Payment Date", Toast.LENGTH_SHORT).show();
+                    editPaymentDate.setError("Please select a Payment Date");
+                    editPaymentDate.requestFocus();
                 } else if (providerPosition == 0) {
                     Toast.makeText(RegisterBillActivity.this, "Please select a Service Provider", Toast.LENGTH_SHORT).show();
                 } else {

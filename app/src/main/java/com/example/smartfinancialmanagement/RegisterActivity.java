@@ -161,18 +161,12 @@ public class RegisterActivity extends AppCompatActivity {
         saveDataToSingleton();
         UserRegistrationData data = UserRegistrationData.getInstance();
 
+        if (!validateInputs()) {
+            return;
+        }
+
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
-
-        // Validation
-        if (email.isEmpty() || password.isEmpty()) {
-            Toast.makeText(this, "Please fill Email and Password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!data.isTermsAccepted) {
-            Toast.makeText(this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
-            return;
-        }
 
         // Disable button to prevent double-clicks
         btnRegister.setEnabled(false);
@@ -318,6 +312,82 @@ public class RegisterActivity extends AppCompatActivity {
                         Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
                     }
                 });
+    }
+
+    private boolean validateInputs() {
+        String fullName = etFullName.getText().toString().trim();
+        String ageStr = etAge.getText().toString().trim();
+        String email = etEmail.getText().toString().trim();
+        String mobile = etMobile.getText().toString().trim();
+        String password = etPassword.getText().toString().trim();
+
+        if (fullName.isEmpty()) {
+            etFullName.setError("Full Name is required");
+            etFullName.requestFocus();
+            return false;
+        }
+
+        if (ageStr.isEmpty()) {
+            etAge.setError("Age is required");
+            etAge.requestFocus();
+            return false;
+        }
+
+        try {
+            int age = Integer.parseInt(ageStr);
+            if (age < 1 || age > 120) {
+                etAge.setError("Please enter a valid age (1-120)");
+                etAge.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            etAge.setError("Please enter a valid numeric age");
+            etAge.requestFocus();
+            return false;
+        }
+
+        if (email.isEmpty()) {
+            etEmail.setError("Email is required");
+            etEmail.requestFocus();
+            return false;
+        }
+
+        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+            etEmail.setError("Please enter a valid email address");
+            etEmail.requestFocus();
+            return false;
+        }
+
+        if (mobile.isEmpty()) {
+            etMobile.setError("Mobile number is required");
+            etMobile.requestFocus();
+            return false;
+        }
+
+        if (mobile.length() < 10) {
+            etMobile.setError("Please enter a valid mobile number (min 10 digits)");
+            etMobile.requestFocus();
+            return false;
+        }
+
+        if (password.isEmpty()) {
+            etPassword.setError("Password is required");
+            etPassword.requestFocus();
+            return false;
+        }
+
+        if (password.length() < 6) {
+            etPassword.setError("Password must be at least 6 characters");
+            etPassword.requestFocus();
+            return false;
+        }
+
+        if (!termsCheckbox.isChecked()) {
+            Toast.makeText(this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        return true;
     }
 
     /**
