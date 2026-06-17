@@ -19,116 +19,107 @@ public class RegisterBillActivity extends AppCompatActivity {
 
     // Declare layout elements
     private ImageView backButton;
-    private EditText editBillName;
-    private EditText editAccountNo;
-    private EditText editPlace;
-    private EditText editPaymentDate;
-    private Spinner spinnerServiceProvider;
+    private EditText editBillName, editAmount, editPaymentDate;
+    private Spinner spinnerCategory, spinnerStatus;
     private Button btnRegisterSubmit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register_bill); // Connects to your XML layout
+        setContentView(R.layout.activity_register_bill);
 
-        // 1. Initialize Views from XML
+        initViews();
+        setupSpinners();
+        setupDatePicker();
+        setupClickListeners();
+    }
+
+    private void initViews() {
         backButton = findViewById(R.id.backButton);
         editBillName = findViewById(R.id.editBillName);
-        editAccountNo = findViewById(R.id.editAccountNo);
-        editPlace = findViewById(R.id.editPlace);
+        editAmount = findViewById(R.id.editAmount);
         editPaymentDate = findViewById(R.id.editPaymentDate);
-        spinnerServiceProvider = findViewById(R.id.spinnerServiceProvider);
+        spinnerCategory = findViewById(R.id.spinnerCategory);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
         btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit);
+    }
 
-        // 2. Populate Service Provider Dropdown (Spinner)
-        List<String> providersList = new ArrayList<>();
-        providersList.add("Select Provider"); // Placeholder row
-        providersList.add("Electricity");
-        providersList.add("Water");
-        providersList.add("Telephone");
-        providersList.add("Internet");
-        providersList.add("Television");
-        providersList.add("Rent");
+    private void setupSpinners() {
+        // Category Spinner
+        List<String> categories = new ArrayList<>();
+        categories.add("Select Category");
+        categories.add("Electricity");
+        categories.add("Water");
+        categories.add("Telephone");
+        categories.add("Internet");
+        categories.add("Television");
+        categories.add("Rent");
 
-        ArrayAdapter<String> providerAdapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                providersList
-        );
-        providerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerServiceProvider.setAdapter(providerAdapter);
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
+        categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCategory.setAdapter(categoryAdapter);
 
+        // Status Spinner
+        List<String> statuses = new ArrayList<>();
+        statuses.add("Select Status");
+        statuses.add("Paid");
+        statuses.add("Pending");
+        statuses.add("Due");
 
-        // 3. Set Up Interactive Date Picker Calendar Dialog
-        editPaymentDate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Get the current day's date to initialize the calendar picker view
-                final Calendar calendar = Calendar.getInstance();
-                int year = calendar.get(Calendar.YEAR);
-                int month = calendar.get(Calendar.MONTH);
-                int day = calendar.get(Calendar.DAY_OF_MONTH);
+        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statuses);
+        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(statusAdapter);
+    }
 
-                // Show DatePickerDialog window view
-                DatePickerDialog datePickerDialog = new DatePickerDialog(
-                        RegisterBillActivity.this,
-                        new DatePickerDialog.OnDateSetListener() {
-                            @Override
-                            public void onDateSet(DatePicker view, int selectedYear, int selectedMonth, int selectedDay) {
-                                // Formats the selected date sequence and sets it into the entry frame
-                                String formattedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
-                                editPaymentDate.setText(formattedDate);
-                            }
-                        }, year, month, day);
-                datePickerDialog.show();
+    private void setupDatePicker() {
+        editPaymentDate.setOnClickListener(v -> {
+            final Calendar calendar = Calendar.getInstance();
+            int year = calendar.get(Calendar.YEAR);
+            int month = calendar.get(Calendar.MONTH);
+            int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+            DatePickerDialog datePickerDialog = new DatePickerDialog(
+                    RegisterBillActivity.this,
+                    (view, selectedYear, selectedMonth, selectedDay) -> {
+                        String formattedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        editPaymentDate.setText(formattedDate);
+                    }, year, month, day);
+            datePickerDialog.show();
+        });
+    }
+
+    private void setupClickListeners() {
+        backButton.setOnClickListener(v -> finish());
+
+        btnRegisterSubmit.setOnClickListener(v -> {
+            if (validateForm()) {
+                Toast.makeText(this, "Bill Saved Successfully", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
+    }
 
-
-        // 4. Handle Back Arrow Navigation Action Frame
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish(); // Closes this registration form view and goes back to previous screen
-            }
-        });
-
-
-        // 5. Handle Form Inputs Submission Validation Setup Block
-        btnRegisterSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // Read text string data out from inputs
-                String billName = editBillName.getText().toString().trim();
-                String accountNo = editAccountNo.getText().toString().trim();
-                String place = editPlace.getText().toString().trim();
-                String paymentDate = editPaymentDate.getText().toString().trim();
-                int providerPosition = spinnerServiceProvider.getSelectedItemPosition();
-
-                // Validation checking conditions
-                if (billName.isEmpty()) {
-                    editBillName.setError("Please enter Bill Name");
-                    editBillName.requestFocus();
-                } else if (accountNo.isEmpty()) {
-                    editAccountNo.setError("Please enter Account Number");
-                    editAccountNo.requestFocus();
-                } else if (place.isEmpty()) {
-                    editPlace.setError("Please enter Place location");
-                    editPlace.requestFocus();
-                } else if (paymentDate.isEmpty()) {
-                    editPaymentDate.setError("Please select a Payment Date");
-                    editPaymentDate.requestFocus();
-                } else if (providerPosition == 0) {
-                    Toast.makeText(RegisterBillActivity.this, "Please select a Service Provider", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Success Scenario
-                    String chosenProvider = spinnerServiceProvider.getSelectedItem().toString();
-                    Toast.makeText(RegisterBillActivity.this, "Successfully Registered: " + billName, Toast.LENGTH_LONG).show();
-
-                    // Closes screen back to home dashboard after saving successfully
-                    finish();
-                }
-            }
-        });
+    private boolean validateForm() {
+        if (editBillName.getText().toString().trim().isEmpty()) {
+            editBillName.setError("Enter bill name");
+            return false;
+        }
+        if (editAmount.getText().toString().trim().isEmpty()) {
+            editAmount.setError("Enter amount");
+            return false;
+        }
+        if (spinnerCategory.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Select a category", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (editPaymentDate.getText().toString().trim().isEmpty()) {
+            editPaymentDate.setError("Select date");
+            return false;
+        }
+        if (spinnerStatus.getSelectedItemPosition() == 0) {
+            Toast.makeText(this, "Select a status", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        return true;
     }
 }

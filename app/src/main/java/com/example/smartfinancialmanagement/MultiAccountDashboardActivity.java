@@ -23,6 +23,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private LinearLayout btnSwitchAccount;
     private View btnTopLogout;
     private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
+    private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
 
     // Simulated account data
     private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};
@@ -64,6 +65,9 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         cardLoanManager = findViewById(R.id.cardLoanManager);
         cardCards = findViewById(R.id.cardCards);
         cardAddAccount = findViewById(R.id.cardAddAccount);
+        cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
+        cardSavingManager = findViewById(R.id.cardSavingManager);
+        cardUtilityManager = findViewById(R.id.cardUtilityManager);
 
         setupActionCards();
     }
@@ -76,6 +80,18 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
         cardLoanManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, LoanFormActivity.class);
+            startActivity(intent);
+        });
+        cardSubscriptionManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SubscriptionManagerActivity.class);
+            startActivity(intent);
+        });
+        cardSavingManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
+        cardUtilityManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, UtilityManagerActivity.class);
             startActivity(intent);
         });
     }

@@ -12,6 +12,10 @@ public class StudentDashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
 
+        initViews();
+    }
+
+    private void initViews() {
         View btnTopLogout = findViewById(R.id.btnTopLogout);
         if (btnTopLogout != null) {
             btnTopLogout.setOnClickListener(v -> {
@@ -21,6 +25,25 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 startActivity(intent);
                 finish();
             });
+        }
+
+        // Core Manager Cards
+        View cardLoanManager = findViewById(R.id.cardLoanManager);
+        View cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
+        View cardSavingManager = findViewById(R.id.cardSavingManager);
+        View cardUtilityManager = findViewById(R.id.cardUtilityManager);
+
+        if (cardLoanManager != null) {
+            cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
+        }
+        if (cardSubscriptionManager != null) {
+            cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
+        }
+        if (cardSavingManager != null) {
+            cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
+        }
+        if (cardUtilityManager != null) {
+            cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         }
     }
 }

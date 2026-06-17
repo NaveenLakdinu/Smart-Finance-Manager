@@ -3,159 +3,182 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_screen_gradient"
-    android:fillViewport="true">
+    android:background="@drawable/bg_dashboard"
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:background="@drawable/top_gradient_card"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <RelativeLayout
+        <!-- Header -->
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp">
+            android:layout_marginTop="32dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/backButton"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_alignParentStart="true"
-                android:layout_centerInParent="true"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@drawable/bg_notification"
+                android:padding="10dp"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="#1B1E28" />
+                app:tint="#FFFFFF" />
 
             <TextView
+                android:id="@+id/txtTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_toEndOf="@id/backButton"
                 android:layout_marginStart="16dp"
-                android:text="Register New Bill"
-                android:textColor="#1B1E28"
-                android:textSize="18sp"
+                android:text="Add Utility Bill"
+                android:textColor="#FFFFFF"
+                android:textSize="20sp"
                 android:textStyle="bold" />
-        </RelativeLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:layout_marginTop="30dp"
-            android:background="@drawable/bg_input_feild"
-            android:backgroundTint="#EBF1F6"
-            android:orientation="vertical"
-            android:padding="20dp">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Bill Name"
-                android:textColor="#4A5568"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-            <EditText
-                android:id="@+id/editBillName"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_feild"
-                android:hint="Enter Bill Name"
-                android:inputType="text"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Account No"
-                android:textColor="#4A5568"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-            <EditText
-                android:id="@+id/editAccountNo"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_feild"
-                android:hint="Enter Bill Account No"
-                android:inputType="number"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Place"
-                android:textColor="#4A5568"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-            <EditText
-                android:id="@+id/editPlace"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_feild"
-                android:hint="Enter Place"
-                android:inputType="text"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Payment Date"
-                android:textColor="#4A5568"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-            <EditText
-                android:id="@+id/editPaymentDate"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_input_feild"
-                android:hint="Payment Date"
-                android:focusable="false"
-                android:clickable="true"
-                android:paddingHorizontal="16dp"
-                android:textSize="14sp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Service Provider"
-                android:textColor="#4A5568"
-                android:textStyle="bold"
-                android:textSize="14sp" />
-            <Spinner
-                android:id="@+id/spinnerServiceProvider"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="6dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/bg_input_feild"
-                android:paddingHorizontal="16dp" />
 
         </LinearLayout>
 
-        <Button
+        <!-- Form Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="#00000000"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_glass_card"
+                android:orientation="vertical"
+                android:padding="24dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="BILL DETAILS"
+                    android:textColor="#7A9CC0"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.1" />
+
+                <!-- Bill Name -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:text="Bill Name"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/editBillName"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input_feild"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:hint="e.g. Electricity Bill"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#4A6A8A"
+                    android:paddingHorizontal="16dp" />
+
+                <!-- Amount -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Amount (LKR)"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/editAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input_feild"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:hint="0.00"
+                    android:inputType="numberDecimal"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#4A6A8A"
+                    android:paddingHorizontal="16dp" />
+
+                <!-- Category -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Category"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+                <Spinner
+                    android:id="@+id/spinnerCategory"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input_feild"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:paddingHorizontal="16dp" />
+
+                <!-- Due Date -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Due Date"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+                <EditText
+                    android:id="@+id/editPaymentDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input_feild"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:hint="Select Date"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#4A6A8A"
+                    android:paddingHorizontal="16dp" />
+
+                <!-- Status -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Status"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp" />
+                <Spinner
+                    android:id="@+id/spinnerStatus"
+                    android:layout_width="match_parent"
+                    android:layout_height="54dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@drawable/bg_input_feild"
+                    android:backgroundTint="#1AFFFFFF"
+                    android:paddingHorizontal="16dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btnRegisterSubmit"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/bg_dark_card"
-            android:text="Register"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:background="@drawable/btn_login_gradient"
+            android:text="Save Bill"
             android:textAllCaps="false"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
-            android:textStyle="bold"
-            app:backgroundTint="@null" />
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>

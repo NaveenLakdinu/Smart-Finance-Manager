@@ -27,7 +27,7 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtTotalCount, txtSubMessage;
 
-    private MaterialCardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
+    private MaterialCardView cardManageLoan, cardManageSubscription, cardManageSaving, cardManageUtility;
     private android.view.View btnTopLogout;
 
     private LinearLayout recentSection;
@@ -58,8 +58,8 @@ public class DashboardActivity extends AppCompatActivity {
 
         cardManageLoan = findViewById(R.id.cardManageLoan);
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
+        cardManageSaving = findViewById(R.id.cardManageSaving);
         cardManageUtility = findViewById(R.id.cardManageUtility);
-        cardPaused = findViewById(R.id.cardPaused);
         btnTopLogout = findViewById(R.id.btnTopLogout);
 
         recentSection = findViewById(R.id.recentSection);
@@ -118,12 +118,20 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        cardManageSubscription.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageSubscription.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
+        });
 
-        cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageSaving.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
 
-
-        cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageUtility.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, UtilityManagerActivity.class);
+            startActivity(intent);
+        });
 
         btnTopLogout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
@@ -207,4 +215,4 @@ public class DashboardActivity extends AppCompatActivity {
 
         recentSection.setVisibility(View.GONE);
     }
-    }
+}
