@@ -8,8 +8,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
@@ -18,6 +18,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private TextView txtGreeting;
     private TextView txtUserEmail;
     private TextView btnNotifications;
+    private View btnTopLogout;
 
     // Summary State Fields
     private TextView txtTotalCount;
@@ -27,6 +28,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private MaterialCardView cardManageLoan;
     private MaterialCardView cardManageSubscription;
     private MaterialCardView cardManageUtility;
+    private MaterialCardView cardSavingManager;
     private MaterialCardView cardB2BInvoice;
     private MaterialCardView cardAnalytics;
 
@@ -35,13 +37,10 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private TextView txtViewAll;
     private RecyclerView SampleRecycler;
 
-    // Account Actions
-    private MaterialButton btnLogout;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_owner_dashboard); // Pointing directly to your updated layout container
+        setContentView(R.layout.activity_business_owner_dashboard);
 
         initializeViews();
         setupClickListeners();
@@ -57,6 +56,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         txtGreeting = findViewById(R.id.txtGreeting);
         txtUserEmail = findViewById(R.id.txtUserEmail);
         btnNotifications = findViewById(R.id.btnNotifications);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
 
         // Core Balance Summary Info
         txtTotalCount = findViewById(R.id.txtTotalCount);
@@ -66,6 +66,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         cardManageLoan = findViewById(R.id.cardManageLoan);
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
         cardManageUtility = findViewById(R.id.cardManageUtility);
+        cardSavingManager = findViewById(R.id.cardSavingManager);
         cardB2BInvoice = findViewById(R.id.B2BInvoice);
         cardAnalytics = findViewById(R.id.cardAnalytics);
 
@@ -73,9 +74,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         recentSection = findViewById(R.id.recentSection);
         txtViewAll = findViewById(R.id.txtViewAll);
         SampleRecycler = findViewById(R.id.recyclerRecent);
-
-        // Bottom Operations Terminal
-        btnLogout = findViewById(R.id.btnLogout);
     }
 
     /**
@@ -87,18 +85,34 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 Toast.makeText(this, "Opening corporate notification stream...", Toast.LENGTH_SHORT).show()
         );
 
+        // Global Sign-Out Logic Route
+        btnTopLogout.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, LoginFormActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+        });
+
         // Grid Component Intercept Vectors
-        cardManageLoan.setOnClickListener(v -> showModuleToast("Loan Management"));
-        cardManageUtility.setOnClickListener(v -> showModuleToast("Utility Bill Tracker"));
+        cardManageLoan.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, LoanFormActivity.class);
+            startActivity(intent);
+        });
+
+        cardManageUtility.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class);
+            startActivity(intent);
+        });
+        
+        cardSavingManager.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
 
         cardManageSubscription.setOnClickListener(v -> {
-            // Flips visibility flags to expose preview adapters conditionally
-            if (recentSection.getVisibility() == View.GONE) {
-                recentSection.setVisibility(View.VISIBLE);
-                Toast.makeText(this, "Showing Subscriptions feed preview below", Toast.LENGTH_SHORT).show();
-            } else {
-                recentSection.setVisibility(View.GONE);
-            }
+            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
         });
 
         // Direct Core Component Activations
@@ -112,13 +126,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        txtViewAll.setOnClickListener(v -> showModuleToast("All System Subscriptions"));
-
-        // Global Sign-Out Logic Route
-        btnLogout.setOnClickListener(v -> {
-            Toast.makeText(this, "Signing out secure workspace session...", Toast.LENGTH_LONG).show();
-            // Optional: redirect to a login portal activity screen
-            finish();
+        txtViewAll.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
         });
     }
 
@@ -127,7 +137,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
      */
     private void configureRecentListsFeed() {
         SampleRecycler.setLayoutManager(new LinearLayoutManager(this));
-        // Recycler row rendering elements link here via standard layout templates when adapter data models are populated.
     }
 
     /**
