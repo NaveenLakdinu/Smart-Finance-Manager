@@ -60,7 +60,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
             cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
         }
         if (cardSavingManager != null) {
-            cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
+            cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, StudentSavingActivity.class)));
         }
         if (cardUtilityManager != null) {
             cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
