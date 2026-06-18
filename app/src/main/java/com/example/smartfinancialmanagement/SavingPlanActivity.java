@@ -158,14 +158,66 @@ public class SavingPlanActivity extends AppCompatActivity {
     }
 
     private boolean validateForm() {
-        if (goalNameInput.getText().toString().trim().isEmpty()) {
+        String goalName = goalNameInput.getText().toString().trim();
+        String targetAmountStr = targetAmountInput.getText().toString().trim();
+        String currentSavingsStr = currentSavingsInput.getText().toString().trim();
+        String monthlyAmountStr = monthlyAmountInput.getText().toString().trim();
+
+        if (goalName.isEmpty()) {
             goalNameInput.setError("Enter goal name");
+            goalNameInput.requestFocus();
             return false;
         }
-        if (targetAmountInput.getText().toString().trim().isEmpty()) {
+
+        if (targetAmountStr.isEmpty()) {
             targetAmountInput.setError("Enter target amount");
+            targetAmountInput.requestFocus();
             return false;
         }
+
+        try {
+            double target = Double.parseDouble(targetAmountStr);
+            if (target <= 0) {
+                targetAmountInput.setError("Target amount must be greater than zero");
+                targetAmountInput.requestFocus();
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            targetAmountInput.setError("Enter a valid numeric amount");
+            targetAmountInput.requestFocus();
+            return false;
+        }
+
+        if (!currentSavingsStr.isEmpty()) {
+            try {
+                double current = Double.parseDouble(currentSavingsStr);
+                if (current < 0) {
+                    currentSavingsInput.setError("Current savings cannot be negative");
+                    currentSavingsInput.requestFocus();
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                currentSavingsInput.setError("Enter a valid numeric amount");
+                currentSavingsInput.requestFocus();
+                return false;
+            }
+        }
+
+        if (!monthlyAmountStr.isEmpty()) {
+            try {
+                double monthly = Double.parseDouble(monthlyAmountStr);
+                if (monthly < 0) {
+                    monthlyAmountInput.setError("Monthly amount cannot be negative");
+                    monthlyAmountInput.requestFocus();
+                    return false;
+                }
+            } catch (NumberFormatException e) {
+                monthlyAmountInput.setError("Enter a valid numeric amount");
+                monthlyAmountInput.requestFocus();
+                return false;
+            }
+        }
+
         if (targetDateText.getText().toString().equals("Select goal deadline")) {
             Toast.makeText(this, "Select a date", Toast.LENGTH_SHORT).show();
             return false;

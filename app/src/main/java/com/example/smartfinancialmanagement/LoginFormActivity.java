@@ -112,17 +112,26 @@ public class LoginFormActivity extends AppCompatActivity {
         String password = passwordInput.getText().toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            usernameInput.setError("Please enter email");
+            usernameInput.requestFocus();
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            usernameInput.setError("Please enter a valid email address");
+            usernameInput.requestFocus();
             return;
         }
 
         if (password.isEmpty()) {
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            passwordInput.setError("Please enter password");
+            passwordInput.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordInput.setError("Password must be at least 6 characters");
+            passwordInput.requestFocus();
             return;
         }
 

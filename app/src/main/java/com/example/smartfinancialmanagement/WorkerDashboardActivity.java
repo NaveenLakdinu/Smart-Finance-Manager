@@ -18,7 +18,8 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtEarnings, txtPayrollStatus;
-    private MaterialCardView cardWorkTasks, cardExpenseClaims, cardAttendance, cardPayslips, cardLoanManager;
+    private MaterialCardView cardWorkTasks, cardExpenseClaims, cardPayslips, cardLoanManager;
+    private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
     private android.view.View btnTopLogout;
 
     @Override
@@ -40,9 +41,11 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
         cardWorkTasks = findViewById(R.id.cardWorkTasks);
         cardExpenseClaims = findViewById(R.id.cardExpenseClaims);
-        cardAttendance = findViewById(R.id.cardAttendance);
         cardPayslips = findViewById(R.id.cardPayslips);
         cardLoanManager = findViewById(R.id.cardLoanManager);
+        cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
+        cardSavingManager = findViewById(R.id.cardSavingManager);
+        cardUtilityManager = findViewById(R.id.cardUtilityManager);
         
         btnTopLogout = findViewById(R.id.btnTopLogout);
     }
@@ -76,12 +79,32 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
-        cardWorkTasks.setOnClickListener(v -> Toast.makeText(this, "Task Management - Coming Soon", Toast.LENGTH_SHORT).show());
-        cardExpenseClaims.setOnClickListener(v -> Toast.makeText(this, "Expense Claims - Coming Soon", Toast.LENGTH_SHORT).show());
-        cardAttendance.setOnClickListener(v -> Toast.makeText(this, "Attendance Tracker - Coming Soon", Toast.LENGTH_SHORT).show());
-        cardPayslips.setOnClickListener(v -> Toast.makeText(this, "Payslips & Reports - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardWorkTasks.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WorkerTasksActivity.class);
+            startActivity(intent);
+        });
+        cardExpenseClaims.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ExpenseClaimsActivity.class);
+            startActivity(intent);
+        });
+        cardPayslips.setOnClickListener(v -> {
+            Intent intent = new Intent(this, WorkerPayslipActivity.class);
+            startActivity(intent);
+        });
         cardLoanManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, LoanFormActivity.class);
+            startActivity(intent);
+        });
+        cardSubscriptionManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SubscriptionManagerActivity.class);
+            startActivity(intent);
+        });
+        cardSavingManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
+        cardUtilityManager.setOnClickListener(v -> {
+            Intent intent = new Intent(this, UtilityManagerActivity.class);
             startActivity(intent);
         });
 
