@@ -369,6 +369,16 @@
                     app:cornerRadius="30dp"
                     app:elevation="0dp" />
 
+                <!-- Loading Indicator -->
+                <ProgressBar
+                    android:id="@+id/progressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:visibility="gone"
+                    android:indeterminateTint="#071A33"
+                    android:layout_marginBottom="20dp" />
+
                 <!-- ── LOGIN LINK ── -->
                 <LinearLayout
                     android:layout_width="wrap_content"
