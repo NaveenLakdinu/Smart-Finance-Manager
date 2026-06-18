@@ -10,7 +10,7 @@ public class StudentSavingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_savings);
+        setContentView(R.layout.activity_student_saving);
 
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
         if (bottomNavigationView != null) {
