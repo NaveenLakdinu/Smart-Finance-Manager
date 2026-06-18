@@ -109,10 +109,6 @@
             android:exported="false" />
 
         <activity
-            android:name=".BudgetPlannerActivity"
-            android:exported="false" />
-
-        <activity
             android:name=".AnalyticsActivity"
             android:exported="false" />
         <activity
@@ -135,6 +131,16 @@
             android:exported="false" />
         <activity
             android:name=".ExpenseClaimsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".InvoiceHubActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateInvoiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InvoiceDetailsActivity"
             android:exported="false" />
 
         <service

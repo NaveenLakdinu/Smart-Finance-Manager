@@ -2,32 +2,31 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import java.util.Locale;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
     private TextView btnBack;
-    private Button btnGeneratePdf;
+    private MaterialButton btnGeneratePdf; // Updated component type
 
     // Summary Display UI
     private TextView txtMonthlyProfit;
-    private TextView txtProfitMargin;
     private TextView txtAnalyticsSummary;
 
     // Metrics Trend Outputs
     private TextView txtRevenueTrend;
     private TextView txtExpenseTrend;
 
-    // Clickable Material Metrics Cards
-    private CardView cardRevenueTrend;
-    private CardView cardExpenseTrend;
+    // Clickable Material Metrics Cards (Updated component types)
+    private MaterialCardView cardRevenueTrend;
+    private MaterialCardView cardExpenseTrend;
 
     // Local Variables to hold temporary state before backend integration
     private double currentRevenue = 250000.0; // Default mock value
@@ -40,7 +39,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_analytic);
+        setContentView(R.layout.activity_business_analytic); // Pointing to your optimized layout name
 
         initializeViews();
         setupResultLaunchers();
@@ -55,7 +54,6 @@ public class AnalyticsActivity extends AppCompatActivity {
         btnGeneratePdf = findViewById(R.id.btnGeneratePdf);
 
         txtMonthlyProfit = findViewById(R.id.txtMonthlyProfit);
-
         txtAnalyticsSummary = findViewById(R.id.txtAnalyticsSummary);
 
         txtRevenueTrend = findViewById(R.id.txtRevenueTrend);
@@ -103,8 +101,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         // Launch Revenue UI safely via registered contract launcher
         if (cardRevenueTrend != null) {
             cardRevenueTrend.setOnClickListener(v -> {
+                // Assuming Target Activity name matches your management convention
                 Intent intent = new Intent(AnalyticsActivity.this, RevenueManagementActivity.class);
-                intent.putExtra("CURRENT_REVENUE", currentRevenue); // pass current value if needed
+                intent.putExtra("CURRENT_REVENUE", currentRevenue);
                 revenueLauncher.launch(intent);
             });
         }
@@ -112,8 +111,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         // Launch Expense UI safely via registered contract launcher
         if (cardExpenseTrend != null) {
             cardExpenseTrend.setOnClickListener(v -> {
+                // Assuming Target Activity name matches your management convention
                 Intent intent = new Intent(AnalyticsActivity.this, ExpenseManagementActivity.class);
-                intent.putExtra("CURRENT_EXPENSE", currentExpenses); // pass current value if needed
+                intent.putExtra("CURRENT_EXPENSE", currentExpenses);
                 expenseLauncher.launch(intent);
             });
         }
@@ -124,23 +124,21 @@ public class AnalyticsActivity extends AppCompatActivity {
      */
     private void updateFinancialUI() {
         // Update basic tracking text elements first
-        txtRevenueTrend.setText(String.format(Locale.getDefault(), "Rs. %,.0f", currentRevenue));
-        txtExpenseTrend.setText(String.format(Locale.getDefault(), "Rs. %,.0f", currentExpenses));
+        txtRevenueTrend.setText(String.format(Locale.getDefault(), "%,.0fK", currentRevenue / 1000));
+        txtExpenseTrend.setText(String.format(Locale.getDefault(), "%,.0fK", currentExpenses / 1000));
 
-        // Execute dynamic math configurations
+        // Execute dynamic net calculation loop
         double netProfit = currentRevenue - currentExpenses;
-        double marginPercentage = (currentRevenue > 0) ? (netProfit / currentRevenue) * 100 : 0.0;
 
         // Apply string values directly onto summary metrics card elements
         txtMonthlyProfit.setText(String.format(Locale.getDefault(), "Rs. %,.2f", netProfit));
-        txtProfitMargin.setText(String.format(Locale.getDefault(), "%.1f%%", marginPercentage));
 
-        // Adjust style states depending on dynamic output balances
+        // Adjust style states and system messages depending on negative or positive states
         if (netProfit < 0) {
-            txtMonthlyProfit.setTextColor(getResources().getColor(android.R.color.holo_red_dark));
+            txtMonthlyProfit.setTextColor(android.graphics.Color.parseColor("#FF4D4D")); // Bright theme-aligned warning red
             txtAnalyticsSummary.setText("Warning: Business operations are currently running at a loss.");
         } else {
-            txtMonthlyProfit.setTextColor(getResources().getColor(android.R.color.holo_green_dark));
+            txtMonthlyProfit.setTextColor(android.graphics.Color.parseColor("#4DE800")); // Neon green layout match
             txtAnalyticsSummary.setText("Business performance is stable and improving.");
         }
     }

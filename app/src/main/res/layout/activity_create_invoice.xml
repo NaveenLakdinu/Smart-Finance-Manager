@@ -69,7 +69,7 @@
                 android:layout_height="56dp"
                 android:hint="Company / Client Name"
                 android:textColor="#FFFFFF"
-                android:inputType="textCompany"
+                android:inputType="textCapWords"
                 android:paddingHorizontal="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
 

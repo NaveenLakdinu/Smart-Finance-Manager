@@ -1,120 +1,139 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import android.content.Intent;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
-    // Top Profile Area Views
-    private TextView txtNotificationBell;
+    // Top Header / Profile Info
+    private TextView txtProfileLetter;
+    private TextView txtGreeting;
+    private TextView txtUserEmail;
+    private TextView btnNotifications;
 
-    // Business Feature Cards
-    private CardView cardRevenue;
-    private CardView cardExpense;
-    private CardView cardInventory;
-    private CardView cardBudget;
-    private CardView cardProfit;
-    private CardView cardAnalytics;
+    // Summary State Fields
+    private TextView txtTotalCount;
+    private TextView txtSubMessage;
+
+    // Feature Modules Grid
+    private MaterialCardView cardManageLoan;
+    private MaterialCardView cardManageSubscription;
+    private MaterialCardView cardManageUtility;
+    private MaterialCardView cardB2BInvoice;
+    private MaterialCardView cardAnalytics;
+
+    // Bottom Feed Lists
+    private View recentSection;
+    private TextView txtViewAll;
+    private RecyclerView SampleRecycler;
+
+    // Account Actions
+    private MaterialButton btnLogout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_owner_dashboard); // Ensure this matches your XML file name
+        setContentView(R.layout.activity_business_owner_dashboard); // Pointing directly to your updated layout container
 
-        // 1. Initialize Interactive Views
-        initViews();
-
-        // 2. Setup Click Listeners
+        initializeViews();
         setupClickListeners();
+        configureRecentListsFeed();
     }
 
     /**
-     * Finds and binds only the interactive views from the XML layout using their IDs.
+     * Maps and initializes layout components safely.
      */
-    private void initViews() {
-        // Notification Icon
-        txtNotificationBell = findViewById(R.id.txtNotificationBell);
+    private void initializeViews() {
+        // Header Binds
+        txtProfileLetter = findViewById(R.id.txtProfileLetter);
+        txtGreeting = findViewById(R.id.txtGreeting);
+        txtUserEmail = findViewById(R.id.txtUserEmail);
+        btnNotifications = findViewById(R.id.btnNotifications);
 
-        // Feature Grid Cards
-        cardRevenue = findViewById(R.id.cardRevenue);
-        cardExpense = findViewById(R.id.cardExpense);
-        cardInventory = findViewById(R.id.cardInventory);
-        cardBudget = findViewById(R.id.cardBudget);
-        cardProfit = findViewById(R.id.cardProfit);
+        // Core Balance Summary Info
+        txtTotalCount = findViewById(R.id.txtTotalCount);
+        txtSubMessage = findViewById(R.id.txtSubMessage);
+
+        // Grid Actions
+        cardManageLoan = findViewById(R.id.cardManageLoan);
+        cardManageSubscription = findViewById(R.id.cardManageSubscription);
+        cardManageUtility = findViewById(R.id.cardManageUtility);
+        cardB2BInvoice = findViewById(R.id.B2BInvoice);
         cardAnalytics = findViewById(R.id.cardAnalytics);
+
+        // Secondary List Containers
+        recentSection = findViewById(R.id.recentSection);
+        txtViewAll = findViewById(R.id.txtViewAll);
+        SampleRecycler = findViewById(R.id.recyclerRecent);
+
+        // Bottom Operations Terminal
+        btnLogout = findViewById(R.id.btnLogout);
     }
 
     /**
-     * Configures the click actions for all interactive elements.
+     * Chains UI component event loop triggers using optimal Java lambda blocks.
      */
     private void setupClickListeners() {
-        // Notification Icon Click
-        txtNotificationBell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Notifications clicked");
+        // Notification Alert Bell Interaction Handler
+        btnNotifications.setOnClickListener(v ->
+                Toast.makeText(this, "Opening corporate notification stream...", Toast.LENGTH_SHORT).show()
+        );
+
+        // Grid Component Intercept Vectors
+        cardManageLoan.setOnClickListener(v -> showModuleToast("Loan Management"));
+        cardManageUtility.setOnClickListener(v -> showModuleToast("Utility Bill Tracker"));
+
+        cardManageSubscription.setOnClickListener(v -> {
+            // Flips visibility flags to expose preview adapters conditionally
+            if (recentSection.getVisibility() == View.GONE) {
+                recentSection.setVisibility(View.VISIBLE);
+                Toast.makeText(this, "Showing Subscriptions feed preview below", Toast.LENGTH_SHORT).show();
+            } else {
+                recentSection.setVisibility(View.GONE);
             }
         });
 
-        // Feature Card Clicks
-        cardRevenue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,RevenueManagementActivity.class);
-                startActivity(intent);
-            }
+        // Direct Core Component Activations
+        cardB2BInvoice.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class);
+            startActivity(intent);
         });
 
-        cardExpense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, ExpenseManagementActivity.class);
-                startActivity(intent);
-            }
+        cardAnalytics.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class);
+            startActivity(intent);
         });
 
-        cardInventory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,InventoryManagementActivity.class);
-                startActivity(intent);
-            }
-        });
+        txtViewAll.setOnClickListener(v -> showModuleToast("All System Subscriptions"));
 
-        cardBudget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,BudgetPlannerActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        cardProfit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, ProfitLossActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        cardAnalytics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,AnalyticsActivity.class);
-                startActivity(intent);
-            }
+        // Global Sign-Out Logic Route
+        btnLogout.setOnClickListener(v -> {
+            Toast.makeText(this, "Signing out secure workspace session...", Toast.LENGTH_LONG).show();
+            // Optional: redirect to a login portal activity screen
+            finish();
         });
     }
 
     /**
-     * Helper method to easily display a toast message when an item is tapped.
+     * Initializes structural linear state layouts safely for the recent view.
      */
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void configureRecentListsFeed() {
+        SampleRecycler.setLayoutManager(new LinearLayoutManager(this));
+        // Recycler row rendering elements link here via standard layout templates when adapter data models are populated.
+    }
+
+    /**
+     * Standardized message printer shortcut.
+     */
+    private void showModuleToast(String moduleName) {
+        Toast.makeText(this, moduleName + " module integration coming soon!", Toast.LENGTH_SHORT).show();
     }
 }
