@@ -61,6 +61,8 @@ public class MainActivity extends AppCompatActivity {
                 intent = new Intent(MainActivity.this, BusinessDashboardActivity.class);
                 break;
             case "Student":
+                intent = new Intent(MainActivity.this, StudentDashboardActivity.class);
+                break;
             default:
                 intent = new Intent(MainActivity.this, DashboardActivity.class);
                 break;
