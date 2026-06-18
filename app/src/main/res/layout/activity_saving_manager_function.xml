@@ -34,14 +34,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:text="Utility Manager"
+                android:text="Saving Manager"
                 android:textColor="#FFFFFF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
         </LinearLayout>
 
-        <!-- Hero Card: Total Monthly Utilities -->
+        <!-- Hero Card: Total Savings -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -60,17 +60,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ESTIMATED MONTHLY TOTAL"
+                    android:text="TOTAL SAVINGS GOAL"
                     android:textColor="#7A9CC0"
                     android:textSize="11sp"
                     android:letterSpacing="0.1" />
 
                 <TextView
-                    android:id="@+id/txtTotalUtilityAmount"
+                    android:id="@+id/txtTotalSavings"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="LKR 12,500.00"
+                    android:text="LKR 540,000.00"
                     android:textColor="#FFFFFF"
                     android:textSize="28sp"
                     android:textStyle="bold" />
@@ -79,18 +79,18 @@
                     android:layout_width="40dp"
                     android:layout_height="3dp"
                     android:layout_marginTop="16dp"
-                    android:background="#F59E0B" />
+                    android:background="#4ADE80" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Main Actions Section -->
+        <!-- Manager Actions -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            android:text="Manager Actions"
+            android:text="Saving Actions"
             android:textColor="#F0F6FF"
             android:textSize="17sp"
             android:textStyle="bold" />
@@ -101,46 +101,9 @@
             android:layout_marginTop="16dp"
             android:columnCount="2">
 
-            <!-- Register New Bill -->
+            <!-- Add Goal -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnRegisterNewBill"
-                android:layout_width="0dp"
-                android:layout_height="110dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                android:clickable="true"
-                android:focusable="true"
-                android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/bg_glass_card"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_function_icon_blue"
-                        android:gravity="center"
-                        android:text="➕"
-                        android:textSize="20sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Add Utility"
-                        android:textColor="#F0F6FF"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- View All Bills -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnViewBill"
+                android:id="@+id/btnAddGoal"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
                 android:layout_columnWeight="1"
@@ -162,22 +125,59 @@
                         android:layout_height="44dp"
                         android:background="@drawable/bg_function_icon_green"
                         android:gravity="center"
-                        android:text="📜"
+                        android:text="🎯"
                         android:textSize="20sp" />
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="View Bills"
+                        android:text="Add Goal"
                         android:textColor="#F0F6FF"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Generate Report -->
+            <!-- View Goals -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/btnGetReport"
+                android:id="@+id/btnViewGoals"
+                android:layout_width="0dp"
+                android:layout_height="110dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_function_icon_blue"
+                        android:gravity="center"
+                        android:text="🏦"
+                        android:textSize="20sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="All Goals"
+                        android:textColor="#F0F6FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Savings Report -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/btnSavingReport"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
                 android:layout_columnWeight="1"
@@ -205,7 +205,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Get Report"
+                        android:text="Report"
                         android:textColor="#F0F6FF"
                         android:textSize="12sp"
                         android:textStyle="bold" />
@@ -214,7 +214,7 @@
 
         </GridLayout>
 
-        <!-- Recent Bills Section -->
+        <!-- Active Goals Section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -226,13 +226,12 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Recent Utilities"
+                android:text="Active Goals"
                 android:textColor="#F0F6FF"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/txtSeeAllRecent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See all →"
@@ -241,13 +240,12 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/layoutRecentBills"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:orientation="vertical">
 
-            <!-- Sample Item 1 -->
+            <!-- Goal 1 -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -259,40 +257,53 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@drawable/bg_glass_card"
-                    android:gravity="center_vertical"
+                    android:orientation="vertical"
                     android:padding="16dp">
-                    <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
-                        android:background="@drawable/bg_function_icon_orange"
-                        android:gravity="center"
-                        android:text="⚡"
-                        android:textSize="18sp" />
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/bg_function_icon_blue"
+                            android:gravity="center"
+                            android:text="🚗"
+                            android:textSize="18sp" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="New Car Fund"
+                                android:textColor="#FFFFFF"
+                                android:textStyle="bold" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Target: LKR 1.5M"
+                                android:textColor="#7A9CC0"
+                                android:textSize="12sp" />
+                        </LinearLayout>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Electricity Bill"
-                            android:textColor="#FFFFFF"
+                            android:text="45%"
+                            android:textColor="#4ADE80"
                             android:textStyle="bold" />
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="May 2026 • Paid"
-                            android:textColor="#7A9CC0"
-                            android:textSize="12sp" />
                     </LinearLayout>
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="LKR 4,200"
-                        android:textColor="#FFFFFF"
-                        android:textStyle="bold" />
+                    <ProgressBar
+                        style="@android:style/Widget.ProgressBar.Horizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="12dp"
+                        android:progress="45"
+                        android:progressDrawable="@drawable/progress_active" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 

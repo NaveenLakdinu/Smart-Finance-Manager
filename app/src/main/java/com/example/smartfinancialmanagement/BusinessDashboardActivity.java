@@ -15,6 +15,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private TextView txtNotificationBell;
     private View btnTopLogout;
 
+    // Core Manager Cards
+    private View cardLoanManager, cardSubscriptionManager, cardSavingManager, cardUtilityManager;
+
     // Business Feature Cards
     private CardView cardRevenue;
     private CardView cardExpense;
@@ -42,6 +45,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         // Notification Icon
         txtNotificationBell = findViewById(R.id.txtNotificationBell);
         btnTopLogout = findViewById(R.id.btnTopLogout);
+
+        // Core Managers
+        cardLoanManager = findViewById(R.id.cardLoanManager);
+        cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
+        cardSavingManager = findViewById(R.id.cardSavingManager);
+        cardUtilityManager = findViewById(R.id.cardUtilityManager);
 
         // Feature Grid Cards
         cardRevenue = findViewById(R.id.cardRevenue);
@@ -74,6 +83,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // Core Manager Clicks
+        cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
+        cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
+        cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
+        cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
 
         // Feature Card Clicks
         cardRevenue.setOnClickListener(new View.OnClickListener() {
