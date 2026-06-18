@@ -22,7 +22,7 @@ public class GetReportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_report_form);
+        setContentView(R.layout.activity_get_utilityreport_form);
 
         // 1. Initialize Views from XML
         initializeViews();
