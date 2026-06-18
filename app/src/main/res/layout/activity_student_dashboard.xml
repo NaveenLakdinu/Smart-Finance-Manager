@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4F8"
+    android:background="@drawable/bg_dashboard"
     tools:context=".StudentDashboardActivity">
 
     <!-- ══════════════════════════════════════════ -->
@@ -32,8 +32,8 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutDashboardHeader"
                 android:layout_width="match_parent"
-                android:layout_height="270dp"
-                android:background="@drawable/bg_budget_header"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_hero_card"
                 android:padding="20dp">
 
                 <!-- Decorative circle background accent -->
@@ -45,8 +45,8 @@
                     android:layout_marginEnd="-40dp"
                     android:alpha="0.12"
                     android:background="@drawable/bg_profile_circle"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <!-- Greeting & App Title Group -->
                 <LinearLayout
@@ -55,9 +55,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:orientation="vertical"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/frameDashboardNotifications"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/frameDashboardNotifications">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
                         android:id="@+id/txtDashboardGreeting"
@@ -86,8 +86,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="32dp"
                     android:orientation="horizontal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <FrameLayout
                         android:id="@+id/frameDashboardNotifications"
@@ -103,8 +103,8 @@
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/ic_notification"
                             android:contentDescription="Notifications"
+                            android:src="@drawable/ic_notification"
                             app:tint="#FFFFFF" />
 
                         <!-- Badge indicator ("3") -->
@@ -115,11 +115,11 @@
                             android:layout_gravity="top|end"
                             android:layout_margin="2dp"
                             android:background="@drawable/icon_circle_red"
+                            android:gravity="center"
                             android:text="3"
                             android:textColor="#FFFFFF"
                             android:textSize="9sp"
-                            android:textStyle="bold"
-                            android:gravity="center" />
+                            android:textStyle="bold" />
 
                     </FrameLayout>
 
@@ -150,21 +150,21 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:orientation="vertical"
                     android:gravity="center_horizontal"
-                    app:layout_constraintTop_toBottomOf="@id/layoutGreetingTitle"
+                    android:orientation="vertical"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/layoutGreetingTitle">
 
                     <TextView
                         android:id="@+id/txtTotalBalanceLabel"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:letterSpacing="0.08"
                         android:text="TOTAL BALANCE"
                         android:textColor="#BCE0FF"
                         android:textSize="11sp"
-                        android:textStyle="bold"
-                        android:letterSpacing="0.08" />
+                        android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/txtTotalBalanceValue"
@@ -1299,7 +1299,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_budget_header"
+                    android:background="@drawable/bg_hero_card"
                     android:orientation="vertical"
                     android:padding="20dp">
 
