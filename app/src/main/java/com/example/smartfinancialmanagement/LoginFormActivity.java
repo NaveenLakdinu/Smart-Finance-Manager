@@ -112,17 +112,26 @@ public class LoginFormActivity extends AppCompatActivity {
         String password = passwordInput.getText().toString().trim();
 
         if (email.isEmpty()) {
-            Toast.makeText(this, "Please enter email", Toast.LENGTH_SHORT).show();
+            usernameInput.setError("Please enter email");
+            usernameInput.requestFocus();
             return;
         }
 
         if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Please enter a valid email address", Toast.LENGTH_SHORT).show();
+            usernameInput.setError("Please enter a valid email address");
+            usernameInput.requestFocus();
             return;
         }
 
         if (password.isEmpty()) {
-            Toast.makeText(this, "Please enter password", Toast.LENGTH_SHORT).show();
+            passwordInput.setError("Please enter password");
+            passwordInput.requestFocus();
+            return;
+        }
+
+        if (password.length() < 6) {
+            passwordInput.setError("Password must be at least 6 characters");
+            passwordInput.requestFocus();
             return;
         }
 
@@ -172,6 +181,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                     .apply();
 
                             // 💡 FIXED: Evaluated switch-case strings to align perfectly with DB values
+                            // 💡 LoginFormActivity එකේ checkUserInFirestore මෙතඩ් එක ඇතුළේ තියෙන switch එක මේ විදිහට අප්ඩේට් කරන්න:
                             switch (role) {
                                 case "Company worker":
                                     navigateToWorkerDashboard(role);
@@ -182,9 +192,14 @@ public class LoginFormActivity extends AppCompatActivity {
                                     break;
 
                                 case "Student":
+                                    navigateToStudentDashboard(role);
+                                    break;
+
                                 case "Business owner":
+                                    navigateToBusinessDashboard(role);
+                                    break;
+
                                 default:
-                                    // Route to default dashboard since specific pages are pending creation
                                     navigateToDashboard(role);
                                     break;
                             }
@@ -219,6 +234,23 @@ public class LoginFormActivity extends AppCompatActivity {
 
     private void navigateToMultiAccountDashboard(String role) {
         Intent intent = new Intent(LoginFormActivity.this, MultiAccountDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    // 💡LoginFormActivity එකේ අගටම මේ මෙතඩ් දෙක පේස්ට් කරන්න:
+    private void navigateToStudentDashboard(String role) {
+        Intent intent = new Intent(LoginFormActivity.this, StudentDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void navigateToBusinessDashboard(String role) {
+        Intent intent = new Intent(LoginFormActivity.this, BusinessDashboardActivity.class);
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);

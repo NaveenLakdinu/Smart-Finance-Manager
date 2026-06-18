@@ -27,8 +27,8 @@ public class DashboardActivity extends AppCompatActivity {
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
     private TextView txtTotalCount, txtSubMessage;
 
-    private MaterialCardView cardManageLoan, cardManageSubscription, cardManageUtility, cardPaused;
-    private MaterialButton btnLogout;
+    private MaterialCardView cardManageLoan, cardManageSubscription, cardManageSaving, cardManageUtility;
+    private android.view.View btnTopLogout;
 
     private LinearLayout recentSection;
     private RecyclerView recyclerRecent;
@@ -58,9 +58,9 @@ public class DashboardActivity extends AppCompatActivity {
 
         cardManageLoan = findViewById(R.id.cardManageLoan);
         cardManageSubscription = findViewById(R.id.cardManageSubscription);
+        cardManageSaving = findViewById(R.id.cardManageSaving);
         cardManageUtility = findViewById(R.id.cardManageUtility);
-        cardPaused = findViewById(R.id.cardPaused);
-        btnLogout = findViewById(R.id.btnLogout);
+        btnTopLogout = findViewById(R.id.btnTopLogout);
 
         recentSection = findViewById(R.id.recentSection);
         recyclerRecent = findViewById(R.id.recyclerRecent);
@@ -118,14 +118,22 @@ public class DashboardActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-        cardManageSubscription.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Subscription Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageSubscription.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
+        });
 
-        cardManageUtility.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Utility Management - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardManageSaving.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
 
+        cardManageUtility.setOnClickListener(view -> {
+            Intent intent = new Intent(DashboardActivity.this, UtilityManagerActivity.class);
+            startActivity(intent);
+        });
 
-        cardPaused.setOnClickListener(view -> Toast.makeText(DashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show());
-
-        btnLogout.setOnClickListener(view -> {
+        btnTopLogout.setOnClickListener(view -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(DashboardActivity.this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -207,4 +215,4 @@ public class DashboardActivity extends AppCompatActivity {
 
         recentSection.setVisibility(View.GONE);
     }
-    }
+}

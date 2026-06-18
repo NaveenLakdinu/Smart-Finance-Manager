@@ -5,29 +5,26 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.button.MaterialButton;
+import androidx.cardview.widget.CardView;
 import android.content.Intent;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
     // Top Profile Area Views
-    private TextView btnNotifications;
+    private TextView txtNotificationBell;
 
     // Business Feature Cards
-    private MaterialCardView cardManageLoan;
-    private MaterialCardView cardManageSubscription;
-    private MaterialCardView cardManageUtility;
-    private MaterialCardView cardB2BInvoice;
-    private MaterialCardView cardAnalytics;
-
-    // Account Actions
-    private MaterialButton btnLogout;
+    private CardView cardRevenue;
+    private CardView cardExpense;
+    private CardView cardInventory;
+    private CardView cardBudget;
+    private CardView cardProfit;
+    private CardView cardAnalytics;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_owner_dashboard); // Clean mapping to your updated business XML layout
+        setContentView(R.layout.activity_business_owner_dashboard); // Ensure this matches your XML file name
 
         // 1. Initialize Interactive Views
         initViews();
@@ -37,86 +34,79 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     /**
-     * Finds and binds the interactive views from your updated layout.
+     * Finds and binds only the interactive views from the XML layout using their IDs.
      */
     private void initViews() {
-        // Top Layout Interactions
-        btnNotifications = findViewById(R.id.btnNotifications);
+        // Notification Icon
+        txtNotificationBell = findViewById(R.id.txtNotificationBell);
 
-        // Updated Feature Grid Material Cards
-        cardManageLoan = findViewById(R.id.cardManageLoan);
-        cardManageSubscription = findViewById(R.id.cardManageSubscription);
-        cardManageUtility = findViewById(R.id.cardManageUtility);
-        cardB2BInvoice = findViewById(R.id.cardB2BInvoice); // Triggers B2B Invoice Hub
+        // Feature Grid Cards
+        cardRevenue = findViewById(R.id.cardRevenue);
+        cardExpense = findViewById(R.id.cardExpense);
+        cardInventory = findViewById(R.id.cardInventory);
+        cardBudget = findViewById(R.id.cardBudget);
+        cardProfit = findViewById(R.id.cardProfit);
         cardAnalytics = findViewById(R.id.cardAnalytics);
-
-        // Exit Navigation
-        btnLogout = findViewById(R.id.btnLogout);
     }
 
     /**
-     * Configures click actions for your operational layout assets.
+     * Configures the click actions for all interactive elements.
      */
     private void setupClickListeners() {
-        // Notification Hub View
-        btnNotifications.setOnClickListener(new View.OnClickListener() {
+        // Notification Icon Click
+        txtNotificationBell.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showToast("Notifications clicked");
             }
         });
 
-        // Credit & Loan Features
-        cardManageLoan.setOnClickListener(new View.OnClickListener() {
+        // Feature Card Clicks
+        cardRevenue.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BusinessDashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Recurring Plans Tracker
-        cardManageSubscription.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(BusinessDashboardActivity.this, "Paused Subscriptions - Coming Soon", Toast.LENGTH_SHORT).show();
-            }
-        });
-
-        // Fixed Utility Costs
-        cardManageUtility.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class);
+                Intent intent = new Intent(BusinessDashboardActivity.this,RevenueManagementActivity.class);
                 startActivity(intent);
             }
         });
 
-        // New Feature Workflow: Handles your Accounts Receivable
-        cardB2BInvoice.setOnClickListener(new View.OnClickListener() {
+        cardExpense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Instantly opens Screen 1: The main overview invoice portal
-                Intent intent = new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class);
+                Intent intent = new Intent(BusinessDashboardActivity.this, ExpenseManagementActivity.class);
                 startActivity(intent);
             }
         });
 
-        // Operational Financial Reports
+        cardInventory.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusinessDashboardActivity.this,InventoryManagementActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardBudget.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusinessDashboardActivity.this,BudgetPlannerActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        cardProfit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(BusinessDashboardActivity.this, ProfitLossActivity.class);
+                startActivity(intent);
+            }
+        });
+
         cardAnalytics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class);
+                Intent intent = new Intent(BusinessDashboardActivity.this,AnalyticsActivity.class);
                 startActivity(intent);
-            }
-        });
-
-        // Terminate Session Loop
-        btnLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Signing out...");
-                // Add your real authorization session clear logic here if necessary
-                finish();
             }
         });
     }

@@ -103,6 +103,25 @@
 
             </FrameLayout>
 
+            <!-- Creative Circle Logout Button -->
+            <FrameLayout
+                android:id="@+id/btnTopLogout"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_power" />
+
+            </FrameLayout>
+
         </LinearLayout>
 
         <!-- ══════════════════════════════════════════ -->
@@ -395,9 +414,9 @@
             android:layout_marginTop="14dp"
             android:orientation="horizontal">
 
-            <!-- Manage Utility -->
+            <!-- Manage Saving -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardManageUtility"
+                android:id="@+id/cardManageSaving"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
                 android:layout_weight="1"
@@ -424,7 +443,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⚡"
+                            android:text="🏦"
                             android:textSize="26sp" />
                     </LinearLayout>
 
@@ -432,7 +451,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Manage Utility"
+                        android:text="Savings"
                         android:textColor="#E8F4FF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -450,9 +469,9 @@
 
             <Space android:layout_width="14dp" android:layout_height="1dp" />
 
-            <!-- Paused -->
+            <!-- Manage Utility -->
             <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardPaused"
+                android:id="@+id/cardManageUtility"
                 android:layout_width="0dp"
                 android:layout_height="120dp"
                 android:layout_weight="1"
@@ -479,7 +498,7 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⏸"
+                            android:text="💡"
                             android:textSize="26sp" />
                     </LinearLayout>
 
@@ -487,7 +506,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:text="Paused"
+                        android:text="Utilities"
                         android:textColor="#E8F4FF"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -497,7 +516,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="#FCD34D" />
+                        android:background="#F59E0B" />
 
                 </LinearLayout>
 
@@ -556,88 +575,6 @@
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-
-        <!-- ══════════════════════════════════════════ -->
-        <!--   DIVIDER WITH LABEL                      -->
-        <!-- ══════════════════════════════════════════ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="36dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="#1A3050" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="14dp"
-                android:layout_marginEnd="14dp"
-                android:text="ACCOUNT"
-                android:textColor="#2A4A6A"
-                android:textSize="10sp"
-                android:letterSpacing="0.18" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="1dp"
-                android:layout_weight="1"
-                android:background="#1A3050" />
-
-        </LinearLayout>
-
-        <!-- ══════════════════════════════════════════ -->
-        <!--   CREATIVE LOGOUT BUTTON                  -->
-        <!-- ══════════════════════════════════════════ -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_logout_btn"
-            android:gravity="center"
-            android:orientation="horizontal"
-            android:clickable="true"
-            android:focusable="true"
-            android:foreground="?attr/selectableItemBackground">
-
-            <!-- Power icon -->
-            <ImageView
-                android:layout_width="22dp"
-                android:layout_height="22dp"
-                android:src="@drawable/ic_power"
-                android:layout_marginEnd="10dp" />
-
-            <!-- Text — real MaterialButton for correct click handling -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Sign Out"
-                android:textColor="#FF4466"
-                android:textSize="15sp"
-                android:textStyle="bold"
-                android:letterSpacing="0.06"
-                app:backgroundTint="#00000000"
-                app:cornerRadius="0dp"
-                app:strokeWidth="0dp"
-                style="@style/Widget.MaterialComponents.Button.TextButton" />
-
-        </LinearLayout>
-
-        <!-- Subtle warning hint under logout -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:gravity="center"
-            android:text="You will be signed out of all devices"
-            android:textColor="#2A4A6A"
-            android:textSize="11sp" />
 
         <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
