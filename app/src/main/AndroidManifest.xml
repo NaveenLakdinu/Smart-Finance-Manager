@@ -85,6 +85,22 @@
             android:exported="false" />
 
         <activity
+            android:name=".StudentBudgetActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentLoansActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentSavingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentProfileActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".RevenueManagementActivity"
             android:exported="false" />
         <activity

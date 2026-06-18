@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class StudentDashboardActivity extends AppCompatActivity {
@@ -11,6 +12,25 @@ public class StudentDashboardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
+
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
+        bottomNavigationView.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_budget) {
+                startActivity(new Intent(this, StudentBudgetActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_loans) {
+                startActivity(new Intent(this, StudentLoansActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_savings) {
+                startActivity(new Intent(this, StudentSavingActivity.class));
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(this, StudentProfileActivity.class));
+                return true;
+            }
+            return false;
+        });
 
         initViews();
     }
