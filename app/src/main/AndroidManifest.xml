@@ -126,6 +126,12 @@
             android:name=".UtilityReportActivity"
             android:exported="false" />
         <activity
+            android:name=".UtilityReportFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportSummaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".SavingManagerActivity"
             android:exported="false" />
         <activity
