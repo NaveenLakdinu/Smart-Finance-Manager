@@ -26,7 +26,6 @@ import android.content.pm.PackageManager;
 import android.os.Build;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.annotation.NonNull;
 
 public class UtilityBillActivity extends AppCompatActivity {
 
@@ -153,18 +152,6 @@ public class UtilityBillActivity extends AppCompatActivity {
         public BillWithId(String id, RegisterBillActivity.BillModel billData) {
             this.id = id;
             this.billData = billData;
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == 101) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Notification reminders enabled!", Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(this, "Reminders disabled. You won't get bill alerts.", Toast.LENGTH_LONG).show();
-            }
         }
     }
 }

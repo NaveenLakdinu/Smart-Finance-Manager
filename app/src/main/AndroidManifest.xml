@@ -17,6 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFinancialManagement">
 
+        <receiver android:name=".InvoiceReminderReceiver" android:exported="false" />
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -149,6 +151,9 @@
             android:exported="false" />
         <activity
             android:name=".InvoiceDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddBusinessActivity"
             android:exported="false" />
 
         <receiver android:name=".NotificationReceiver" android:exported="false" />

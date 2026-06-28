@@ -211,12 +211,12 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            app:backgroundTint="#112240"
-            android:text="SEND REMINDER ALERTS"
-            android:textColor="#FFFFFF"
+            app:backgroundTint="#2A1215"
+            android:text="DELETE INVOICE RECORD"
+            android:textColor="#FF5555"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:strokeColor="#1A3050"
+            app:strokeColor="#FF3333"
             app:strokeWidth="1dp"
             app:cornerRadius="16dp" />
 

@@ -55,7 +55,7 @@
                     android:id="@+id/txtGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Good Morning 👋"
+                    android:text="Welcome Back,"
                     android:textColor="#7A9CC0"
                     android:textSize="13sp" />
 
@@ -66,7 +66,7 @@
                     android:layout_marginTop="3dp"
                     android:text="business@email.com"
                     android:textColor="#F0F6FF"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -128,7 +128,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="OUTSTANDING B2B RECEIVABLES"
+                    android:text="TOTAL COMBINED RECEIVABLES"
                     android:textColor="#7A9CC0"
                     android:textSize="11sp"
                     android:letterSpacing="0.15" />
@@ -147,7 +147,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TRADE CREDIT"
+                        android:text="ALL WORKSPACES"
                         android:textColor="#4ADE80"
                         android:textSize="10sp"
                         android:textStyle="bold" />
@@ -171,7 +171,7 @@
                         android:id="@+id/txtTotalCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rs. 450K"
+                        android:text="Rs. 1,250K"
                         android:textColor="#FFFFFF"
                         android:textSize="36sp"
                         android:textStyle="bold" />
@@ -192,7 +192,7 @@
                     android:layout_height="72dp"
                     android:background="@drawable/bg_calendar_circle"
                     android:gravity="center"
-                    android:text="🏢"
+                    android:text="📊"
                     android:textSize="32sp" />
             </LinearLayout>
 
@@ -201,7 +201,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Pending collection from corporate partners"
+                android:text="Sum total across all your registered entities"
                 android:textColor="#7A9CC0"
                 android:textSize="13sp" />
         </LinearLayout>
@@ -209,7 +209,91 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="26dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_teal_bar" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="My Businesses"
+                    android:textColor="#F0F6FF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardStaticBizAdd"
+                        android:layout_width="wrap_content"
+                        android:layout_height="38dp"
+                        android:layout_marginEnd="8dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        app:cardCornerRadius="19dp"
+                        app:cardElevation="0dp">
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:background="#1E293B"
+                            android:gravity="center"
+                            android:orientation="horizontal"
+                            android:paddingStart="14dp"
+                            android:paddingEnd="14dp">
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="➕ "
+                                android:textSize="12sp" />
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Add Business"
+                                android:textColor="#00D4AA"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recyclerBusinessFilters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+                </LinearLayout>
+            </HorizontalScrollView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -573,7 +657,9 @@
                 android:background="#1A3050" />
         </LinearLayout>
 
-        <Space android:layout_width="match_parent" android:layout_height="32dp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
 
     </LinearLayout>
 </ScrollView>
