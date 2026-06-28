@@ -74,18 +74,55 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
         recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // Navigation Link Handlers
-        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> {
-            Toast.makeText(this, "Navigate to Add Business Profile Layout Module", Toast.LENGTH_SHORT).show();
+        // =========================================================
+        // 💡 XML එකට අනුව ප්‍රධාන විශේෂාංග 6 (6 Finance Tools Modules)
+        // =========================================================
+
+        // Module 1: Manage Loan
+        findViewById(R.id.cardManageLoan).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, LoanFormActivity.class);
+            startActivity(intent);
         });
 
+        // Module 2: Manage Subscription
+        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionActivity.class);
+            startActivity(intent);
+        });
+
+        // Module 3: Manage Utility
+        findViewById(R.id.cardManageUtility).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class);
+            startActivity(intent);
+        });
+
+        // Module 4: Saving Manager
+        findViewById(R.id.cardSavingManager).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SavingManagerActivity.class);
+            startActivity(intent);
+        });
+
+        // Module 5: B2B Invoices
+        findViewById(R.id.B2BInvoice).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class);
+            startActivity(intent);
+        });
+
+        // Module 6: Analytics
         findViewById(R.id.cardAnalytics).setOnClickListener(v -> {
-            startActivity(new Intent(this, AnalyticsActivity.class));
+            Intent intent = new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class);
+            startActivity(intent);
         });
 
-        findViewById(R.id.B2BInvoice).setOnClickListener(v ->
-                Toast.makeText(this, "B2B Invoice Screen", Toast.LENGTH_SHORT).show()
-        );
+        // =========================================================
+        // 💡 අනෙකුත් බොත්තම් (Add Business, Notifications, Logout)
+        // =========================================================
+
+        // Add Business
+        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, AddBusinessActivity.class);
+            startActivity(intent);
+        });
 
         btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
 

@@ -21,17 +21,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
-                android:gravity="center"
-                android:text="←"
-                android:textColor="#F0F6FF"
-                android:textSize="20sp"
+                android:src="@drawable/ic_arrow_back"
+                android:scaleType="centerInside"
+                app:tint="#FFFFFF"
                 android:clickable="true"
-                android:focusable="true"/>
+                android:focusable="true"
+                android:contentDescription="Back" />
 
             <TextView
                 android:layout_width="0dp"
@@ -137,6 +137,7 @@
                 app:cardBackgroundColor="#1A3050">
                 <LinearLayout
                     android:layout_width="match_parent"
+                    android:id="@+id/layoutRevenueCard"
                     android:layout_height="match_parent"
                     android:orientation="vertical"
                     android:gravity="center"
@@ -170,6 +171,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:id="@+id/layoutExpenseCard"
                     android:orientation="vertical"
                     android:gravity="center"
                     android:padding="12dp">

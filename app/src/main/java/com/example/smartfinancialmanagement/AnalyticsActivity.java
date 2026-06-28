@@ -17,6 +17,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.content.ContentValues;
+import android.content.Intent;
+import android.graphics.Bitmap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -43,6 +46,7 @@ import java.util.Locale;
 public class AnalyticsActivity extends AppCompatActivity {
 
     private TextView txtRevenueDisplay, txtExpenseDisplay, txtProfitDisplay, txtPercentageDisplay;
+    private View btnGoToRevenue, btnGoToExpense;
     private Button btnGeneratePDF;
     private ImageView imgChartPlaceholder;
     private Spinner spinnerBusinessFilter;
@@ -76,9 +80,21 @@ public class AnalyticsActivity extends AppCompatActivity {
         btnGeneratePDF = findViewById(R.id.btnGeneratePDF);
         imgChartPlaceholder = findViewById(R.id.imgChartPlaceholder);
         spinnerBusinessFilter = findViewById(R.id.spinnerBusinessFilter);
+        btnGoToRevenue = findViewById(R.id.layoutRevenueCard); // හෝ R.id.btnRevenue
+        btnGoToExpense = findViewById(R.id.layoutExpenseCard); // හෝ R.id.btnExpense
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         btnGeneratePDF.setOnClickListener(v -> generateAnalyticsPDF());
+
+        btnGoToRevenue.setOnClickListener(v -> {
+            Intent intent = new Intent(AnalyticsActivity.this, RevenueManagementActivity.class);
+            startActivity(intent);
+        });
+
+        btnGoToExpense.setOnClickListener(v -> {
+            Intent intent = new Intent(AnalyticsActivity.this, ExpenseManagementActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void setupFilterSpinner() {

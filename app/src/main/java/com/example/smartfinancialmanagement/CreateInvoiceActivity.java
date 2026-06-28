@@ -13,6 +13,7 @@ import android.text.TextWatcher;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,7 +35,8 @@ public class CreateInvoiceActivity extends AppCompatActivity {
 
     private AutoCompleteTextView spinnerBusinessDropdown;
     private EditText etClientName, etClientBRN, etItemName, etQty, etPrice, etPaymentDueDate;
-    private TextView txtSubtotal, txtGrandTotal, btnBack;
+    private TextView txtSubtotal, txtGrandTotal;
+    private ImageView btnBack;
     private MaterialButton btnGenerateInvoice;
 
     private FirebaseFirestore db;
