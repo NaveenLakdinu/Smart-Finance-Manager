@@ -55,5 +55,6 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.itextpdf:itextg:5.5.10")
 
 }
