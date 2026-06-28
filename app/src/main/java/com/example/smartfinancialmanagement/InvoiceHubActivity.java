@@ -2,8 +2,11 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.os.Build; // Fixed missing import
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,10 +35,15 @@ public class InvoiceHubActivity extends AppCompatActivity {
     private RecyclerView rvInvoices;
     private FloatingActionButton fabAddInvoice;
 
+    // Dropdown structural bindings
+    private Spinner spinnerBusinessFilter;
+    private List<String> businessDropdownOptions = new ArrayList<>();
+    private String currentSelectedBusinessFilter = "All Businesses"; // Default option tracking string reference
+
     private FirebaseFirestore db;
     private List<InvoiceModel> allInvoicesList = new ArrayList<>();
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
-    private String currentSelectedFilter = "pending"; // Default state
+    private String currentSelectedFilter = "pending";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +54,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
 
         initializeViews();
         setupFilterListeners();
+        loadBusinessFilterDropdown(); // Fetch workspaces directly from Cloud Firestore Database
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         fabAddInvoice.setOnClickListener(v -> startActivity(new Intent(this, CreateInvoiceActivity.class)));
@@ -72,8 +81,41 @@ public class InvoiceHubActivity extends AppCompatActivity {
         txtFilterPaid = findViewById(R.id.txtFilterPaid);
         txtFilterDue = findViewById(R.id.txtFilterDue);
 
+        spinnerBusinessFilter = findViewById(R.id.spinnerBusinessFilter);
         rvInvoices = findViewById(R.id.rvInvoices);
         fabAddInvoice = findViewById(R.id.fabAddInvoice);
+    }
+
+    private void loadBusinessFilterDropdown() {
+        db.collection("businesses")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    businessDropdownOptions.clear();
+                    businessDropdownOptions.add("All Businesses"); // Add master clear fallback selection anchor option
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        BusinessModel business = doc.toObject(BusinessModel.class);
+                        if (business != null && business.getBusinessName() != null) {
+                            businessDropdownOptions.add(business.getBusinessName());
+                        }
+                    }
+
+                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_spinner_item, businessDropdownOptions);
+                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerBusinessFilter.setAdapter(spinnerAdapter);
+
+                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            currentSelectedBusinessFilter = parent.getItemAtPosition(position).toString();
+                            applyFilterAndPopulateList(); // Instantly update view when selections map context changes
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load business profile configurations", Toast.LENGTH_SHORT).show());
     }
 
     private void setupFilterListeners() {
@@ -85,7 +127,6 @@ public class InvoiceHubActivity extends AppCompatActivity {
     private void updateFilterUI(String selectedFilter) {
         currentSelectedFilter = selectedFilter;
 
-        // Reset all backgrounds to glass aesthetic
         txtFilterPending.setBackgroundResource(R.drawable.bg_glass_card);
         txtFilterPending.setTextColor(Color.parseColor("#F0F6FF"));
 
@@ -95,7 +136,6 @@ public class InvoiceHubActivity extends AppCompatActivity {
         txtFilterDue.setBackgroundResource(R.drawable.bg_glass_card);
         txtFilterDue.setTextColor(Color.parseColor("#F0F6FF"));
 
-        // Highlight selected active filter chip buttons
         if (selectedFilter.equals("pending")) {
             txtFilterPending.setBackgroundColor(Color.parseColor("#00D4AA"));
             txtFilterPending.setTextColor(Color.parseColor("#071A33"));
@@ -123,10 +163,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Sort the complete master list first by upcoming date
                     sortInvoicesChronological(allInvoicesList);
-
-                    // Update views
                     populateHeroCardClosestInvoice();
                     applyFilterAndPopulateList();
                 })
@@ -138,7 +175,6 @@ public class InvoiceHubActivity extends AppCompatActivity {
         InvoiceModel closestInvoice = null;
         long minimumTimeDiff = Long.MAX_VALUE;
 
-        // Find the pending or due invoice closest to today's date
         for (InvoiceModel inv : allInvoicesList) {
             if (!inv.getStatus().equalsIgnoreCase("paid") && inv.getPaymentDueDate() != null) {
                 try {
@@ -168,13 +204,19 @@ public class InvoiceHubActivity extends AppCompatActivity {
 
     private void applyFilterAndPopulateList() {
         List<InvoiceModel> filteredList = new ArrayList<>();
+
         for (InvoiceModel inv : allInvoicesList) {
-            if (inv.getStatus().equalsIgnoreCase(currentSelectedFilter)) {
+            boolean matchesStatus = inv.getStatus().equalsIgnoreCase(currentSelectedFilter);
+
+            // Evaluates workspace criteria parameter contexts
+            boolean matchesBusiness = currentSelectedBusinessFilter.equals("All Businesses")
+                    || (inv.getSelectedBusiness() != null && inv.getSelectedBusiness().equalsIgnoreCase(currentSelectedBusinessFilter));
+
+            if (matchesStatus && matchesBusiness) {
                 filteredList.add(inv);
             }
         }
 
-        // TODO: Replace 'InvoiceAdapter' with your actual Adapter class name
         InvoiceAdapter adapter = new InvoiceAdapter(filteredList);
         rvInvoices.setAdapter(adapter);
     }
@@ -186,7 +228,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
                 Date d1 = dateFormat.parse(inv1.getPaymentDueDate());
                 Date d2 = dateFormat.parse(inv2.getPaymentDueDate());
                 if (d1 != null && d2 != null) {
-                    return d1.compareTo(d2); // Closest to farthest sorting
+                    return d1.compareTo(d2);
                 }
             } catch (ParseException ignored) {}
             return 0;

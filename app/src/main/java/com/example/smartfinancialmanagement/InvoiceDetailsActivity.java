@@ -27,6 +27,8 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
 
     // Replace this string with a dynamic document lookup ID passed from your adapter
     private String invoiceDocId = "";
+    // A. Declare the TextView field variable inside InvoiceDetailActivity.java
+    private TextView  txtDetBusinessWorkspace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +54,8 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
         txtDetTotal = findViewById(R.id.txtDetTotal);
         btnMarkPaid = findViewById(R.id.btnMarkPaid);
         btnDeleteInvoice = findViewById(R.id.btnSendReminder); // Bound to old button id to minimize XML edits
+        // B. In initializeViews() find and bind it:
+        txtDetBusinessWorkspace = findViewById(R.id.txtDetBusinessWorkspace);
     }
 
     private void getIntentData() {
@@ -76,6 +80,12 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
 
             // Random mock number block layout setup or parse sequence mapping
             txtDetInvoiceNum.setText("#INV-" + Math.abs(clientName.hashCode() % 10000));
+            // C. In getIntentData() update the UI text layout view safely:
+            if (selectedBusiness != null && !selectedBusiness.isEmpty()) {
+                txtDetBusinessWorkspace.setText("Workspace: " + selectedBusiness);
+            } else {
+                txtDetBusinessWorkspace.setText("Business Commercial Statement");
+            }
 
             configureStatusUI();
         }

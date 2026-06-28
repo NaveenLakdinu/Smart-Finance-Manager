@@ -91,10 +91,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/txtDetBusinessWorkspace"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="B2B Commercial Statement"
+                            android:text="Workspace: Loading..."
                             android:textColor="#7A9CC0"
                             android:textSize="12sp" />
                     </LinearLayout>

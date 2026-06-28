@@ -189,9 +189,45 @@
     </HorizontalScrollView>
 
     <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBusinessFilterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scrollFilters"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="14dp"
+        app:cardCornerRadius="14dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#1A3050"
+        app:cardBackgroundColor="#0A1D37">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FILTER BY BUSINESS WORKSPACE"
+                android:textColor="#7A9CC0"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <Spinner
+                android:id="@+id/spinnerBusinessFilter"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#F0F6FF"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/scrollFilters"
+        android:layout_below="@id/cardBusinessFilterContainer"
         android:layout_above="@+id/dummyAnchor"
         android:layout_marginHorizontal="20dp"
         android:layout_marginTop="14dp"
