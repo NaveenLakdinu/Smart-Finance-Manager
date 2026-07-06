@@ -10,28 +10,44 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class RegisterBillActivity extends AppCompatActivity {
 
-    // Declare layout elements
     private ImageView backButton;
     private EditText editBillName, editAmount, editPaymentDate;
     private Spinner spinnerCategory, spinnerStatus;
     private Button btnRegisterSubmit;
+
+    private FirebaseFirestore db;
+    private String uid;
+    private double currentSavings = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_bill);
 
+        db = FirebaseFirestore.getInstance();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            uid = user.getUid();
+        }
+
         initViews();
         setupSpinners();
         setupDatePicker();
         setupClickListeners();
+        fetchCurrentSavings();
     }
 
     private void initViews() {
@@ -42,6 +58,22 @@ public class RegisterBillActivity extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         spinnerStatus = findViewById(R.id.spinnerStatus);
         btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit);
+    }
+
+    private void fetchCurrentSavings() {
+        if (uid == null) return;
+        db.collection("users").document(uid)
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String savingsStr = documentSnapshot.getString("currentSavings");
+                        if (savingsStr != null) {
+                            try {
+                                currentSavings = Double.parseDouble(savingsStr.trim());
+                            } catch (NumberFormatException ignored) {}
+                        }
+                    }
+                });
     }
 
     private void setupSpinners() {
@@ -93,10 +125,48 @@ public class RegisterBillActivity extends AppCompatActivity {
 
         btnRegisterSubmit.setOnClickListener(v -> {
             if (validateForm()) {
-                Toast.makeText(this, "Bill Saved Successfully", Toast.LENGTH_SHORT).show();
-                finish();
+                double amount = Double.parseDouble(editAmount.getText().toString().trim());
+                if (amount > currentSavings) {
+                    showSavingsWarningDialog(amount);
+                } else {
+                    saveBillToFirestore(amount);
+                }
             }
         });
+    }
+
+    private void showSavingsWarningDialog(double amount) {
+        new AlertDialog.Builder(this)
+                .setTitle("⚠️ Insufficient Savings")
+                .setMessage(String.format("The bill amount (LKR %.2f) exceeds your current savings (LKR %.2f). Would you like to register it anyway?", amount, currentSavings))
+                .setPositiveButton("Register Anyway", (dialog, which) -> saveBillToFirestore(amount))
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    private void saveBillToFirestore(double amount) {
+        if (uid == null) {
+            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        Map<String, Object> bill = new HashMap<>();
+        bill.put("billName", editBillName.getText().toString().trim());
+        bill.put("amount", amount);
+        bill.put("category", spinnerCategory.getSelectedItem().toString());
+        bill.put("paymentDate", editPaymentDate.getText().toString().trim());
+        bill.put("status", spinnerStatus.getSelectedItem().toString());
+        bill.put("createdAt", System.currentTimeMillis());
+
+        db.collection("users").document(uid).collection("utilities")
+                .add(bill)
+                .addOnSuccessListener(documentReference -> {
+                    Toast.makeText(RegisterBillActivity.this, "Bill Saved Successfully", Toast.LENGTH_SHORT).show();
+                    finish();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(RegisterBillActivity.this, "Error saving bill: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private boolean validateForm() {
@@ -106,6 +176,16 @@ public class RegisterBillActivity extends AppCompatActivity {
         }
         if (editAmount.getText().toString().trim().isEmpty()) {
             editAmount.setError("Enter amount");
+            return false;
+        }
+        try {
+            double amt = Double.parseDouble(editAmount.getText().toString().trim());
+            if (amt <= 0) {
+                editAmount.setError("Amount must be greater than zero");
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            editAmount.setError("Enter a valid amount");
             return false;
         }
         if (spinnerCategory.getSelectedItemPosition() == 0) {

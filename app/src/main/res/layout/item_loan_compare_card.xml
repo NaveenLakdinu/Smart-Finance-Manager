@@ -1,64 +1,147 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!--
+  item_loan_compare_card.xml
+  Redesigned: Premium dark glassmorphic theme, matching the dashboard aesthetic.
+  Shows bank name, interest type toggle, principal / rate / duration inputs,
+  and live EMI / interest / total result row.
+-->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp">
+    app:cardBackgroundColor="@color/glass_card_bg"
+    app:cardCornerRadius="22dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/glass_card_border"
+    app:strokeWidth="1dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:padding="20dp">
 
+        <!-- ── Title Row ──────────────────────────────────────────────── -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="12dp">
+            android:layout_marginBottom="16dp">
 
-            <TextView
-                android:id="@+id/txtLoanOptionTitle"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Loan Option"
-                android:textColor="#1E293B"
-                android:textSize="15sp"
-                android:textStyle="bold" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="10dp"
+                    app:cardBackgroundColor="@color/qa_teal_bg"
+                    app:cardCornerRadius="10dp"
+                    app:cardElevation="0dp">
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_compare"
+                        app:tint="@color/hero_accent" />
+                </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/txtLoanOptionTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Loan Option"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
             <ImageView
                 android:id="@+id/btnRemoveLoan"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
                 android:layout_alignParentEnd="true"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:layout_centerVertical="true"
+                android:background="@drawable/bg_pill_accent"
                 android:contentDescription="Remove Loan"
-                app:tint="#EF4444"
-                android:visibility="gone" />
+                android:padding="6dp"
+                android:src="@android:drawable/ic_menu_close_clear_cancel"
+                android:visibility="gone"
+                app:tint="@color/danger_text" />
         </RelativeLayout>
 
+        <!-- ── Divider ────────────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginBottom="16dp"
+            android:background="@color/divider_dark" />
+
+        <!-- ── Bank Name label ────────────────────────────────────────── -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="Bank/Provider Name"
-            android:textColor="#64748B"
+            android:layout_marginBottom="6dp"
+            android:text="Bank / Provider Name"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp" />
 
         <EditText
             android:id="@+id/etBankName"
             android:layout_width="match_parent"
-            android:layout_height="48dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/edittext_rounded_bg"
-            android:hint="Enter bank name"
+            android:layout_height="50dp"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/bg_input_dark"
+            android:hint="e.g. Bank of Ceylon"
             android:inputType="text"
-            android:paddingHorizontal="12dp"
-            android:textColor="@color/black"
+            android:paddingHorizontal="14dp"
+            android:textColor="@color/text_on_dark_primary"
+            android:textColorHint="@color/text_on_dark_muted"
             android:textSize="14sp" />
 
+        <!-- ── Interest Type Toggle ───────────────────────────────────── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="Interest Type"
+            android:textColor="@color/text_on_dark_secondary"
+            android:textSize="12sp" />
+
+        <RadioGroup
+            android:id="@+id/rgCardInterestType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/rbCardReducing"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/hero_accent"
+                android:checked="true"
+                android:text="Reducing Balance"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="12sp" />
+
+            <RadioButton
+                android:id="@+id/rbCardFlat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:buttonTint="@color/hero_accent"
+                android:text="Flat Rate"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="12sp" />
+        </RadioGroup>
+
+        <!-- ── Three inputs: Principal / Interest / Months ───────────── -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -67,95 +150,197 @@
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginEnd="4dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
-                    android:text="Principal ($)"
-                    android:textColor="#64748B"
-                    android:textSize="12sp" />
+                    android:layout_marginBottom="6dp"
+                    android:text="Principal (LKR)"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="11sp" />
 
                 <EditText
                     android:id="@+id/etPrincipal"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/edittext_rounded_bg"
-                    android:hint="0.00"
+                    android:background="@drawable/bg_input_dark"
+                    android:hint="0"
                     android:inputType="numberDecimal"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/black"
-            android:textSize="14sp" />
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginHorizontal="4dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:text="Interest (%)"
-                    android:textColor="#64748B"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="11sp" />
 
                 <EditText
                     android:id="@+id/etInterest"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/edittext_rounded_bg"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="0.0"
                     android:inputType="numberDecimal"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/black"
-            android:textSize="14sp" />
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:layout_marginStart="4dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="4dp"
+                    android:layout_marginBottom="6dp"
                     android:text="Months"
-                    android:textColor="#64748B"
-                    android:textSize="12sp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="11sp" />
 
                 <EditText
                     android:id="@+id/etDuration"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
-                    android:background="@drawable/edittext_rounded_bg"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="0"
                     android:inputType="number"
                     android:paddingHorizontal="12dp"
-                    android:textColor="@color/black"
-            android:textSize="14sp" />
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
             </LinearLayout>
         </LinearLayout>
-        
+
+        <!-- ── Divider ────────────────────────────────────────────────── -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="14dp"
+            android:background="@color/divider_dark" />
+
+        <!-- ── Result row: EMI / Total Interest / Total Payable ──────── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Monthly EMI -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_dark"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly EMI"
+                    android:textColor="@color/text_on_dark_muted"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtEmiResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="LKR 0.00"
+                    android:textColor="@color/hero_accent"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+            <!-- Total Interest -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_dark"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Interest"
+                    android:textColor="@color/text_on_dark_muted"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtInterestResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="LKR 0.00"
+                    android:textColor="@color/danger_text"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <Space android:layout_width="6dp" android:layout_height="1dp" />
+
+            <!-- Total Payable -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/bg_input_dark"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Total Payable"
+                    android:textColor="@color/text_on_dark_muted"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/txtTotalResult"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="LKR 0.00"
+                    android:textColor="@color/pill_positive_text"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Hidden legacy field kept for compatibility -->
         <TextView
             android:id="@+id/txtComparisonResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:text="EMI: $0.00 | Total: $0.00"
-            android:textColor="#2563EB"
-            android:textSize="13sp"
-            android:textStyle="bold"
-            android:gravity="end"/>
+            android:visibility="gone" />
 
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

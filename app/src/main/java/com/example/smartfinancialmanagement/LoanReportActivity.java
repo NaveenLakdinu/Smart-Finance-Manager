@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -104,31 +105,34 @@ public class LoanReportActivity extends AppCompatActivity {
             radioPdf.setChecked(false);
             updateFormatUI();
         });
+
+        // Initial UI update to apply active/inactive styles correctly
+        updateFormatUI();
     }
 
     private void updateFormatUI() {
-        // Highlight the selected card with a blue stroke
-        int activeColor = Color.parseColor("#2563EB");
-        int inactiveColor = Color.parseColor("#E2E8F0");
-        int activeBg = Color.parseColor("#EFF6FF");
-        int inactiveBg = Color.WHITE;
+        // Highlight the selected card with an accent stroke matching our premium dark theme
+        int activeColor = ContextCompat.getColor(this, R.color.hero_accent);
+        int inactiveColor = ContextCompat.getColor(this, R.color.glass_card_border);
+        int activeBg = Color.parseColor("#223E66"); // Slightly lighter highlighted dark blue
+        int inactiveBg = ContextCompat.getColor(this, R.color.glass_card_bg);
 
         if (radioPdf.isChecked()) {
             optionPdf.setStrokeColor(activeColor);
             optionPdf.setStrokeWidth(4);
-            optionPdf.getChildAt(0).setBackgroundColor(activeBg);
+            optionPdf.setCardBackgroundColor(activeBg);
             
             optionCsv.setStrokeColor(inactiveColor);
             optionCsv.setStrokeWidth(2);
-            optionCsv.getChildAt(0).setBackgroundColor(inactiveBg);
+            optionCsv.setCardBackgroundColor(inactiveBg);
         } else {
             optionCsv.setStrokeColor(activeColor);
             optionCsv.setStrokeWidth(4);
-            optionCsv.getChildAt(0).setBackgroundColor(activeBg);
+            optionCsv.setCardBackgroundColor(activeBg);
             
             optionPdf.setStrokeColor(inactiveColor);
             optionPdf.setStrokeWidth(2);
-            optionPdf.getChildAt(0).setBackgroundColor(inactiveBg);
+            optionPdf.setCardBackgroundColor(inactiveBg);
         }
     }
 

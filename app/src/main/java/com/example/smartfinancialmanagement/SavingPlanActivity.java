@@ -14,7 +14,12 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
 
 public class SavingPlanActivity extends AppCompatActivity {
 
@@ -85,17 +90,54 @@ public class SavingPlanActivity extends AppCompatActivity {
         data.targetDate = targetDateText.getText().toString().trim();
         data.currentSavings = currentSavingsInput.getText().toString().trim();
         data.monthlySavingAmount = monthlyAmountInput.getText().toString().trim();
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            Map<String, Object> update = new HashMap<>();
+            update.put("hasSavingPlan", true);
+            update.put("savingGoalName", data.goalName);
+            update.put("savingTargetAmount", data.targetAmount);
+            update.put("savingTargetDate", data.targetDate);
+            update.put("currentSavings", data.currentSavings);
+            update.put("monthlySavingAmount", data.monthlySavingAmount);
+
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .update(update)
+                    .addOnFailureListener(e -> {
+                        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                                .set(update, com.google.firebase.firestore.SetOptions.merge());
+                    });
+        }
     }
 
     private void loadExistingData() {
-        UserRegistrationData data = UserRegistrationData.getInstance();
-        if (data.hasSavingPlan) {
-            goalNameInput.setText(data.goalName);
-            targetAmountInput.setText(data.targetAmount);
-            targetDateText.setText(data.targetDate);
-            currentSavingsInput.setText(data.currentSavings);
-            monthlyAmountInput.setText(data.monthlySavingAmount);
-            updateProgressBar();
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Boolean hasPlan = documentSnapshot.getBoolean("hasSavingPlan");
+                            if (hasPlan != null && hasPlan) {
+                                goalNameInput.setText(documentSnapshot.getString("savingGoalName"));
+                                targetAmountInput.setText(documentSnapshot.getString("savingTargetAmount"));
+                                targetDateText.setText(documentSnapshot.getString("savingTargetDate"));
+                                currentSavingsInput.setText(documentSnapshot.getString("currentSavings"));
+                                monthlyAmountInput.setText(documentSnapshot.getString("monthlySavingAmount"));
+                                updateProgressBar();
+                            }
+                        }
+                    });
+        } else {
+            UserRegistrationData data = UserRegistrationData.getInstance();
+            if (data.hasSavingPlan) {
+                goalNameInput.setText(data.goalName);
+                targetAmountInput.setText(data.targetAmount);
+                targetDateText.setText(data.targetDate);
+                currentSavingsInput.setText(data.currentSavings);
+                monthlyAmountInput.setText(data.monthlySavingAmount);
+                updateProgressBar();
+            }
         }
     }
 

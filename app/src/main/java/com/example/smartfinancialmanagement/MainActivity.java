@@ -1,6 +1,6 @@
 // MainActivity.java
 // ══════════════════════════════════════════════════
-// 
+// Entry point: routes user based on login + PIN status.
 // ══════════════════════════════════════════════════
 
 package com.example.smartfinancialmanagement;
@@ -18,14 +18,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Check if user is already logged in
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
         if (currentUser != null) {
-            redirectLoggedInUser();
+            // ── User is already authenticated ─────────────────────────────
+            if (PinHelper.isPinSet(this)) {
+                // User has a PIN → show PIN lock screen
+                Intent intent = new Intent(this, PinLockActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            } else {
+                // Logged in but no PIN set yet → offer PIN setup first
+                Intent intent = new Intent(this, PinSetupActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+            }
+            finish();
             return;
         }
 
-        // Make the activity full screen (no status bar)
+        // ── User is NOT logged in → show welcome / login screen ───────────
         getWindow().setFlags(
                 android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN,
                 android.view.WindowManager.LayoutParams.FLAG_FULLSCREEN
@@ -33,44 +45,12 @@ public class MainActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_main);
 
-        // Button click listeners
         findViewById(R.id.loginButton).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, LoginFormActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, LoginFormActivity.class));
         });
 
         findViewById(R.id.signUpButton).setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, ChooseRoleActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(MainActivity.this, ChooseRoleActivity.class));
         });
-    }
-
-    private void redirectLoggedInUser() {
-        String role = getSharedPreferences("UserData", MODE_PRIVATE)
-                .getString("user_role", "Student");
-
-        Intent intent;
-        switch (role) {
-            case "Company worker":
-                intent = new Intent(MainActivity.this, WorkerDashboardActivity.class);
-                break;
-            case "Multiple account holder":
-                intent = new Intent(MainActivity.this, MultiAccountDashboardActivity.class);
-                break;
-            case "Business owner":
-                intent = new Intent(MainActivity.this, BusinessDashboardActivity.class);
-                break;
-            case "Student":
-                intent = new Intent(MainActivity.this, StudentDashboardActivity.class);
-                break;
-            default:
-                intent = new Intent(MainActivity.this, DashboardActivity.class);
-                break;
-        }
-
-        intent.putExtra("CURRENT_USER_ROLE", role);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(intent);
-        finish();
     }
 }

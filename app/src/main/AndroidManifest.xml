@@ -78,6 +78,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".PinLockActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PinSetupActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".BusinessDashboardActivity"
             android:exported="false" />
 

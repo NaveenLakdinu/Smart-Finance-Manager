@@ -31,6 +31,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import androidx.appcompat.app.AlertDialog;
+
 public class LoanCompareActivity extends AppCompatActivity {
 
     private ImageView btnBack;
@@ -39,6 +45,13 @@ public class LoanCompareActivity extends AppCompatActivity {
     private int optionCount = 0;
 
     private com.google.android.material.button.MaterialButton btnCompare;
+
+    private double userMonthlyIncome = 0.0;
+    private double activeLoansMonthlyTotal = 0.0;
+    private double utilitiesMonthlyTotal = 0.0;
+    private double subscriptionsMonthlyTotal = 0.0;
+    private FirebaseFirestore db;
+    private String uid;
 
     // Helper class for comparison data
     private static class ComparisonData {
@@ -57,6 +70,7 @@ public class LoanCompareActivity extends AppCompatActivity {
         setContentView(R.layout.activity_loan_compare);
 
         initViews();
+        fetchFinancialData();
         setupListeners();
 
         // Start with 3 default options as requested
@@ -80,7 +94,7 @@ public class LoanCompareActivity extends AppCompatActivity {
             if (validateAllCards()) {
                 List<ComparisonData> dataList = extractComparisonData();
                 if (!dataList.isEmpty()) {
-                    generateDetailedComparisonReport(dataList);
+                    showVisualSuitabilityReport(dataList);
                 }
             }
         });
@@ -134,59 +148,88 @@ public class LoanCompareActivity extends AppCompatActivity {
         Paint paint = new Paint();
 
         // 1. Header
-        paint.setTextSize(22f);
+        paint.setTextSize(20f);
         paint.setFakeBoldText(true);
-        canvas.drawText("Detailed Loan Comparison Analysis", 50, 60, paint);
+        canvas.drawText("Detailed Loan Comparison & Suitability Analysis", 40, 50, paint);
         
-        paint.setTextSize(12f);
+        paint.setTextSize(11f);
         paint.setFakeBoldText(false);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
-        canvas.drawText("Generated on: " + dateStr, 50, 90, paint);
-        canvas.drawLine(50, 100, 550, 100, paint);
+        canvas.drawText("Generated on: " + dateStr, 40, 75, paint);
+        canvas.drawLine(40, 85, 555, 85, paint);
 
-        // 2. Analysis & Recommendations
-        ComparisonData bestOverall = Collections.min(dataList, Comparator.comparingDouble(d -> d.totalPayable));
-        ComparisonData lowestEMI = Collections.min(dataList, Comparator.comparingDouble(d -> d.emi));
-
-        paint.setTextSize(16f);
+        // 2. Financial Context Summary
+        paint.setTextSize(13f);
         paint.setFakeBoldText(true);
-        paint.setColor(Color.parseColor("#10B981")); // Green for recommendation
-        canvas.drawText("RECOMMENDED OPTION (Best Overall Value)", 50, 140, paint);
-        
-        paint.setColor(Color.BLACK);
+        canvas.drawText("Your Financial Context (Monthly Basis)", 40, 110, paint);
+
+        paint.setTextSize(11f);
         paint.setFakeBoldText(false);
-        paint.setTextSize(14f);
-        canvas.drawText("Option: " + bestOverall.optionLabel + " (" + bestOverall.bankName + ")", 50, 165, paint);
-        canvas.drawText("Reason: Lowest total repayment amount of $" + String.format(Locale.US, "%.2f", bestOverall.totalPayable), 50, 185, paint);
-
-        paint.setTextSize(16f);
-        paint.setFakeBoldText(true);
-        paint.setColor(Color.parseColor("#3B82F6")); // Blue for EMI burden
-        canvas.drawText("LOWEST MONTHLY BURDEN", 50, 230, paint);
+        canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: LKR %.2f", userMonthlyIncome), 45, 130, paint);
         
-        paint.setColor(Color.BLACK);
-        paint.setFakeBoldText(false);
-        paint.setTextSize(14f);
-        canvas.drawText("Option: " + lowestEMI.optionLabel + " (" + lowestEMI.bankName + ")", 50, 255, paint);
-        canvas.drawText("Best for: Maintaining immediate monthly cash flow ($" + String.format(Locale.US, "%.2f", lowestEMI.emi) + "/mo)", 50, 275, paint);
+        double existingCommitments = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
+        canvas.drawText(String.format(Locale.US, "• Existing Commitments: LKR %.2f", existingCommitments), 45, 150, paint);
+        canvas.drawText(String.format(Locale.US, "  - Active Loans EMI: LKR %.2f", activeLoansMonthlyTotal), 55, 170, paint);
+        canvas.drawText(String.format(Locale.US, "  - Utility Bills: LKR %.2f", utilitiesMonthlyTotal), 55, 190, paint);
+        canvas.drawText(String.format(Locale.US, "  - Subscriptions: LKR %.2f", subscriptionsMonthlyTotal), 55, 210, paint);
+        
+        canvas.drawLine(40, 225, 555, 225, paint);
 
-        // 3. Detailed Comparison Table
-        paint.setTextSize(16f);
+        // 3. Side-by-Side Suitability Analysis
+        paint.setTextSize(13f);
         paint.setFakeBoldText(true);
-        canvas.drawText("Detailed Side-by-Side Comparison", 50, 330, paint);
-        canvas.drawLine(50, 340, 550, 340, paint);
+        canvas.drawText("Option-by-Option Suitability Assessment", 40, 250, paint);
 
-        int y = 370;
-        paint.setTextSize(12f);
-        // Header row
-        canvas.drawText("Label/Bank", 50, y, paint);
+        int y = 275;
+        paint.setTextSize(11f);
+        paint.setFakeBoldText(false);
+
+        for (ComparisonData data : dataList) {
+            double totalExpenses = existingCommitments + data.emi;
+            double remaining = userMonthlyIncome - totalExpenses;
+            boolean isSuitable = remaining >= 0;
+
+            paint.setFakeBoldText(true);
+            canvas.drawText(data.optionLabel + " (" + data.bankName + ")", 45, y, paint);
+            paint.setFakeBoldText(false);
+
+            canvas.drawText(String.format(Locale.US, "EMI: LKR %.2f | Commitment: LKR %.2f | Net Cash Flow: LKR %.2f", 
+                    data.emi, totalExpenses, remaining), 45, y + 18, paint);
+
+            paint.setFakeBoldText(true);
+            paint.setColor(Color.parseColor(isSuitable ? "#10B981" : "#EF4444"));
+            canvas.drawText("STATUS: " + (isSuitable ? "SUITABLE (AFFORDABLE)" : "NOT SUITABLE (BURDEN)"), 45, y + 36, paint);
+            paint.setColor(Color.BLACK);
+            paint.setFakeBoldText(false);
+
+            y += 55;
+            if (y > 780) {
+                document.finishPage(page);
+                page = document.startPage(pageInfo);
+                canvas = page.getCanvas();
+                y = 50;
+            }
+        }
+
+        canvas.drawLine(40, y + 5, 555, y + 5, paint);
+        y += 25;
+
+        // 4. Detailed Side-by-Side Comparison Table
+        paint.setTextSize(13f);
+        paint.setFakeBoldText(true);
+        canvas.drawText("Side-by-Side Comparison Table", 40, y, paint);
+        canvas.drawLine(40, y + 10, 555, y + 10, paint);
+        y += 28;
+
+        paint.setTextSize(10f);
+        canvas.drawText("Label / Bank", 40, y, paint);
         canvas.drawText("Principal", 180, y, paint);
         canvas.drawText("Rate", 280, y, paint);
-        canvas.drawText("EMI", 350, y, paint);
-        canvas.drawText("Total Payable", 450, y, paint);
-        
-        canvas.drawLine(50, y + 10, 550, y + 10, paint);
-        y += 40;
+        canvas.drawText("Monthly EMI", 345, y, paint);
+        canvas.drawText("Total Payable", 445, y, paint);
+
+        canvas.drawLine(40, y + 5, 555, y + 5, paint);
+        y += 20;
         paint.setFakeBoldText(false);
 
         for (ComparisonData data : dataList) {
@@ -196,16 +239,16 @@ public class LoanCompareActivity extends AppCompatActivity {
                 canvas = page.getCanvas();
                 y = 50;
             }
-            canvas.drawText(data.optionLabel + " / " + data.bankName, 50, y, paint);
-            canvas.drawText("$" + (int)data.principal, 180, y, paint);
-            canvas.drawText(data.interestRate + "%", 280, y, paint);
-            canvas.drawText("$" + String.format(Locale.US, "%.2f", data.emi), 350, y, paint);
-            canvas.drawText("$" + String.format(Locale.US, "%.2f", data.totalPayable), 450, y, paint);
-            y += 35;
+            canvas.drawText(data.optionLabel + " - " + data.bankName, 40, y, paint);
+            canvas.drawText(String.format(Locale.US, "LKR %.0f", data.principal), 180, y, paint);
+            canvas.drawText(String.format(Locale.US, "%.2f%%", data.interestRate), 280, y, paint);
+            canvas.drawText(String.format(Locale.US, "LKR %.2f", data.emi), 345, y, paint);
+            canvas.drawText(String.format(Locale.US, "LKR %.2f", data.totalPayable), 445, y, paint);
+            y += 20;
         }
 
         document.finishPage(page);
-        String fileName = "Loan_Comparison_Analysis_" + System.currentTimeMillis() + ".pdf";
+        String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
 
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
@@ -220,7 +263,7 @@ public class LoanCompareActivity extends AppCompatActivity {
                     if (outputStream != null) {
                         document.writeTo(outputStream);
                         outputStream.close();
-                        Toast.makeText(this, "Analytical Report saved to Downloads", Toast.LENGTH_LONG).show();
+                        Toast.makeText(this, "Analytical Suitability Report saved to Downloads", Toast.LENGTH_LONG).show();
                     }
                 }
             } else {
@@ -231,6 +274,163 @@ public class LoanCompareActivity extends AppCompatActivity {
         } finally {
             document.close();
         }
+    }
+
+    private void fetchFinancialData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) {
+            userMonthlyIncome = 85000.0;
+            return;
+        }
+        uid = user.getUid();
+        db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                String monthlySavingStr = documentSnapshot.getString("monthlySavingAmount");
+                if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
+                    try {
+                        userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
+                    } catch (NumberFormatException ignored) {}
+                }
+                
+                String role = documentSnapshot.getString("role");
+                if (userMonthlyIncome <= 0 && "Company worker".equals(role)) {
+                    db.collection("users").document(uid).collection("worker_profile").document("profile_data")
+                            .get()
+                            .addOnSuccessListener(profileDoc -> {
+                                if (profileDoc.exists()) {
+                                    Double salary = profileDoc.getDouble("monthlySalary");
+                                    if (salary != null && salary > 0) {
+                                        userMonthlyIncome = salary;
+                                    }
+                                }
+                                if (userMonthlyIncome <= 0) {
+                                    userMonthlyIncome = 75000.0;
+                                }
+                            });
+                } else if (userMonthlyIncome <= 0) {
+                    userMonthlyIncome = 60000.0;
+                }
+            }
+        });
+
+        db.collection("users").document(uid).collection("loans").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            double total = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                Double emi = doc.getDouble("monthlyEmi");
+                if (emi != null) {
+                    total += emi;
+                }
+            }
+            activeLoansMonthlyTotal = total;
+        });
+
+        db.collection("users").document(uid).collection("utilities").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            double total = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                Double amount = doc.getDouble("amount");
+                if (amount != null) {
+                    total += amount;
+                }
+            }
+            utilitiesMonthlyTotal = total;
+        });
+
+        db.collection("users").document(uid).collection("subscriptions").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            subscriptionsMonthlyTotal = queryDocumentSnapshots.size() * 1500.0;
+        });
+    }
+
+    private void showVisualSuitabilityReport(List<ComparisonData> dataList) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        
+        TextView titleView = new TextView(this);
+        titleView.setText("Loan Suitability & Commitment Analysis");
+        titleView.setTextSize(18f);
+        titleView.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+        titleView.setTextColor(Color.parseColor("#FFFFFF"));
+        titleView.setPadding(40, 40, 40, 20);
+        titleView.setBackgroundColor(Color.parseColor("#071A33"));
+        builder.setCustomTitle(titleView);
+
+        android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        container.setPadding(30, 30, 30, 30);
+        container.setBackgroundColor(Color.parseColor("#071A33"));
+
+        TextView introText = new TextView(this);
+        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: LKR %.2f\nExisting commitments: Loans (LKR %.2f) + Utilities (LKR %.2f) + Subscriptions (LKR %.2f)", 
+                userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        introText.setTextColor(Color.parseColor("#BCE0FF"));
+        introText.setTextSize(13f);
+        introText.setPadding(0, 0, 0, 30);
+        container.addView(introText);
+
+        double existingExpenses = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
+
+        for (ComparisonData data : dataList) {
+            com.google.android.material.card.MaterialCardView card = new com.google.android.material.card.MaterialCardView(this);
+            card.setCardElevation(6f);
+            card.setRadius(24f);
+            card.setUseCompatPadding(true);
+            
+            LinearLayout cardContent = new LinearLayout(this);
+            cardContent.setOrientation(LinearLayout.VERTICAL);
+            cardContent.setPadding(32, 32, 32, 32);
+
+            double totalExpenses = existingExpenses + data.emi;
+            double remaining = userMonthlyIncome - totalExpenses;
+            boolean isSuitable = remaining >= 0;
+
+            card.setCardBackgroundColor(Color.parseColor(isSuitable ? "#0C2E2B" : "#321A1A"));
+            card.setStrokeWidth(2);
+            card.setStrokeColor(Color.parseColor(isSuitable ? "#10B981" : "#EF4444"));
+
+            TextView nameText = new TextView(this);
+            nameText.setText(data.optionLabel + " - " + data.bankName);
+            nameText.setTextColor(Color.WHITE);
+            nameText.setTextSize(16f);
+            nameText.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+            cardContent.addView(nameText);
+
+            TextView detailsText = new TextView(this);
+            detailsText.setText(String.format(Locale.US, 
+                    "• Proposed EMI: LKR %.2f/mo\n" +
+                    "• Total Monthly Commitment: LKR %.2f/mo\n" +
+                    "• Net Cash Flow: LKR %.2f/mo", 
+                    data.emi, totalExpenses, remaining));
+            detailsText.setTextColor(Color.parseColor("#D8E4FF"));
+            detailsText.setTextSize(13f);
+            detailsText.setPadding(0, 16, 0, 16);
+            cardContent.addView(detailsText);
+
+            TextView badge = new TextView(this);
+            badge.setText(isSuitable ? "✅ SUITABLE (AFFORDABLE)" : "❌ NOT RECOMMENDED (BURDEN)");
+            badge.setTextColor(Color.parseColor(isSuitable ? "#34D399" : "#F87171"));
+            badge.setTextSize(14f);
+            badge.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
+            cardContent.addView(badge);
+
+            card.addView(cardContent);
+            container.addView(card);
+        }
+
+        scrollView.addView(container);
+        builder.setView(scrollView);
+
+        builder.setPositiveButton("Generate PDF Report", (dialog, which) -> {
+            generateDetailedComparisonReport(dataList);
+        });
+        builder.setNegativeButton("Close", null);
+        
+        AlertDialog dialog = builder.create();
+        dialog.show();
+        
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#4ADE80"));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#071A33")));
     }
 
     private boolean validateAllCards() {
