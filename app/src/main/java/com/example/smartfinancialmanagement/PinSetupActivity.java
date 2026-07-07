@@ -159,6 +159,8 @@ public class PinSetupActivity extends AppCompatActivity {
                 intent = new Intent(this, MultiAccountDashboardActivity.class); break;
             case "Business owner":
                 intent = new Intent(this, BusinessDashboardActivity.class); break;
+            case "student_worker_hybrid":
+                intent = new Intent(this, StudentWorkerHybridDashboardActivity.class); break;
             default:
                 intent = new Intent(this, StudentDashboardActivity.class); break;
         }

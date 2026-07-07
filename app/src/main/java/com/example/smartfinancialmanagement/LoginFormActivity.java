@@ -326,6 +326,14 @@ public class LoginFormActivity extends AppCompatActivity {
         finish();
     }
 
+    private void navigateToHybridDashboard(String role) {
+        Intent intent = new Intent(LoginFormActivity.this, StudentWorkerHybridDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
 
     /**
      * Routes the user to the correct dashboard based on their Firestore role string.
@@ -345,6 +353,9 @@ public class LoginFormActivity extends AppCompatActivity {
                 break;
             case "Business owner":
                 navigateToBusinessDashboard(role);
+                break;
+            case "student_worker_hybrid":
+                navigateToHybridDashboard(role);
                 break;
             default:
                 navigateToDashboard(role);

@@ -94,6 +94,14 @@
             android:exported="false" />
 
         <activity
+            android:name=".RoleUpgradeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentWorkerHybridDashboardActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".StudentBudgetActivity"
             android:exported="false" />
 

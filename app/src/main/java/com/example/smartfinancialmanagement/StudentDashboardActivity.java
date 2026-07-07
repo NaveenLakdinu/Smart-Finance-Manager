@@ -81,6 +81,12 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (cardUtilityManager != null) {
             cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         }
+
+        View cardUpgradeHybrid = findViewById(R.id.cardUpgradeHybrid);
+        if (cardUpgradeHybrid != null) {
+            cardUpgradeHybrid.setOnClickListener(v -> startActivity(new Intent(this, RoleUpgradeActivity.class)));
+        }
+
         setupSavingsWidget();
     }
 

@@ -20,7 +20,12 @@ public class StudentBudgetActivity extends AppCompatActivity {
                 if (itemId == R.id.nav_budget) {
                     return true;
                 } else if (itemId == R.id.nav_dashboard) {
-                    startActivity(new Intent(this, StudentDashboardActivity.class));
+                    String role = getSharedPreferences("UserData", MODE_PRIVATE).getString("user_role", "Student");
+                    if ("student_worker_hybrid".equals(role)) {
+                        startActivity(new Intent(this, StudentWorkerHybridDashboardActivity.class));
+                    } else {
+                        startActivity(new Intent(this, StudentDashboardActivity.class));
+                    }
                     overridePendingTransition(0, 0);
                     return true;
                 } else if (itemId == R.id.nav_savings) {
