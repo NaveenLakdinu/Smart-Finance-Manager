@@ -194,12 +194,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <RadioButton
+                    <ImageView
                         android:id="@+id/radioStudent"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/hero_accent"
-                        android:checked="true" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_radio_unchecked"
+                        android:contentDescription="Select Student"
+                        app:tint="@color/hero_accent" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -294,12 +295,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <RadioButton
+                    <ImageView
                         android:id="@+id/radioWorker"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/hero_accent"
-                        android:checked="false" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_radio_unchecked"
+                        android:contentDescription="Select Worker"
+                        app:tint="@color/hero_accent" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -394,12 +396,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <RadioButton
+                    <ImageView
                         android:id="@+id/radioBusinessOwner"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/hero_accent"
-                        android:checked="false" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_radio_unchecked"
+                        android:contentDescription="Select Business Owner"
+                        app:tint="@color/hero_accent" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -494,12 +497,13 @@
                         </LinearLayout>
                     </LinearLayout>
 
-                    <RadioButton
+                    <ImageView
                         android:id="@+id/radioMulti"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:buttonTint="@color/hero_accent"
-                        android:checked="false" />
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:src="@drawable/ic_radio_unchecked"
+                        android:contentDescription="Select Multiple Accounts"
+                        app:tint="@color/hero_accent" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
