@@ -132,8 +132,20 @@ public class UtilityBillActivity extends AppCompatActivity {
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
                 if (alarmManager != null && calendar.getTimeInMillis() > System.currentTimeMillis()) {
-                    // Schedules system alert accurately even when background device execution rests
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    try {
+                        // Fix: Check exact alarm permission on Android 12 (API 31) and above
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                            // Fallback to an inexact alarm if the exact alarm permission isn't granted
+                            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                        } else {
+                            // Safe to call setExactAndAllowWhileIdle on older versions or if permission is granted
+                            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                        }
+                    } catch (SecurityException se) {
+                        // Additional safety catch block to handle unexpected SecurityExceptions
+                        se.printStackTrace();
+                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                    }
                 }
             }
         } catch (Exception e) {

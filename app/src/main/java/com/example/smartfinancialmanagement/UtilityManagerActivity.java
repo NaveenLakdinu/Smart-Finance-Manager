@@ -41,6 +41,13 @@ public class UtilityManagerActivity extends AppCompatActivity {
 
         initViews();
         setupClickListeners();
+        // REMOVED: fetchDashboardDataFromFirestore() from here
+    }
+
+    // FIX: Overriding onResume to fetch data every time the screen becomes visible
+    @Override
+    protected void onResume() {
+        super.onResume();
         fetchDashboardDataFromFirestore();
     }
 
@@ -124,6 +131,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
                         // Safe fallback layout state configuration if database collection is empty
                         if (txtHeroBillName != null) txtHeroBillName.setText("No Pending Bills");
                         if (txtHeroBillDueDate != null) txtHeroBillDueDate.setText("All caught up!");
+                        layoutRecentBills.removeAllViews(); // Clear any leftover items
                     }
                 })
                 .addOnFailureListener(e -> Toast.makeText(this, "Dashboard Sync Failed: " + e.getMessage(), Toast.LENGTH_SHORT).show());

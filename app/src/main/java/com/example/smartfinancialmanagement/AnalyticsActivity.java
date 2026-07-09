@@ -1,6 +1,7 @@
 package com.example.smartfinancialmanagement;
 
 import android.content.ContentValues;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,16 +14,18 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.ContentValues;
-import android.content.Intent;
-import android.graphics.Bitmap;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.BarData;
+import com.github.mikephil.charting.data.BarDataSet;
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.itextpdf.text.Document;
@@ -48,7 +51,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     private TextView txtRevenueDisplay, txtExpenseDisplay, txtProfitDisplay, txtPercentageDisplay;
     private View btnGoToRevenue, btnGoToExpense;
     private Button btnGeneratePDF;
-    private ImageView imgChartPlaceholder;
+    private BarChart barChartAnalytic;
     private Spinner spinnerBusinessFilter;
 
     private FirebaseFirestore db;
@@ -78,10 +81,10 @@ public class AnalyticsActivity extends AppCompatActivity {
         txtProfitDisplay = findViewById(R.id.txtProfitDisplay);
         txtPercentageDisplay = findViewById(R.id.txtPercentageDisplay);
         btnGeneratePDF = findViewById(R.id.btnGeneratePDF);
-        imgChartPlaceholder = findViewById(R.id.imgChartPlaceholder);
+        barChartAnalytic = findViewById(R.id.barChartAnalytic);
         spinnerBusinessFilter = findViewById(R.id.spinnerBusinessFilter);
-        btnGoToRevenue = findViewById(R.id.layoutRevenueCard); // හෝ R.id.btnRevenue
-        btnGoToExpense = findViewById(R.id.layoutExpenseCard); // හෝ R.id.btnExpense
+        btnGoToRevenue = findViewById(R.id.layoutRevenueCard);
+        btnGoToExpense = findViewById(R.id.layoutExpenseCard);
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         btnGeneratePDF.setOnClickListener(v -> generateAnalyticsPDF());
@@ -98,7 +101,6 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void setupFilterSpinner() {
-        // පළමුවෙන්ම "All Businesses" එක ඇතුළත් කරනවා
         filterOptionsList.clear();
         filterOptionsList.add("All Businesses");
 
@@ -113,12 +115,11 @@ public class AnalyticsActivity extends AppCompatActivity {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
             spinnerBusinessFilter.setAdapter(adapter);
 
-            // Spinner එක මාරු කරන විට ක්‍රියාත්මක වන ලෝගිකය
             spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     selectedBusinessFilter = filterOptionsList.get(position);
-                    fetchMonthlyAnalytics(); // දත්ත නැවත Filter කර ලබාගන්නවා
+                    fetchMonthlyAnalytics();
                 }
 
                 @Override
@@ -139,7 +140,6 @@ public class AnalyticsActivity extends AppCompatActivity {
                 Double amount = doc.getDouble("amount");
 
                 if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                    // "All Businesses" නම් හෝ තෝරාගත් ව්‍යාපාරයේ නම සමාන නම් පමණක් එකතු කරයි
                     if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
                         currentMonthRevenue += amount;
                     }
@@ -188,6 +188,57 @@ public class AnalyticsActivity extends AppCompatActivity {
             txtPercentageDisplay.setText(String.format(Locale.getDefault(), "%.1f%% Net Loss", profitPercentage));
             txtPercentageDisplay.setTextColor(Color.parseColor("#FF5555"));
         }
+
+        updateBarChartDisplay();
+    }
+
+    private void updateBarChartDisplay() {
+        List<BarEntry> entries = new ArrayList<>();
+        entries.add(new BarEntry(0f, (float) currentMonthRevenue));
+        entries.add(new BarEntry(1f, (float) currentMonthExpense));
+        entries.add(new BarEntry(2f, (float) currentMonthProfit));
+
+        BarDataSet dataSet = new BarDataSet(entries, "Monthly Analytics");
+
+        int[] colors = new int[]{
+                Color.parseColor("#4ADE80"),
+                Color.parseColor("#FF5555"),
+                Color.parseColor("#00D4AA")
+        };
+        dataSet.setColors(colors);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueTextSize(11f);
+
+        BarData barData = new BarData(dataSet);
+        barData.setBarWidth(0.5f);
+
+        barChartAnalytic.setData(barData);
+
+        final String[] labels = new String[]{"Revenue", "Expenses", "Net Profit"};
+        XAxis xAxis = barChartAnalytic.getXAxis();
+        xAxis.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                if (value >= 0 && value < labels.length) {
+                    return labels[(int) value];
+                }
+                return "";
+            }
+        });
+
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setTextColor(Color.parseColor("#7A9CC0"));
+        xAxis.setDrawGridLines(false);
+        xAxis.setGranularity(1f);
+
+        barChartAnalytic.getAxisLeft().setTextColor(Color.WHITE);
+        barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#1A3050"));
+        barChartAnalytic.getAxisRight().setEnabled(false);
+        barChartAnalytic.getDescription().setEnabled(false);
+        barChartAnalytic.getLegend().setEnabled(false);
+
+        barChartAnalytic.animateY(1000);
+        barChartAnalytic.invalidate();
     }
 
     private void generateAnalyticsPDF() {
@@ -223,7 +274,6 @@ public class AnalyticsActivity extends AppCompatActivity {
             title.setSpacingAfter(5);
             document.add(title);
 
-            // PDF එකේ දැනට Filter කර ඇති Scope එක පෙන්වීම
             Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter, boldFont);
             filterScope.setSpacingAfter(20);
             document.add(filterScope);
@@ -249,12 +299,11 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(table);
 
-            // Chart ImageView එකෙන් ලබාගෙන PDF එකට දමනවා
             document.add(new Paragraph("Visual Analytics Workspace Chart Summary:", boldFont));
 
-            Bitmap bitmap = Bitmap.createBitmap(imgChartPlaceholder.getWidth(), imgChartPlaceholder.getHeight(), Bitmap.Config.ARGB_8888);
+            Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
-            imgChartPlaceholder.draw(canvas);
+            barChartAnalytic.draw(canvas);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
@@ -284,4 +333,4 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
         table.addCell(cell);
     }
-}
+} // 💡 Class එක වසා දමන අවසාන වරහන

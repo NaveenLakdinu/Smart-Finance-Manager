@@ -35,10 +35,9 @@ public class InvoiceHubActivity extends AppCompatActivity {
     private RecyclerView rvInvoices;
     private FloatingActionButton fabAddInvoice;
 
-    // Dropdown structural bindings
     private Spinner spinnerBusinessFilter;
     private List<String> businessDropdownOptions = new ArrayList<>();
-    private String currentSelectedBusinessFilter = "All Businesses"; // Default option tracking string reference
+    private String currentSelectedBusinessFilter = "All Businesses";
 
     private FirebaseFirestore db;
     private List<InvoiceModel> allInvoicesList = new ArrayList<>();
@@ -54,7 +53,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
 
         initializeViews();
         setupFilterListeners();
-        loadBusinessFilterDropdown(); // Fetch workspaces directly from Cloud Firestore Database
+        loadBusinessFilterDropdown();
 
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         fabAddInvoice.setOnClickListener(v -> startActivity(new Intent(this, CreateInvoiceActivity.class)));
@@ -91,7 +90,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     businessDropdownOptions.clear();
-                    businessDropdownOptions.add("All Businesses"); // Add master clear fallback selection anchor option
+                    businessDropdownOptions.add("All Businesses");
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         BusinessModel business = doc.toObject(BusinessModel.class);
@@ -109,7 +108,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                             currentSelectedBusinessFilter = parent.getItemAtPosition(position).toString();
-                            applyFilterAndPopulateList(); // Instantly update view when selections map context changes
+                            applyFilterAndPopulateList();
                         }
                         @Override
                         public void onNothingSelected(AdapterView<?> parent) {}
@@ -155,10 +154,42 @@ public class InvoiceHubActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     allInvoicesList.clear();
+                    Date today = new Date();
+
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         InvoiceModel item = doc.toObject(InvoiceModel.class);
                         if (item != null) {
                             if (item.getStatus() == null) item.setStatus("pending");
+
+                            // 💡 1. කාලය ඉකුත් වී ඇත්නම් ස්වයංක්‍රීයව Status එක "due" ලෙස වෙනස් කිරීම
+                            if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
+                                try {
+                                    Date dueDate = dateFormat.parse(item.getPaymentDueDate());
+                                    // ඉන්වොයිසියේ දිනය අද දිනට වඩා පැරණි නම් සහ දැනට status එක "due" නොවේ නම්
+                                    if (dueDate != null && dueDate.before(today) && !item.getStatus().equalsIgnoreCase("due")) {
+                                        item.setStatus("due");
+                                        // Firestore එකේ පවතින document එකද "due" ලෙස update කිරීම
+                                        db.collection("invoices").document(doc.getId()).update("status", "due");
+                                    }
+                                } catch (ParseException ignored) {}
+                            }
+
+                            // 💡 2. FIX: ReminderScheduler එක හරහා නිවැරදිව පරාමිතීන් 6 ම ලබා දී Alarm එක යෙදීම
+                            if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
+
+                                // InvoiceModel එකෙන් businessEmail එක ලබා ගැනීම (නම වෙනස් නම් model එක බලන්න)
+                                String businessEmail = item.getBusinessEmail() != null ? item.getBusinessEmail() : "";
+
+                                InvoiceReminderScheduler.scheduleInvoiceReminder(
+                                        InvoiceHubActivity.this,
+                                        item.getClientName(),
+                                        item.getPaymentDueDate(),
+                                        item.isEmailReminderEnabled(),
+                                        businessEmail,            // 5 වෙනි පරාමිතිය (String)
+                                        item.getGrandTotal()       // 6 වෙනි පරාමිතිය (double)
+                                );
+                            }
+
                             allInvoicesList.add(item);
                         }
                     }
@@ -208,7 +239,6 @@ public class InvoiceHubActivity extends AppCompatActivity {
         for (InvoiceModel inv : allInvoicesList) {
             boolean matchesStatus = inv.getStatus().equalsIgnoreCase(currentSelectedFilter);
 
-            // Evaluates workspace criteria parameter contexts
             boolean matchesBusiness = currentSelectedBusinessFilter.equals("All Businesses")
                     || (inv.getSelectedBusiness() != null && inv.getSelectedBusiness().equalsIgnoreCase(currentSelectedBusinessFilter));
 

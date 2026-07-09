@@ -4,11 +4,13 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,18 +38,20 @@ import androidx.core.content.ContextCompat;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
+    private static final String TAG = "BusinessDashboard";
     private TextView txtProfileLetter, txtUserEmail, txtTotalCount, txtSubMessage, btnNotifications;
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private RecyclerView recyclerBusinessFilters;
     private View btnTopLogout;
-
+    private ImageView btnManageBusinesses;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    private List<String> businessList = new ArrayList<>();
-    private String selectedBusinessScope = "ALL WORKSPACES"; // Default state
 
-    // Invoice Metrics Tracking
-    private double allWorkspacesInvoiceTotal = 0.0;
+    private List<String> businessNamesList = new ArrayList<>();
+    private List<String> businessIdsList = new ArrayList<>();
+    private String selectedBusinessScope = "ALL WORKSPACES";
+
+    private List<InvoiceModel> cachedInvoices = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,8 +63,18 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
         initializeViews();
         setupUserIdentityProfile();
-        loadBusinessWorkspaces();
         checkNotificationPermission();
+
+        // 🛑 loadBusinessWorkspaces(); එක මෙතැනින් ඉවත් කර ඇත.
+    }
+
+    // 💡 100% FIX: වෙනත් ක්‍රියාකාරකමක (Activity) සිට නැවත Dashboard එකට එන හැම වෙලාවකම
+    // Firebase එකෙන් අලුත්ම දත්ත ඇදලා අරන් තිරය auto-refresh කරන්නේ මෙන්න මේ කොටසින්.
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume triggered: Fetching fresh data...");
+        loadBusinessWorkspaces();
     }
 
     private void initializeViews() {
@@ -72,65 +86,28 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         btnTopLogout = findViewById(R.id.btnTopLogout);
         recyclerBusinessFilters = findViewById(R.id.recyclerBusinessFilters);
 
+        // initializeViews() ඇතුළතට මෙය එකතු කරන්න:
+        ImageView btnManageBusinesses = findViewById(R.id.btnManageBusinesses);
+        btnManageBusinesses.setOnClickListener(v -> {
+            startActivity(new Intent(this, ManageBusinessActivity.class));
+        });
+
         recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
-        // =========================================================
-        // 💡 XML එකට අනුව ප්‍රධාන විශේෂාංග 6 (6 Finance Tools Modules)
-        // =========================================================
-
-        // Module 1: Manage Loan
-        findViewById(R.id.cardManageLoan).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, LoanFormActivity.class);
-            startActivity(intent);
-        });
-
-        // Module 2: Manage Subscription
-        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionActivity.class);
-            startActivity(intent);
-        });
-
-        // Module 3: Manage Utility
-        findViewById(R.id.cardManageUtility).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class);
-            startActivity(intent);
-        });
-
-        // Module 4: Saving Manager
-        findViewById(R.id.cardSavingManager).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, SavingManagerActivity.class);
-            startActivity(intent);
-        });
-
-        // Module 5: B2B Invoices
-        findViewById(R.id.B2BInvoice).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class);
-            startActivity(intent);
-        });
-
-        // Module 6: Analytics
-        findViewById(R.id.cardAnalytics).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class);
-            startActivity(intent);
-        });
-
-        // =========================================================
-        // 💡 අනෙකුත් බොත්තම් (Add Business, Notifications, Logout)
-        // =========================================================
-
-        // Add Business
-        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> {
-            Intent intent = new Intent(BusinessDashboardActivity.this, AddBusinessActivity.class);
-            startActivity(intent);
-        });
+        // Click listeners
+        findViewById(R.id.cardManageLoan).setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
+        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> startActivity(new Intent(this, SubscriptionActivity.class)));
+        findViewById(R.id.cardManageUtility).setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
+        findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
+        findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
+        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
+        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
 
         btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
-
         btnTopLogout.setOnClickListener(v -> {
             mAuth.signOut();
             Toast.makeText(this, "Logged Out Safely", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(BusinessDashboardActivity.this, LoginFormActivity.class);
+            Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
@@ -138,15 +115,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void checkNotificationPermission() {
-        // උපාංගයේ Android සංස්කරණය Android 13 (TIRAMISU) හෝ ඊට ඉහළ නම් පමණක් ක්‍රියාත්මක වේ
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
-                    != PackageManager.PERMISSION_GRANTED) {
-
-                // පරිශීලකයා මින් පෙර අවසර දී නොමැති නම් අවසර ඉල්ලන Dialog එක පෙන්වීම
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.POST_NOTIFICATIONS},
-                        NOTIFICATION_PERMISSION_CODE);
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, NOTIFICATION_PERMISSION_CODE);
             }
         }
     }
@@ -163,107 +134,138 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         }
     }
 
-    // පරිශීලකයා Permission Dialog එකට ලබාදෙන පිළිතුර (Allow / Don't Allow) හැසිරවීම
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if (requestCode == NOTIFICATION_PERMISSION_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                Toast.makeText(this, "Notification permission granted!", Toast.LENGTH_SHORT).show();
-            } else {
-                // පරිශීලකයා Permission එක ප්‍රතික්ෂේප කළහොත් පෙන්වන පණිවිඩය
-                Toast.makeText(this, "Notifications disabled. You might miss important financial alerts.", Toast.LENGTH_LONG).show();
-            }
-        }
-    }
-
     private void loadBusinessWorkspaces() {
-        db.collection("businesses").get()
-                .addOnSuccessListener(snapshots -> {
-                    businessList.clear();
-                    businessList.add("ALL WORKSPACES");
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null || user.getEmail() == null) return;
 
+        String currentLogInUserEmail = user.getEmail().toLowerCase(Locale.ROOT).trim();
+
+        businessNamesList.clear();
+        businessIdsList.clear();
+
+        businessNamesList.add("ALL WORKSPACES");
+        businessIdsList.add("ALL WORKSPACES");
+
+        db.collection("businesses")
+                .get()
+                .addOnSuccessListener(snapshots -> {
                     for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                        String name = doc.getString("businessName");
-                        if (name != null) businessList.add(name);
-                    }
-                    calculateInvoiceMetricsPipeline();
-                })
-                .addOnFailureListener(e -> {
-                    // 💡 Firebase බ්ලොක් කළහොත් ක්‍රෑෂ් නොවී මෙම පණිවිඩය පෙන්වයි
-                    Toast.makeText(this, "Firestore Businesses Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    // දත්ත නැතත් Dashboard එක විවෘත වීමට හිස් ලිස්ට් එකක් සකසයි
-                    setupFilterRecyclerView(new ArrayList<>());
-                });
-    }
-    private void calculateInvoiceMetricsPipeline() {
-        db.collection("invoices").get()
-                .addOnSuccessListener(snapshots -> {
-                    allWorkspacesInvoiceTotal = 0.0;
-                    List<DocumentSnapshot> allInvoiceDocs = snapshots.getDocuments();
+                        if (doc.exists()) {
+                            String name = doc.getString("businessName");
+                            String id = doc.getId();
 
-                    for (DocumentSnapshot doc : allInvoiceDocs) {
-                        Double totalAmt = doc.getDouble("totalAmount");
-                        if (totalAmt == null) totalAmt = doc.getDouble("amount");
+                            String ownerEmailField = doc.getString("ownerEmail");
+                            String businessEmailField = doc.getString("businessEmail");
 
-                        if (totalAmt != null) {
-                            allWorkspacesInvoiceTotal += totalAmt;
+                            if (name != null && !name.trim().isEmpty()) {
+                                name = name.trim();
+
+                                String finalOwnerEmail = (ownerEmailField != null) ? ownerEmailField.toLowerCase(Locale.ROOT).trim() : "";
+                                String finalBusinessEmail = (businessEmailField != null) ? businessEmailField.toLowerCase(Locale.ROOT).trim() : "";
+
+                                boolean isMyBusiness = false;
+
+                                if (!finalOwnerEmail.isEmpty() && finalOwnerEmail.equals(currentLogInUserEmail)) {
+                                    isMyBusiness = true;
+                                }
+                                else if (!finalBusinessEmail.isEmpty() && finalBusinessEmail.equals(currentLogInUserEmail)) {
+                                    isMyBusiness = true;
+                                }
+
+                                if (isMyBusiness) {
+                                    if (!businessIdsList.contains(id)) {
+                                        businessNamesList.add(name);
+                                        businessIdsList.add(id);
+                                    }
+                                }
+                            }
                         }
                     }
 
-                    updateHeroCardDisplay(allInvoiceDocs);
-                    setupFilterRecyclerView(allInvoiceDocs);
+                    Log.d(TAG, "Total businesses fetched and shown: " + (businessNamesList.size() - 1));
+                    calculateInvoiceMetricsPipeline(currentLogInUserEmail);
                 })
                 .addOnFailureListener(e -> {
-                    // 💡 Invoices කියවීමට නොහැකි වුවහොත් පෙන්වන පණිවිඩය
-                    Toast.makeText(this, "Firestore Invoices Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                    setupFilterRecyclerView(new ArrayList<>());
+                    Log.e(TAG, "Businesses load failure: " + e.getMessage());
+                    calculateInvoiceMetricsPipeline(currentLogInUserEmail);
                 });
     }
 
-    private void updateHeroCardDisplay(List<DocumentSnapshot> invoiceDocs) {
-        if (selectedBusinessScope.equals("ALL WORKSPACES")) {
-            txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", allWorkspacesInvoiceTotal));
-            txtSubMessage.setText("Sum total across all your registered entities");
-        } else {
-            double selectedBizTotal = 0.0;
-            for (DocumentSnapshot doc : invoiceDocs) {
-                String bName = doc.getString("selectedBusiness");
-                Double amt = doc.getDouble("totalAmount");
-                if (amt == null) amt = doc.getDouble("amount");
+    private void calculateInvoiceMetricsPipeline(String ownerEmail) {
+        db.collection("invoices").get()
+                .addOnSuccessListener(snapshots -> {
+                    cachedInvoices.clear();
 
-                if (bName != null && bName.equalsIgnoreCase(selectedBusinessScope) && amt != null) {
-                    selectedBizTotal += amt;
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        InvoiceModel invoice = doc.toObject(InvoiceModel.class);
+                        if (invoice != null) {
+                            cachedInvoices.add(invoice);
+                        }
+                    }
+
+                    updateHeroCardDisplay();
+                    setupFilterRecyclerView();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Invoices Pipeline Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    setupFilterRecyclerView();
+                });
+    }
+
+    private void updateHeroCardDisplay() {
+        double pendingTotal = 0.0;
+
+        for (InvoiceModel invoice : cachedInvoices) {
+            String status = invoice.getStatus();
+            String bizNameInInvoice = invoice.getSelectedBusiness();
+            double amount = invoice.getGrandTotal();
+
+            if (status != null && (status.equalsIgnoreCase("pending") || status.equalsIgnoreCase("unpaid"))) {
+
+                if (selectedBusinessScope.equals("ALL WORKSPACES")) {
+                    if (bizNameInInvoice != null && (businessNamesList.contains(bizNameInInvoice) || businessIdsList.contains(bizNameInInvoice))) {
+                        pendingTotal += amount;
+                    }
+                } else {
+                    int selectedIndex = businessNamesList.indexOf(selectedBusinessScope);
+                    if (selectedIndex != -1) {
+                        String correspondingId = businessIdsList.get(selectedIndex);
+
+                        if (bizNameInInvoice != null &&
+                                (bizNameInInvoice.equalsIgnoreCase(selectedBusinessScope) || bizNameInInvoice.equals(correspondingId))) {
+                            pendingTotal += amount;
+                        }
+                    }
                 }
             }
-            txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", selectedBizTotal));
-            txtSubMessage.setText("Isolated metrics view for matrix pipeline: " + selectedBusinessScope);
+        }
+
+        txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", pendingTotal));
+
+        if (selectedBusinessScope.equals("ALL WORKSPACES")) {
+            txtSubMessage.setText("Total pending invoices across all registered workspaces");
+        } else {
+            txtSubMessage.setText("Pending balances isolated for: " + selectedBusinessScope);
         }
     }
 
-    private void setupFilterRecyclerView(List<DocumentSnapshot> invoiceDocs) {
-        recyclerBusinessFilters.setAdapter(new RecyclerView.Adapter<FilterViewHolder>() {
+    private void setupFilterRecyclerView() {
+        RecyclerView.Adapter<FilterViewHolder> adapter = new RecyclerView.Adapter<FilterViewHolder>() {
             @NonNull
             @Override
             public FilterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
                 MaterialCardView card = new MaterialCardView(parent.getContext());
-
-                // 💡 මෙතැනදී MATCH_PARENT වෙනුවට WRAP_CONTENT යොදා ක්‍රෑෂ් එක සම්පූර්ණයෙන්ම විසඳා ඇත.
                 LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT
                 );
                 params.setMargins(0, 0, 16, 0);
                 card.setLayoutParams(params);
-
                 card.setRadius(19.0f);
                 card.setStrokeWidth(0);
 
                 TextView tv = new TextView(parent.getContext());
-                tv.setId(View.generateViewId());
-                tv.setPadding(34, 16, 34, 16); // Padding මදක් වැඩි කර පෙනුම ලස්සන කරන ලදී
-
+                tv.setPadding(34, 16, 34, 16);
                 tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 12.0f);
                 tv.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
                 card.addView(tv);
@@ -273,7 +275,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
             @Override
             public void onBindViewHolder(@NonNull FilterViewHolder holder, int position) {
-                String filterName = businessList.get(position);
+                String filterName = businessNamesList.get(position);
                 holder.textView.setText(filterName);
 
                 if (filterName.equalsIgnoreCase(selectedBusinessScope)) {
@@ -286,16 +288,18 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
                 holder.itemView.setOnClickListener(v -> {
                     selectedBusinessScope = filterName;
-                    updateHeroCardDisplay(invoiceDocs);
+                    updateHeroCardDisplay();
                     notifyDataSetChanged();
                 });
             }
 
             @Override
             public int getItemCount() {
-                return businessList.size();
+                return businessNamesList.size();
             }
-        });
+        };
+
+        recyclerBusinessFilters.setAdapter(adapter);
     }
 
     private void showNotificationPanelDialog() {
@@ -303,11 +307,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         LinearLayout container = panelView.findViewById(R.id.layoutNotificationsContainer);
         Button btnClose = panelView.findViewById(R.id.btnDismissNotifications);
 
-        // 💡 වඩාත් ආරක්ෂිත සාමාන්‍ය AlertDialog ස්ටයිල් එකක් භාවිත කර ඇත
-        AlertDialog dialog = new AlertDialog.Builder(this)
-                .setView(panelView)
-                .create();
-
+        AlertDialog dialog = new AlertDialog.Builder(this).setView(panelView).create();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
@@ -318,7 +318,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 "🧾 New B2B client invoice log processed successfully."
         };
 
-        container.removeAllViews(); // පැරණි දත්ත තිබේ නම් ඉවත් කිරීම
+        container.removeAllViews();
         for (String msg : samples) {
             TextView row = new TextView(this);
             row.setText(msg);

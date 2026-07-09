@@ -1,6 +1,7 @@
 package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -39,9 +40,19 @@ public class UtilityReportFormActivity extends AppCompatActivity {
         firebaseBillsList = new ArrayList<>();
         billSpinnerNames = new ArrayList<>();
 
-        // Unpack existing items list if returning via the "Add More" action button
+        // Fix: Type-safe, deprecation-free Intent bundle unpacking
         if (getIntent().hasExtra("STAGED_ITEMS")) {
-            stagedReportItems = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS");
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                // Android 13+ type-safe alternative
+                @SuppressWarnings("unchecked")
+                ArrayList<BillReportItem> items = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS", ArrayList.class);
+                stagedReportItems = items != null ? items : new ArrayList<>();
+            } else {
+                // Backward compatibility fallback for older APIs
+                @SuppressWarnings("unchecked")
+                ArrayList<BillReportItem> items = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS");
+                stagedReportItems = items != null ? items : new ArrayList<>();
+            }
         } else {
             stagedReportItems = new ArrayList<>();
         }
@@ -117,8 +128,8 @@ public class UtilityReportFormActivity extends AppCompatActivity {
         }
 
         // 1. Check Total Constraint Limit: Max 5 items total allowed
-        if (stagedReportItems.size() >= 5) {
-            Toast.makeText(this, "Limit reached! Maximum of 5 total bills can be chosen.", Toast.LENGTH_LONG).show();
+        if (stagedReportItems.size() >= 6) {
+            Toast.makeText(this, "Limit reached! Maximum of 6 total bills can be chosen.", Toast.LENGTH_LONG).show();
             return false;
         }
 

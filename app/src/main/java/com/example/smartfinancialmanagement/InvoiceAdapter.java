@@ -1,6 +1,6 @@
 package com.example.smartfinancialmanagement;
 
-import android.content.Intent; // Added missing import
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -46,13 +46,13 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
             holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#00D4AA"));
         } else if (status.equals("due")) {
             holder.txtStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#FF5555"));
+            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#FF5555")); // 🚨 කල් ඉකුත් වූ ඒවා රතු පාටින්
         } else {
             holder.txtStatusBadge.setTextColor(Color.parseColor("#F0F6FF"));
             holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#1A3050"));
         }
 
-        // Fixed: Completed the onClickListener navigation pipeline block sequence safely
+        // 💡 Click Listener එක හරහා InvoiceDetailsActivity වෙත සුරක්ෂිතව දත්ත රැගෙන යාම
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), InvoiceDetailsActivity.class);
 
@@ -64,6 +64,8 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
             intent.putExtra("quantity", invoice.getQuantity());
             intent.putExtra("unitPrice", invoice.getUnitPrice());
             intent.putExtra("grandTotal", invoice.getGrandTotal());
+
+            // 💡 FIX: InvoiceDetailsActivity හි getIntent().getStringExtra("paymentDueDate") සමඟ නිවැරදිව ගැළපේ
             intent.putExtra("paymentDueDate", invoice.getPaymentDueDate());
             intent.putExtra("status", invoice.getStatus());
 

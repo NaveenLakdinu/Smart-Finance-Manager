@@ -218,14 +218,11 @@
                 android:background="@drawable/bg_glass_card"
                 android:padding="16dp">
 
-                <ImageView
-                    android:id="@+id/barChartView"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChartAnalytic"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:scaleType="fitCenter"
-                    android:contentDescription="Monthly Expenses Chart"
-                    android:src="@android:drawable/ic_menu_report_image"
-                    app:tint="#7A9CC0" />
+                    android:layout_height="250dp"
+                    android:layout_margin="16dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

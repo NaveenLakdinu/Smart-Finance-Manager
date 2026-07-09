@@ -16,6 +16,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.Manifest;
+import android.content.pm.PackageManager;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -61,6 +65,13 @@ public class CreateInvoiceActivity extends AppCompatActivity {
 
         btnGenerateInvoice.setOnClickListener(v -> checkInputsAndPromptEmail());
         btnBack.setOnClickListener(v -> finish());
+
+        // Android 13 හෝ ඊට ඉහළ නම් පරිශීලකයාගෙන් Notification අවසර ඉල්ලීම
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
+            }
+        }
     }
 
     private void initializeViews() {
@@ -114,9 +125,16 @@ public class CreateInvoiceActivity extends AppCompatActivity {
 
     private void setupCalculationListeners() {
         TextWatcher calculationWatcher = new TextWatcher() {
-            @Override public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-            @Override public void onTextChanged(CharSequence s, int start, int before, int count) { calculateTotals(); }
-            @Override public void afterTextChanged(Editable s) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                calculateTotals();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
         };
         etQty.addTextChangedListener(calculationWatcher);
         etPrice.addTextChangedListener(calculationWatcher);
@@ -168,7 +186,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     private void saveInvoiceToDatabase(boolean isEmailReminderEnabled) {
         btnGenerateInvoice.setEnabled(false);
 
-        // STEP A: Query the designated workspace document from the businesses collection to get its email address
         db.collection("businesses")
                 .whereEqualTo("businessName", chosenBusinessName)
                 .get()
@@ -182,7 +199,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                         }
                     }
 
-                    // Complete data assembly mapping tracking destinations
                     String client = etClientName.getText().toString().trim();
                     String brn = etClientBRN.getText().toString().trim();
                     String item = etItemName.getText().toString().trim();
@@ -195,17 +211,15 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                             calculatedSubtotal, calculatedGrandTotal, dueDate, isEmailReminderEnabled, "pending"
                     );
 
-                    // Map and save the tracked target workspace email field reference directly into the model setup
                     invoice.setBusinessEmail(targetBusinessEmail);
 
-                    // STEP B: Save the completed Invoice data structure to cloud DB
                     db.collection("invoices")
                             .add(invoice)
                             .addOnSuccessListener(documentReference -> {
                                 Toast.makeText(CreateInvoiceActivity.this, "Invoice generated and stored successfully!", Toast.LENGTH_SHORT).show();
 
-                                // STEP C: Programmatically schedule notifications 1 day prior to the payment date
-                                scheduleOneDayPriorNotification(client, dueDate);
+                                // 💡 STEP C: පරිශීලකයා ලබාදුන් ඊමේල් තේරීම (true/false) ද සමඟින් Notification එක Schedule කිරීම
+                                scheduleOneDayPriorNotification(client, dueDate, isEmailReminderEnabled);
                                 finish();
                             })
                             .addOnFailureListener(e -> {
@@ -219,34 +233,53 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                 });
     }
 
-    private void scheduleOneDayPriorNotification(String clientName, String dueDateString) {
+    // 💡 යාවත්කාලීන කරන ලද සහ දෝෂ රහිත (Error-Free) Notification Scheduling ක්‍රමය
+    private void scheduleOneDayPriorNotification(String clientName, String dueDateString, boolean isEmailEnabled) {
         try {
             Date dueDate = dateFormat.parse(dueDateString);
             if (dueDate != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(dueDate);
-                // Subtract 1 day to push precisely 24 hours prior
+
+                // නිවැරදිව දිනකට පෙර (1 day before) සැකසීම
                 calendar.add(Calendar.DAY_OF_YEAR, -1);
-                // Set explicit preferred trigger hour execution time (e.g., 9:00 AM)
-                calendar.set(Calendar.HOUR_OF_DAY, 9);
+                calendar.set(Calendar.HOUR_OF_DAY, 9);  // උදේ 9:00 ට
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
 
                 long triggerMillis = calendar.getTimeInMillis();
 
-                // Only schedule if the calculated reminder time is still in the future
                 if (triggerMillis > System.currentTimeMillis()) {
                     Intent intent = new Intent(this, InvoiceReminderReceiver.class);
                     intent.putExtra("clientName", clientName);
                     intent.putExtra("dueDate", dueDateString);
 
-                    int uniqueRequestId = (int) System.currentTimeMillis();
-                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, uniqueRequestId,
-                            intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+                    // 💡 පරිශීලකයාගේ ඊමේල් අවසර තීරණය BroadcastReceiver එක වෙත යැවීම
+                    intent.putExtra("isEmailReminderEnabled", isEmailEnabled);
 
+                    int uniqueRequestId = Math.abs((clientName + dueDateString).hashCode());
+
+                    int flags = PendingIntent.FLAG_UPDATE_CURRENT;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        flags |= PendingIntent.FLAG_IMMUTABLE;
+                    }
+
+                    PendingIntent pendingIntent = PendingIntent.getBroadcast(this, uniqueRequestId, intent, flags);
                     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
                     if (alarmManager != null) {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                        // Android 12 (API 31) සහ ඊට ඉහළ සඳහා Exact Alarm පරීක්ෂාව
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                            if (alarmManager.canScheduleExactAlarms()) {
+                                try {
+                                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
+                                } catch (SecurityException e) {
+                                    alarmManager.set(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
+                                }
+                            } else {
+                                alarmManager.set(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
+                            }
+                        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                             alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);
                         } else {
                             alarmManager.setExact(AlarmManager.RTC_WAKEUP, triggerMillis, pendingIntent);

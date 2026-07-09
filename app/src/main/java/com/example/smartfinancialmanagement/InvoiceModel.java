@@ -10,7 +10,7 @@ public class InvoiceModel {
     private double subtotal;
     private double grandTotal;
     private String paymentDueDate;
-    private boolean sendReminder;
+    private boolean emailReminderEnabled; // 💡 Activity වලට ගැළපෙන ලෙස 'sendReminder' වෙනුවට මෙය ආදේශ කරන ලදී
     private String status;              // For filtering: "pending", "paid", or "due"
     private String businessEmail;       // To store the selected business workspace email
 
@@ -20,7 +20,7 @@ public class InvoiceModel {
     // Main constructor used during invoice generation
     public InvoiceModel(String selectedBusiness, String clientName, String clientBRN, String itemName,
                         int quantity, double unitPrice, double subtotal, double grandTotal,
-                        String paymentDueDate, boolean sendReminder, String status) {
+                        String paymentDueDate, boolean emailReminderEnabled, String status) {
         this.selectedBusiness = selectedBusiness;
         this.clientName = clientName;
         this.clientBRN = clientBRN;
@@ -30,7 +30,7 @@ public class InvoiceModel {
         this.subtotal = subtotal;
         this.grandTotal = grandTotal;
         this.paymentDueDate = paymentDueDate;
-        this.sendReminder = sendReminder;
+        this.emailReminderEnabled = emailReminderEnabled;
         this.status = status;
     }
 
@@ -62,8 +62,9 @@ public class InvoiceModel {
     public String getPaymentDueDate() { return paymentDueDate; }
     public void setPaymentDueDate(String paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
-    public boolean isSendReminder() { return sendReminder; }
-    public void setSendReminder(boolean sendReminder) { this.sendReminder = sendReminder; }
+    // 💡 Activity Classes වල භාවිතා වන Getter සහ Setter ක්‍රම නිවැරදි කිරීම
+    public boolean isEmailReminderEnabled() { return emailReminderEnabled; }
+    public void setEmailReminderEnabled(boolean emailReminderEnabled) { this.emailReminderEnabled = emailReminderEnabled; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }

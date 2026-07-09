@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
         android:allowBackup="true"
@@ -16,8 +17,6 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFinancialManagement">
-
-        <receiver android:name=".InvoiceReminderReceiver" android:exported="false" />
 
         <activity
             android:name=".MainActivity"
@@ -128,6 +127,9 @@
             android:name=".UtilityReportActivity"
             android:exported="false" />
         <activity
+            android:name=".UpdateBillActivity"
+            android:exported="false" />
+        <activity
             android:name=".UtilityReportFormActivity"
             android:exported="false" />
         <activity
@@ -155,8 +157,14 @@
         <activity
             android:name=".AddBusinessActivity"
             android:exported="false" />
+        <activity
+            android:name=".ManageBusinessActivity"
+            android:exported="false" />
 
-        <receiver android:name=".NotificationReceiver" android:exported="false" />
+        <receiver
+            android:name=".InvoiceReminderReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
