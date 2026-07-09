@@ -16,6 +16,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -314,6 +319,32 @@ public class RegisterActivity extends AppCompatActivity {
                                 loanData.put("monthlyEmi", safeParseDouble(data.monthlyInstallment));
                                 loanData.put("createdAt", System.currentTimeMillis());
                                 batch.set(loanRef, loanData);
+                            }
+
+                            // 4. Save initial saving plan to Realtime Database if checked
+                            if (data.hasSavingPlan) {
+                                DatabaseReference savingsRef = FirebaseDatabase.getInstance().getReference("Savings").child(uid);
+                                String savingId = savingsRef.push().getKey();
+                                
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                String startDate = sdf.format(new Date()); // today
+                                String targetDate = data.targetDate != null ? data.targetDate : startDate;
+                                
+                                SavingModel savingModel = new SavingModel(
+                                        savingId,
+                                        data.goalName != null && !data.goalName.isEmpty() ? data.goalName : "Initial Saving Goal",
+                                        safeParseDouble(data.targetAmount),
+                                        safeParseDouble(data.currentSavings),
+                                        safeParseDouble(data.monthlySavingAmount),
+                                        startDate,
+                                        targetDate,
+                                        "Active",
+                                        System.currentTimeMillis()
+                                );
+                                
+                                if (savingId != null) {
+                                    savingsRef.child(savingId).setValue(savingModel);
+                                }
                             }
 
                             System.out.println("Committing atomic write batch for UID: " + uid);

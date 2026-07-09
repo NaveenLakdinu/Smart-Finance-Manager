@@ -86,7 +86,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".StudentBudgetActivity"
+            android:name=".BudgetPlannerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BudgetSummaryActivity"
             android:exported="false" />
 
         <activity
@@ -150,6 +154,25 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
+
+        <activity
+            android:name=".SavingListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddSavingGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UpdateSavingGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".GenerateSavingReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingReportResultActivity"
+            android:exported="false" />
 
     </application>
 
