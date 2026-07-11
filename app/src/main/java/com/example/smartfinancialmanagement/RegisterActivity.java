@@ -338,6 +338,12 @@ public class RegisterActivity extends AppCompatActivity {
                                         setLoadingState(false);
                                         System.err.println("❌ Firestore Batch Commit Error: " + e.getMessage());
                                         e.printStackTrace();
+                                        
+                                        // Rollback: Delete the Auth user if Firestore save fails
+                                        if (mAuth.getCurrentUser() != null) {
+                                            mAuth.getCurrentUser().delete();
+                                        }
+                                        
                                         Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     });
                                     
@@ -346,6 +352,12 @@ public class RegisterActivity extends AppCompatActivity {
                             setLoadingState(false);
                             System.err.println("❌ Logic Error during registration: " + e.getMessage());
                             e.printStackTrace();
+                            
+                            // Rollback: Delete the Auth user if an exception occurs
+                            if (mAuth.getCurrentUser() != null) {
+                                mAuth.getCurrentUser().delete();
+                            }
+                            
                             Toast.makeText(this, "Internal Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                         
