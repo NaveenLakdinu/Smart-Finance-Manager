@@ -159,16 +159,16 @@
             android:name=".SavingListActivity"
             android:exported="false" />
         <activity
-            android:name=".AddSavingGoalActivity"
+            android:name=".SavingAddGoalActivity"
             android:exported="false" />
         <activity
-            android:name=".UpdateSavingGoalActivity"
+            android:name=".SavingUpdateGoalActivity"
             android:exported="false" />
         <activity
             android:name=".SavingDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".GenerateSavingReportActivity"
+            android:name=".SavingGenerateReportActivity"
             android:exported="false" />
         <activity
             android:name=".SavingReportResultActivity"
