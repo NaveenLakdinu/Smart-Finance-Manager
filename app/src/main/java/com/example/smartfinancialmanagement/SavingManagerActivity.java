@@ -16,6 +16,8 @@ public class SavingManagerActivity extends AppCompatActivity {
 
     private View btnAddGoal, btnViewGoals, btnSavingReport;
     private ImageView backButton;
+    private View cardActiveGoal;
+    private View txtSeeAllActiveGoals;
     private TextView txtTotalSavings;
 
     @Override
@@ -32,6 +34,8 @@ public class SavingManagerActivity extends AppCompatActivity {
         btnViewGoals = findViewById(R.id.btnViewGoals);
         btnSavingReport = findViewById(R.id.btnSavingReport);
         backButton = findViewById(R.id.backButton);
+        cardActiveGoal = findViewById(R.id.cardActiveGoal);
+        txtSeeAllActiveGoals = findViewById(R.id.txtSeeAllActiveGoals);
         txtTotalSavings = findViewById(R.id.txtTotalSavings);
     }
 
@@ -39,17 +43,29 @@ public class SavingManagerActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> finish());
 
         btnAddGoal.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SavingPlanActivity.class);
+            Intent intent = new Intent(this, SavingAddGoalActivity.class);
             startActivity(intent);
         });
 
-        btnViewGoals.setOnClickListener(v -> 
-            Toast.makeText(this, "View All Goals - Coming Soon", Toast.LENGTH_SHORT).show()
-        );
+        btnViewGoals.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingListActivity.class);
+            startActivity(intent);
+        });
 
-        btnSavingReport.setOnClickListener(v -> 
-            Toast.makeText(this, "Generating Saving Report...", Toast.LENGTH_SHORT).show()
-        );
+        btnSavingReport.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingGenerateReportActivity.class);
+            startActivity(intent);
+        });
+
+        cardActiveGoal.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingDetailsActivity.class);
+            startActivity(intent);
+        });
+
+        txtSeeAllActiveGoals.setOnClickListener(v -> {
+            Intent intent = new Intent(this, SavingListActivity.class);
+            startActivity(intent);
+        });
     }
 
     private void loadSavingsData() {

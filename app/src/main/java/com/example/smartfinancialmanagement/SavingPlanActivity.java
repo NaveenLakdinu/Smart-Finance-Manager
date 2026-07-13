@@ -181,7 +181,7 @@ public class SavingPlanActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         DatePickerDialog dialog = new DatePickerDialog(this,
                 (view, year, month, day) -> {
-                    String date = day + "/" + (month + 1) + "/" + year;
+                    String date = String.format(java.util.Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
                     targetDateText.setText(date);
                 },
                 calendar.get(Calendar.YEAR),
