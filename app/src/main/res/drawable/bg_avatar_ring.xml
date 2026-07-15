@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Teal ring around avatar -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:startColor="#00D4AA"
+        android:endColor="#0891B2"
+        android:angle="135" />
+</shape>

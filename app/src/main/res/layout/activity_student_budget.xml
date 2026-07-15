@@ -1,0 +1,911 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout 
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
+    tools:context=".MainActivity">
+
+    <!-- ══════════════════════════════════════════ -->
+    <!--   SCROLLABLE CONTENT AREA                 -->
+    <!-- ══════════════════════════════════════════ -->
+    <ScrollView
+        android:id="@+id/budgetScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:id="@+id/budgetContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <!-- ── Top Header Banner ── -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutHeader"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:background="@drawable/bg_hero_card"
+                android:padding="20dp">
+
+                <!-- Back button with translucent circle background -->
+                <FrameLayout
+                    android:id="@+id/btnBackContainer"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginTop="36dp"
+                    android:background="@drawable/bg_back_circle"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/btnBack"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="Back"
+                        android:src="@drawable/ic_back" />
+
+                </FrameLayout>
+
+                <!-- Greeting & Title Group -->
+                <LinearLayout
+                    android:id="@+id/layoutHeaderTitles"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="@id/btnBackContainer"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/btnBackContainer"
+                    app:layout_constraintTop_toTopOf="@id/btnBackContainer">
+
+                    <TextView
+                        android:id="@+id/txtGreeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Good Morning, Dulani 👋"
+                        android:textColor="#D8E4FF"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/txtTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Student Budget Planner"
+                        android:textColor="#FFFFFF"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <!-- Subtitle text -->
+                <TextView
+                    android:id="@+id/txtSubtitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="18dp"
+                    android:text="Plan your semester budget wisely"
+                    android:textColor="#BCE0FF"
+                    android:textSize="13sp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/layoutHeaderTitles" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <!-- ── Cards Layout Container ── -->
+            <LinearLayout
+                android:id="@+id/layoutCards"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-24dp"
+                android:orientation="vertical"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="24dp">
+
+                <!-- Card 1: Income Details -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardIncomeDetails"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="24dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:padding="20dp">
+
+                        <!-- Icon & Section Header -->
+                        <LinearLayout
+                            android:id="@+id/layoutIncomeTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <FrameLayout
+                                android:id="@+id/layoutIncomeIcon"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:background="@drawable/icon_circle_blue">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="$"
+                                    android:textColor="#1E60FF"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold" />
+
+                            </FrameLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="12dp"
+                                android:text="Income Details"
+                                android:textColor="#111827"
+                                android:textSize="16sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- Input Field: Monthly Allowance -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Monthly Allowance (Rs.)"
+                            android:textColor="#5A6470"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editMonthlyAllowance"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="15000"
+                            android:textColor="#111827"
+                            android:textSize="15sp" />
+
+                        <!-- Input Field: Scholarship Amount -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Scholarship Amount (Rs.)"
+                            android:textColor="#5A6470"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editScholarshipAmount"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="5000"
+                            android:textColor="#111827"
+                            android:textSize="15sp" />
+
+                        <!-- Input Field: Part-Time Income -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Part-Time Income (Rs.)"
+                            android:textColor="#5A6470"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editPartTimeIncome"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="8000"
+                            android:textColor="#111827"
+                            android:textSize="15sp" />
+
+                        <!-- Segmented Duration Options -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Semester Duration (Months)"
+                            android:textColor="#5A6470"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="4">
+
+                            <!-- Option 3M -->
+                            <TextView
+                                android:id="@+id/btnDuration3M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="3M"
+                                android:textColor="#5A6470"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="1dp" />
+
+                            <!-- Option 4M -->
+                            <TextView
+                                android:id="@+id/btnDuration4M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="4M"
+                                android:textColor="#5A6470"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="1dp" />
+
+                            <!-- Option 6M (Selected) -->
+                            <TextView
+                                android:id="@+id/btnDuration6M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_active"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="6M"
+                                android:textColor="#FFFFFF"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="1dp" />
+
+                            <!-- Option 12M -->
+                            <TextView
+                                android:id="@+id/btnDuration12M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="12M"
+                                android:textColor="#5A6470"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- Action Button: Calculate Budget -->
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCalculateBudget"
+                            android:layout_width="match_parent"
+                            android:layout_height="54dp"
+                            android:layout_marginTop="24dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:text="Calculate Budget"
+                            android:textColor="#FFFFFF"
+                            android:textSize="15sp"
+                            android:textStyle="bold"
+                            app:backgroundTint="#1E60FF"
+                            app:cornerRadius="27dp"
+                            app:strokeWidth="0dp" />
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Results Container (Hidden until Calculate Budget is clicked) -->
+                <LinearLayout
+                    android:id="@+id/layoutResults"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    tools:visibility="visible">
+
+                    <!-- Budget Summary Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardBudgetSummary"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/icon_role_green">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:contentDescription="Budget Summary"
+                                        android:src="@drawable/ic_report"
+                                        app:tint="#10B981" />
+
+                                </FrameLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Budget Summary"
+                                    android:textColor="#111827"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <androidx.cardview.widget.CardView
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                app:cardBackgroundColor="#448BFF"
+                                app:cardCornerRadius="16dp"
+                                app:cardElevation="0dp">
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:padding="20dp">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Total Semester Income"
+                                        android:textColor="#E0E7FF"
+                                        android:textSize="13sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtTotalIncome"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="Rs. 168,000"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="28sp"
+                                        android:textStyle="bold" />
+
+                                </LinearLayout>
+                            </androidx.cardview.widget.CardView>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="16dp"
+                                android:orientation="horizontal"
+                                android:weightSum="3">
+
+                                <!-- Daily -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/tag_blue"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingTop="16dp"
+                                    android:paddingBottom="16dp">
+
+                                    <TextView
+                                        android:id="@+id/txtDailyLimit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Rs.933"
+                                        android:textColor="#1E60FF"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="Daily Limit"
+                                        android:textColor="#6B7280"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <Space
+                                    android:layout_width="12dp"
+                                    android:layout_height="wrap_content" />
+
+                                <!-- Weekly -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/tag_green"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingTop="16dp"
+                                    android:paddingBottom="16dp">
+
+                                    <TextView
+                                        android:id="@+id/txtWeeklyLimit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Rs.7,000"
+                                        android:textColor="#10B981"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="Weekly Limit"
+                                        android:textColor="#6B7280"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                                <Space
+                                    android:layout_width="12dp"
+                                    android:layout_height="wrap_content" />
+
+                                <!-- Monthly -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:background="@drawable/tag_purple"
+                                    android:gravity="center"
+                                    android:orientation="vertical"
+                                    android:paddingTop="16dp"
+                                    android:paddingBottom="16dp">
+
+                                    <TextView
+                                        android:id="@+id/txtMonthlyLimit"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Rs.28,000"
+                                        android:textColor="#8B5CF6"
+                                        android:textSize="14sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="Monthly"
+                                        android:textColor="#6B7280"
+                                        android:textSize="11sp" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Financial Health Score Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardFinancialHealth"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/icon_role_purple">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:contentDescription="Financial Health Score"
+                                        android:src="@drawable/ic_savings_wave"
+                                        app:tint="#8B5CF6" />
+
+                                </FrameLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Financial Health Score"
+                                    android:textColor="#111827"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <!-- Circular Progress -->
+                            <FrameLayout
+                                android:layout_width="160dp"
+                                android:layout_height="160dp"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="24dp">
+
+                                <com.google.android.material.progressindicator.CircularProgressIndicator
+                                    android:id="@+id/progressHealthScore"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:max="100"
+                                    android:progress="62"
+                                    app:indicatorColor="#F59E0B"
+                                    app:indicatorSize="160dp"
+                                    app:trackColor="#E5E7EB"
+                                    app:trackCornerRadius="5dp"
+                                    app:trackThickness="10dp" />
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/txtHealthScore"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="62"
+                                        android:textColor="#F59E0B"
+                                        android:textSize="32sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="/ 100"
+                                        android:textColor="#9CA3AF"
+                                        android:textSize="14sp" />
+                                </LinearLayout>
+                            </FrameLayout>
+
+                            <TextView
+                                android:id="@+id/txtHealthStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center"
+                                android:layout_marginTop="20dp"
+                                android:background="@drawable/tag_amber"
+                                android:paddingStart="16dp"
+                                android:paddingTop="8dp"
+                                android:paddingEnd="16dp"
+                                android:paddingBottom="8dp"
+                                android:text="Good Financial Health"
+                                android:textColor="#F59E0B"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Quick Insights Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardQuickInsights"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardCornerRadius="24dp"
+                        app:cardElevation="2dp"
+                        app:strokeWidth="0dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="20dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <FrameLayout
+                                    android:layout_width="40dp"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/tag_amber">
+
+                                    <ImageView
+                                        android:layout_width="20dp"
+                                        android:layout_height="20dp"
+                                        android:layout_gravity="center"
+                                        android:contentDescription="Quick Insights"
+                                        android:src="@drawable/ic_lighting"
+                                        app:tint="#F59E0B" />
+
+                                </FrameLayout>
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:text="Quick Insights"
+                                    android:textColor="#111827"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+
+                            <!-- Insight 1 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="20dp"
+                                android:background="@drawable/tag_blue"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="16dp">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="0dp">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="1"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <TextView
+                                    android:id="@+id/txtInsight1"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="You can safely spend Rs.933/day."
+                                    android:textColor="#374151"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Insight 2 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:background="@drawable/tag_blue"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="16dp">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="0dp">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="2"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <TextView
+                                    android:id="@+id/txtInsight2"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Current budget can last the entire 6-month semester."
+                                    android:textColor="#374151"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Insight 3 -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="12dp"
+                                android:background="@drawable/tag_blue"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="16dp">
+
+                                <com.google.android.material.card.MaterialCardView
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardCornerRadius="12dp"
+                                    app:cardElevation="0dp"
+                                    app:strokeWidth="0dp">
+
+                                    <TextView
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:gravity="center"
+                                        android:text="3"
+                                        android:textColor="#FFFFFF"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </com.google.android.material.card.MaterialCardView>
+
+                                <TextView
+                                    android:id="@+id/txtInsight3"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="12dp"
+                                    android:layout_weight="1"
+                                    android:text="Consider saving Rs.4,200 (15%) monthly."
+                                    android:textColor="#374151"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                    </com.google.android.material.card.MaterialCardView>
+
+                </LinearLayout>
+
+                <!-- Card 2: Semester status summary -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardSemesterSummary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="2dp"
+                    app:strokeWidth="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="16dp">
+
+                        <FrameLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/icon_circle_blue">
+
+                            <ImageView
+                                android:layout_width="20dp"
+                                android:layout_height="20dp"
+                                android:layout_gravity="center"
+                                android:contentDescription="Calendar"
+                                android:src="@drawable/ic_calendar"
+                                app:tint="#1E60FF" />
+
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/txtSemesterDate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Semester: Jun 2026 – Dec 2026"
+                                android:textColor="#111827"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/txtSemesterStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="6 months remaining"
+                                android:textColor="#6B7280"
+                                android:textSize="12sp" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                </com.google.android.material.card.MaterialCardView>
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!--   BOTTOM NAVIGATION BAR                    -->
+    <!-- ══════════════════════════════════════════ -->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

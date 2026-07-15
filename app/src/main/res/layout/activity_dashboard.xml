@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="48dp">
+
+
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   PROFILE ROW                             -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="52dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- Avatar with teal ring -->
+            <FrameLayout
+                android:layout_width="60dp"
+                android:layout_height="60dp">
+
+                <!-- Ring background -->
+                <View
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/bg_avatar_ring" />
+
+                <TextView
+                    android:id="@+id/txtProfileLetter"
+                    android:layout_width="52dp"
+                    android:layout_height="52dp"
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_profile_circle"
+                    android:gravity="center"
+                    android:text="A"
+                    android:textColor="#FFFFFF"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+            </FrameLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/txtGreeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Good Morning 👋"
+                    android:textColor="#7A9CC0"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:id="@+id/txtUserEmail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:text="user@email.com"
+                    android:textColor="#F0F6FF"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <!-- Notification Bell with dot indicator -->
+            <FrameLayout
+                android:layout_width="48dp"
+                android:layout_height="48dp">
+
+                <TextView
+                    android:id="@+id/btnNotifications"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_notification"
+                    android:gravity="center"
+                    android:text="🔔"
+                    android:textSize="20sp" />
+
+                <!-- Unread dot -->
+                <View
+                    android:layout_width="10dp"
+                    android:layout_height="10dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="8dp"
+                    android:background="@drawable/bg_pill_green" />
+
+            </FrameLayout>
+
+            <!-- Creative Circle Logout Button -->
+            <FrameLayout
+                android:id="@+id/btnTopLogout"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_power" />
+
+            </FrameLayout>
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   HERO STAT CARD                          -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/bg_hero_card"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <!-- Top row: label + active pill -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TOTAL SUBSCRIPTIONS"
+                    android:textColor="#7A9CC0"
+                    android:textSize="11sp"
+                    android:letterSpacing="0.15" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_green"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <!-- Green dot pulse indicator -->
+                    <View
+                        android:layout_width="6dp"
+                        android:layout_height="6dp"
+                        android:layout_marginEnd="6dp"
+                        android:background="@drawable/bg_pill_green" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="ACTIVE"
+                        android:textColor="#4ADE80"
+                        android:textSize="10sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Big number + icon -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtTotalCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="00"
+                        android:textColor="#FFFFFF"
+                        android:textSize="58sp"
+                        android:textStyle="bold"
+                        android:lineSpacingMultiplier="0.9" />
+
+                    <!-- Teal underline accent -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="4dp">
+                        <View android:layout_width="32dp" android:layout_height="3dp" android:background="#00D4AA" />
+                        <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
+                        <View android:layout_width="4dp" android:layout_height="3dp" android:background="#1E3A6E" android:layout_marginStart="4dp" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Circular icon badge -->
+                <LinearLayout
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_calendar_circle"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📅"
+                        android:textSize="32sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Sub-message -->
+            <TextView
+                android:id="@+id/txtSubMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:text="Manage your plans easily"
+                android:textColor="#7A9CC0"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   SECTION TITLE: Finance Tools            -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <View
+                android:layout_width="4dp"
+                android:layout_height="20dp"
+                android:layout_marginEnd="10dp"
+                android:background="@drawable/bg_teal_bar" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Finance Tools"
+                android:textColor="#F0F6FF"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_pill_green"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="4 modules"
+                android:textColor="#4ADE80"
+                android:textSize="11sp" />
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   QUICK ACTION CARDS ROW 1                -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal">
+
+            <!-- Manage Loan -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageLoan"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <!-- Icon with glow bg -->
+                    <LinearLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_function_icon_blue"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💰"
+                            android:textSize="26sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Manage Loan"
+                        android:textColor="#E8F4FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="7dp"
+                        android:background="#38BDF8" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space android:layout_width="14dp" android:layout_height="1dp" />
+
+            <!-- Manage Subscription -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageSubscription"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_function_icon_dark"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📅"
+                            android:textSize="26sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Subscriptions"
+                        android:textColor="#E8F4FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="7dp"
+                        android:background="#A78BFA" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   QUICK ACTION CARDS ROW 2                -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:orientation="horizontal">
+
+            <!-- Manage Saving -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageSaving"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_function_icon_green"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="🏦"
+                            android:textSize="26sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Savings"
+                        android:textColor="#E8F4FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="7dp"
+                        android:background="#4ADE80" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space android:layout_width="14dp" android:layout_height="1dp" />
+
+            <!-- Manage Utility -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardManageUtility"
+                android:layout_width="0dp"
+                android:layout_height="120dp"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground"
+                app:cardBackgroundColor="#00000000"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <LinearLayout
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:background="@drawable/bg_function_icon_orange"
+                        android:gravity="center">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="💡"
+                            android:textSize="26sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="Utilities"
+                        android:textColor="#E8F4FF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="center" />
+
+                    <View
+                        android:layout_width="24dp"
+                        android:layout_height="2dp"
+                        android:layout_marginTop="7dp"
+                        android:background="#F59E0B" />
+
+                </LinearLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!--   RECENT SUBSCRIPTIONS                    -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:id="@+id/recentSection"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="20dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/bg_teal_bar" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Recent Subscriptions"
+                    android:textColor="#F0F6FF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtViewAll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View all →"
+                    android:textColor="#00D4AA"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recyclerRecent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+
+        <Space android:layout_width="match_parent" android:layout_height="32dp" />
+
+    </LinearLayout>
+
+</ScrollView>

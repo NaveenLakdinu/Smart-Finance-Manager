@@ -2,15 +2,19 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFinancialManagement">
+
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -20,6 +24,156 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LoginFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".TermsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingPlanActivity"
+            android:exported="false" />
+        <activity
+            android:name=".DashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerTasksActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerPayslipActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MultiAccountDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MultiAccountActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanCompareActivity"
+            android:exported="false" />
+        <activity
+            android:name=".LoanReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ChooseRoleActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BusinessDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BudgetPlannerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BudgetSummaryActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentLoansActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentSavingActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentProfileActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RevenueManagementActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseManagementActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".RegisterBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionManagerActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimsActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".InvoiceHubActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateInvoiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InvoiceDetailsActivity"
+            android:exported="false" />
+
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher" />
+
+        <activity
+            android:name=".SavingListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingAddGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingUpdateGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingGenerateReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingReportResultActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

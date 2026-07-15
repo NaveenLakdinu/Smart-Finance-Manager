@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
+    android:fillViewport="true"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp"
+        android:paddingBottom="48dp">
+
+        <!-- ══════════════════════════════════════════ -->
+        <!-- HEADER ROW -->
+        <!-- ══════════════════════════════════════════ -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="42dp"
+                android:layout_height="42dp"
+                android:background="@drawable/bg_notification"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="#F0F6FF"
+                android:textSize="20sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_weight="1"
+                android:text="Business Analytics"
+                android:textColor="#F0F6FF"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!-- HERO OVERVIEW CARD -->
+        <!-- ══════════════════════════════════════════ -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="160dp"
+            android:layout_marginTop="24dp"
+            app:cardCornerRadius="28dp"
+            app:cardElevation="6dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_hero_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="22dp">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Analytics Overview"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Monthly Profit"
+                        android:textColor="#B9C7D9"
+                        android:textSize="13sp" />
+
+                    <TextView
+                        android:id="@+id/txtMonthlyProfit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Rs. 80,000"
+                        android:textColor="#4DE800"
+                        android:textSize="26sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtAnalyticsSummary"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:text="Business performance is improving"
+                        android:textColor="#B9C7D9"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="65dp"
+                    android:layout_height="65dp"
+                    android:background="@drawable/bg_calendar_circle"
+                    android:gravity="center"
+                    android:text="📉"
+                    android:textSize="30sp" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!-- METRICS GRID -->
+        <!-- ══════════════════════════════════════════ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Analytics Metrics"
+            android:textColor="#F0F6FF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
+
+            <!-- Revenue Mini Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRevenueTrend"
+                android:layout_width="0dp"
+                android:layout_height="125dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_function_icon_green"
+                        android:gravity="center"
+                        android:text="💵"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Revenue"
+                        android:textColor="#E8F4FF"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtRevenueTrend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="250K"
+                        android:textColor="#4ADE80"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <Space
+                android:layout_width="14dp"
+                android:layout_height="1dp" />
+
+            <!-- Expenses Mini Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardExpenseTrend"
+                android:layout_width="0dp"
+                android:layout_height="125dp"
+                android:layout_weight="1"
+                app:cardCornerRadius="22dp"
+                app:cardElevation="4dp"
+                app:strokeWidth="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="12dp">
+
+                    <TextView
+                        android:layout_width="46dp"
+                        android:layout_height="46dp"
+                        android:background="@drawable/bg_function_icon_blue"
+                        android:gravity="center"
+                        android:text="📊"
+                        android:textSize="22sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Expenses"
+                        android:textColor="#E8F4FF"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtExpenseTrend"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="170K"
+                        android:textColor="#38BDF8"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!-- ACTION ACTION BUTTON -->
+        <!-- ══════════════════════════════════════════ -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnGeneratePdf"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            android:text="Generate PDF Report"
+            android:textAllCaps="false"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:backgroundTint="#00D4AA"
+            android:textColor="#071A33"/>
+
+        <!-- ══════════════════════════════════════════ -->
+        <!-- PERFORMANCE VISUALIZATION GRAPH SECTION -->
+        <!-- ══════════════════════════════════════════ -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="Business Performance"
+            android:textColor="#F0F6FF"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="340dp"
+            android:layout_marginTop="12dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/bg_glass_card"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Revenue vs Expenses vs Profit"
+                    android:textColor="#F0F6FF"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Set background color compatible with your dark background canvas -->
+                <ImageView
+                    android:id="@+id/imgChartPlaceholder"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="12dp"
+                    android:src="@drawable/ic_launcher_foreground"
+                    android:scaleType="centerInside"
+                    android:background="#122544"
+                    android:contentDescription="Business Analytics Chart Container" />
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+    </LinearLayout>
+</ScrollView>

@@ -1,5 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <!-- Backgrounds -->
+    <color name="background_light">#F0F4F8</color>
+    <color name="nav_background">#D8DFE8</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#040000</color>
+
+    <!-- Text -->
+    <color name="text_nav">#6B7C93</color>
+    <color name="text_secondary">#5A6470</color>
+    <color name="btn_signup_text">#2D4A7A</color>
+
+    <!-- Buttons -->
+    <color name="btn_login_dark">#1E3A6E</color>
+    <color name="btn_login_dark_pressed">#16305D</color>
+    <color name="btn_signup_bg">#C8D8EF</color>
+    <color name="btn_signup_bg_pressed">#B0C6E0</color>
+
+    <!-- Additional colors -->
+    <color name="dark_background">#1A1A2E</color>
+    <color name="button_blue">#1E3A6E</color>
+    <color name="button_light_blue">#C8D8EF</color>
+    <color name="text_gray">#B0B0B0</color>
+    <color name="brand_dark_blue">#1E3A6E</color>
+    <color name="brand_green">#4CAF50</color>
+
+
+
+
+
+    <!-- Loan related colors -->
+    <color name="loan_bg_dark">#0F172A</color>
+    <color name="loan_header_dark">#1E293B</color>
+    <color name="loan_card_dark">#334155</color>
+
+    <!-- Quick Actions Colors -->
+    <color name="action_blue_bg">#DBEAFE</color>
+    <color name="action_blue_icon">#2563EB</color>
+    <color name="action_green_bg">#DCFCE7</color>
+    <color name="action_green_icon">#16A34A</color>
+    <color name="action_yellow_bg">#FEF9C3</color>
+    <color name="action_yellow_icon">#CA8A04</color>
+
+    <!-- Status Colors -->
+    <color name="loan_status_green_bg">#DCFCE7</color>
+    <color name="loan_status_green_text">#16A34A</color>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- NEW PREMIUM DASHBOARD DESIGN TOKENS       -->
+    <!-- ══════════════════════════════════════════ -->
+
+    <!-- Deep Navy Background -->
+    <color name="dash_bg_deep">#0A1628</color>
+    <color name="dash_bg_mid">#0D1F3C</color>
+    <color name="dash_bg_light">#112244</color>
+
+    <!-- Hero Card accent -->
+    <color name="hero_start">#0F3460</color>
+    <color name="hero_end">#16213E</color>
+    <color name="hero_accent">#00D4AA</color>
+    <color name="hero_accent_dim">#0891B2</color>
+
+    <!-- Glass Card -->
+    <color name="glass_card_bg">#1A2F50</color>
+    <color name="glass_card_border">#2A4A70</color>
+
+    <!-- Quick-action icon backgrounds -->
+    <color name="qa_blue_bg">#162D4A</color>
+    <color name="qa_blue_icon">#38BDF8</color>
+    <color name="qa_teal_bg">#0F3330</color>
+    <color name="qa_teal_icon">#2DD4BF</color>
+    <color name="qa_purple_bg">#251840</color>
+    <color name="qa_purple_icon">#A78BFA</color>
+    <color name="qa_amber_bg">#2A1F0A</color>
+    <color name="qa_amber_icon">#FCD34D</color>
+    <color name="qa_rose_bg">#2D1020</color>
+    <color name="qa_rose_icon">#FB7185</color>
+    <color name="qa_green_bg">#0F2D1A</color>
+    <color name="qa_green_icon">#4ADE80</color>
+
+    <!-- Text on dark -->
+    <color name="text_on_dark_primary">#F0F6FF</color>
+    <color name="text_on_dark_secondary">#7A9CC0</color>
+    <color name="text_on_dark_muted">#4A6A8A</color>
+
+    <!-- Stat pills -->
+    <color name="pill_positive_bg">#0F3320</color>
+    <color name="pill_positive_text">#4ADE80</color>
+    <color name="pill_warning_bg">#2A1C08</color>
+    <color name="pill_warning_text">#FCD34D</color>
+
+    <!-- Danger -->
+    <color name="danger_bg">#2D0F1A</color>
+    <color name="danger_text">#FB7185</color>
+    <color name="danger_border">#4D1A2A</color>
+
+    <!-- Divider -->
+    <color name="divider_dark">#1A3050</color>
 </resources>
