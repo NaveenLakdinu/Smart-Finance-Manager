@@ -100,8 +100,6 @@
 
                     </FrameLayout>
 
-                </LinearLayout>
-
                 <!-- Name & Role -->
                 <LinearLayout
                     android:layout_width="0dp"
