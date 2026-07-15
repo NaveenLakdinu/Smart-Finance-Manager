@@ -12,7 +12,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
 import android.widget.EditText;
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.button.MaterialButton;
@@ -28,19 +31,29 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
 
     // Simulated account data
-    private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};
-    private String[] balances = {"LKR 125,400.00", "LKR 2,450,000.00", "LKR 45,000.00"};
-    private String[] accountNumbers = {"**** **** 4290", "**** **** 8812", "**** **** 1029"};
-    private int currentAccountIndex = 0;
+private List<AccountInfo> accountsList = new ArrayList<>();
+private int currentAccountIndex = 0;
+
+// Simple holder for account info
+private static class AccountInfo {
+    String name;
+    double balance;
+    String number;
+    AccountInfo(String name, double balance, String number) {
+        this.name = name;
+        this.balance = balance;
+        this.number = number;
+    }
+}
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_multi_account_dashboard);
 
-        initViews();
-        setupUserDetails();
-        updateAccountUI();
+initViews();
+setupUserDetails();
+loadAccountsFromFirestore();
         
         btnSwitchAccount.setOnClickListener(v -> showAccountSwitchDialog());
         
@@ -118,20 +131,31 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         else return "Good Night ✨";
     }
 
-    private void updateAccountUI() {
-        txtCurrentAccountName.setText(accounts[currentAccountIndex]);
-        txtAccountBalance.setText(balances[currentAccountIndex]);
-        txtAccountNumber.setText(accountNumbers[currentAccountIndex]);
+private void updateAccountUI() {
+    if (accountsList.isEmpty()) {
+        txtCurrentAccountName.setText("No Account");
+        txtAccountBalance.setText("LKR 0.00");
+        txtAccountNumber.setText("----");
+    } else {
+        AccountInfo info = accountsList.get(currentAccountIndex);
+        txtCurrentAccountName.setText(info.name);
+        txtAccountBalance.setText(String.format(Locale.US, "LKR %.2f", info.balance));
+        txtAccountNumber.setText(info.number);
     }
+}
 
     private void showAccountSwitchDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Switch Account");
-        builder.setItems(accounts, (dialog, which) -> {
-            currentAccountIndex = which;
-            updateAccountUI();
-            Toast.makeText(this, "Switched to " + accounts[which], Toast.LENGTH_SHORT).show();
-        });
+String[] names = new String[accountsList.size()];
+for (int i = 0; i < accountsList.size(); i++) {
+    names[i] = accountsList.get(i).name;
+}
+builder.setItems(names, (dialog, which) -> {
+    currentAccountIndex = which;
+    updateAccountUI();
+    Toast.makeText(this, "Switched to " + names[which], Toast.LENGTH_SHORT).show();
+});
         builder.show();
     }
 
@@ -168,7 +192,31 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
                             txtValue.setText("LKR 0.00");
                         }
                     }
-                });
+        });
+    }
+
+    private void loadAccountsFromFirestore() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("accounts")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    accountsList.clear();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String name = doc.getString("name");
+                        Double balance = doc.getDouble("balance");
+                        String number = doc.getString("accountNumber");
+                        if (name != null && balance != null && number != null) {
+                            accountsList.add(new AccountInfo(name, balance, number));
+                        }
+                    }
+                    if (!accountsList.isEmpty()) {
+                        currentAccountIndex = Math.min(currentAccountIndex, accountsList.size() - 1);
+                    }
+                    updateAccountUI();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load accounts: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     private void showUpdateSavingsDialog(TextView txtValue) {

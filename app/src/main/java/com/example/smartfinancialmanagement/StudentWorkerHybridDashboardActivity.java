@@ -109,10 +109,10 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                 txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
             }
             loadSalaryFromFirestore(user.getUid());
-        } else {
-            txtEarnings.setText("LKR 75,000.00");
-            txtPayrollStatus.setText("Next payday: June 30th");
-        }
+} else {
+    txtEarnings.setText("LKR 0.00");
+    txtPayrollStatus.setText("Next payday: June 30th");
+}
     }
 
     private void loadSalaryFromFirestore(String uid) {
@@ -125,15 +125,15 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                         if (salary != null && salary > 0) {
                             txtEarnings.setText(String.format(Locale.US, "LKR %.2f", salary));
                         } else {
-                            txtEarnings.setText("LKR 75,000.00"); // default mock salary
+txtEarnings.setText("LKR 0.00"); // default no salary
                         }
                     } else {
-                        txtEarnings.setText("LKR 75,000.00"); // default mock salary
+                        txtEarnings.setText("LKR 0.00"); // default no salary
                     }
                     txtPayrollStatus.setText("Next payday: June 30th");
                 })
                 .addOnFailureListener(e -> {
-                    txtEarnings.setText("LKR 75,000.00");
+                    txtEarnings.setText("LKR 0.00");
                     txtPayrollStatus.setText("Next payday: June 30th");
                 });
     }

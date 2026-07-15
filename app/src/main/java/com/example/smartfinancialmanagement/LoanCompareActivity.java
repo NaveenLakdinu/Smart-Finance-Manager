@@ -279,7 +279,7 @@ public class LoanCompareActivity extends AppCompatActivity {
     private void fetchFinancialData() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) {
-            userMonthlyIncome = 85000.0;
+            userMonthlyIncome = 0.0;
             return;
         }
         uid = user.getUid();
@@ -306,11 +306,11 @@ public class LoanCompareActivity extends AppCompatActivity {
                                     }
                                 }
                                 if (userMonthlyIncome <= 0) {
-                                    userMonthlyIncome = 75000.0;
+                                    /* default income removed */
                                 }
                             });
                 } else if (userMonthlyIncome <= 0) {
-                    userMonthlyIncome = 60000.0;
+                    /* default income removed */
                 }
             }
         });
@@ -338,7 +338,14 @@ public class LoanCompareActivity extends AppCompatActivity {
         });
 
         db.collection("users").document(uid).collection("subscriptions").get().addOnSuccessListener(queryDocumentSnapshots -> {
-            subscriptionsMonthlyTotal = queryDocumentSnapshots.size() * 1500.0;
+            double total = 0;
+for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+    Double cost = doc.getDouble("monthlyCost");
+    if (cost != null) {
+        total += cost;
+    }
+}
+subscriptionsMonthlyTotal = total;
         });
     }
 

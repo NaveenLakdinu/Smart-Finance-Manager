@@ -59,16 +59,18 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         
         txtGreeting.setText(getGreetingText());
 
-        if (user != null) {
-            String email = user.getEmail();
-            if (email != null && !email.isEmpty()) {
-                txtUserEmail.setText(email);
-                txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
-            }
-        }
+if (user != null) {
+    String email = user.getEmail();
+    if (email != null && !email.isEmpty()) {
+        txtUserEmail.setText(email);
+        txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
+    }
+    // Load salary from Firestore
+    loadSalaryFromFirestore(user.getUid());
+} else {
+    txtEarnings.setText("LKR 0.00");
+}
         
-        // Mock data for earnings
-        txtEarnings.setText("LKR 75,000.00");
         txtPayrollStatus.setText("Next payday: June 30th");
     }
 
@@ -191,6 +193,25 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void loadSalaryFromFirestore(String uid) {
+        FirebaseFirestore.getInstance().collection("users").document(uid)
+                .collection("worker_profile").document("profile_data")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Double salary = documentSnapshot.getDouble("monthlySalary");
+                        if (salary != null && salary > 0) {
+                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", salary));
+                        } else {
+                            txtEarnings.setText("LKR 0.00");
+                        }
+                    } else {
+                        txtEarnings.setText("LKR 0.00");
+                    }
+                })
+                .addOnFailureListener(e -> txtEarnings.setText("LKR 0.00"));
     }
 
     private void showUpdateSavingsDialog(TextView txtValue) {

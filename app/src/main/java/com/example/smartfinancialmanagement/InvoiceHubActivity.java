@@ -10,6 +10,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.ArrayList;
 import java.util.Locale;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class InvoiceHubActivity extends AppCompatActivity {
 
@@ -20,7 +24,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
     private FloatingActionButton fabAddInvoice;
 
     // Local State Variables (Matching layout data)
-    private double totalOutstandingAmount = 1420500.00;
+    private double totalOutstandingAmount = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +34,7 @@ public class InvoiceHubActivity extends AppCompatActivity {
         initializeViews();
         setupNavigation();
         setupInvoiceList();
-        updateOutstandingUI();
+        loadOutstandingAmountFromFirestore();
     }
 
     /**
@@ -78,5 +82,23 @@ public class InvoiceHubActivity extends AppCompatActivity {
      */
     private void updateOutstandingUI() {
         txtTotalAmountDue.setText(String.format(Locale.getDefault(), "Rs. %,.2f", totalOutstandingAmount));
+    }
+
+    private void loadOutstandingAmountFromFirestore() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("utilities")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    double total = 0;
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Double amount = doc.getDouble("amount");
+                        if (amount != null) total += amount;
+                    }
+                    totalOutstandingAmount = total;
+                    updateOutstandingUI();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load invoices: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }
