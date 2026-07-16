@@ -139,52 +139,24 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Summary"
+                android:text="Selected Bills Breakdown"
                 android:textColor="#F0F6FF"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <LinearLayout
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerReportItems"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="30dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <View
-                    android:layout_width="4dp"
-                    android:layout_height="20dp"
-                    android:layout_marginEnd="10dp"
-                    android:background="@drawable/bg_teal_bar" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Selected Bills Breakdown"
-                    android:textColor="#F0F6FF"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerReportItems"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="14dp"
-                android:nestedScrollingEnabled="false" />
-        </LinearLayout>
+            android:overScrollMode="never"
+            android:nestedScrollingEnabled="false" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
+            android:layout_marginTop="28dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -205,7 +177,7 @@
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
-            android:layout_height="220dp"
+            android:layout_height="360dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="16dp"
             app:cardBackgroundColor="#00000000"
@@ -216,13 +188,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/bg_glass_card"
-                android:padding="16dp">
+                android:orientation="vertical"
+                android:padding="12dp">
 
                 <com.github.mikephil.charting.charts.BarChart
                     android:id="@+id/barChartAnalytic"
                     android:layout_width="match_parent"
-                    android:layout_height="250dp"
-                    android:layout_margin="16dp" />
+                    android:layout_height="match_parent"
+                    android:layout_margin="4dp" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

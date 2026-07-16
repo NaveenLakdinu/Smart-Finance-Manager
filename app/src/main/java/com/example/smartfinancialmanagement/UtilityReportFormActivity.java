@@ -9,6 +9,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -29,31 +30,41 @@ public class UtilityReportFormActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<UtilityBillActivity.BillWithId> firebaseBillsList;
     private List<String> billSpinnerNames;
-    private ArrayList<BillReportItem> stagedReportItems; // Holds currently added entries
 
+    // 💡 DataBridge වෙනුවට Intent මඟින් එහා මෙහා යන ලැයිස්තුව
+    private ArrayList<BillReportItem> stagedReportItems;
+
+    @SuppressWarnings("unchecked")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_get_utilityreport_form); // Your provided XML filename
+        setContentView(R.layout.activity_get_utilityreport_form);
 
         db = FirebaseFirestore.getInstance();
         firebaseBillsList = new ArrayList<>();
         billSpinnerNames = new ArrayList<>();
 
-        // Fix: Type-safe, deprecation-free Intent bundle unpacking
-        if (getIntent().hasExtra("STAGED_ITEMS")) {
+        // 💡 FIX 1: පෙර තිරයෙන් (ReportSummaryActivity එකෙන්) එවූ දැනට එකතු කර ඇති දත්ත ලැයිස්තුව Intent එකෙන් ආරක්ෂිතව කියවීම
+        if (savedInstanceState != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                // Android 13+ type-safe alternative
-                @SuppressWarnings("unchecked")
-                ArrayList<BillReportItem> items = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS", ArrayList.class);
-                stagedReportItems = items != null ? items : new ArrayList<>();
+                stagedReportItems = savedInstanceState.getSerializable("STAGED_ITEMS", ArrayList.class);
             } else {
-                // Backward compatibility fallback for older APIs
-                @SuppressWarnings("unchecked")
-                ArrayList<BillReportItem> items = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS");
-                stagedReportItems = items != null ? items : new ArrayList<>();
+                stagedReportItems = (ArrayList<BillReportItem>) savedInstanceState.getSerializable("STAGED_ITEMS");
             }
-        } else {
+        }
+
+        if (stagedReportItems == null) {
+            if (getIntent() != null && getIntent().hasExtra("STAGED_ITEMS")) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    stagedReportItems = getIntent().getSerializableExtra("STAGED_ITEMS", ArrayList.class);
+                } else {
+                    stagedReportItems = (ArrayList<BillReportItem>) getIntent().getSerializableExtra("STAGED_ITEMS");
+                }
+            }
+        }
+
+        // තවමත් ලැයිස්තුව හිස් නම් අලුත් එකක් සාදන්න
+        if (stagedReportItems == null) {
             stagedReportItems = new ArrayList<>();
         }
 
@@ -61,6 +72,13 @@ public class UtilityReportFormActivity extends AppCompatActivity {
         setupMonthSpinner();
         fetchSavedBillsFromFirestore();
         setupClickListeners();
+    }
+
+    // Screen rotation වලදී දත්ත තාවකාලිකව රඳවා ගැනීම
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("STAGED_ITEMS", stagedReportItems);
     }
 
     private void initViews() {
@@ -92,7 +110,6 @@ public class UtilityReportFormActivity extends AppCompatActivity {
                 RegisterBillActivity.BillModel bill = doc.toObject(RegisterBillActivity.BillModel.class);
                 if (bill != null) {
                     firebaseBillsList.add(new UtilityBillActivity.BillWithId(doc.getId(), bill));
-                    // Display name and account number clearly inside the dropdown menu element
                     billSpinnerNames.add(bill.getName() + " (" + bill.getAccountNo() + ")");
                 }
             }
@@ -108,11 +125,11 @@ public class UtilityReportFormActivity extends AppCompatActivity {
 
         btnNextReport.setOnClickListener(v -> {
             if (validateAndStageItem()) {
-                // Head directly into summary layout view processing
+                // 💡 FIX 2: DataBridge වෙනුවට කෙලින්ම Intent එක හරහා Summary තිරයට ලැයිස්තුව Pass කිරීම
                 Intent intent = new Intent(UtilityReportFormActivity.this, ReportSummaryActivity.class);
                 intent.putExtra("STAGED_ITEMS", stagedReportItems);
                 startActivity(intent);
-                finish();
+                finish(); // පැරණි Form එක මතකයෙන් ඉවත් කරයි
             }
         });
     }
@@ -127,36 +144,39 @@ public class UtilityReportFormActivity extends AppCompatActivity {
             return false;
         }
 
-        // 1. Check Total Constraint Limit: Max 5 items total allowed
-        if (stagedReportItems.size() >= 6) {
-            Toast.makeText(this, "Limit reached! Maximum of 6 total bills can be chosen.", Toast.LENGTH_LONG).show();
+        // උපරිම බිල්පත් 5කට සීමා කිරීම
+        if (stagedReportItems.size() >= 5) {
+            Toast.makeText(this, "Limit reached! Maximum of 5 total bills can be chosen.", Toast.LENGTH_LONG).show();
             return false;
         }
 
         int selectedIndex = spinnerChooseBill.getSelectedItemPosition();
         UtilityBillActivity.BillWithId selectedBillWrapper = firebaseBillsList.get(selectedIndex);
         String selectedMonth = spinnerChooseMonth.getSelectedItem().toString();
-        double amount = Double.parseDouble(editBillAmount.getText().toString().trim());
 
-        // Process existing validation conditions across our active stack entries
+        double amount;
+        try {
+            amount = Double.parseDouble(editBillAmount.getText().toString().trim());
+        } catch (NumberFormatException e) {
+            editBillAmount.setError("Invalid amount entered");
+            return false;
+        }
+
         Set<String> uniqueMonths = new HashSet<>();
         for (BillReportItem item : stagedReportItems) {
             uniqueMonths.add(item.getTargetMonth());
 
-            // 2. Check Duplication Constraint: Ensure this specific bill isn't already added for this specific month
             if (item.getBillId().equals(selectedBillWrapper.id) && item.getTargetMonth().equals(selectedMonth)) {
                 Toast.makeText(this, "This bill has already been added for " + selectedMonth, Toast.LENGTH_LONG).show();
                 return false;
             }
         }
 
-        // 3. Check Month Constraint Limit: Max 3 unique months across entries
         if (!uniqueMonths.contains(selectedMonth) && uniqueMonths.size() >= 3) {
             Toast.makeText(this, "Limit reached! You can select a maximum of 3 distinct months.", Toast.LENGTH_LONG).show();
             return false;
         }
 
-        // If constraints clear, package input into staging collection list
         BillReportItem newItem = new BillReportItem(
                 selectedBillWrapper.id,
                 selectedBillWrapper.billData.getName(),
@@ -167,6 +187,7 @@ public class UtilityReportFormActivity extends AppCompatActivity {
         );
 
         stagedReportItems.add(newItem);
+        Toast.makeText(this, "Bill added to list", Toast.LENGTH_SHORT).show();
         return true;
     }
 }
