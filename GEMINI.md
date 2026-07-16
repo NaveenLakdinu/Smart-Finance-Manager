@@ -68,3 +68,28 @@ The project follows a standard Android Activity-based architecture.
 - Before adding new features, ensure they align with the visual style established in existing activities like `DashboardActivity`.
 - Register all new activities in `app/src/main/AndroidManifest.xml`.
 - Use the `libs.versions.toml` file for dependency management.
+
+---
+
+## Roadmap & Improvement Suggestions
+
+### 1. Architectural Improvements
+- **Implement MVVM Pattern:** Transition from Activity-based logic to Model-View-ViewModel to separate business logic from UI components.
+- **BaseActivity/BaseFragment:** Create base classes to handle shared logic (e.g., Logout, Profile Setup) to reduce code duplication.
+- **Dependency Injection:** Integrate **Hilt** to manage Firebase and system service instances efficiently.
+
+### 2. UI & UX Enhancements
+- **Single Activity Architecture:** Use a single `MainActivity` with **Fragments** and the **Navigation Component** for smoother tab transitions and state preservation.
+- **Loading States:** Implement **Shimmer effects** or custom ProgressBars for Firestore data fetching operations.
+- **Empty States:** Add illustrative empty state views for lists (Invoices, Subscriptions) when no data is available.
+
+### 3. Feature Roadmap
+- **Role-Based Repositories:** Abstract profile-specific logic into dedicated Repository classes.
+- **Data Export:** Add functionality to export reports (Analytics, Loans) to **PDF or CSV** formats.
+- **Push Notifications:** Integrate **Firebase Cloud Messaging (FCM)** for automated payment and renewal reminders.
+
+### 4. Security & Performance
+- **Localization:** Move hardcoded strings to `strings.xml` to support future internationalization.
+- **Firestore Security:** Audit and tighten Firestore Rules to ensure strict `uid`-based access control.
+- **Offline Persistence:** Explicitly enable Firestore offline data persistence for a seamless offline experience.
+- **Code Optimization:** Configure R8/Proguard rules to optimize the release build and protect against reverse engineering.

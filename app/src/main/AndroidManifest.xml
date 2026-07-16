@@ -76,6 +76,7 @@
         <activity
             android:name=".ChooseRoleActivity"
             android:exported="false" />
+
         <activity
             android:name=".BusinessDashboardActivity"
             android:exported="false" />
@@ -85,7 +86,11 @@
             android:exported="false" />
 
         <activity
-            android:name=".StudentBudgetActivity"
+            android:name=".BudgetPlannerActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".BudgetSummaryActivity"
             android:exported="false" />
 
         <activity
@@ -106,15 +111,7 @@
         <activity
             android:name=".ExpenseManagementActivity"
             android:exported="false" />
-        <activity
-            android:name=".InventoryManagementActivity"
-            android:exported="false" />
-        <activity
-            android:name=".BudgetPlannerActivity"
-            android:exported="false" />
-        <activity
-            android:name=".ProfitLossActivity"
-            android:exported="false" />
+
         <activity
             android:name=".AnalyticsActivity"
             android:exported="false" />
@@ -140,6 +137,16 @@
             android:name=".ExpenseClaimsActivity"
             android:exported="false" />
 
+        <activity
+            android:name=".InvoiceHubActivity"
+            android:exported="false" />
+        <activity
+            android:name=".CreateInvoiceActivity"
+            android:exported="false" />
+        <activity
+            android:name=".InvoiceDetailsActivity"
+            android:exported="false" />
+
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
             android:exported="false" />
@@ -147,6 +154,28 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
+
+        <activity
+            android:name=".SavingListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingAddGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingUpdateGoalActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingGenerateReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingReportResultActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SavingsPassportActivity"
+            android:exported="false" />
 
     </application>
 

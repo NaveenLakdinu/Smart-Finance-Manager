@@ -1,116 +1,184 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
+import android.text.TextUtils;
+import android.view.View;
 import android.widget.EditText;
-import android.widget.Spinner;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
+
+
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 
 public class BudgetPlannerActivity extends AppCompatActivity {
 
-    private TextView btnBack;
-    private Spinner spinnerBudgetCategory;
-    private EditText edtMonth;
-    private EditText edtBudgetAmount;
-    private Button btnSaveBudget;
+    private EditText editMonthlyAllowance;
+    private EditText editScholarshipAmount;
+    private EditText editPartTimeIncome;
+    
+    private TextView btnDuration3M;
+    private TextView btnDuration4M;
+    private TextView btnDuration6M;
+    private TextView btnDuration12M;
+    
+    private int selectedDuration = 0; // Default none
+    private BudgetViewModel viewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_budget_planner);
+        setContentView(R.layout.activity_student_budget);
 
-        // 1. Hook up the interactive XML views
-        initializeViews();
+        viewModel = new ViewModelProvider(this).get(BudgetViewModel.class);
 
-        // 2. Populate the category dropdown list
-        setupSpinner();
+        // Hide results layout
+        LinearLayout layoutResults = findViewById(R.id.layoutResults);
+        if (layoutResults != null) {
+            layoutResults.setVisibility(View.GONE);
+        }
+        
+        // Show income card just in case it was hidden
+        MaterialCardView cardIncomeDetails = findViewById(R.id.cardIncomeDetails);
+        if (cardIncomeDetails != null) {
+            cardIncomeDetails.setVisibility(View.VISIBLE);
+        }
 
-        // 3. Attach standard click listeners
-        setupListeners();
+        initViews();
+
+        setupObservers();
     }
 
-    private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
-        spinnerBudgetCategory = findViewById(R.id.spinnerBudgetCategory);
-        edtMonth = findViewById(R.id.edtMonth);
-        edtBudgetAmount = findViewById(R.id.edtBudgetAmount);
-        btnSaveBudget = findViewById(R.id.btnSaveBudget);
-    }
+    private void initViews() {
+        editMonthlyAllowance = findViewById(R.id.editMonthlyAllowance);
+        editScholarshipAmount = findViewById(R.id.editScholarshipAmount);
+        editPartTimeIncome = findViewById(R.id.editPartTimeIncome);
 
-    private void setupSpinner() {
-        String[] budgetCategories = {
-                "Utilities",
-                "Loan Payments",
-                "Subscriptions",
-                "Inventory",
-                "Employee Salaries",
-                "Marketing",
-                "Transport",
-                "Office Rent",
-                "Equipment",
-                "Other"
+        btnDuration3M = findViewById(R.id.btnDuration3M);
+        btnDuration4M = findViewById(R.id.btnDuration4M);
+        btnDuration6M = findViewById(R.id.btnDuration6M);
+        btnDuration12M = findViewById(R.id.btnDuration12M);
+
+        View.OnClickListener durationListener = v -> {
+            resetDurationButtons();
+            v.setBackgroundResource(R.drawable.bg_segment_active);
+            ((TextView) v).setTextColor(Color.parseColor("#FFFFFF"));
+
+            int id = v.getId();
+            if (id == R.id.btnDuration3M) selectedDuration = 3;
+            else if (id == R.id.btnDuration4M) selectedDuration = 4;
+            else if (id == R.id.btnDuration6M) selectedDuration = 6;
+            else if (id == R.id.btnDuration12M) selectedDuration = 12;
         };
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this,
-                android.R.layout.simple_spinner_item,
-                budgetCategories
-        );
+        btnDuration3M.setOnClickListener(durationListener);
+        btnDuration4M.setOnClickListener(durationListener);
+        btnDuration6M.setOnClickListener(durationListener);
+        btnDuration12M.setOnClickListener(durationListener);
 
-        adapter.setDropDownViewResource(
-                android.R.layout.simple_spinner_dropdown_item
-        );
+        // Reset initially (since layout might have 6M active by default)
+        resetDurationButtons();
+        selectedDuration = 0;
 
-        spinnerBudgetCategory.setAdapter(adapter);
+        MaterialButton btnCalculateBudget = findViewById(R.id.btnCalculateBudget);
+        btnCalculateBudget.setOnClickListener(v -> validateAndCalculate());
+        
+        View btnBack = findViewById(R.id.btnBackContainer);
+        if (btnBack != null) {
+            btnBack.setOnClickListener(v -> finish());
+        }
     }
 
-    private void setupListeners() {
-        // Go back to the previous dashboard screen
-        btnBack.setOnClickListener(v -> finish());
+    private void resetDurationButtons() {
+        TextView[] buttons = {btnDuration3M, btnDuration4M, btnDuration6M, btnDuration12M};
+        for (TextView btn : buttons) {
+            btn.setBackgroundResource(R.drawable.bg_segment_inactive);
+            btn.setTextColor(Color.parseColor("#5A6470"));
+        }
+    }
 
-        // Handle frontend form validation
-        btnSaveBudget.setOnClickListener(v -> {
-            String month = edtMonth.getText().toString().trim();
-            String amountStr = edtBudgetAmount.getText().toString().trim();
+    private void validateAndCalculate() {
+        String allowanceStr = editMonthlyAllowance.getText().toString().trim();
+        String scholarshipStr = editScholarshipAmount.getText().toString().trim();
+        String partTimeStr = editPartTimeIncome.getText().toString().trim();
 
-            if (month.isEmpty()) {
-                edtMonth.setError("Enter month");
-                edtMonth.requestFocus();
+        if (TextUtils.isEmpty(allowanceStr)) {
+            editMonthlyAllowance.setError("Monthly allowance required");
+            return;
+        }
+
+        double allowance, scholarship = 0, partTime = 0;
+        try {
+            allowance = Double.parseDouble(allowanceStr);
+            if (allowance < 0) {
+                editMonthlyAllowance.setError("Cannot be negative");
                 return;
             }
+        } catch (NumberFormatException e) {
+            editMonthlyAllowance.setError("Invalid number");
+            return;
+        }
 
-            if (amountStr.isEmpty()) {
-                edtBudgetAmount.setError("Enter budget amount");
-                edtBudgetAmount.requestFocus();
-                return;
-            }
-
+        if (!TextUtils.isEmpty(scholarshipStr)) {
             try {
-                double amount = Double.parseDouble(amountStr);
-                if (amount <= 0) {
-                    edtBudgetAmount.setError("Budget amount must be greater than zero");
-                    edtBudgetAmount.requestFocus();
-                    return;
-                }
+                scholarship = Double.parseDouble(scholarshipStr);
+                if (scholarship < 0) scholarship = 0;
             } catch (NumberFormatException e) {
-                edtBudgetAmount.setError("Enter a valid numeric amount");
-                edtBudgetAmount.requestFocus();
+                editScholarshipAmount.setError("Invalid number");
                 return;
             }
+        }
 
-            // Form inputs are clean, wipe the inputs for the next entry
-            clearFields();
-            Toast.makeText(this, "Budget saved successfully", Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(partTimeStr)) {
+            try {
+                partTime = Double.parseDouble(partTimeStr);
+                if (partTime < 0) partTime = 0;
+            } catch (NumberFormatException e) {
+                editPartTimeIncome.setError("Invalid number");
+                return;
+            }
+        }
+
+        if (selectedDuration == 0) {
+            Toast.makeText(this, "Please select semester duration", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        viewModel.calculateAndSaveBudget(allowance, scholarship, partTime, selectedDuration);
+    }
+
+    private void setupObservers() {
+        viewModel.getIsLoading().observe(this, isLoading -> {
+            MaterialButton btnCalculateBudget = findViewById(R.id.btnCalculateBudget);
+            if (isLoading) {
+                btnCalculateBudget.setEnabled(false);
+                btnCalculateBudget.setText("Calculating...");
+            } else {
+                btnCalculateBudget.setEnabled(true);
+                btnCalculateBudget.setText("Calculate Budget");
+            }
+        });
+
+        viewModel.getErrorMessage().observe(this, error -> {
+            if (error != null) {
+                Toast.makeText(this, error, Toast.LENGTH_LONG).show();
+            }
+        });
+
+        viewModel.getCalculationSuccess().observe(this, model -> {
+            if (model != null) {
+                Intent intent = new Intent(this, BudgetSummaryActivity.class);
+                intent.putExtra("budgetModel", model);
+                startActivity(intent);
+            }
         });
     }
 
-    private void clearFields() {
-        edtMonth.setText("");
-        edtBudgetAmount.setText("");
-        spinnerBudgetCategory.setSelection(0);
-    }
+
 }

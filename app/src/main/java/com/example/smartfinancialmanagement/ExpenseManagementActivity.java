@@ -7,7 +7,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -101,37 +100,21 @@ public class ExpenseManagementActivity extends AppCompatActivity {
 
         // Standard frontend validation logic before submissions
         btnAddExpense.setOnClickListener(v -> {
-            String amountStr = edtExpenseAmount.getText().toString().trim();
+            String amount = edtExpenseAmount.getText().toString().trim();
             String date = edtExpenseDate.getText().toString().trim();
 
-            if (amountStr.isEmpty()) {
+            if (amount.isEmpty()) {
                 edtExpenseAmount.setError("Enter amount");
-                edtExpenseAmount.requestFocus();
-                return;
-            }
-
-            try {
-                double amount = Double.parseDouble(amountStr);
-                if (amount <= 0) {
-                    edtExpenseAmount.setError("Amount must be greater than zero");
-                    edtExpenseAmount.requestFocus();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                edtExpenseAmount.setError("Enter a valid numeric amount");
-                edtExpenseAmount.requestFocus();
                 return;
             }
 
             if (date.isEmpty()) {
                 edtExpenseDate.setError("Select date");
-                edtExpenseDate.requestFocus();
                 return;
             }
 
             // Input is clean, clear the form fields for next entry
             clearFields();
-            Toast.makeText(this, "Expense added successfully", Toast.LENGTH_SHORT).show();
         });
     }
 

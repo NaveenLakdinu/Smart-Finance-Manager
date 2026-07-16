@@ -17,6 +17,10 @@ import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
+
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFullName, etAge, etEmail, etMobile, etPassword;
@@ -314,6 +318,30 @@ public class RegisterActivity extends AppCompatActivity {
                                 loanData.put("monthlyEmi", safeParseDouble(data.monthlyInstallment));
                                 loanData.put("createdAt", System.currentTimeMillis());
                                 batch.set(loanRef, loanData);
+                            }
+
+                            // 4. Save initial saving plan to Firestore if checked
+                            if (data.hasSavingPlan) {
+                                DocumentReference savingRef = db.collection("users").document(uid).collection("savings").document();
+                                String savingId = savingRef.getId();
+                                
+                                SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                                String startDate = sdf.format(new Date()); // today
+                                String targetDate = data.targetDate != null ? data.targetDate : startDate;
+                                
+                                SavingModel savingModel = new SavingModel(
+                                        savingId,
+                                        data.goalName != null && !data.goalName.isEmpty() ? data.goalName : "Initial Saving Goal",
+                                        safeParseDouble(data.targetAmount),
+                                        safeParseDouble(data.currentSavings),
+                                        safeParseDouble(data.monthlySavingAmount),
+                                        startDate,
+                                        targetDate,
+                                        "Active",
+                                        System.currentTimeMillis()
+                                );
+                                
+                                batch.set(savingRef, savingModel);
                             }
 
                             System.out.println("Committing atomic write batch for UID: " + uid);

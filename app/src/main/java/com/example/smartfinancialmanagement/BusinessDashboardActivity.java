@@ -1,149 +1,148 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import android.content.Intent;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
-    // Top Profile Area Views
-    private TextView txtNotificationBell;
+    // Top Header / Profile Info
+    private TextView txtProfileLetter;
+    private TextView txtGreeting;
+    private TextView txtUserEmail;
+    private TextView btnNotifications;
     private View btnTopLogout;
 
-    // Core Manager Cards
-    private View cardLoanManager, cardSubscriptionManager, cardSavingManager, cardUtilityManager;
+    // Summary State Fields
+    private TextView txtTotalCount;
+    private TextView txtSubMessage;
 
-    // Business Feature Cards
-    private CardView cardRevenue;
-    private CardView cardExpense;
-    private CardView cardInventory;
-    private CardView cardBudget;
-    private CardView cardProfit;
-    private CardView cardAnalytics;
+    // Feature Modules Grid
+    private MaterialCardView cardManageLoan;
+    private MaterialCardView cardManageSubscription;
+    private MaterialCardView cardManageUtility;
+    private MaterialCardView cardSavingManager;
+    private MaterialCardView cardB2BInvoice;
+    private MaterialCardView cardAnalytics;
+
+    // Bottom Feed Lists
+    private View recentSection;
+    private TextView txtViewAll;
+    private RecyclerView SampleRecycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_owner_dashboard); // Ensure this matches your XML file name
+        setContentView(R.layout.activity_business_owner_dashboard);
 
-        // 1. Initialize Interactive Views
-        initViews();
-
-        // 2. Setup Click Listeners
+        initializeViews();
         setupClickListeners();
+        configureRecentListsFeed();
     }
 
     /**
-     * Finds and binds only the interactive views from the XML layout using their IDs.
+     * Maps and initializes layout components safely.
      */
-    private void initViews() {
-        // Notification Icon
-        txtNotificationBell = findViewById(R.id.txtNotificationBell);
+    private void initializeViews() {
+        // Header Binds
+        txtProfileLetter = findViewById(R.id.txtProfileLetter);
+        txtGreeting = findViewById(R.id.txtGreeting);
+        txtUserEmail = findViewById(R.id.txtUserEmail);
+        btnNotifications = findViewById(R.id.btnNotifications);
         btnTopLogout = findViewById(R.id.btnTopLogout);
 
-        // Core Managers
-        cardLoanManager = findViewById(R.id.cardLoanManager);
-        cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
-        cardSavingManager = findViewById(R.id.cardSavingManager);
-        cardUtilityManager = findViewById(R.id.cardUtilityManager);
+        // Core Balance Summary Info
+        txtTotalCount = findViewById(R.id.txtTotalCount);
+        txtSubMessage = findViewById(R.id.txtSubMessage);
 
-        // Feature Grid Cards
-        cardRevenue = findViewById(R.id.cardRevenue);
-        cardExpense = findViewById(R.id.cardExpense);
-        cardInventory = findViewById(R.id.cardInventory);
-        cardBudget = findViewById(R.id.cardBudget);
-        cardProfit = findViewById(R.id.cardProfit);
+        // Grid Actions
+        cardManageLoan = findViewById(R.id.cardManageLoan);
+        cardManageSubscription = findViewById(R.id.cardManageSubscription);
+        cardManageUtility = findViewById(R.id.cardManageUtility);
+        cardSavingManager = findViewById(R.id.cardSavingManager);
+        cardB2BInvoice = findViewById(R.id.B2BInvoice);
         cardAnalytics = findViewById(R.id.cardAnalytics);
+
+        // Secondary List Containers
+        recentSection = findViewById(R.id.recentSection);
+        txtViewAll = findViewById(R.id.txtViewAll);
+        SampleRecycler = findViewById(R.id.recyclerRecent);
     }
 
     /**
-     * Configures the click actions for all interactive elements.
+     * Chains UI component event loop triggers using optimal Java lambda blocks.
      */
     private void setupClickListeners() {
-        // Notification Icon Click
-        txtNotificationBell.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showToast("Notifications clicked");
-            }
+        // Notification Alert Bell Interaction Handler
+        btnNotifications.setOnClickListener(v ->
+                Toast.makeText(this, "Opening corporate notification stream...", Toast.LENGTH_SHORT).show()
+        );
+
+        // Global Sign-Out Logic Route
+        btnTopLogout.setOnClickListener(v -> {
+            FirebaseAuth.getInstance().signOut();
+            Intent intent = new Intent(this, LoginFormActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
         });
 
-        btnTopLogout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FirebaseAuth.getInstance().signOut();
-                Intent intent = new Intent(BusinessDashboardActivity.this, LoginFormActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                startActivity(intent);
-                finish();
-            }
+        // Grid Component Intercept Vectors
+        cardManageLoan.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, LoanFormActivity.class);
+            startActivity(intent);
         });
 
-        // Core Manager Clicks
-        cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
-        cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
-        cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
-        cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
-
-        // Feature Card Clicks
-        cardRevenue.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,RevenueManagementActivity.class);
-                startActivity(intent);
-            }
+        cardManageUtility.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class);
+            startActivity(intent);
+        });
+        
+        cardSavingManager.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SavingManagerActivity.class);
+            startActivity(intent);
         });
 
-        cardExpense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, ExpenseManagementActivity.class);
-                startActivity(intent);
-            }
+        cardManageSubscription.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
         });
 
-        cardInventory.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,InventoryManagementActivity.class);
-                startActivity(intent);
-            }
+        // Direct Core Component Activations
+        cardB2BInvoice.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class);
+            startActivity(intent);
         });
 
-        cardBudget.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,BudgetPlannerActivity.class);
-                startActivity(intent);
-            }
+        cardAnalytics.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class);
+            startActivity(intent);
         });
 
-        cardProfit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this, ProfitLossActivity.class);
-                startActivity(intent);
-            }
-        });
-
-        cardAnalytics.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(BusinessDashboardActivity.this,AnalyticsActivity.class);
-                startActivity(intent);
-            }
+        txtViewAll.setOnClickListener(v -> {
+            Intent intent = new Intent(BusinessDashboardActivity.this, SubscriptionManagerActivity.class);
+            startActivity(intent);
         });
     }
 
     /**
-     * Helper method to easily display a toast message when an item is tapped.
+     * Initializes structural linear state layouts safely for the recent view.
      */
-    private void showToast(String message) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
+    private void configureRecentListsFeed() {
+        SampleRecycler.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    /**
+     * Standardized message printer shortcut.
+     */
+    private void showModuleToast(String moduleName) {
+        Toast.makeText(this, moduleName + " module integration coming soon!", Toast.LENGTH_SHORT).show();
     }
 }
