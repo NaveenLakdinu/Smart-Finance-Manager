@@ -10,99 +10,71 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+
+// Firebase Firestore library to communicate with your cloud database
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Locale;
 
 public class RegisterBillActivity extends AppCompatActivity {
 
+    // UI elements declaration
     private ImageView backButton;
-    private EditText editBillName, editAmount, editPaymentDate;
-    private Spinner spinnerCategory, spinnerStatus;
+    private EditText editBillName, editAccountNo, editPaymentDate; // Changed editAmount to editAccountNo
+    private Spinner spinnerCategory;
     private Button btnRegisterSubmit;
 
+    // Database instance variable
     private FirebaseFirestore db;
-    private String uid;
-    private double currentSavings = 0.0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register_bill);
 
+        // Initialize Cloud Firestore when the activity starts
         db = FirebaseFirestore.getInstance();
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user != null) {
-            uid = user.getUid();
-        }
 
+        // UI and event setup helper methods
         initViews();
         setupSpinners();
         setupDatePicker();
         setupClickListeners();
-        fetchCurrentSavings();
     }
 
+    // Link Java objects to your XML layout elements via IDs
     private void initViews() {
         backButton = findViewById(R.id.backButton);
         editBillName = findViewById(R.id.editBillName);
-        editAmount = findViewById(R.id.editAmount);
+        editAccountNo = findViewById(R.id.editAccountNo); // Linked to the new XML ID
         editPaymentDate = findViewById(R.id.editPaymentDate);
         spinnerCategory = findViewById(R.id.spinnerCategory);
-        spinnerStatus = findViewById(R.id.spinnerStatus);
         btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit);
     }
 
-    private void fetchCurrentSavings() {
-        if (uid == null) return;
-        db.collection("users").document(uid)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String savingsStr = documentSnapshot.getString("currentSavings");
-                        if (savingsStr != null) {
-                            try {
-                                currentSavings = Double.parseDouble(savingsStr.trim());
-                            } catch (NumberFormatException ignored) {}
-                        }
-                    }
-                });
-    }
-
+    // Populates the drop-down menu with your defined bill categories
     private void setupSpinners() {
-        // Category Spinner
         List<String> categories = new ArrayList<>();
-        categories.add("Select Category");
+        categories.add("Select Category"); // Hint item at position 0
         categories.add("Electricity");
         categories.add("Water");
         categories.add("Telephone");
         categories.add("Internet");
         categories.add("Television");
         categories.add("Rent");
+        categories.add("Other");
 
+        // Bind the list array data to the default Android spinner layout style
         ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, categories);
         categoryAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCategory.setAdapter(categoryAdapter);
-
-        // Status Spinner
-        List<String> statuses = new ArrayList<>();
-        statuses.add("Select Status");
-        statuses.add("Paid");
-        statuses.add("Pending");
-        statuses.add("Due");
-
-        ArrayAdapter<String> statusAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, statuses);
-        statusAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerStatus.setAdapter(statusAdapter);
     }
 
+    // Displays a popup calendar view when clicking the Due Date input field
     private void setupDatePicker() {
         editPaymentDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
@@ -113,81 +85,67 @@ public class RegisterBillActivity extends AppCompatActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     RegisterBillActivity.this,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        String formattedDate = selectedDay + "/" + (selectedMonth + 1) + "/" + selectedYear;
+                        // Formats day and month with a leading zero if below 10 (e.g., 05/09/2026)
+                        String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, (selectedMonth + 1), selectedYear);
                         editPaymentDate.setText(formattedDate);
                     }, year, month, day);
             datePickerDialog.show();
         });
     }
 
+    // Listens for clicks on actionable elements (Back arrow & Save button)
     private void setupClickListeners() {
+        // Closes this screen and returns to the previous dashboard activity
         backButton.setOnClickListener(v -> finish());
 
+        // Submits the data to the cloud only if user inputs clear standard error validation
         btnRegisterSubmit.setOnClickListener(v -> {
             if (validateForm()) {
-                double amount = Double.parseDouble(editAmount.getText().toString().trim());
-                if (amount > currentSavings) {
-                    showSavingsWarningDialog(amount);
-                } else {
-                    saveBillToFirestore(amount);
-                }
+                saveBillToFirebase();
             }
         });
     }
 
-    private void showSavingsWarningDialog(double amount) {
-        new AlertDialog.Builder(this)
-                .setTitle("⚠️ Insufficient Savings")
-                .setMessage(String.format("The bill amount (LKR %.2f) exceeds your current savings (LKR %.2f). Would you like to register it anyway?", amount, currentSavings))
-                .setPositiveButton("Register Anyway", (dialog, which) -> saveBillToFirestore(amount))
-                .setNegativeButton("Cancel", null)
-                .show();
-    }
+    // Packages field variables and pushes them over the network to Firestore
+    private void saveBillToFirebase() {
+        // Extract plain values from UI fields
+        String name = editBillName.getText().toString().trim();
+        String accountNo = editAccountNo.getText().toString().trim(); // Stored as String to protect leading zeros
+        String category = spinnerCategory.getSelectedItem().toString();
+        String dueDateStr = editPaymentDate.getText().toString().trim();
 
-    private void saveBillToFirestore(double amount) {
-        if (uid == null) {
-            Toast.makeText(this, "User not authenticated", Toast.LENGTH_SHORT).show();
-            return;
-        }
+        // Create an instance of our nested BillModel, forcing the status to start as "Pending"
+        BillModel newBill = new BillModel(name, accountNo, category, dueDateStr);
 
-        Map<String, Object> bill = new HashMap<>();
-        bill.put("billName", editBillName.getText().toString().trim());
-        bill.put("amount", amount);
-        bill.put("category", spinnerCategory.getSelectedItem().toString());
-        bill.put("paymentDate", editPaymentDate.getText().toString().trim());
-        bill.put("status", spinnerStatus.getSelectedItem().toString());
-        bill.put("createdAt", System.currentTimeMillis());
+        // Temporarily freeze button to prevent double-submit network spamming
+        btnRegisterSubmit.setEnabled(false);
 
-        db.collection("users").document(uid).collection("utilities")
-                .add(bill)
+        // Uploads the mapped object to a collection named "bills"
+        db.collection("bills")
+                .add(newBill)
                 .addOnSuccessListener(documentReference -> {
-                    Toast.makeText(RegisterBillActivity.this, "Bill Saved Successfully", Toast.LENGTH_SHORT).show();
-                    finish();
+                    // Triggers if write is successful
+                    Toast.makeText(RegisterBillActivity.this, "Bill Saved Successfully!", Toast.LENGTH_SHORT).show();
+                    finish(); // Return to previous dashboard screen
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(RegisterBillActivity.this, "Error saving bill: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    // Triggers if there's a connection/permission failure
+                    btnRegisterSubmit.setEnabled(true); // Unfreeze button so the user can retry
+                    Toast.makeText(RegisterBillActivity.this, "Failed to save: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
 
+    // Form client-side sanity check to ensure no crucial inputs are submitted empty
     private boolean validateForm() {
         if (editBillName.getText().toString().trim().isEmpty()) {
             editBillName.setError("Enter bill name");
             return false;
         }
-        if (editAmount.getText().toString().trim().isEmpty()) {
-            editAmount.setError("Enter amount");
+        if (editAccountNo.getText().toString().trim().isEmpty()) {
+            editAccountNo.setError("Enter account number");
             return false;
         }
-        try {
-            double amt = Double.parseDouble(editAmount.getText().toString().trim());
-            if (amt <= 0) {
-                editAmount.setError("Amount must be greater than zero");
-                return false;
-            }
-        } catch (NumberFormatException e) {
-            editAmount.setError("Enter a valid amount");
-            return false;
-        }
+        // Validates that user didn't leave the dropdown selection on "Select Category" (position 0)
         if (spinnerCategory.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Select a category", Toast.LENGTH_SHORT).show();
             return false;
@@ -196,10 +154,44 @@ public class RegisterBillActivity extends AppCompatActivity {
             editPaymentDate.setError("Select date");
             return false;
         }
-        if (spinnerStatus.getSelectedItemPosition() == 0) {
-            Toast.makeText(this, "Select a status", Toast.LENGTH_SHORT).show();
-            return false;
+        return true; // Form is clean and safe to upload
+    }
+
+    // =========================================================================
+    // NESTED STATIC MODEL CLASS FOR FIREBASE
+    // This replaces a standalone Bill.java file completely.
+    // =========================================================================
+    public static class BillModel {
+        private String name;
+        private String accountNo; // Changed from 'double amount' to 'String accountNo'
+        private String category;
+        private String dueDate;
+
+
+        // Mandated empty constructor. Firebase requires this to map incoming structural data values.
+        public BillModel() {}
+
+        // Initialization constructor used when compiling the document model before uploading
+        public BillModel(String name, String accountNo, String category, String dueDate) {
+            this.name = name;
+            this.accountNo = accountNo;
+            this.category = category;
+            this.dueDate = dueDate;
+
         }
-        return true;
+
+        // Getters & Setters are required by Firestore reflection to parse object fields into document properties
+        public String getName() { return name; }
+        public void setName(String name) { this.name = name; }
+
+        public String getAccountNo() { return accountNo; }
+        public void setAccountNo(String accountNo) { this.accountNo = accountNo; }
+
+        public String getCategory() { return category; }
+        public void setCategory(String category) { this.category = category; }
+
+        public String getDueDate() { return dueDate; }
+        public void setDueDate(String dueDate) { this.dueDate = dueDate; }
+
     }
 }

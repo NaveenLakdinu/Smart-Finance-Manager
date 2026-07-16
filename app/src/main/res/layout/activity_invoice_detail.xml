@@ -22,18 +22,17 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/btnBack"
+            <ImageButton
+                android:id="@+id/bBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
-                android:gravity="center"
-                android:text="←"
-                android:textColor="#F0F6FF"
-                android:textSize="20sp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="#FFFFFF"
+                android:scaleType="centerInside"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground" />
+                android:contentDescription="Back Button" />
 
             <TextView
                 android:layout_width="0dp"
@@ -92,10 +91,11 @@
                             android:textStyle="bold" />
 
                         <TextView
+                            android:id="@+id/txtDetBusinessWorkspace"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="B2B Commercial Statement"
+                            android:text="Workspace: Loading..."
                             android:textColor="#7A9CC0"
                             android:textSize="12sp" />
                     </LinearLayout>
@@ -212,12 +212,12 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="12dp"
-            app:backgroundTint="#112240"
-            android:text="SEND REMINDER ALERTS"
-            android:textColor="#FFFFFF"
+            app:backgroundTint="#2A1215"
+            android:text="DELETE INVOICE RECORD"
+            android:textColor="#FF5555"
             android:textSize="14sp"
             android:textStyle="bold"
-            app:strokeColor="#1A3050"
+            app:strokeColor="#FF3333"
             app:strokeWidth="1dp"
             app:cornerRadius="16dp" />
 

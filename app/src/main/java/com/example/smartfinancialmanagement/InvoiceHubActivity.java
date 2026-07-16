@@ -1,104 +1,267 @@
 package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import java.util.ArrayList;
-import java.util.Locale;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
 
 public class InvoiceHubActivity extends AppCompatActivity {
 
-    // UI View References
-    private TextView btnBack;
-    private TextView txtTotalAmountDue;
+    private TextView txtHeroClientName, txtHeroAmountAndDate, txtHeroIcon;
+    private TextView txtFilterPending, txtFilterPaid, txtFilterDue;
+    private MaterialCardView cardFilterPending, cardFilterPaid, cardFilterDue;
     private RecyclerView rvInvoices;
     private FloatingActionButton fabAddInvoice;
 
-    // Local State Variables (Matching layout data)
-    private double totalOutstandingAmount = 0.0;
+    private Spinner spinnerBusinessFilter;
+    private List<String> businessDropdownOptions = new ArrayList<>();
+    private String currentSelectedBusinessFilter = "All Businesses";
+
+    private FirebaseFirestore db;
+    private List<InvoiceModel> allInvoicesList = new ArrayList<>();
+    private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+    private String currentSelectedFilter = "pending";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_invoice_hub); // Matches your layout file name
+        setContentView(R.layout.activity_invoice_hub);
+
+        db = FirebaseFirestore.getInstance();
 
         initializeViews();
-        setupNavigation();
-        setupInvoiceList();
-        loadOutstandingAmountFromFirestore();
+        setupFilterListeners();
+        loadBusinessFilterDropdown();
+
+        findViewById(R.id.btnBack).setOnClickListener(v -> finish());
+        fabAddInvoice.setOnClickListener(v -> startActivity(new Intent(this, CreateInvoiceActivity.class)));
+
+        rvInvoices.setLayoutManager(new LinearLayoutManager(this));
     }
 
-    /**
-     * Finds and hooks into the layout elements.
-     */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchInvoicesFromDatabase();
+    }
+
     private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
-        txtTotalAmountDue = findViewById(R.id.txtTotalAmountDue);
+        txtHeroClientName = findViewById(R.id.txtHeroClientName);
+        txtHeroAmountAndDate = findViewById(R.id.txtHeroAmountAndDate);
+        txtHeroIcon = findViewById(R.id.txtHeroIcon);
+
+        cardFilterPending = findViewById(R.id.cardFilterPending);
+        cardFilterPaid = findViewById(R.id.cardFilterPaid);
+        cardFilterDue = findViewById(R.id.cardFilterDue);
+
+        txtFilterPending = findViewById(R.id.txtFilterPending);
+        txtFilterPaid = findViewById(R.id.txtFilterPaid);
+        txtFilterDue = findViewById(R.id.txtFilterDue);
+
+        spinnerBusinessFilter = findViewById(R.id.spinnerBusinessFilter);
         rvInvoices = findViewById(R.id.rvInvoices);
         fabAddInvoice = findViewById(R.id.fabAddInvoice);
     }
 
-    /**
-     * Handles actionable click routines.
-     */
-    private void setupNavigation() {
-        // Safe navigation back to Main Dashboard
-        btnBack.setOnClickListener(v -> finish());
-
-        // Fab action shortcut button routing to invoice entry page
-        fabAddInvoice.setOnClickListener(v -> {
-            Toast.makeText(this, "Opening Invoice Creator...", Toast.LENGTH_SHORT).show();
-
-            // Un-comment this track when your Invoice Form Activity is ready:
-            // Intent intent = new Intent(InvoiceHubActivity.this, CreateInvoiceActivity.class);
-            // startActivity(intent);
-        });
-    }
-
-    /**
-     * Prepares your internal data stream engine loops.
-     */
-    private void setupInvoiceList() {
-        rvInvoices.setLayoutManager(new LinearLayoutManager(this));
-
-        // Note: For now, the RecyclerView is set up with an empty state layout template.
-        // Once your custom list row item layout and Custom Adapter classes are written,
-        // you would initialize and pass data models here:
-        // InvoiceAdapter adapter = new InvoiceAdapter(getMockInvoiceData());
-        // rvInvoices.setAdapter(adapter);
-    }
-
-    /**
-     * Synchronizes display layout text fields with standard currency parsing patterns.
-     */
-    private void updateOutstandingUI() {
-        txtTotalAmountDue.setText(String.format(Locale.getDefault(), "Rs. %,.2f", totalOutstandingAmount));
-    }
-
-    private void loadOutstandingAmountFromFirestore() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                .collection("utilities")
+    private void loadBusinessFilterDropdown() {
+        db.collection("businesses")
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    double total = 0;
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Double amount = doc.getDouble("amount");
-                        if (amount != null) total += amount;
+                    businessDropdownOptions.clear();
+                    businessDropdownOptions.add("All Businesses");
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        BusinessModel business = doc.toObject(BusinessModel.class);
+                        if (business != null && business.getBusinessName() != null) {
+                            businessDropdownOptions.add(business.getBusinessName());
+                        }
                     }
-                    totalOutstandingAmount = total;
-                    updateOutstandingUI();
+
+                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+                            android.R.layout.simple_spinner_item, businessDropdownOptions);
+                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    spinnerBusinessFilter.setAdapter(spinnerAdapter);
+
+                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            currentSelectedBusinessFilter = parent.getItemAtPosition(position).toString();
+                            applyFilterAndPopulateList();
+                        }
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load invoices: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load business profile configurations", Toast.LENGTH_SHORT).show());
+    }
+
+    private void setupFilterListeners() {
+        cardFilterPending.setOnClickListener(v -> updateFilterUI("pending"));
+        cardFilterPaid.setOnClickListener(v -> updateFilterUI("paid"));
+        cardFilterDue.setOnClickListener(v -> updateFilterUI("due"));
+    }
+
+    private void updateFilterUI(String selectedFilter) {
+        currentSelectedFilter = selectedFilter;
+
+        txtFilterPending.setBackgroundResource(R.drawable.bg_glass_card);
+        txtFilterPending.setTextColor(Color.parseColor("#F0F6FF"));
+
+        txtFilterPaid.setBackgroundResource(R.drawable.bg_glass_card);
+        txtFilterPaid.setTextColor(Color.parseColor("#F0F6FF"));
+
+        txtFilterDue.setBackgroundResource(R.drawable.bg_glass_card);
+        txtFilterDue.setTextColor(Color.parseColor("#F0F6FF"));
+
+        if (selectedFilter.equals("pending")) {
+            txtFilterPending.setBackgroundColor(Color.parseColor("#00D4AA"));
+            txtFilterPending.setTextColor(Color.parseColor("#071A33"));
+        } else if (selectedFilter.equals("paid")) {
+            txtFilterPaid.setBackgroundColor(Color.parseColor("#00D4AA"));
+            txtFilterPaid.setTextColor(Color.parseColor("#071A33"));
+        } else if (selectedFilter.equals("due")) {
+            txtFilterDue.setBackgroundColor(Color.parseColor("#00D4AA"));
+            txtFilterDue.setTextColor(Color.parseColor("#071A33"));
+        }
+
+        applyFilterAndPopulateList();
+    }
+
+    private void fetchInvoicesFromDatabase() {
+        db.collection("invoices")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    allInvoicesList.clear();
+                    Date today = new Date();
+
+                    for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                        InvoiceModel item = doc.toObject(InvoiceModel.class);
+                        if (item != null) {
+                            if (item.getStatus() == null) item.setStatus("pending");
+
+                            // 💡 1. කාලය ඉකුත් වී ඇත්නම් ස්වයංක්‍රීයව Status එක "due" ලෙස වෙනස් කිරීම
+                            if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
+                                try {
+                                    Date dueDate = dateFormat.parse(item.getPaymentDueDate());
+                                    // ඉන්වොයිසියේ දිනය අද දිනට වඩා පැරණි නම් සහ දැනට status එක "due" නොවේ නම්
+                                    if (dueDate != null && dueDate.before(today) && !item.getStatus().equalsIgnoreCase("due")) {
+                                        item.setStatus("due");
+                                        // Firestore එකේ පවතින document එකද "due" ලෙස update කිරීම
+                                        db.collection("invoices").document(doc.getId()).update("status", "due");
+                                    }
+                                } catch (ParseException ignored) {}
+                            }
+
+                            // 💡 2. FIX: ReminderScheduler එක හරහා නිවැරදිව පරාමිතීන් 6 ම ලබා දී Alarm එක යෙදීම
+                            if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
+
+                                // InvoiceModel එකෙන් businessEmail එක ලබා ගැනීම (නම වෙනස් නම් model එක බලන්න)
+                                String businessEmail = item.getBusinessEmail() != null ? item.getBusinessEmail() : "";
+
+                                InvoiceReminderScheduler.scheduleInvoiceReminder(
+                                        InvoiceHubActivity.this,
+                                        item.getClientName(),
+                                        item.getPaymentDueDate(),
+                                        item.isEmailReminderEnabled(),
+                                        businessEmail,            // 5 වෙනි පරාමිතිය (String)
+                                        item.getGrandTotal()       // 6 වෙනි පරාමිතිය (double)
+                                );
+                            }
+
+                            allInvoicesList.add(item);
+                        }
+                    }
+
+                    sortInvoicesChronological(allInvoicesList);
+                    populateHeroCardClosestInvoice();
+                    applyFilterAndPopulateList();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load invoices", Toast.LENGTH_SHORT).show());
+    }
+
+    private void populateHeroCardClosestInvoice() {
+        long currentMillis = System.currentTimeMillis();
+        InvoiceModel closestInvoice = null;
+        long minimumTimeDiff = Long.MAX_VALUE;
+
+        for (InvoiceModel inv : allInvoicesList) {
+            if (!inv.getStatus().equalsIgnoreCase("paid") && inv.getPaymentDueDate() != null) {
+                try {
+                    Date dueDate = dateFormat.parse(inv.getPaymentDueDate());
+                    if (dueDate != null) {
+                        long timeDiff = Math.abs(dueDate.getTime() - currentMillis);
+                        if (timeDiff < minimumTimeDiff) {
+                            minimumTimeDiff = timeDiff;
+                            closestInvoice = inv;
+                        }
+                    }
+                } catch (ParseException ignored) {}
+            }
+        }
+
+        if (closestInvoice != null) {
+            txtHeroClientName.setText(closestInvoice.getClientName() + " (" + closestInvoice.getSelectedBusiness() + ")");
+            txtHeroAmountAndDate.setText(String.format(Locale.getDefault(), "Rs. %.2f\nDue: %s",
+                    closestInvoice.getGrandTotal(), closestInvoice.getPaymentDueDate()));
+            txtHeroIcon.setText(closestInvoice.getStatus().equals("due") ? "🚨" : "⏳");
+        } else {
+            txtHeroClientName.setText("All clear!");
+            txtHeroAmountAndDate.setText("No upcoming obligations");
+            txtHeroIcon.setText("✅");
+        }
+    }
+
+    private void applyFilterAndPopulateList() {
+        List<InvoiceModel> filteredList = new ArrayList<>();
+
+        for (InvoiceModel inv : allInvoicesList) {
+            boolean matchesStatus = inv.getStatus().equalsIgnoreCase(currentSelectedFilter);
+
+            boolean matchesBusiness = currentSelectedBusinessFilter.equals("All Businesses")
+                    || (inv.getSelectedBusiness() != null && inv.getSelectedBusiness().equalsIgnoreCase(currentSelectedBusinessFilter));
+
+            if (matchesStatus && matchesBusiness) {
+                filteredList.add(inv);
+            }
+        }
+
+        InvoiceAdapter adapter = new InvoiceAdapter(filteredList);
+        rvInvoices.setAdapter(adapter);
+    }
+
+    private void sortInvoicesChronological(List<InvoiceModel> list) {
+        Collections.sort(list, (inv1, inv2) -> {
+            if (inv1.getPaymentDueDate() == null || inv2.getPaymentDueDate() == null) return 0;
+            try {
+                Date d1 = dateFormat.parse(inv1.getPaymentDueDate());
+                Date d2 = dateFormat.parse(inv2.getPaymentDueDate());
+                if (d1 != null && d2 != null) {
+                    return d1.compareTo(d2);
+                }
+            } catch (ParseException ignored) {}
+            return 0;
+        });
     }
 }

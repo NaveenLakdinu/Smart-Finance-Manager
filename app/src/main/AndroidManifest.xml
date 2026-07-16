@@ -5,6 +5,9 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -148,6 +151,15 @@
             android:name=".UtilityReportActivity"
             android:exported="false" />
         <activity
+            android:name=".UpdateBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityReportFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportSummaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".SavingManagerActivity"
             android:exported="false" />
         <activity
@@ -165,6 +177,17 @@
             android:exported="false" />
         <activity
             android:name=".InvoiceDetailsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddBusinessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageBusinessActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".InvoiceReminderReceiver"
+            android:enabled="true"
             android:exported="false" />
 
         <service
