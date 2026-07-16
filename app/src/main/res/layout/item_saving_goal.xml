@@ -1,163 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- item_saving_goal.xml: Detailed card for SavingListActivity -->
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginHorizontal="16dp"
-    android:layout_marginBottom="16dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp">
+    android:layout_marginBottom="12dp"
+    app:cardBackgroundColor="@color/goal_surface"
+    app:cardCornerRadius="18dp"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/bg_goal_card"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/txtSavingTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_toStartOf="@id/actionsLayout"
-                android:layout_alignParentStart="true"
-                android:text="New Car Fund"
-                android:textColor="#1E293B"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <LinearLayout
-                android:id="@+id/actionsLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:id="@+id/btnEditSaving"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="16dp"
-                    android:src="@android:drawable/ic_menu_edit"
-                    app:tint="#2563EB" />
-
-                <ImageView
-                    android:id="@+id/btnDeleteSaving"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@android:drawable/ic_menu_delete"
-                    app:tint="#EF4444" />
-            </LinearLayout>
-
-        </RelativeLayout>
-
+        <!-- Row 1: Title + Edit/Delete -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginBottom="12dp">
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/tvGoalName"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="vertical">
+                android:textColor="@color/goal_text"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:text="Goal Name" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Target"
-                    android:textColor="#94A3B8"
-                    android:textSize="12sp" />
+            <TextView
+                android:id="@+id/btnEdit"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="✎"
+                android:textColor="@color/goal_blue"
+                android:textSize="14sp"
+                android:layout_marginEnd="6dp"/>
 
-                <TextView
-                    android:id="@+id/txtTargetAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="$5,000"
-                    android:textColor="#1E293B"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Current"
-                    android:textColor="#94A3B8"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/txtCurrentAmount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="$2,500"
-                    android:textColor="#16A34A"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/btnDelete"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:gravity="center"
+                android:text="🗑"
+                android:textColor="@color/goal_coral"
+                android:textSize="14sp"/>
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/progressBar"
-            style="?android:attr/progressBarStyleHorizontal"
+        <View android:layout_width="match_parent" android:layout_height="12dp"/>
+
+        <!-- Row 2: Target & Current -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Target: prefix in grey, value in grey -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Target "
+                android:textColor="@color/goal_text_mute"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tvTarget"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="LKR 0.00"
+                android:textColor="@color/goal_text_mute"
+                android:textSize="13sp"/>
+
+            <!-- Current: prefix in grey, value in mint -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Current "
+                android:textColor="@color/goal_text_mute"
+                android:textSize="13sp"/>
+            <TextView
+                android:id="@+id/tvCurrent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LKR 0.00"
+                android:textColor="@color/goal_mint"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="8dp"/>
+
+        <!-- Progress bar -->
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="8dp"
-            android:layout_marginBottom="8dp"
-            android:max="100"
-            android:progress="50"
-            android:progressDrawable="@drawable/bg_progress_bar_custom" />
-            
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-            
-            <TextView
-                android:id="@+id/txtRemainingAmount"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="Remaining: $2,500"
-                android:textColor="#94A3B8"
-                android:textSize="12sp" />
+            android:background="@drawable/bg_progress_track">
+            <View
+                android:id="@+id/progressBar"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:background="@color/goal_mint"/>
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/txtProgressPercent"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="50%"
-                android:textColor="#16A34A"
-                android:textSize="12sp"
-                android:textStyle="bold" />
-        </RelativeLayout>
-        
+        <View android:layout_width="match_parent" android:layout_height="14dp"/>
+
+        <!-- Status badge -->
         <TextView
-            android:id="@+id/txtStatus"
+            android:id="@+id/tvStatus"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="Active"
-            android:paddingHorizontal="8dp"
-            android:paddingVertical="4dp"
-            android:background="@drawable/tag_green"
-            android:textColor="#16A34A"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:text="Ongoing"
             android:textSize="12sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:background="@drawable/bg_badge_ongoing"/>
 
+        <!-- Keep dummy invisible views to prevent Java NPEs during transition if needed -->
+        <LinearLayout android:layout_width="match_parent" android:layout_height="0dp" android:visibility="gone">
+            <TextView android:id="@+id/tvRemaining" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+            <TextView android:id="@+id/tvPercent" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+        </LinearLayout>
     </LinearLayout>
-</com.google.android.material.card.MaterialCardView>
+</androidx.cardview.widget.CardView>

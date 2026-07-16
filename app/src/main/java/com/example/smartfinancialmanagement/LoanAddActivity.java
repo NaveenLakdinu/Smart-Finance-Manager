@@ -237,16 +237,16 @@ public class LoanAddActivity extends AppCompatActivity {
 
                 if (r == 0) {
                     double emi = p / n;
-                    estimatedMonthlyPayment.setText(String.format(Locale.US, "LKR %.2f", emi));
+                    estimatedMonthlyPayment.setText(CurrencyHelper.formatMoney(LoanAddActivity.this, emi));
                 } else {
                     double emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
-                    estimatedMonthlyPayment.setText(String.format(Locale.US, "LKR %.2f", emi));
+                    estimatedMonthlyPayment.setText(CurrencyHelper.formatMoney(LoanAddActivity.this, emi));
                 }
             } else {
-                estimatedMonthlyPayment.setText("LKR 0.00");
+                estimatedMonthlyPayment.setText(CurrencyHelper.formatMoney(LoanAddActivity.this, 0));
             }
         } catch (Exception e) {
-            estimatedMonthlyPayment.setText("LKR 0.00");
+            estimatedMonthlyPayment.setText(CurrencyHelper.formatMoney(LoanAddActivity.this, 0));
         }
     }
 }

@@ -27,7 +27,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     // Simulated account data
     private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};
-    private String[] balances = {"LKR 125,400.00", "LKR 2,450,000.00", "LKR 45,000.00"};
+    private double[] balances = {125400.00, 2450000.00, 45000.00};
     private String[] accountNumbers = {"**** **** 4290", "**** **** 8812", "**** **** 1029"};
     private int currentAccountIndex = 0;
 
@@ -116,7 +116,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     private void updateAccountUI() {
         txtCurrentAccountName.setText(accounts[currentAccountIndex]);
-        txtAccountBalance.setText(balances[currentAccountIndex]);
+        txtAccountBalance.setText(CurrencyHelper.formatMoney(this, balances[currentAccountIndex]));
         txtAccountNumber.setText(accountNumbers[currentAccountIndex]);
     }
 
