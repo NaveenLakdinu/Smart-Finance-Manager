@@ -9,11 +9,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -27,7 +25,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
     private TextView tvTotalTarget, tvTotalSaved, tvTotalRemaining, tvAvgProgress;
     private ProgressBar pbAvgProgress;
 
-    private DatabaseReference databaseReference;
+    private CollectionReference databaseReference;
     private String userId;
     private String reportType, monthYear, startDateStr, endDateStr;
     private SimpleDateFormat dateFormat;
@@ -74,7 +72,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
         } else {
             userId = "test_user";
         }
-        databaseReference = FirebaseDatabase.getInstance().getReference("Savings").child(userId);
+        databaseReference = FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings");
     }
 
     private void setupListeners() {
@@ -93,9 +91,8 @@ public class SavingReportResultActivity extends AppCompatActivity {
     }
 
     private void fetchDataAndCalculate() {
-        databaseReference.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+        databaseReference.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
                 int totalGoals = 0;
                 int activeGoals = 0;
                 int completedGoals = 0;
@@ -103,8 +100,8 @@ public class SavingReportResultActivity extends AppCompatActivity {
                 double totalSaved = 0;
                 double totalProgressSum = 0;
 
-                for (DataSnapshot dataSnapshot : snapshot.getChildren()) {
-                    SavingModel saving = dataSnapshot.getValue(SavingModel.class);
+                for (QueryDocumentSnapshot document : task.getResult()) {
+                    SavingModel saving = document.toObject(SavingModel.class);
                     if (saving != null && isWithinDateRange(saving.getStartDate(), saving.getTargetDate())) {
                         totalGoals++;
                         
@@ -133,10 +130,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
                 double healthScore = (avgProgress * 0.7) + (completedGoalsPercent * 0.3);
 
                 updateUI(totalGoals, activeGoals, completedGoals, totalTarget, totalSaved, avgProgress, healthScore);
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            } else {
                 Toast.makeText(SavingReportResultActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });

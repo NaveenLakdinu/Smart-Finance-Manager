@@ -1,6 +1,7 @@
 package com.example.smartfinancialmanagement;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,11 +14,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentSnapshot;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -31,7 +30,7 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
     private ImageView btnBack;
     private MaterialButton btnCancel, btnUpdate;
 
-    private DatabaseReference databaseReference;
+    private CollectionReference databaseReference;
     private String userId;
     private String savingId;
     private SimpleDateFormat dateFormat;
@@ -73,16 +72,15 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
         } else {
             userId = "test_user";
         }
-        databaseReference = FirebaseDatabase.getInstance().getReference("Savings").child(userId);
+        databaseReference = FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings");
     }
 
     private void loadExistingData() {
         if (savingId == null) return;
 
-        databaseReference.child(savingId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                SavingModel saving = snapshot.getValue(SavingModel.class);
+        databaseReference.document(savingId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null && task.getResult().exists()) {
+                SavingModel saving = task.getResult().toObject(SavingModel.class);
                 if (saving != null) {
                     etGoalName.setText(saving.getSavingTitle());
                     etTargetAmount.setText(String.valueOf(saving.getTargetAmount()));
@@ -92,18 +90,15 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
                     createdAt = saving.getCreatedAt();
                     calculateRequirement();
                 }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+            } else {
                 Toast.makeText(SavingUpdateGoalActivity.this, "Failed to load data", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-        btnCancel.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> navigateToManager());
+        btnCancel.setOnClickListener(v -> navigateToManager());
 
         tvStartDate.setOnClickListener(v -> showDatePicker(tvStartDate));
         tvTargetDate.setOnClickListener(v -> showDatePicker(tvTargetDate));
@@ -125,6 +120,13 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
         tvTargetDate.addTextChangedListener(calculationWatcher);
 
         btnUpdate.setOnClickListener(v -> updateGoal());
+    }
+
+    private void navigateToManager() {
+        Intent intent = new Intent(this, SavingManagerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void showDatePicker(TextView targetView) {
@@ -217,7 +219,7 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
             SavingModel savingModel = new SavingModel(savingId, name, target, current, monthlyRequirement, 
                     startStr, endStr, status, createdAt);
 
-            databaseReference.child(savingId).setValue(savingModel).addOnCompleteListener(task -> {
+            databaseReference.document(savingId).set(savingModel).addOnCompleteListener(task -> {
                 if (task.isSuccessful()) {
                     Toast.makeText(this, "Goal Updated", Toast.LENGTH_SHORT).show();
                     finish();
