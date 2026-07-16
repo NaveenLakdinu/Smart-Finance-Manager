@@ -16,8 +16,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.WriteBatch;
 import java.util.HashMap;
 import java.util.Map;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -323,10 +322,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 batch.set(loanRef, loanData);
                             }
 
-                            // 4. Save initial saving plan to Realtime Database if checked
+                            // 4. Save initial saving plan to Firestore if checked
                             if (data.hasSavingPlan) {
-                                DatabaseReference savingsRef = FirebaseDatabase.getInstance().getReference("Savings").child(uid);
-                                String savingId = savingsRef.push().getKey();
+                                DocumentReference savingRef = db.collection("users").document(uid).collection("savings").document();
+                                String savingId = savingRef.getId();
                                 
                                 SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
                                 String startDate = sdf.format(new Date()); // today
@@ -344,9 +343,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         System.currentTimeMillis()
                                 );
                                 
-                                if (savingId != null) {
-                                    savingsRef.child(savingId).setValue(savingModel);
-                                }
+                                batch.set(savingRef, savingModel);
                             }
 
                             System.out.println("Committing atomic write batch for UID: " + uid);

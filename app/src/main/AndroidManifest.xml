@@ -193,6 +193,9 @@
         <activity
             android:name=".SavingReportResultActivity"
             android:exported="false" />
+        <activity
+            android:name=".SavingsPassportActivity"
+            android:exported="false" />
 
     </application>
 

@@ -10,7 +10,8 @@ public class StudentSavingActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_saving);
-
+        // Redirect to the new Jetpack Compose SavingsPassportActivity
+        startActivity(new Intent(this, SavingsPassportActivity.class));
+        finish();
     }
 }
