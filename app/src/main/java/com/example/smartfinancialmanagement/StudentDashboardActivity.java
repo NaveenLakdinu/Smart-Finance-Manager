@@ -5,6 +5,12 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.example.smartfinancialmanagement.ui.AchievementManager;
+import java.util.ArrayList;
+import java.util.List;
+import android.widget.TextView;
 
 public class StudentDashboardActivity extends AppCompatActivity {
     @Override
@@ -39,7 +45,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         View cardBudget = findViewById(R.id.cardDashboardHeaderBudget);
 
         if (cardAchievement != null) {
-            cardAchievement.setOnClickListener(v -> startActivity(new Intent(this, StudentSavingActivity.class)));
+            cardAchievement.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
         }
         if (cardBudget != null) {
             cardBudget.setOnClickListener(v -> startActivity(new Intent(this, BudgetPlannerActivity.class)));
@@ -63,5 +69,35 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (cardUtilityManager != null) {
             cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         }
+
+        loadAchievementData();
+    }
+
+    private void loadAchievementData() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : "test_user";
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                
+                List<SavingModel> savings = new ArrayList<>();
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    SavingModel saving = doc.toObject(SavingModel.class);
+                    savings.add(saving);
+                }
+                
+                double totalSavings = 0;
+                for (SavingModel s : savings) {
+                    totalSavings += s.getCurrentAmount();
+                }
+
+                String level = AchievementManager.INSTANCE.getSavingsLevel(totalSavings);
+                
+                TextView txtAchievementPts = findViewById(R.id.txtAchievementPts);
+                if (txtAchievementPts != null) {
+                    txtAchievementPts.setText(level);
+                }
+            });
     }
 }

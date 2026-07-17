@@ -5,13 +5,13 @@ import android.os.Bundle;
 import androidx.appcompat.app.AppCompatActivity;
 
 
-public class StudentSavingActivity extends AppCompatActivity {
+public class StudentProfileActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Redirect to the new Jetpack Compose SavingsPassportActivity
-        startActivity(new Intent(this, SavingsPassportActivity.class));
-        finish();
+        setContentView(R.layout.activity_student_profile);
+
+
     }
 }

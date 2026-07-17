@@ -1,6 +1,7 @@
 package com.example.smartfinancialmanagement;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -12,8 +13,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -27,7 +28,7 @@ public class SavingAddGoalActivity extends AppCompatActivity {
     private ImageView btnBack;
     private MaterialButton btnCancel, btnSave;
     
-    private DatabaseReference databaseReference;
+    private CollectionReference databaseReference;
     private String userId;
     private SimpleDateFormat dateFormat;
 
@@ -66,12 +67,12 @@ public class SavingAddGoalActivity extends AppCompatActivity {
         } else {
             userId = "test_user";
         }
-        databaseReference = FirebaseDatabase.getInstance().getReference("Savings").child(userId);
+        databaseReference = FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings");
     }
 
     private void setupListeners() {
-        btnBack.setOnClickListener(v -> finish());
-        btnCancel.setOnClickListener(v -> finish());
+        btnBack.setOnClickListener(v -> navigateToManager());
+        btnCancel.setOnClickListener(v -> navigateToManager());
 
         tvStartDate.setOnClickListener(v -> showDatePicker(tvStartDate));
         tvTargetDate.setOnClickListener(v -> showDatePicker(tvTargetDate));
@@ -93,6 +94,13 @@ public class SavingAddGoalActivity extends AppCompatActivity {
         tvTargetDate.addTextChangedListener(calculationWatcher);
 
         btnSave.setOnClickListener(v -> saveGoal());
+    }
+
+    private void navigateToManager() {
+        Intent intent = new Intent(this, SavingManagerActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+        finish();
     }
 
     private void showDatePicker(TextView targetView) {
@@ -171,7 +179,7 @@ public class SavingAddGoalActivity extends AppCompatActivity {
                 return;
             }
 
-            String id = databaseReference.push().getKey();
+            String id = databaseReference.document().getId();
             
             // Recalculate monthly requirement
             long diffInMillis = endDate.getTime() - startDate.getTime();
@@ -183,12 +191,12 @@ public class SavingAddGoalActivity extends AppCompatActivity {
                     startStr, endStr, "Active", System.currentTimeMillis());
 
             if (id != null) {
-                databaseReference.child(id).setValue(savingModel).addOnCompleteListener(task -> {
+                databaseReference.document(id).set(savingModel).addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         Toast.makeText(this, "Goal Saved", Toast.LENGTH_SHORT).show();
                         finish();
                     } else {
-                        Toast.makeText(this, "Failed to save goal", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to save goal: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 });
             }
