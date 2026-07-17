@@ -164,6 +164,97 @@ public class LoginFormActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null && document.exists()) {
+
+                            String status = document.getString("status");
+
+                            // ──────────────────────────────────────────────────────────────
+                            // 🚫 DEACTIVATED: Hard block — do not let the user in at all
+                            // ──────────────────────────────────────────────────────────────
+                            if ("deactivated".equalsIgnoreCase(status)) {
+                                mAuth.signOut();
+                                loginButton.setEnabled(true);
+                                loginButton.setText("LOGIN");
+                                new androidx.appcompat.app.AlertDialog.Builder(this)
+                                        .setTitle("Account Deactivated")
+                                        .setMessage("Your account has been permanently deactivated. " +
+                                                "Please contact support if you believe this is a mistake.")
+                                        .setPositiveButton("OK", null)
+                                        .setCancelable(false)
+                                        .show();
+                                return;
+                            }
+
+                            // ──────────────────────────────────────────────────────────────
+                            // ⚠️ SUSPENDED: Warning — allow login but show notice.
+                            //    If suspended for ≥ 30 days → auto-deactivate and hard block.
+                            // ──────────────────────────────────────────────────────────────
+                            if ("suspended".equalsIgnoreCase(status)) {
+                                com.google.firebase.Timestamp suspendedAt =
+                                        document.getTimestamp("suspendedAt");
+
+                                boolean autoDeactivated = false;
+
+                                if (suspendedAt != null) {
+                                    long suspendedMillis = suspendedAt.toDate().getTime();
+                                    long thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000;
+                                    long elapsed = System.currentTimeMillis() - suspendedMillis;
+
+                                    if (elapsed >= thirtyDaysMillis) {
+                                        // 30 days have passed — escalate to deactivated
+                                        db.collection("users").document(uid)
+                                                .update(
+                                                        "status", "deactivated",
+                                                        "deactivatedAt",
+                                                        com.google.firebase.firestore.FieldValue.serverTimestamp()
+                                                );
+                                        autoDeactivated = true;
+                                    }
+                                }
+
+                                if (autoDeactivated) {
+                                    // Show deactivation message after auto-escalation
+                                    mAuth.signOut();
+                                    loginButton.setEnabled(true);
+                                    loginButton.setText("LOGIN");
+                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                            .setTitle("Account Deactivated")
+                                            .setMessage("Your account has been deactivated because " +
+                                                    "it remained suspended for more than 30 days. " +
+                                                    "Please contact support for assistance.")
+                                            .setPositiveButton("OK", null)
+                                            .setCancelable(false)
+                                            .show();
+                                    return;
+                                } else {
+                                    // Still within the 30-day window — warn but let them in
+                                    // Store role first, then show warning on top of dashboard
+                                    String role = document.getString("role");
+                                    if (role == null) role = "Student";
+                                    final String finalRole = role;
+
+                                    getSharedPreferences("UserData", MODE_PRIVATE)
+                                            .edit()
+                                            .putString("user_role", role)
+                                            .apply();
+
+                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                            .setTitle("⚠️ Account Suspended")
+                                            .setMessage("Your account has been suspended due to " +
+                                                    "not following the agreement. You can still " +
+                                                    "access the app, but your account may be " +
+                                                    "permanently deactivated if this is not resolved.")
+                                            .setPositiveButton("I Understand", (dialog, which) -> {
+                                                navigateByRole(finalRole);
+                                            })
+                                            .setCancelable(false)
+                                            .show();
+                                    return; // Navigation handled inside dialog callback
+                                }
+                            }
+
+                            // ──────────────────────────────────────────────────────────────
+                            // ✅ ACTIVE (or no status field): Normal login flow
+                            // ──────────────────────────────────────────────────────────────
                             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
                             // 💡 FIXED: Read the role and check against synchronized capitalized strings
@@ -180,29 +271,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                     .putString("user_role", role)
                                     .apply();
 
-                            // 💡 FIXED: Evaluated switch-case strings to align perfectly with DB values
-                            // 💡 LoginFormActivity එකේ checkUserInFirestore මෙතඩ් එක ඇතුළේ තියෙන switch එක මේ විදිහට අප්ඩේට් කරන්න:
-                            switch (role) {
-                                case "Company worker":
-                                    navigateToWorkerDashboard(role);
-                                    break;
-
-                                case "Multiple account holder":
-                                    navigateToMultiAccountDashboard(role);
-                                    break;
-
-                                case "Student":
-                                    navigateToStudentDashboard(role);
-                                    break;
-
-                                case "Business owner":
-                                    navigateToBusinessDashboard(role);
-                                    break;
-
-                                default:
-                                    navigateToDashboard(role);
-                                    break;
-                            }
+                            navigateByRole(role);
                         } else {
                             mAuth.signOut();
                             Toast.makeText(this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
@@ -257,9 +326,47 @@ public class LoginFormActivity extends AppCompatActivity {
         finish();
     }
 
+    private void navigateToHybridDashboard(String role) {
+        Intent intent = new Intent(LoginFormActivity.this, StudentWorkerHybridDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    /**
+     * Routes the user to the correct dashboard based on their Firestore role string.
+     * Single source of truth for all role-based navigation in this Activity.
+     */
+    private void navigateByRole(String role) {
+        // Show success toast only for normal (non-suspended) logins
+        switch (role) {
+            case "Company worker":
+                navigateToWorkerDashboard(role);
+                break;
+            case "Multiple account holder":
+                navigateToMultiAccountDashboard(role);
+                break;
+            case "Student":
+                navigateToStudentDashboard(role);
+                break;
+            case "Business owner":
+                navigateToBusinessDashboard(role);
+                break;
+            case "student_worker_hybrid":
+                navigateToHybridDashboard(role);
+                break;
+            default:
+                navigateToDashboard(role);
+                break;
+        }
+    }
+
     /**
      * Converts raw Firebase Auth exception messages into user-friendly strings.
      */
+
     private String getFriendlyErrorMessage(Exception e) {
         if (e == null) return "Login failed. Please try again.";
         String msg = e.getMessage();

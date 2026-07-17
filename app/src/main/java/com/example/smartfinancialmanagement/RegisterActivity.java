@@ -87,8 +87,10 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(android.text.Editable s) {
                 String fullName = s.toString();
-                if (!fullName.matches("^[a-zA-Z\\s]+$")) {
+                if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z\\s]+$")) {
                     etFullName.setError("Please enter a valid name (letters and spaces only)");
+                } else {
+                    etFullName.setError(null);
                 }
             }
         });
@@ -355,9 +357,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
 
                                         data.clearData();
-                                        clearAllFields();
-
-                                        // Handle conditional routing based on dashboard page availability
+                                        
+                                        // Handle routing (will now route to PIN setup)
                                         navigateToDashboard(userRole);
                                     })
                                     .addOnFailureListener(e -> {
@@ -365,6 +366,12 @@ public class RegisterActivity extends AppCompatActivity {
                                         setLoadingState(false);
                                         System.err.println("❌ Firestore Batch Commit Error: " + e.getMessage());
                                         e.printStackTrace();
+                                        
+                                        // Rollback: Delete the Auth user if Firestore save fails
+                                        if (mAuth.getCurrentUser() != null) {
+                                            mAuth.getCurrentUser().delete();
+                                        }
+                                        
                                         Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     });
                                     
@@ -373,6 +380,12 @@ public class RegisterActivity extends AppCompatActivity {
                             setLoadingState(false);
                             System.err.println("❌ Logic Error during registration: " + e.getMessage());
                             e.printStackTrace();
+                            
+                            // Rollback: Delete the Auth user if an exception occurs
+                            if (mAuth.getCurrentUser() != null) {
+                                mAuth.getCurrentUser().delete();
+                            }
+                            
                             Toast.makeText(this, "Internal Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                         
@@ -488,41 +501,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     // Helper method to safely route users to their designated dashboards without crashes.
-     // Fallback to primary DashboardActivity occurs if role-specific screens are not yet created.
+     * Helper method to route users correctly after registration.
+     * New users must configure their PIN lock before accessing the dashboard.
      */
     private void navigateToDashboard(String role) {
-        Intent dashboardIntent;
-
-        // 💡 FIXED: Now perfectly matches synchronized capitalized strings coming from ChooseRoleActivity
-        switch (role) {
-            case "Company worker":
-                dashboardIntent = new Intent(this, WorkerDashboardActivity.class);
-                break;
-
-            case "Multiple account holder":
-                dashboardIntent = new Intent(this, MultiAccountDashboardActivity.class);
-                break;
-
-            case "Student":
-                dashboardIntent = new Intent(this, StudentDashboardActivity.class);
-                break;
-
-            case "Business owner":
-                dashboardIntent = new Intent(this, BusinessDashboardActivity.class);
-                break;
-
-            default:
-                dashboardIntent = new Intent(this, DashboardActivity.class);
-                break;
-        }
-
-        // Carry over the current user role explicitly to update conditional dashboard typography
-        dashboardIntent.putExtra("CURRENT_USER_ROLE", role);
-
-        // Clear activity stack completely to avoid navigation loop issues on back button press
-        dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(dashboardIntent);
+        // Enforce PIN setup immediately after successful registration
+        Intent pinIntent = new Intent(this, PinSetupActivity.class);
+        
+        // PinSetupActivity handles routing to the correct dashboard via its own redirectToDashboard() 
+        // which relies on SharedPreferences "user_role", so we don't need to pass the intent extra here.
+        
+        pinIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(pinIntent);
         finish();
     }
 

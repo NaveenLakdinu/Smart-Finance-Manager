@@ -12,6 +12,5 @@ public class StudentLoansActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_loans);
 
-
     }
 }

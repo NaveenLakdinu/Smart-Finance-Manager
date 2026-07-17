@@ -1,47 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!--
+  activity_register.xml — Redesigned to premium dark glassmorphic theme
+  Consistent with dashboard aesthetics: deep navy, teal accents, glass cards.
+-->
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F3F4F6"
+    android:background="@drawable/bg_dashboard"
     android:fillViewport="true"
     android:overScrollMode="never">
 
-    <FrameLayout
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-
+        <!-- ── Hero header ─────────────────────────────────────────────── -->
         <LinearLayout
             android:id="@+id/topCard"
             android:layout_width="match_parent"
             android:layout_height="160dp"
-            android:background="@drawable/top_gradient_card"
+            android:background="@drawable/bg_hero_card"
             android:orientation="vertical"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            android:paddingTop="40dp"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="44dp"
             android:paddingBottom="0dp">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="20% Complete"
-                android:textColor="#111827"
-                android:textSize="20sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="2dp" />
+                android:layout_marginBottom="4dp"
+                android:text="Create Account"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Personal Details"
-                android:textColor="#374151"
-                android:textSize="13sp"
-                android:layout_marginBottom="16dp" />
+                android:layout_marginBottom="16dp"
+                android:text="Personal Details  ·  Step 1 of 5"
+                android:textColor="@color/text_on_dark_secondary"
+                android:textSize="13sp" />
 
             <!-- Progress bar -->
             <LinearLayout
@@ -67,15 +71,19 @@
             </LinearLayout>
         </LinearLayout>
 
-
+        <!-- ── Form glass card ─────────────────────────────────────────── -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="120dp"
-            android:outlineProvider="none"
+            android:layout_marginTop="-16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="24dp"
+            app:cardBackgroundColor="@color/glass_card_bg"
             app:cardCornerRadius="24dp"
-            app:cardElevation="16dp"
-            app:cardBackgroundColor="#FFFFFF">
+            app:cardElevation="0dp"
+            app:strokeColor="@color/glass_card_border"
+            app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -84,34 +92,39 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
                 android:paddingTop="28dp"
-                android:paddingBottom="36dp">
+                android:paddingBottom="28dp">
 
                 <!-- ── FULL NAME ── -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Full Name"
-                    android:textColor="#111827"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/input_field_bg"
-                    android:orientation="horizontal"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="18dp">
+                    android:paddingEnd="14dp">
+
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_person" android:layout_marginEnd="10dp"
-                        android:contentDescription="person" />
-                    <EditText android:id="@+id/etFullName" android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:hint="Username, Email &amp; Phone Number"
-                        android:textColorHint="#9CA3AF" android:textColor="#111827"
-                        android:textSize="14sp" android:background="@android:color/transparent"
+                        android:contentDescription="person"
+                        app:tint="@color/text_on_dark_muted" />
+
+                    <EditText android:id="@+id/etFullName"
+                        android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:hint="Enter your full name"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:background="@android:color/transparent"
                         android:inputType="textPersonName" />
                 </LinearLayout>
 
@@ -119,55 +132,66 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Age"
-                    android:textColor="#111827"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/input_field_bg"
-                    android:orientation="horizontal"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="18dp">
+                    android:paddingEnd="14dp">
+
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_cake" android:layout_marginEnd="10dp"
-                        android:contentDescription="age" />
-                    <EditText android:id="@+id/etAge" android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:hint="Enter your age" android:textColorHint="#9CA3AF"
-                        android:textColor="#111827" android:textSize="14sp"
-                        android:background="@android:color/transparent" android:inputType="number" />
+                        android:contentDescription="age"
+                        app:tint="@color/text_on_dark_muted" />
+
+                    <EditText android:id="@+id/etAge"
+                        android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:hint="e.g. 25"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:background="@android:color/transparent"
+                        android:inputType="number" />
                 </LinearLayout>
 
                 <!-- ── EMAIL ── -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Email"
-                    android:textColor="#111827"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/input_field_bg"
-                    android:orientation="horizontal"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="18dp">
+                    android:paddingEnd="14dp">
+
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_email" android:layout_marginEnd="10dp"
-                        android:contentDescription="email" />
-                    <EditText android:id="@+id/etEmail" android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:hint="Enter your email" android:textColorHint="#9CA3AF"
-                        android:textColor="#111827" android:textSize="14sp"
+                        android:contentDescription="email"
+                        app:tint="@color/text_on_dark_muted" />
+
+                    <EditText android:id="@+id/etEmail"
+                        android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:hint="you@example.com"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
                         android:background="@android:color/transparent"
                         android:inputType="textEmailAddress" />
                 </LinearLayout>
@@ -176,227 +200,208 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Mobile Number"
-                    android:textColor="#111827"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/input_field_bg"
-                    android:orientation="horizontal"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="18dp"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="18dp">
+                    android:paddingEnd="14dp">
+
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_phone" android:layout_marginEnd="10dp"
-                        android:contentDescription="phone" />
-                    <EditText android:id="@+id/etMobile" android:layout_width="match_parent" android:layout_height="match_parent"
-                        android:hint="Enter your mobile number" android:textColorHint="#9CA3AF"
-                        android:textColor="#111827" android:textSize="14sp"
-                        android:background="@android:color/transparent" android:inputType="phone" />
+                        android:contentDescription="phone"
+                        app:tint="@color/text_on_dark_muted" />
+
+                    <EditText android:id="@+id/etMobile"
+                        android:layout_width="match_parent" android:layout_height="match_parent"
+                        android:hint="+94 77 000 0000"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:background="@android:color/transparent"
+                        android:inputType="phone" />
                 </LinearLayout>
 
                 <!-- ── PASSWORD ── -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginBottom="8dp"
                     android:text="Password"
-                    android:textColor="#111827"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    android:layout_marginBottom="8dp" />
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="13sp" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
-                    android:background="@drawable/input_field_bg"
-                    android:orientation="horizontal"
+                    android:layout_height="54dp"
+                    android:layout_marginBottom="6dp"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
+                    android:orientation="horizontal"
                     android:paddingStart="14dp"
-                    android:paddingEnd="14dp"
-                    android:layout_marginBottom="6dp">
+                    android:paddingEnd="14dp">
+
                     <ImageView android:layout_width="20dp" android:layout_height="20dp"
                         android:src="@drawable/ic_lock" android:layout_marginEnd="10dp"
-                        android:contentDescription="lock" />
+                        android:contentDescription="lock"
+                        app:tint="@color/text_on_dark_muted" />
+
                     <EditText android:id="@+id/etPassword"
                         android:layout_width="0dp" android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:hint="Create password" android:textColorHint="#9CA3AF"
-                        android:textColor="#111827" android:textSize="14sp"
+                        android:hint="Minimum 8 characters"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
                         android:background="@android:color/transparent"
                         android:inputType="textPassword" />
+
                     <ImageView android:id="@+id/passwordToggle"
                         android:layout_width="22dp" android:layout_height="22dp"
                         android:src="@drawable/ic_eye"
-                        android:contentDescription="toggle password" />
+                        android:contentDescription="toggle password"
+                        app:tint="@color/text_on_dark_muted" />
                 </LinearLayout>
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="24dp"
                     android:text="At least 8 characters with letters and numbers"
-                    android:textColor="#9CA3AF"
-                    android:textSize="12sp"
+                    android:textColor="@color/text_on_dark_muted"
+                    android:textSize="12sp" />
+
+                <!-- ── Divider ─────────────────────────────────────────── -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
                     android:layout_marginBottom="20dp"
-                    android:layout_marginTop="4dp" />
+                    android:background="@color/divider_dark" />
 
-
-
-                <!-- ── CHECKBOX 1 — I have a loan ── -->
+                <!-- ── Checkboxes ──────────────────────────────────────── -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <CheckBox
-                        android:id="@+id/checkLoan"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:buttonTint="#22C55E"
-                        android:checked="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
+                    <CheckBox android:id="@+id/checkLoan"
+                        android:layout_width="24dp" android:layout_height="24dp"
+                        android:buttonTint="@color/hero_accent" android:checked="false" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:text="I have a loan"
-                        android:textColor="#374151"
-                        android:textSize="14sp"
-                        android:layout_marginStart="8dp" />
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp" android:layout_marginStart="10dp" />
                 </LinearLayout>
 
-                <!-- ── CHECKBOX 2 — Terms and conditions ── -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <CheckBox
-                        android:id="@+id/checkTerms"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:buttonTint="#22C55E"
-                        android:checked="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
+                    <CheckBox android:id="@+id/checkTerms"
+                        android:layout_width="24dp" android:layout_height="24dp"
+                        android:buttonTint="@color/hero_accent" android:checked="false" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
                         android:text="I agree to the "
-                        android:textColor="#374151"
-                        android:textSize="14sp"
-                        android:layout_marginStart="8dp" />
-
-                    <TextView
-                        android:id="@+id/termsLink"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="terms and conditions"
-                        android:textColor="#3B82F6"
-                        android:textSize="14sp"
-                        android:textStyle="bold" />
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp" android:layout_marginStart="10dp" />
+                    <TextView android:id="@+id/termsLink"
+                        android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="terms &amp; conditions"
+                        android:textColor="@color/hero_accent"
+                        android:textSize="14sp" android:textStyle="bold" />
                 </LinearLayout>
 
-                <!-- ── CHECKBOX 3 — Subscription updates ── -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="10dp">
-
-                    <CheckBox
-                        android:id="@+id/checkSubscription"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:buttonTint="#22C55E"
-                        android:checked="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="I want to receive subscription updates"
-                        android:textColor="#374151"
-                        android:textSize="14sp"
-                        android:layout_marginStart="8dp" />
+                    android:layout_marginBottom="12dp"
+                    android:orientation="horizontal">
+                    <CheckBox android:id="@+id/checkSubscription"
+                        android:layout_width="24dp" android:layout_height="24dp"
+                        android:buttonTint="@color/hero_accent" android:checked="false" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="Receive subscription updates"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp" android:layout_marginStart="10dp" />
                 </LinearLayout>
 
-                <!-- ── CHECKBOX 4 — Saving plan ── -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="28dp">
-
-                    <CheckBox
-                        android:id="@+id/checkSaving"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:buttonTint="#22C55E"
-                        android:checked="false" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="I do have a saving plan"
-                        android:textColor="#374151"
-                        android:textSize="14sp"
-                        android:layout_marginStart="8dp" />
+                    android:layout_marginBottom="28dp"
+                    android:orientation="horizontal">
+                    <CheckBox android:id="@+id/checkSaving"
+                        android:layout_width="24dp" android:layout_height="24dp"
+                        android:buttonTint="@color/hero_accent" android:checked="false" />
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
+                        android:text="I have a saving plan"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp" android:layout_marginStart="10dp" />
                 </LinearLayout>
 
-                <!-- ── NEXT BUTTON ── -->
+                <!-- ── Register Button ──────────────────────────────────── -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnRegister"
                     android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:text="Register"
-                    android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    android:background="@drawable/btn_register_dark"
+                    android:layout_height="56dp"
                     android:insetTop="0dp"
                     android:insetBottom="0dp"
-                    android:gravity="center"
-                    android:layout_marginBottom="20dp"
-                    app:backgroundTint="@null"
-                    app:cornerRadius="30dp"
-                    app:elevation="0dp" />
+                    android:layout_marginBottom="16dp"
+                    android:text="Create Account"
+                    android:textAllCaps="false"
+                    android:textColor="#FFFFFF"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    app:backgroundTint="@color/hero_accent"
+                    app:cornerRadius="16dp"
+                    app:icon="@drawable/ic_signup_arrow"
+                    app:iconGravity="end"
+                    app:iconPadding="8dp"
+                    app:iconTint="#FFFFFF" />
 
-                <!-- Loading Indicator -->
+                <!-- Loading indicator -->
                 <ProgressBar
                     android:id="@+id/progressBar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
-                    android:visibility="gone"
-                    android:indeterminateTint="#071A33"
-                    android:layout_marginBottom="20dp" />
+                    android:layout_marginBottom="16dp"
+                    android:indeterminateTint="@color/hero_accent"
+                    android:visibility="gone" />
 
-                <!-- ── LOGIN LINK ── -->
+                <!-- ── Login Link ─────────────────────────────────────── -->
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:orientation="horizontal">
                     <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Already have an account? " android:textColor="#6B7280"
+                        android:text="Already have an account? "
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="14sp" />
                     <TextView android:id="@+id/loginLink"
                         android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Login" android:textColor="#3B82F6"
+                        android:text="Sign In"
+                        android:textColor="@color/hero_accent"
                         android:textSize="14sp" android:textStyle="bold" />
                 </LinearLayout>
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
-    </FrameLayout>
+    </LinearLayout>
 </ScrollView>
