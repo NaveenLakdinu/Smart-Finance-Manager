@@ -76,11 +76,17 @@
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
-                <View
-                    android:layout_width="40dp"
-                    android:layout_height="3dp"
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="4dp"
                     android:layout_marginTop="16dp"
-                    android:background="#4ADE80" />
+                    android:background="#1AFFFFFF">
+                    <View
+                        android:id="@+id/progressTotal"
+                        android:layout_width="3dp"
+                        android:layout_height="match_parent"
+                        android:background="#4ADE80" />
+                </FrameLayout>
 
             </LinearLayout>
 
@@ -249,6 +255,17 @@
             android:layout_marginTop="16dp"
             android:orientation="vertical">
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvEmptyGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="No ongoing goals yet — tap Add Goal to start one."
+            android:textColor="#7A9CC0"
+            android:textSize="13sp"
+            android:visibility="gone" />
 
         <Space android:layout_width="match_parent" android:layout_height="32dp" />
 
