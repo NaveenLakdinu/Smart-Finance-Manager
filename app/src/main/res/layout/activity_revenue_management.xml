@@ -5,15 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
-    android:fillViewport="true">
+    android:fillViewport="true"
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="20dp"
+        android:paddingBottom="48dp">
 
-        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -21,14 +22,18 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageButton
                 android:id="@+id/btnBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
-                android:gravity="center"
-                android:text="←"
-                android:textSize="20sp" />
+                android:foreground="?attr/selectableItemBackground"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="#FFFFFF"
+                android:scaleType="centerInside"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Back" />
 
             <TextView
                 android:layout_width="0dp"
@@ -39,22 +44,22 @@
                 android:textColor="#F0F6FF"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
         </LinearLayout>
 
-        <!-- Revenue Summary Card -->
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_marginTop="24dp"
             app:cardCornerRadius="28dp"
-            app:cardElevation="14dp">
+            app:cardElevation="6dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@android:color/transparent">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="center_vertical"
                 android:background="@drawable/bg_hero_card"
+                android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="22dp">
 
@@ -67,9 +72,9 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Total Revenue"
+                        android:text="Current Month Revenue"
                         android:textColor="#FFFFFF"
-                        android:textSize="18sp"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -77,28 +82,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
-                        android:text="Rs. 250,000"
+                        android:text="Rs. 0.00"
                         android:textColor="#FFFFFF"
                         android:textSize="26sp"
                         android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="This Month"
-                        android:textColor="#B9C7D9"
-                        android:textSize="12sp" />
-
-                    <TextView
-                        android:id="@+id/txtMonthlyRevenue"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Rs. 50,000"
-                        android:textColor="#FFFFFF"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
                 </LinearLayout>
 
                 <TextView
@@ -108,139 +95,77 @@
                     android:gravity="center"
                     android:text="💵"
                     android:textSize="30sp" />
-
             </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-        </androidx.cardview.widget.CardView>
-
-        <!-- Form Title -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:text="Add Revenue"
-            android:textColor="#F0F6FF"
-            android:textSize="17sp"
-            android:textStyle="bold" />
+            android:text="Revenue per Business Workspace"
+            android:textColor="#7A9CC0"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
 
-        <!-- Revenue Form Card -->
-        <androidx.cardview.widget.CardView
+        <HorizontalScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            app:cardCornerRadius="20dp"
-            app:cardElevation="10dp">
+            android:layout_marginTop="10dp"
+            android:scrollbars="none"
+            android:overScrollMode="never">
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:id="@+id/layoutBusinessCardsContainer"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="18dp">
+                android:orientation="horizontal"
+                android:paddingVertical="4dp" />
+        </HorizontalScrollView>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Revenue Source"
-                    android:textStyle="bold" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnOpenAddRevenue"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="24dp"
+            app:backgroundTint="#00D4AA"
+            android:text="+ ADD MONTHLY REVENUE LOG"
+            android:textColor="#071A33"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            app:cornerRadius="16dp"
+            app:elevation="4dp"/>
 
-                <Spinner
-                    android:id="@+id/spinnerRevenueSource"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Amount"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/edtRevenueAmount"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:drawable/edit_text"
-                    android:hint="Enter amount"
-                    android:inputType="numberDecimal"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Date"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/edtRevenueDate"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:drawable/edit_text"
-                    android:focusable="false"
-                    android:hint="Select date"
-                    android:padding="12dp" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Description"
-                    android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/edtRevenueDescription"
-                    android:layout_width="match_parent"
-                    android:layout_height="100dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@android:drawable/edit_text"
-                    android:gravity="top"
-                    android:hint="Optional description"
-                    android:padding="12dp" />
-
-                <Button
-                    android:id="@+id/btnAddRevenue"
-                    android:layout_width="match_parent"
-                    android:layout_height="55dp"
-                    android:layout_marginTop="20dp"
-                    android:text="Add Revenue" />
-
-            </LinearLayout>
-
-        </androidx.cardview.widget.CardView>
-
-        <!-- Revenue History -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Revenue History"
+            android:layout_marginTop="28dp"
+            android:text="Current Month Revenue Logs"
             android:textColor="#F0F6FF"
-            android:textSize="17sp"
+            android:textSize="16sp"
             android:textStyle="bold" />
 
-        <androidx.cardview.widget.CardView
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="8dp">
+            app:cardElevation="4dp"
+            app:strokeWidth="0dp"
+            app:cardBackgroundColor="@android:color/transparent">
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recyclerRevenue"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/bg_glass_card"
                 android:nestedScrollingEnabled="false"
-                android:padding="10dp" />
-
-        </androidx.cardview.widget.CardView>
+                android:padding="12dp" />
+        </com.google.android.material.card.MaterialCardView>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="90dp" />
+            android:layout_height="32dp" />
 
     </LinearLayout>
-
 </ScrollView>

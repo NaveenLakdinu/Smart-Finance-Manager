@@ -128,7 +128,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:background="@drawable/input_field_bg"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="14dp"
                     android:layout_marginBottom="18dp">
@@ -139,7 +139,7 @@
                         android:background="@null"
                         android:hint="e.g. Personal Loan"
                         android:textColorHint="@color/text_on_dark_muted"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="text" />
                 </LinearLayout>
@@ -156,7 +156,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
-                    android:background="@drawable/input_field_bg"
+                    android:background="@drawable/bg_input_dark"
                     android:gravity="center_vertical"
                     android:paddingHorizontal="14dp"
                     android:layout_marginBottom="18dp">
@@ -167,7 +167,7 @@
                         android:background="@null"
                         android:hint="0.00"
                         android:textColorHint="@color/text_on_dark_muted"
-                        android:textColor="@color/black"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal" />
                 </LinearLayout>
@@ -194,7 +194,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
-                            android:background="@drawable/input_field_bg"
+                            android:background="@drawable/bg_input_dark"
                             android:gravity="center_vertical"
                             android:paddingHorizontal="14dp">
                             <EditText
@@ -204,7 +204,7 @@
                                 android:background="@null"
                                 android:hint="5.0"
                                 android:textColorHint="@color/text_on_dark_muted"
-                                android:textColor="@color/black"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:inputType="numberDecimal" />
                         </LinearLayout>
@@ -227,7 +227,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="52dp"
-                            android:background="@drawable/input_field_bg"
+                            android:background="@drawable/bg_input_dark"
                             android:gravity="center_vertical"
                             android:paddingHorizontal="14dp">
                             <EditText
@@ -237,7 +237,7 @@
                                 android:background="@null"
                                 android:hint="12"
                                 android:textColorHint="@color/text_on_dark_muted"
-                                android:textColor="@color/black"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:inputType="number" />
                         </LinearLayout>

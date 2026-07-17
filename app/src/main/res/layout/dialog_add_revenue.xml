@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="#0A1D37"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log New Revenue Entry"
+        android:textColor="#F0F6FF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Target Business Profile"
+        android:textColor="#7A9CC0"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:id="@+id/dialogSpinnerBusiness"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="#F0F6FF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Revenue Stream Source"
+        android:textColor="#7A9CC0"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <Spinner
+        android:id="@+id/dialogSpinnerSource"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="#F0F6FF" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Received Amount (Rs.)"
+        android:textColor="#7A9CC0"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/dialogEdtAmount"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="0.00"
+        android:textColorHint="#4A607A"
+        android:textColor="#FFFFFF"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:id="@+id/dialogTxtDateWarning"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="⚠️ Transaction will automatically lock into current month timeline matrix logs."
+        android:textColor="#FFB800"
+        android:textSize="11sp"/>
+
+    <Button
+        android:id="@+id/dialogBtnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="#00D4AA"
+        android:text="SAVE TRANSACTION ENTRY"
+        android:textColor="#071A33"
+        android:textStyle="bold"/>
+</LinearLayout>
