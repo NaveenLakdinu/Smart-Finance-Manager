@@ -46,7 +46,7 @@ private static class AccountInfo {
         this.number = number;
     }
 }
->>>>>>> boseth-branch
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
