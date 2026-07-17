@@ -33,7 +33,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Business Name"
-            android:textColor="#F0F6FF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="12sp"
             android:textStyle="bold" />
 
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text=" (Rs. 450K)"
-            android:textColor="#7A9CC0"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="11sp" />
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

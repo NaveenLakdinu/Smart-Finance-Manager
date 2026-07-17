@@ -28,7 +28,7 @@
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="#FFFFFF"
+                app:tint="@color/text_on_dark_primary"
                 android:scaleType="centerInside"
                 android:clickable="true"
                 android:focusable="true"
@@ -40,7 +40,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="Invoice Details"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -62,7 +62,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             app:cardCornerRadius="24dp"
-            app:cardElevation="4dp"
+            app:cardElevation="0dp"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -86,7 +86,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="#INV-9902"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="22sp"
                             android:textStyle="bold" />
 
@@ -96,7 +96,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Workspace: Loading..."
-                            android:textColor="#7A9CC0"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -114,13 +114,13 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="20dp"
-                    android:background="#1A3050" />
+                    android:background="@color/divider_dark" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BILLED TO:"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:letterSpacing="0.08" />
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Global Logistics Ltd"
-                    android:textColor="#F0F6FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -141,7 +141,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="BRN: BR-88392-X"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
                 <TableLayout
@@ -151,15 +151,15 @@
                     android:stretchColumns="0">
 
                     <TableRow android:background="#0A1D37" android:padding="10dp">
-                        <TextView android:text="Description" android:textStyle="bold" android:textColor="#7A9CC0" android:textSize="12sp"/>
-                        <TextView android:text="Qty" android:textStyle="bold" android:textColor="#7A9CC0" android:textSize="12sp" android:gravity="end" android:layout_width="50dp"/>
-                        <TextView android:text="Amount" android:textStyle="bold" android:textColor="#7A9CC0" android:textSize="12sp" android:gravity="end" android:layout_width="100dp"/>
+                        <TextView android:text="Description" android:textStyle="bold" android:textColor="@color/text_on_dark_secondary" android:textSize="12sp"/>
+                        <TextView android:text="Qty" android:textStyle="bold" android:textColor="@color/text_on_dark_secondary" android:textSize="12sp" android:gravity="end" android:layout_width="50dp"/>
+                        <TextView android:text="Amount" android:textStyle="bold" android:textColor="@color/text_on_dark_secondary" android:textSize="12sp" android:gravity="end" android:layout_width="100dp"/>
                     </TableRow>
 
                     <TableRow android:padding="10dp">
-                        <TextView android:id="@+id/txtDetItemName" android:text="Bulk Floral Event Supplies" android:textColor="#E8F4FF" android:textSize="13sp"/>
-                        <TextView android:id="@+id/txtDetQty" android:text="15" android:textColor="#E8F4FF" android:textSize="13sp" android:gravity="end"/>
-                        <TextView android:id="@+id/txtDetPrice" android:text="Rs. 45,000" android:textColor="#4ADE80" android:textSize="13sp" android:gravity="end"/>
+                        <TextView android:id="@+id/txtDetItemName" android:text="Bulk Floral Event Supplies" android:textColor="@color/text_on_dark_primary" android:textSize="13sp"/>
+                        <TextView android:id="@+id/txtDetQty" android:text="15" android:textColor="@color/text_on_dark_primary" android:textSize="13sp" android:gravity="end"/>
+                        <TextView android:id="@+id/txtDetPrice" android:text="Rs. 45,000" android:textColor="@color/pill_positive_text" android:textSize="13sp" android:gravity="end"/>
                     </TableRow>
                 </TableLayout>
 
@@ -167,7 +167,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="20dp"
-                    android:background="#1A3050" />
+                    android:background="@color/divider_dark" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -177,7 +177,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Total Receivable Amount"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"/>
 
@@ -187,7 +187,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="Rs. 45,000.00"
-                        android:textColor="#00D4AA"
+                        android:textColor="@color/hero_accent"
                         android:textSize="18sp"
                         android:textStyle="bold"/>
                 </RelativeLayout>
@@ -200,9 +200,9 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="28dp"
-            app:backgroundTint="#4ADE80"
+            app:backgroundTint="@color/pill_positive_text"
             android:text="MARK AS PAID &amp; RECONCILE"
-            android:textColor="#071A33"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="14sp"
             android:textStyle="bold"
             app:cornerRadius="16dp" />
@@ -214,7 +214,7 @@
             android:layout_marginTop="12dp"
             app:backgroundTint="#2A1215"
             android:text="DELETE INVOICE RECORD"
-            android:textColor="#FF5555"
+            android:textColor="@color/danger_text"
             android:textSize="14sp"
             android:textStyle="bold"
             app:strokeColor="#FF3333"

@@ -9,7 +9,7 @@
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
     app:cardCornerRadius="16dp"
-    app:cardElevation="2dp">
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:text="Add Business"
-            android:textColor="#00D4AA"
+            android:textColor="@color/hero_accent"
             android:textSize="12sp"
             android:textStyle="bold" />
 

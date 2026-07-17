@@ -1,6 +1,7 @@
 package com.example.smartfinancialmanagement;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -70,7 +71,6 @@ public class TransferActivity extends AppCompatActivity {
         names = getIntent().getStringArrayListExtra("NAMES");
         numbers = getIntent().getStringArrayListExtra("NUMBERS");
 
-        // getDoubleArrayListExtra doesn't exist; use double array instead
         double[] balArray = getIntent().getDoubleArrayExtra("BALANCES");
         balances = new ArrayList<>();
         if (balArray != null) {
@@ -85,7 +85,6 @@ public class TransferActivity extends AppCompatActivity {
             return;
         }
 
-        // Default: first account as source, second as dest
         sourceIndex = 0;
         destIndex = docIds.size() > 1 ? 1 : -1;
         updateSourceUI();
@@ -180,6 +179,48 @@ public class TransferActivity extends AppCompatActivity {
             return;
         }
 
+        // Show confirmation dialog before executing the transfer
+        showConfirmationDialog(amount);
+    }
+
+    private void showConfirmationDialog(double amount) {
+        String fromName = names.get(sourceIndex);
+        String toName = names.get(destIndex);
+        String note = editNote.getText().toString().trim();
+        String amountFormatted = String.format(Locale.US, "LKR %.2f", amount);
+
+        // Inflate custom dialog layout
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_transfer_confirm, null);
+
+        TextView txtDialogFrom = dialogView.findViewById(R.id.txtDialogFrom);
+        TextView txtDialogTo = dialogView.findViewById(R.id.txtDialogTo);
+        TextView txtDialogAmount = dialogView.findViewById(R.id.txtDialogAmount);
+        TextView txtDialogNote = dialogView.findViewById(R.id.txtDialogNote);
+        TextView txtDialogNoteLabel = dialogView.findViewById(R.id.txtDialogNoteLabel);
+
+        txtDialogFrom.setText(fromName);
+        txtDialogTo.setText(toName);
+        txtDialogAmount.setText(amountFormatted);
+
+        if (!note.isEmpty()) {
+            txtDialogNote.setText(note);
+            txtDialogNoteLabel.setVisibility(View.VISIBLE);
+            txtDialogNote.setVisibility(View.VISIBLE);
+        } else {
+            txtDialogNoteLabel.setVisibility(View.GONE);
+            txtDialogNote.setVisibility(View.GONE);
+        }
+
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(dialogView)
+                .setPositiveButton("Confirm Transfer", (d, which) -> executeTransfer(amount))
+                .setNegativeButton("Cancel", (d, which) -> d.dismiss())
+                .create();
+
+        dialog.show();
+    }
+
+    private void executeTransfer(double amount) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 

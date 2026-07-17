@@ -95,7 +95,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="🎓 Student"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="COMBINED BENEFITS"
-                android:textColor="#7A9CC0"
+                android:textColor="@color/text_on_dark_secondary"
                 android:textSize="11sp"
                 android:letterSpacing="0.1"
                 android:textStyle="bold" />
@@ -142,7 +142,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -173,7 +173,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Keep Student Features"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -196,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -227,7 +227,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Unlock Worker Features"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -250,7 +250,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp">
 
@@ -274,7 +274,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="This upgrade is instant and will customize your main dashboard to show both portfolios. You can manage your security PIN lock settings normally."
-                        android:textColor="#A78BFA"
+                        android:textColor="@color/qa_purple_icon"
                         android:textSize="11sp" />
 
                 </LinearLayout>
@@ -291,7 +291,7 @@
                 android:insetBottom="0dp"
                 android:text="Confirm Upgrade"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/hero_accent"
@@ -299,7 +299,7 @@
                 app:icon="@drawable/ic_signup_arrow"
                 app:iconGravity="end"
                 app:iconPadding="8dp"
-                app:iconTint="#FFFFFF" />
+                app:iconTint="@color/text_on_dark_primary" />
 
             <ProgressBar
                 android:id="@+id/progressBarUpgrade"

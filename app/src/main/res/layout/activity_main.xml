@@ -55,7 +55,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/ic_ant_logos"
             app:shapeAppearanceOverlay="@style/CircleImageView"
-            app:strokeColor="#FFFFFF"
+            app:strokeColor="@color/text_on_dark_primary"
             app:strokeWidth="3dp" />
 
         <!-- Brand label -->
@@ -89,7 +89,7 @@
             android:shadowDy="2"
             android:shadowRadius="12"
             android:text="SMART FINANCIAL&#10;MANAGEMENT"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="24sp"
             android:textStyle="bold" />
 
@@ -118,7 +118,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
             android:text="Login to manage your subscription"
-            android:textColor="#4A5568"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="14sp"
             android:letterSpacing="0.01"
             android:gravity="center" />
@@ -131,7 +131,7 @@
             android:layout_marginBottom="14dp"
             android:text="Login"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="17sp"
             android:textStyle="bold"
             android:letterSpacing="0.05"

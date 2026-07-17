@@ -43,7 +43,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Netflix Subscription"
-            android:textColor="#1F2937"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="10 Jun 2026"
-            android:textColor="#9CA3AF"
+            android:textColor="@color/text_on_dark_muted"
             android:textSize="12sp" />
 
     </LinearLayout>
@@ -65,7 +65,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Rs.1,490"
-        android:textColor="#EF4444"
+        android:textColor="@color/danger_text"
         android:textSize="14sp"
         android:textStyle="bold" />
 
