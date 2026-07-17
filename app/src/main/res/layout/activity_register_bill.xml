@@ -91,18 +91,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="Amount (LKR)"
+                    android:text="Account Number"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp" />
                 <EditText
-                    android:id="@+id/editAmount"
+                    android:id="@+id/editAccountNo"
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:layout_marginTop="8dp"
                     android:background="@drawable/bg_input_feild"
                     android:backgroundTint="#1AFFFFFF"
-                    android:hint="0.00"
-                    android:inputType="numberDecimal"
+                    android:hint="e.g. 1020304050"
+                    android:inputType="number"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#4A6A8A"
                     android:paddingHorizontal="16dp" />
@@ -144,23 +144,6 @@
                     android:clickable="true"
                     android:textColor="#FFFFFF"
                     android:textColorHint="#4A6A8A"
-                    android:paddingHorizontal="16dp" />
-
-                <!-- Status -->
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:text="Status"
-                    android:textColor="#FFFFFF"
-                    android:textSize="14sp" />
-                <Spinner
-                    android:id="@+id/spinnerStatus"
-                    android:layout_width="match_parent"
-                    android:layout_height="54dp"
-                    android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_input_feild"
-                    android:backgroundTint="#1AFFFFFF"
                     android:paddingHorizontal="16dp" />
 
             </LinearLayout>

@@ -15,18 +15,18 @@
         android:paddingHorizontal="20dp"
         android:paddingVertical="10dp">
 
-        <TextView
+        <ImageButton
             android:id="@+id/btnBack"
             android:layout_width="42dp"
             android:layout_height="42dp"
             android:background="@drawable/bg_notification"
-            android:gravity="center"
-            android:text="←"
-            android:textColor="#F0F6FF"
-            android:textSize="20sp"
+            android:foreground="?attr/selectableItemBackground"
+            android:src="@drawable/ic_arrow_back"
+            app:tint="#FFFFFF"
+            android:scaleType="centerInside"
             android:clickable="true"
             android:focusable="true"
-            android:foreground="?attr/selectableItemBackground" />
+            android:contentDescription="Back" />
 
         <TextView
             android:layout_width="0dp"
@@ -40,7 +40,7 @@
     </LinearLayout>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/cardTotalOutstanding"
+        android:id="@+id/cardClosestInvoice"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_below="@id/layoutHeader"
@@ -65,74 +65,172 @@
                 android:orientation="vertical">
 
                 <TextView
+                    android:id="@+id/txtHeroTitle"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Corporate Receivables"
+                    android:text="Closest Invoice"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="17sp"
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/txtHeroClientName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Total Outstanding"
+                    android:layout_marginTop="4dp"
+                    android:text="No upcoming invoices"
                     android:textColor="#B9C7D9"
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/txtTotalAmountDue"
+                    android:id="@+id/txtHeroAmountAndDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Rs. 1,420,500"
+                    android:text="Rs. 0.00"
                     android:textColor="#FFFFFF"
-                    android:textSize="26sp"
+                    android:textSize="23sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <TextView
+                android:id="@+id/txtHeroIcon"
                 android:layout_width="65dp"
                 android:layout_height="65dp"
                 android:background="@drawable/bg_calendar_circle"
                 android:gravity="center"
-                android:text="🧾"
+                android:text="⏳"
                 android:textSize="30sp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
-    <LinearLayout
-        android:id="@+id/layoutLabel"
+    <HorizontalScrollView
+        android:id="@+id/scrollFilters"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/cardTotalOutstanding"
-        android:layout_marginTop="28dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="20dp">
+        android:layout_below="@id/cardClosestInvoice"
+        android:layout_marginTop="20dp"
+        android:paddingHorizontal="20dp"
+        android:scrollbars="none">
 
-        <View
-            android:layout_width="4dp"
-            android:layout_height="20dp"
-            android:layout_marginEnd="10dp"
-            android:background="@drawable/bg_teal_bar" />
-
-        <TextView
-            android:id="@+id/lblRecent"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Recent Invoices"
-            android:textColor="#F0F6FF"
-            android:textSize="17sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+            android:orientation="horizontal">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFilterPending"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="19dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/txtFilterPending"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="#00D4AA"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:text="Pending"
+                    android:textColor="#071A33"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFilterPaid"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:layout_marginEnd="8dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="19dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/txtFilterPaid"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:text="Paid"
+                    android:textColor="#F0F6FF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFilterDue"
+                android:layout_width="wrap_content"
+                android:layout_height="38dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardCornerRadius="19dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="0dp">
+                <TextView
+                    android:id="@+id/txtFilterDue"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_glass_card"
+                    android:gravity="center"
+                    android:paddingHorizontal="20dp"
+                    android:text="Overdue"
+                    android:textColor="#F0F6FF"
+                    android:textSize="13sp"
+                    android:textStyle="bold" />
+            </com.google.android.material.card.MaterialCardView>
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/cardBusinessFilterContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/scrollFilters"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginTop="14dp"
+        app:cardCornerRadius="14dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="#1A3050"
+        app:cardBackgroundColor="#0A1D37">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="FILTER BY BUSINESS WORKSPACE"
+                android:textColor="#7A9CC0"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="6dp" />
+
+            <Spinner
+                android:id="@+id/spinnerBusinessFilter"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:backgroundTint="#F0F6FF"
+                android:spinnerMode="dropdown" />
+        </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/layoutLabel"
+        android:layout_below="@id/cardBusinessFilterContainer"
         android:layout_above="@+id/dummyAnchor"
         android:layout_marginHorizontal="20dp"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="14dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="4dp"
         app:strokeWidth="0dp">

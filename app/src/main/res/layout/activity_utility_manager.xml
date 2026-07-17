@@ -41,7 +41,6 @@
 
         </LinearLayout>
 
-        <!-- Hero Card: Total Monthly Utilities -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -58,21 +57,32 @@
                 android:padding="24dp">
 
                 <TextView
+                    android:id="@+id/txtHeroHeaderLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ESTIMATED MONTHLY TOTAL"
+                    android:text="NEXT UPCOMING BILL"
                     android:textColor="#7A9CC0"
                     android:textSize="11sp"
                     android:letterSpacing="0.1" />
 
                 <TextView
-                    android:id="@+id/txtTotalUtilityAmount"
+                    android:id="@+id/txtHeroBillName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="LKR 12,500.00"
+                    android:layout_marginTop="6dp"
+                    android:text="Electricity Bill"
                     android:textColor="#FFFFFF"
-                    android:textSize="28sp"
+                    android:textSize="22sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/txtHeroBillDueDate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Due on: June 25, 2026"
+                    android:textColor="#A78BFA"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
 
                 <View
@@ -82,9 +92,7 @@
                     android:background="#F59E0B" />
 
             </LinearLayout>
-
         </com.google.android.material.card.MaterialCardView>
-
         <!-- Main Actions Section -->
         <TextView
             android:layout_width="wrap_content"
