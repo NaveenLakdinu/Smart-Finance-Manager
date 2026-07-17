@@ -14,7 +14,7 @@ public class InvoiceReminderScheduler {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
-    // 🔔 Alarm එකක් Schedule කිරීමේ ආරක්ෂිත ක්‍රමය (isEmailEnabled සමඟ)
+
     public static void scheduleInvoiceReminder(Context context, String clientName, String dueDateString, boolean isEmailEnabled, String businessEmail, double grandTotal) {
         try {
             Date dueDate = dateFormat.parse(dueDateString);
@@ -22,19 +22,19 @@ public class InvoiceReminderScheduler {
 
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(dueDate);
-            calendar.add(Calendar.DAY_OF_YEAR, -1); // දිනකට පෙර
-            calendar.set(Calendar.HOUR_OF_DAY, 9);   // උදේ 9:00 ට
+            calendar.add(Calendar.DAY_OF_YEAR, -1);
+            calendar.set(Calendar.HOUR_OF_DAY, 9);
             calendar.set(Calendar.MINUTE, 0);
             calendar.set(Calendar.SECOND, 0);
 
             long triggerMillis = calendar.getTimeInMillis();
 
             if (triggerMillis > System.currentTimeMillis()) {
-                // 💡 මෙහිදී Target එක ලෙස දෙන්නේ InvoiceReminderReceiver Class එකයි
+
                 Intent intent = new Intent(context, InvoiceReminderReceiver.class);
                 intent.putExtra("clientName", clientName);
                 intent.putExtra("dueDate", dueDateString);
-                intent.putExtra("isEmailReminderEnabled", isEmailEnabled); // 💡 පරිශීලකයාගේ අවසරය පාස් කිරීම
+                intent.putExtra("isEmailReminderEnabled", isEmailEnabled);
                 intent.putExtra("businessEmail", businessEmail);
                 intent.putExtra("grandTotal", grandTotal);
 
@@ -69,7 +69,7 @@ public class InvoiceReminderScheduler {
         } catch (Exception ignored) {}
     }
 
-    // 🔕 Alarm එකක් Cancel කිරීමේ ක්‍රමය
+
     public static void cancelInvoiceReminder(Context context, String clientName, String dueDateString) {
         try {
             Intent intent = new Intent(context, InvoiceReminderReceiver.class);

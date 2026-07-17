@@ -64,12 +64,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         initializeViews();
         setupUserIdentityProfile();
         checkNotificationPermission();
-
-        // 🛑 loadBusinessWorkspaces(); එක මෙතැනින් ඉවත් කර ඇත.
     }
 
-    // 💡 100% FIX: වෙනත් ක්‍රියාකාරකමක (Activity) සිට නැවත Dashboard එකට එන හැම වෙලාවකම
-    // Firebase එකෙන් අලුත්ම දත්ත ඇදලා අරන් තිරය auto-refresh කරන්නේ මෙන්න මේ කොටසින්.
     @Override
     protected void onResume() {
         super.onResume();

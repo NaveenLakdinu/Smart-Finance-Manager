@@ -138,7 +138,6 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         String docId = document.getId();
 
-                        // 💡 Firestore එකෙන් email reminder අවසරය කියවා ගැනීම
                         boolean isEmailReminderEnabled = false;
                         if (document.contains("emailReminderEnabled")) {
                             Boolean enabled = document.getBoolean("emailReminderEnabled");
@@ -146,7 +145,6 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                         }
                         final boolean finalIsEmailEnabled = isEmailReminderEnabled;
 
-                        // 💡 Firestore එකෙන් businessEmail එක කියවා ගැනීම
                         String emailFromDb = "";
                         if (document.contains("businessEmail")) {
                             emailFromDb = document.getString("businessEmail");
@@ -161,19 +159,19 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                                     configureStatusUI();
                                     Toast.makeText(this, "Invoice registry updated to " + newStatus, Toast.LENGTH_SHORT).show();
 
-                                    // 💡 FIX: පරාමිතීන් 6 ම නිවැරදිව ලබා දී ඇත
+
                                     if (status.equalsIgnoreCase("paid")) {
-                                        // ඉන්වොයිසිය PAID වුවහොත් පවතින Alarm එක අවලංගු කරයි
+
                                         InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
                                     } else {
-                                        // නැවත UNPAID කළහොත් අලුතින් Alarm එකක් දමයි (සියලුම පරාමිතීන් 6 ම ලබා දී ඇත)
+
                                         InvoiceReminderScheduler.scheduleInvoiceReminder(
                                                 InvoiceDetailsActivity.this,
                                                 clientName,
                                                 dueDate,
                                                 finalIsEmailEnabled,
-                                                finalBusinessEmail, // 5 වෙනි පරාමිතිය (String)
-                                                grandTotal          // 6 වෙනි පරාමිතිය (double)
+                                                finalBusinessEmail,
+                                                grandTotal
                                         );
                                     }
                                 });
@@ -205,7 +203,7 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
 
-                                    // 💡 ReminderScheduler Class එක භාවිතා කර Alarm එක අවලංගු කිරීම
+
                                     InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
 
                                     Toast.makeText(this, "Invoice deleted successfully!", Toast.LENGTH_SHORT).show();

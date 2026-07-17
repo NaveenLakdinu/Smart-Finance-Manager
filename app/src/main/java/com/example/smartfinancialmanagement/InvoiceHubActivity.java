@@ -161,23 +161,23 @@ public class InvoiceHubActivity extends AppCompatActivity {
                         if (item != null) {
                             if (item.getStatus() == null) item.setStatus("pending");
 
-                            // 💡 1. කාලය ඉකුත් වී ඇත්නම් ස්වයංක්‍රීයව Status එක "due" ලෙස වෙනස් කිරීම
+
                             if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
                                 try {
                                     Date dueDate = dateFormat.parse(item.getPaymentDueDate());
-                                    // ඉන්වොයිසියේ දිනය අද දිනට වඩා පැරණි නම් සහ දැනට status එක "due" නොවේ නම්
+
                                     if (dueDate != null && dueDate.before(today) && !item.getStatus().equalsIgnoreCase("due")) {
                                         item.setStatus("due");
-                                        // Firestore එකේ පවතින document එකද "due" ලෙස update කිරීම
+
                                         db.collection("invoices").document(doc.getId()).update("status", "due");
                                     }
                                 } catch (ParseException ignored) {}
                             }
 
-                            // 💡 2. FIX: ReminderScheduler එක හරහා නිවැරදිව පරාමිතීන් 6 ම ලබා දී Alarm එක යෙදීම
+
                             if (!item.getStatus().equalsIgnoreCase("paid") && item.getPaymentDueDate() != null) {
 
-                                // InvoiceModel එකෙන් businessEmail එක ලබා ගැනීම (නම වෙනස් නම් model එක බලන්න)
+
                                 String businessEmail = item.getBusinessEmail() != null ? item.getBusinessEmail() : "";
 
                                 InvoiceReminderScheduler.scheduleInvoiceReminder(
@@ -185,8 +185,8 @@ public class InvoiceHubActivity extends AppCompatActivity {
                                         item.getClientName(),
                                         item.getPaymentDueDate(),
                                         item.isEmailReminderEnabled(),
-                                        businessEmail,            // 5 වෙනි පරාමිතිය (String)
-                                        item.getGrandTotal()       // 6 වෙනි පරාමිතිය (double)
+                                        businessEmail,
+                                        item.getGrandTotal()
                                 );
                             }
 
