@@ -50,7 +50,7 @@
                     android:background="@drawable/bg_profile_circle"
                     android:gravity="center"
                     android:text="H"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     app:layout_constraintTop_toTopOf="parent"
@@ -73,7 +73,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Good Morning, Hybrid Scholar 👋"
-                        android:textColor="#D8E4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp" />
 
                     <TextView
@@ -82,7 +82,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="studentworker@hybrid.com"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -111,7 +111,7 @@
                             android:layout_height="18dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lock"
-                            app:tint="#FFFFFF" />
+                            app:tint="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -129,7 +129,7 @@
                             android:layout_height="18dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_power"
-                            app:tint="#FFFFFF" />
+                            app:tint="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -149,7 +149,7 @@
                 <com.google.android.material.card.MaterialCardView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#00000000"
+                    app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="24dp"
                     app:cardElevation="0dp">
 
@@ -171,20 +171,20 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="HYBRID MONTHLY EARNINGS"
-                                android:textColor="#7A9CC0"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="10sp"
                                 android:letterSpacing="0.12" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="#0F3320"
+                                android:background="@color/pill_positive_bg"
                                 android:paddingStart="8dp"
                                 android:paddingEnd="8dp"
                                 android:paddingTop="3dp"
                                 android:paddingBottom="3dp"
                                 android:text="ACTIVE WORKER"
-                                android:textColor="#4ADE80"
+                                android:textColor="@color/pill_positive_text"
                                 android:textSize="9sp"
                                 android:textStyle="bold" />
 
@@ -203,7 +203,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="LKR 75,000.00"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="32sp"
                                 android:textStyle="bold" />
 
@@ -223,7 +223,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="Next payday: June 30th"
-                            android:textColor="#7A9CC0"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
 
                     </LinearLayout>
@@ -238,9 +238,9 @@
                     android:layout_marginTop="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#1A2D40"
+                    app:cardBackgroundColor="@color/glass_card_bg"
                     app:strokeWidth="1dp"
-                    app:strokeColor="#2E4A62"
+                    app:strokeColor="@color/glass_card_border"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground">
@@ -271,7 +271,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="CURRENT SAVINGS"
-                                android:textColor="#7A9CC0"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="9sp"
                                 android:letterSpacing="0.1"
                                 android:textStyle="bold" />
@@ -282,7 +282,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="LKR 0.00"
-                                android:textColor="#FFFFFF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -298,7 +298,7 @@
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
                             android:text="UPDATE"
-                            android:textColor="#4ADE80"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="10sp"
                             android:textStyle="bold" />
 
@@ -318,14 +318,14 @@
                         android:layout_width="4dp"
                         android:layout_height="16dp"
                         android:layout_marginEnd="8dp"
-                        android:background="#38BDF8" />
+                        android:background="@color/qa_blue_icon" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Student Portal"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -333,7 +333,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="🎓 5 Modules"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp" />
 
                 </LinearLayout>
@@ -354,7 +354,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -379,7 +379,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Budget Manager"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -398,7 +398,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -423,7 +423,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Loan Manager"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -449,7 +449,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -474,7 +474,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Savings Target"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -493,7 +493,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -518,7 +518,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Subscriptions"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -544,7 +544,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -569,7 +569,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Utility Bills"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -593,14 +593,14 @@
                         android:layout_width="4dp"
                         android:layout_height="16dp"
                         android:layout_marginEnd="8dp"
-                        android:background="#4ADE80" />
+                        android:background="@color/pill_positive_text" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="Worker Portal"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -608,7 +608,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="💼 3 Modules"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp" />
 
                 </LinearLayout>
@@ -629,7 +629,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -654,7 +654,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="My Work Tasks"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -673,7 +673,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -698,7 +698,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="Expense Claims"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -724,7 +724,7 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="#00000000"
+                        app:cardBackgroundColor="@android:color/transparent"
                         app:cardCornerRadius="20dp"
                         app:cardElevation="0dp">
 
@@ -749,7 +749,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
                                 android:text="My Payslips"
-                                android:textColor="#F0F6FF"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -774,9 +774,9 @@
         android:id="@+id/bottomNavigationView"
         android:layout_width="match_parent"
         android:layout_height="72dp"
-        android:background="#FFFFFF"
-        app:itemIconTint="@color/budget_nav_color"
-        app:itemTextColor="@color/budget_nav_color"
+        android:background="@color/bottom_nav_bg"
+        app:itemIconTint="@color/bottom_nav_color"
+        app:itemTextColor="@color/bottom_nav_color"
         app:menu="@menu/student_budget_bottom_nav_menu"
         app:labelVisibilityMode="labeled"
         app:elevation="8dp"

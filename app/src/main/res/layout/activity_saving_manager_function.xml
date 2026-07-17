@@ -29,14 +29,14 @@
                 android:background="@drawable/bg_notification"
                 android:padding="10dp"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="#FFFFFF" />
+                app:tint="@color/text_on_dark_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Saving Manager"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -47,7 +47,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="#00000000"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -62,7 +62,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TOTAL SAVINGS GOAL"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:letterSpacing="0.1" />
 
@@ -72,21 +72,15 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="LKR 540,000.00"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
-                <FrameLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="4dp"
+                <View
+                    android:layout_width="40dp"
+                    android:layout_height="3dp"
                     android:layout_marginTop="16dp"
-                    android:background="#1AFFFFFF">
-                    <View
-                        android:id="@+id/progressTotal"
-                        android:layout_width="3dp"
-                        android:layout_height="match_parent"
-                        android:background="#4ADE80" />
-                </FrameLayout>
+                    android:background="@color/pill_positive_text" />
 
             </LinearLayout>
 
@@ -98,7 +92,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:text="Saving Actions"
-            android:textColor="#F0F6FF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="17sp"
             android:textStyle="bold" />
 
@@ -118,7 +112,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -140,7 +134,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Add Goal"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -156,7 +150,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -177,7 +171,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="All Goals"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -193,7 +187,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -214,7 +208,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Report"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -235,7 +229,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Active Goals"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -244,7 +238,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See all →"
-                android:textColor="#38BDF8"
+                android:textColor="@color/qa_blue_icon"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -255,17 +249,6 @@
             android:layout_marginTop="16dp"
             android:orientation="vertical">
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvEmptyGoals"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
-            android:text="No ongoing goals yet — tap Add Goal to start one."
-            android:textColor="#7A9CC0"
-            android:textSize="13sp"
-            android:visibility="gone" />
 
         <Space android:layout_width="match_parent" android:layout_height="32dp" />
 

@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/backButton"
             android:text="Get a Report"
-            android:textColor="#1B1E28"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
     </RelativeLayout>
@@ -74,7 +74,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="House Rent"
-                            android:textColor="#1B1E28"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textStyle="bold"
                             android:textSize="15sp" />
                         <TextView
@@ -82,7 +82,7 @@
                             android:layout_height="wrap_content"
                             android:text="March"
                             android:textSize="12sp"
-                            android:textColor="#7A869A" />
+                            android:textColor="@color/text_on_dark_secondary" />
                     </LinearLayout>
                     <ImageView
                         android:id="@+id/btnDelete1"
@@ -102,7 +102,7 @@
                         android:backgroundTint="#EBF1F6"
                         android:gravity="center"
                         android:text="500.00"
-                        android:textColor="#111111"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textStyle="bold"
                         android:textSize="13sp" />
                 </RelativeLayout>
@@ -137,7 +137,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="House Rent"
-                            android:textColor="#1B1E28"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textStyle="bold"
                             android:textSize="15sp" />
                         <TextView
@@ -145,7 +145,7 @@
                             android:layout_height="wrap_content"
                             android:text="April"
                             android:textSize="12sp"
-                            android:textColor="#7A869A" />
+                            android:textColor="@color/text_on_dark_secondary" />
                     </LinearLayout>
                     <ImageView
                         android:id="@+id/btnDelete2"
@@ -165,7 +165,7 @@
                         android:backgroundTint="#EBF1F6"
                         android:gravity="center"
                         android:text="1000.00"
-                        android:textColor="#111111"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textStyle="bold"
                         android:textSize="13sp" />
                 </RelativeLayout>
@@ -200,7 +200,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="House Electricity"
-                            android:textColor="#1B1E28"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textStyle="bold"
                             android:textSize="15sp" />
                         <TextView
@@ -208,7 +208,7 @@
                             android:layout_height="wrap_content"
                             android:text="April"
                             android:textSize="12sp"
-                            android:textColor="#7A869A" />
+                            android:textColor="@color/text_on_dark_secondary" />
                     </LinearLayout>
                     <ImageView
                         android:id="@+id/btnDelete3"
@@ -228,7 +228,7 @@
                         android:backgroundTint="#EBF1F6"
                         android:gravity="center"
                         android:text="1000.00"
-                        android:textColor="#111111"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textStyle="bold"
                         android:textSize="13sp" />
                 </RelativeLayout>
@@ -256,7 +256,7 @@
             android:foreground="?attr/selectableItemBackground"
             app:cardBackgroundColor="#0F1E36"
             app:cardCornerRadius="27dp"
-            app:cardElevation="4dp">
+            app:cardElevation="0dp">
             <ImageView
                 android:layout_width="28dp"
                 android:layout_height="28dp"

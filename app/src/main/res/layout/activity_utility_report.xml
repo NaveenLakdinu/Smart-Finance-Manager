@@ -37,7 +37,7 @@
                     android:layout_height="22dp"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_arrow_back"
-                    app:tint="#F0F6FF" />
+                    app:tint="@color/text_on_dark_primary" />
             </FrameLayout>
 
             <TextView
@@ -47,7 +47,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_toEndOf="@id/backButtonContainer"
                 android:text="Report Panel"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TOTAL UTILITY EXPENSES"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:letterSpacing="0.15" />
 
@@ -81,7 +81,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="0.00"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="32sp"
                     android:textStyle="bold" />
 
@@ -90,7 +90,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:layout_marginTop="6dp">
-                    <View android:layout_width="32dp" android:layout_height="3dp" android:background="#00D4AA" />
+                    <View android:layout_width="32dp" android:layout_height="3dp" android:background="@color/hero_accent" />
                     <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
                 </LinearLayout>
             </LinearLayout>
@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TRACKED"
-                    android:textColor="#4ADE80"
+                    android:textColor="@color/pill_positive_text"
                     android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -140,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Selected Bills Breakdown"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -170,7 +170,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Chart View"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -180,7 +180,7 @@
             android:layout_height="360dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="#00000000"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp">
 
@@ -208,12 +208,12 @@
             android:background="@drawable/bg_capsule_white"
             android:text="Generate PDF Report"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="16sp"
             android:textStyle="bold"
-            app:backgroundTint="#4ADE80"
+            app:backgroundTint="@color/pill_positive_text"
             app:icon="@android:drawable/ic_menu_save"
-            app:iconTint="#FFFFFF"
+            app:iconTint="@color/text_on_dark_primary"
             app:iconGravity="textStart"
             app:iconPadding="8dp" />
 

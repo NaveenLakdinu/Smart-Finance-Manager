@@ -363,7 +363,7 @@
                     android:layout_marginBottom="16dp"
                     android:text="Create Account"
                     android:textAllCaps="false"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     app:backgroundTint="@color/hero_accent"
@@ -371,7 +371,7 @@
                     app:icon="@drawable/ic_signup_arrow"
                     app:iconGravity="end"
                     app:iconPadding="8dp"
-                    app:iconTint="#FFFFFF" />
+                    app:iconTint="@color/text_on_dark_primary" />
 
                 <!-- Loading indicator -->
                 <ProgressBar

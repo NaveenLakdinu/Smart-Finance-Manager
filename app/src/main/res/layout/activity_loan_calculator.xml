@@ -511,7 +511,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Monthly Buffer"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="11sp" />
 
                         <TextView
@@ -535,7 +535,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Verdict"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="11sp" />
 
                         <TextView
@@ -581,7 +581,7 @@
             android:layout_marginTop="28dp"
             android:text="Save as Loan"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="@color/hero_accent"

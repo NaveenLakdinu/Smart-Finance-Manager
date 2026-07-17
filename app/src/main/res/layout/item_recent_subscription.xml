@@ -19,7 +19,7 @@
         android:gravity="center"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#FFFFFF" />
+        android:textColor="@color/text_on_dark_primary" />
 
     <!-- Name + renewal date -->
     <LinearLayout
@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:textSize="15sp"
             android:textStyle="bold"
-            android:textColor="#F0F6FF" />
+            android:textColor="@color/text_on_dark_primary" />
 
         <TextView
             android:id="@+id/txtRenewDate"
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:textSize="12sp"
-            android:textColor="#7A9CC0" />
+            android:textColor="@color/text_on_dark_secondary" />
 
     </LinearLayout>
 

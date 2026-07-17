@@ -27,14 +27,14 @@
                 android:background="@drawable/bg_notification"
                 android:padding="10dp"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="#FFFFFF" />
+                app:tint="@color/text_on_dark_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Register Business"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -51,7 +51,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="BUSINESS INFORMATION"
-                android:textColor="#7A9CC0"
+                android:textColor="@color/text_on_dark_secondary"
                 android:textSize="11sp"
                 android:letterSpacing="0.12"
                 android:textStyle="bold" />
@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
                 android:text="Business Workspace Name"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
 
             <EditText
@@ -74,8 +74,8 @@
                 android:inputType="textCapWords"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
-                android:textColorHint="#4A6A8A"
+                android:textColor="@color/text_on_dark_primary"
+                android:textColorHint="@color/text_on_dark_muted"
                 android:textSize="14sp" />
 
             <TextView
@@ -83,7 +83,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Business Category / Industry"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
 
             <EditText
@@ -96,8 +96,8 @@
                 android:inputType="textCapWords"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
-                android:textColorHint="#4A6A8A"
+                android:textColor="@color/text_on_dark_primary"
+                android:textColorHint="@color/text_on_dark_muted"
                 android:textSize="14sp" />
 
             <TextView
@@ -105,7 +105,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Corporate Contact Number"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
 
             <EditText
@@ -118,8 +118,8 @@
                 android:inputType="phone"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
-                android:textColorHint="#4A6A8A"
+                android:textColor="@color/text_on_dark_primary"
+                android:textColorHint="@color/text_on_dark_muted"
                 android:textSize="14sp" />
 
             <TextView
@@ -127,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="Business Email Address"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
 
             <EditText
@@ -140,8 +140,8 @@
                 android:inputType="textEmailAddress"
                 android:paddingStart="16dp"
                 android:paddingEnd="16dp"
-                android:textColor="#000000"
-                android:textColorHint="#4A6A8A"
+                android:textColor="@color/text_on_dark_primary"
+                android:textColorHint="@color/text_on_dark_muted"
                 android:textSize="14sp" />
 
             <com.google.android.material.button.MaterialButton
@@ -150,10 +150,10 @@
                 android:layout_height="52dp"
                 android:layout_marginTop="32dp"
                 android:text="Save Workspace Entity"
-                android:textColor="#1E293B"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:backgroundTint="#00D4AA"
+                app:backgroundTint="@color/hero_accent"
                 app:cornerRadius="8dp" />
 
         </LinearLayout>

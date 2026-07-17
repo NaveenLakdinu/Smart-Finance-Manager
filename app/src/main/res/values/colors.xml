@@ -25,10 +25,6 @@
     <color name="brand_dark_blue">#1E3A6E</color>
     <color name="brand_green">#4CAF50</color>
 
-
-
-
-
     <!-- Loan related colors -->
     <color name="loan_bg_dark">#0F172A</color>
     <color name="loan_header_dark">#1E293B</color>
@@ -97,6 +93,70 @@
 
     <!-- Divider -->
     <color name="divider_dark">#1A3050</color>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SEMANTIC ALIASES (unified intent-based tokens) -->
+    <!-- ══════════════════════════════════════════ -->
+
+    <!-- Primary surfaces -->
+    <color name="surface_primary">@color/dash_bg_deep</color>
+    <color name="surface_card">@color/glass_card_bg</color>
+    <color name="surface_card_border">@color/glass_card_border</color>
+    <color name="surface_elevated">@color/dash_bg_mid</color>
+
+    <!-- Semantic text -->
+    <color name="text_primary">@color/text_on_dark_primary</color>
+    <color name="text_secondary_dark">@color/text_on_dark_secondary</color>
+    <color name="text_muted">@color/text_on_dark_muted</color>
+
+    <!-- Action buttons -->
+    <color name="btn_primary">@color/hero_accent</color>
+    <color name="btn_primary_pressed">#00B896</color>
+    <color name="btn_primary_text">@color/dash_bg_deep</color>
+    <color name="btn_secondary">@color/glass_card_bg</color>
+    <color name="btn_danger">@color/danger_text</color>
+    <color name="btn_danger_bg">@color/danger_bg</color>
+
+    <!-- Spinner / dropdown -->
+    <color name="spinner_text">@color/text_on_dark_primary</color>
+    <color name="spinner_bg">@color/glass_card_bg</color>
+    <color name="spinner_divider">@color/divider_dark</color>
+
+    <!-- Input fields -->
+    <color name="input_bg">@color/glass_card_bg</color>
+    <color name="input_stroke">@color/glass_card_border</color>
+    <color name="input_text">@color/text_on_dark_primary</color>
+    <color name="input_hint">@color/text_on_dark_muted</color>
+
+    <!-- Progress bar -->
+    <color name="progress_track">#1A3050</color>
+    <color name="progress_fill">@color/hero_accent</color>
+
+    <!-- Tab / Segmented control -->
+    <color name="tab_active_bg">@color/hero_accent</color>
+    <color name="tab_active_text">@color/dash_bg_deep</color>
+    <color name="tab_inactive_bg">@color/glass_card_bg</color>
+    <color name="tab_inactive_text">@color/text_on_dark_secondary</color>
+
+    <!-- Badge / Pill -->
+    <color name="badge_success_bg">@color/pill_positive_bg</color>
+    <color name="badge_success_text">@color/pill_positive_text</color>
+    <color name="badge_warning_bg">@color/pill_warning_bg</color>
+    <color name="badge_warning_text">@color/pill_warning_text</color>
+    <color name="badge_info_bg">#162D4A</color>
+    <color name="badge_info_text">#38BDF8</color>
+
+    <!-- Dialog -->
+    <color name="dialog_bg">@color/glass_card_bg</color>
+    <color name="dialog_scrim">#80000000</color>
+
+    <!-- Status bar -->
+    <color name="status_bar">#070F1E</color>
+
+    <!-- Bottom Navigation -->
+    <color name="bottom_nav_bg">@color/dash_bg_mid</color>
+    <color name="bottom_nav_active">@color/hero_accent</color>
+    <color name="bottom_nav_inactive">@color/text_on_dark_muted</color>
 
     <!-- ══════════════════════════════════════════ -->
     <!-- GOAL COLORS  (GoalColors object from Compose) -->

@@ -400,7 +400,7 @@
             android:layout_width="match_parent"
             android:layout_height="54dp"
             android:text="Next →"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="17sp"
             android:textStyle="bold"
             android:insetTop="0dp"

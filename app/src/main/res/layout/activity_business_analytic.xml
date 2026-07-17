@@ -29,7 +29,7 @@
                 android:background="@drawable/bg_notification"
                 android:src="@drawable/ic_arrow_back"
                 android:scaleType="centerInside"
-                app:tint="#FFFFFF"
+                app:tint="@color/text_on_dark_primary"
                 android:clickable="true"
                 android:focusable="true"
                 android:contentDescription="Back" />
@@ -40,7 +40,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_weight="1"
                 android:text="Business Analytics"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -50,7 +50,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
             android:text="Filter by Workspace Profile"
-            android:textColor="#7A9CC0"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp"
             android:textStyle="bold"
             android:letterSpacing="0.06"/>
@@ -60,7 +60,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginTop="6dp"
-            android:backgroundTint="#F0F6FF" />
+            android:backgroundTint="@color/text_on_dark_primary" />
 
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Estimated Net Profit"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
@@ -98,7 +98,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Rs. 0.00"
-                        android:textColor="#00D4AA"
+                        android:textColor="@color/hero_accent"
                         android:textSize="26sp"
                         android:textStyle="bold" />
 
@@ -108,7 +108,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="0.0% Profit Margin"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="12sp" />
                 </LinearLayout>
 
@@ -147,14 +147,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TOTAL REVENUE"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"/>
                     <TextView
                         android:id="@+id/txtRevenueDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs. 0.00"
-                        android:textColor="#4ADE80"
+                        android:textColor="@color/pill_positive_text"
                         android:textStyle="bold"
                         android:textSize="15sp"
                         android:layout_marginTop="6dp"/>
@@ -180,14 +180,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TOTAL EXPENSES"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"/>
                     <TextView
                         android:id="@+id/txtExpenseDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs. 0.00"
-                        android:textColor="#FF5555"
+                        android:textColor="@color/danger_text"
                         android:textStyle="bold"
                         android:textSize="15sp"
                         android:layout_marginTop="6dp"/>
@@ -200,9 +200,9 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="20dp"
-            app:backgroundTint="#00D4AA"
+            app:backgroundTint="@color/hero_accent"
             android:text="GENERATE PDF ANALYTICS REPORT"
-            android:textColor="#071A33"
+            android:textColor="@color/text_on_dark_primary"
             android:textStyle="bold"
             app:cornerRadius="16dp" />
 
@@ -224,7 +224,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Revenue vs Expenses vs Profit View"
-                    android:textColor="#F0F6FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="14sp"
                     android:textStyle="bold" />
 
