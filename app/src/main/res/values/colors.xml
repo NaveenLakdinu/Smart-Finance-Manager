@@ -97,4 +97,54 @@
 
     <!-- Divider -->
     <color name="divider_dark">#1A3050</color>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- GOAL COLORS  (GoalColors object from Compose) -->
+    <!-- ══════════════════════════════════════════ -->
+    <color name="goal_bg">#090D1A</color>
+    <color name="goal_surface">#131A2E</color>
+    <color name="goal_surface_hi">#1A2340</color>
+    <color name="goal_border">#232D4D</color>
+    <color name="goal_mint">#2FE0AC</color>
+    <color name="goal_mint_dim">#1A8F6F</color>
+    <color name="goal_coral">#FF6B7A</color>
+    <color name="goal_gold">#FFC857</color>
+    <color name="goal_blue">#5B8CFF</color>
+    <color name="goal_text">#EEF1FB</color>
+    <color name="goal_text_mute">#8A92B2</color>
+    <color name="goal_text_dim">#5B6389</color>
+    <color name="goal_delete_btn_border">#4DFF6B7A</color>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SAVINGS PASSPORT COLORS (SavingsColors)    -->
+    <!-- ══════════════════════════════════════════ -->
+    <color name="sp_ink">#0B1F3A</color>
+    <color name="sp_ink2">#0F2647</color>
+    <color name="sp_ink3">#16305A</color>
+    <color name="sp_parchment">#FBF7EE</color>
+    <color name="sp_paper">#FFFFFF</color>
+    <color name="sp_brass">#C9A227</color>
+    <color name="sp_brass_light">#E8C766</color>
+    <color name="sp_brass_dark">#9C7A16</color>
+    <color name="sp_emerald">#1F8A5F</color>
+    <color name="sp_emerald_soft">#E4F3EC</color>
+    <color name="sp_amber">#D97706</color>
+    <color name="sp_amber_soft">#FCEEDA</color>
+    <color name="sp_slate">#22283A</color>
+    <color name="sp_slate_soft">#6B7280</color>
+    <color name="sp_rule">#E9E2D2</color>
+    <color name="sp_locked">#C7C2B4</color>
+    <color name="sp_locked_bg">#F4F2EC</color>
+    <color name="sp_bronze">#C97B45</color>
+    <color name="sp_silver">#B9BDC4</color>
+    <color name="sp_goal_icon_bg">#E7F0FA</color>
+    <color name="sp_goal_icon_tint">#2C6FA6</color>
+    <color name="sp_locked_icon_bg">#E3DFD3</color>
+    <color name="sp_locked_icon_text">#9C9885</color>
+    <color name="sp_badge_earned_start">#FFFCF3</color>
+    <color name="sp_badge_earned_end">#FDF6E1</color>
+    <color name="sp_progress_track">#EFEBDF</color>
+    <color name="sp_stat_chip_bg">#F7F5EE</color>
+    <color name="sp_ink_button_dark">#2B4B8C</color>
+    <color name="sp_streak_bg_mid">#1C3C70</color>
 </resources>

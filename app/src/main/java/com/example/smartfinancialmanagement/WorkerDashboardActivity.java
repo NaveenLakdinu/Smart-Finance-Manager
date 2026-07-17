@@ -64,7 +64,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         }
         
         // Mock data for earnings
-        txtEarnings.setText("LKR 75,000.00");
+        txtEarnings.setText(CurrencyHelper.formatMoney(this, 75000.00));
         txtPayrollStatus.setText("Next payday: June 30th");
     }
 
