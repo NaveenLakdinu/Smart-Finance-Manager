@@ -100,7 +100,7 @@ public class LoanFormActivity extends AppCompatActivity implements LoanAdapter.O
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    totalActiveBalance.setText(String.format(Locale.US, "LKR %.2f", total));
+                    totalActiveBalance.setText(CurrencyHelper.formatMoney(LoanFormActivity.this, total));
                 });
     }
 

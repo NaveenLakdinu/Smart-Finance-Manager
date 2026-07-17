@@ -1,188 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<!-- activity_saving_list.xml — mirrors SavingGoalsListScreen (Compose) -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dash_bg_deep"
-    android:fitsSystemWindows="true">
+    android:background="@color/goal_bg">
 
-    <!-- Header -->
-    <RelativeLayout
-        android:id="@+id/headerLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/dash_bg_mid"
-        android:padding="20dp"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_centerVertical="true"
-            android:src="@android:drawable/ic_menu_revert"
-            app:tint="@color/white" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="Saving Goals"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:textStyle="bold" />
-
-        <ImageView
-            android:id="@+id/btnGenerateReport"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:src="@drawable/ic_report"
-            app:tint="@color/white" />
-    </RelativeLayout>
-
-    <!-- Search and Filter -->
+    <!-- Main scrollable list -->
     <LinearLayout
-        android:id="@+id/searchLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp"
-        android:paddingVertical="12dp"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout">
-
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="0dp"
-            android:layout_height="48dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_glass_card"
-            android:hint="Search goals..."
-            android:textColorHint="@color/text_on_dark_muted"
-            android:textColor="@color/text_on_dark_primary"
-            android:paddingHorizontal="16dp"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp" />
-
-        <ImageView
-            android:id="@+id/btnFilter"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginStart="12dp"
-            android:background="@drawable/bg_glass_card"
-            android:padding="12dp"
-            android:src="@android:drawable/ic_menu_sort_by_size"
-            app:tint="@color/qa_blue_icon" />
-    </LinearLayout>
-
-    <!-- Status Filters -->
-    <HorizontalScrollView
-        android:id="@+id/filterScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none"
-        android:paddingHorizontal="16dp"
-        android:paddingBottom="8dp"
-        app:layout_constraintTop_toBottomOf="@id/searchLayout">
-
-        <com.google.android.material.chip.ChipGroup
-            android:id="@+id/chipGroupStatusFilter"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:singleSelection="true"
-            app:selectionRequired="true">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFilterAll"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="All"
-                android:checked="true" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFilterOngoing"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Ongoing" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFilterCompleted"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Completed" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/chipFilterIncompleted"
-                style="@style/Widget.MaterialComponents.Chip.Choice"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Incomplete" />
-
-        </com.google.android.material.chip.ChipGroup>
-    </HorizontalScrollView>
-
-    <!-- Recycler View -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvSavings"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:paddingTop="8dp"
-        android:paddingBottom="80dp"
-        app:layout_constraintTop_toBottomOf="@id/filterScrollView"
-        app:layout_constraintBottom_toBottomOf="parent" />
-
-    <!-- Empty State -->
-    <LinearLayout
-        android:id="@+id/emptyStateLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        android:gravity="center"
-        android:visibility="gone"
-        app:layout_constraintTop_toBottomOf="@id/filterScrollView"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
+        android:paddingHorizontal="16dp"
+        android:paddingTop="24dp">
 
-        <ImageView
-            android:layout_width="100dp"
-            android:layout_height="100dp"
-            android:src="@drawable/ic_savings_wave"
-            app:tint="@color/text_on_dark_muted" />
+        <!-- Top bar -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_goal_card"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="@color/goal_text"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="Saving Goals"
+                android:textColor="@color/goal_text"
+                android:textSize="17sp"
+                android:textStyle="bold"/>
+
+            <!-- placeholder to balance back button -->
+            <View android:layout_width="38dp" android:layout_height="38dp"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="16dp"/>
+
+        <!-- Search field -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_goal_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔍"
+                android:textSize="14sp"
+                android:textColor="@color/goal_text_mute"/>
+
+            <View android:layout_width="10dp" android:layout_height="1dp"/>
+
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@null"
+                android:hint="Search goals..."
+                android:textColor="@color/goal_text"
+                android:textColorHint="@color/goal_text_dim"
+                android:textSize="14sp"
+                android:singleLine="true"
+                android:imeOptions="actionSearch"
+                android:inputType="text"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="14dp"/>
+
+        <!-- Filter chips horizontal scroll -->
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:scrollbars="none">
+            <LinearLayout
+                android:id="@+id/filterChipsContainer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!-- Filter chips added programmatically -->
+            </LinearLayout>
+        </HorizontalScrollView>
+
+        <View android:layout_width="match_parent" android:layout_height="18dp"/>
+
+        <!-- Goals list -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvGoals"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingBottom="80dp"
+            android:clipToPadding="false"/>
 
         <TextView
-            android:layout_width="wrap_content"
+            android:id="@+id/tvEmpty"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="No Saving Goals Found"
-            android:textColor="@color/text_on_dark_secondary"
-            android:textSize="16sp" />
-            
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="Tap + to create a new goal"
-            android:textColor="@color/text_on_dark_muted"
-            android:textSize="14sp" />
+            android:visibility="gone"
+            android:text="No goals match here yet."
+            android:textColor="@color/goal_text_dim"
+            android:textSize="13sp"
+            android:paddingVertical="24dp"/>
+
     </LinearLayout>
 
-    <!-- FAB -->
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fabAddSaving"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="24dp"
-        android:src="@android:drawable/ic_input_add"
-        app:backgroundTint="@color/button_blue"
-        app:tint="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+    <!-- FAB (+) -->
+    <TextView
+        android:id="@+id/fabAddGoal"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="20dp"
+        android:background="@drawable/bg_pill"
+        android:gravity="center"
+        android:text="+"
+        android:textColor="@android:color/white"
+        android:textSize="26sp"
+        android:textStyle="bold"/>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</FrameLayout>

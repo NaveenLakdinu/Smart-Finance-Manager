@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Achievement badge card (used in SavingsPassportActivity) -->
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_savings_card">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- Emoji icon circle -->
+        <TextView
+            android:id="@+id/tvBadgeEmoji"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:gravity="center"
+            android:text="🥉"
+            android:textSize="17sp"/>
+
+        <View android:layout_width="1dp" android:layout_height="8dp"/>
+
+        <TextView
+            android:id="@+id/tvBadgeTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Bronze Saver"
+            android:textColor="@color/sp_ink"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvBadgeSubtitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Save Rs. 5,000"
+            android:textColor="@color/sp_slate_soft"
+            android:textSize="11sp"
+            android:lineSpacingExtra="3dp"/>
+
+        <View android:layout_width="1dp" android:layout_height="8dp"/>
+
+        <!-- "STAMPED" tag (earned) OR Progress bar (locked) -->
+        <LinearLayout
+            android:id="@+id/layoutStamped"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:background="@drawable/bg_pill"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="3dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STAMPED ✓"
+                android:textColor="@color/sp_brass_dark"
+                android:textSize="10sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/layoutLocked"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <!-- Mini progress bar -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="6dp"
+                android:background="@drawable/bg_pill">
+                <View
+                    android:id="@+id/vBadgeProgress"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/sp_locked"/>
+            </FrameLayout>
+            <View android:layout_width="1dp" android:layout_height="4dp"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="PROGRESS"
+                    android:textColor="@color/sp_locked_icon_text"
+                    android:textSize="10sp"/>
+                <TextView
+                    android:id="@+id/tvBadgeProgressPct"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="0%"
+                    android:textColor="@color/sp_locked_icon_text"
+                    android:textSize="10sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Corner badge: check (earned) or lock (locked) -->
+    <TextView
+        android:id="@+id/tvCornerBadge"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="8dp"
+        android:background="@drawable/bg_pill"
+        android:gravity="center"
+        android:text="✓"
+        android:textColor="@android:color/white"
+        android:textSize="9sp"
+        android:textStyle="bold"/>
+
+</FrameLayout>

@@ -7,7 +7,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.example.smartfinancialmanagement.ui.AchievementManager;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.TextView;
@@ -38,6 +37,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
         View budgetPlan = findViewById(R.id.budget_plan);
         if (budgetPlan != null) {
             budgetPlan.setOnClickListener(v -> startActivity(new Intent(this, BudgetPlannerActivity.class)));
+        }
+
+        View btnProfileAvatar = findViewById(R.id.btnProfileAvatar);
+        if (btnProfileAvatar != null) {
+            btnProfileAvatar.setOnClickListener(v -> startActivity(new Intent(this, StudentProfileActivity.class)));
         }
 
         // Header Cards
@@ -92,12 +96,19 @@ public class StudentDashboardActivity extends AppCompatActivity {
                     totalSavings += s.getCurrentAmount();
                 }
 
-                String level = AchievementManager.INSTANCE.getSavingsLevel(totalSavings);
+                String level = getSavingsLevel(totalSavings);
                 
                 TextView txtAchievementPts = findViewById(R.id.txtAchievementPts);
                 if (txtAchievementPts != null) {
                     txtAchievementPts.setText(level);
                 }
             });
+    }
+
+    private String getSavingsLevel(double totalSavings) {
+        if (totalSavings >= 50000) return "Gold Saver";
+        if (totalSavings >= 25000) return "Silver Saver";
+        if (totalSavings >= 5000)  return "Bronze Saver";
+        return "Starter";
     }
 }

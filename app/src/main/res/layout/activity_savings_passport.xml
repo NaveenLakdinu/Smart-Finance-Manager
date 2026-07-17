@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_savings_passport.xml — mirrors SavingsPassportScreen (Compose) -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sp_parchment"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- ── Hero Header (dark navy gradient) ── -->
+        <LinearLayout
+            android:id="@+id/heroHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/sp_ink"
+            android:orientation="vertical"
+            android:paddingHorizontal="22dp"
+            android:paddingTop="36dp"
+            android:paddingBottom="66dp">
+
+            <!-- Back button -->
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:background="@drawable/bg_pill"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="@android:color/white"
+                android:textSize="16sp"/>
+
+            <View android:layout_width="1dp" android:layout_height="16dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TRACK · SAVE · ACHIEVE"
+                android:textColor="@color/sp_brass_light"
+                android:textSize="11sp"
+                android:letterSpacing="0.15"/>
+
+            <View android:layout_width="1dp" android:layout_height="6dp"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Savings Passport"
+                android:textColor="@android:color/white"
+                android:textSize="28sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- ── Level Seal Card (overlaps hero) ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-46dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/bg_savings_card"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="18dp">
+
+            <TextView
+                android:id="@+id/tvLevelEmoji"
+                android:layout_width="76dp"
+                android:layout_height="76dp"
+                android:background="@drawable/bg_circle_gold"
+                android:gravity="center"
+                android:text="🎖️"
+                android:textSize="28sp"/>
+
+            <View android:layout_width="16dp" android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="SAVINGS LEVEL"
+                    android:textColor="@color/sp_slate_soft"
+                    android:textSize="10.5sp"
+                    android:letterSpacing="0.1"/>
+
+                <TextView
+                    android:id="@+id/tvLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Starter"
+                    android:textColor="@color/sp_ink"
+                    android:textSize="20sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Keep saving to unlock higher levels! 🎉"
+                    android:textColor="@color/sp_slate_soft"
+                    android:textSize="12sp"
+                    android:lineSpacingExtra="3dp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="16dp"/>
+
+        <!-- ── Achievement Center Card ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-14dp"
+            android:layout_marginHorizontal="20dp"
+            android:background="@drawable/bg_savings_card"
+            android:orientation="vertical"
+            android:padding="18dp">
+
+            <!-- Header -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="🏆 Achievement Center"
+                    android:textColor="@color/sp_ink"
+                    android:textSize="17sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:id="@+id/tvEarnedCount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="4dp"
+                    android:text="0 earned"
+                    android:textColor="@color/sp_brass_dark"
+                    android:textSize="11sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="Complete milestones to unlock rewards"
+                android:textColor="@color/sp_slate_soft"
+                android:textSize="12sp"/>
+
+            <!-- Earned section label -->
+            <TextView
+                android:id="@+id/tvEarnedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="10dp"
+                android:text="✦ EARNED"
+                android:textColor="@color/sp_emerald"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:visibility="gone"/>
+
+            <!-- Earned badges grid (2 cols) -->
+            <LinearLayout
+                android:id="@+id/containerEarned"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"/>
+
+            <!-- Locked section label -->
+            <TextView
+                android:id="@+id/tvLockedLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="14dp"
+                android:layout_marginBottom="10dp"
+                android:text="🔒 LOCKED"
+                android:textColor="@color/sp_locked"
+                android:textSize="10.5sp"
+                android:textStyle="bold"
+                android:letterSpacing="0.1"
+                android:visibility="gone"/>
+
+            <!-- Locked badges grid (2 cols) -->
+            <LinearLayout
+                android:id="@+id/containerLocked"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone"/>
+
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="16dp"/>
+
+        <!-- ── Streak Banner ── -->
+        <LinearLayout
+            android:id="@+id/streakBanner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="20dp"
+            android:background="@color/sp_ink2"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:padding="16dp">
+
+            <TextView
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_pill"
+                android:gravity="center"
+                android:text="🔥"
+                android:textSize="20sp"/>
+
+            <View android:layout_width="14dp" android:layout_height="1dp"/>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="1-Month Saving Streak"
+                    android:textColor="@android:color/white"
+                    android:textSize="15sp"
+                    android:textStyle="bold"/>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="Keep going to unlock Consistent Saver in 5 more months"
+                    android:textColor="#B3FFFFFF"
+                    android:textSize="11.5sp"
+                    android:lineSpacingExtra="3dp"/>
+
+                <View android:layout_width="match_parent" android:layout_height="10dp"/>
+
+                <!-- Streak segments -->
+                <LinearLayout
+                    android:id="@+id/streakSegments"
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp"
+                    android:orientation="horizontal"
+                    android:weightSum="6">
+                    <!-- 6 segments filled programmatically -->
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="14dp"/>
+
+        <!-- ── Goals Section ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="12dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Savings Goals"
+                android:textColor="@color/sp_ink"
+                android:textSize="19sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/btnAddGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/sp_ink"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="9dp"
+                android:text="+ Add Goal"
+                android:textColor="@android:color/white"
+                android:textSize="12.5sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <!-- Goals list -->
+        <LinearLayout
+            android:id="@+id/containerGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="20dp"/>
+
+        <View android:layout_width="match_parent" android:layout_height="28dp"/>
+
+    </LinearLayout>
+</ScrollView>
