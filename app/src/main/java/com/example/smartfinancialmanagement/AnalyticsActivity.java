@@ -1,3 +1,4 @@
+
 package com.example.smartfinancialmanagement;
 
 import android.content.ContentValues;
@@ -333,4 +334,4 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
         table.addCell(cell);
     }
-} // 💡 Class එක වසා දමන අවසාන වරහන
+} //
