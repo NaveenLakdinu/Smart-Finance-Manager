@@ -542,8 +542,9 @@ public class LoginFormActivity extends AppCompatActivity {
     // Apple Sign-In Implementation
     // ──────────────────────────────────────────────────────────────
     private void handleAppleSignIn() {
-        OAuthProvider.Builder provider = OAuthProvider.newBuilder("apple.com");
-        provider.setScopes(Arrays.asList("email", "name"));
+        OAuthProvider provider = OAuthProvider.newBuilder("apple.com")
+                .setScopes(Arrays.asList("email", "name"))
+                .build();
 
         Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
         if (pendingResultTask != null) {

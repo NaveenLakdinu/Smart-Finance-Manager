@@ -61,6 +61,10 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+    
+    // Google Play Services Auth for Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    
     implementation(libs.recyclerview)
     
     val composeBom = platform(libs.androidx.compose.bom)
