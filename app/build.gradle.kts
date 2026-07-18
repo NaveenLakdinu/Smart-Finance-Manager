@@ -84,4 +84,9 @@ dependencies {
     implementation("com.sun.mail:android-mail:1.6.6")
     implementation("com.sun.mail:android-activation:1.6.6")
 
+    // Facebook Login SDK
+    implementation("com.facebook.android:facebook-android-sdk:16.3.0")
+
+    // Note: Apple Sign-In is implemented using Firebase OAuthProvider (no native SDK needed)
+
 }
