@@ -67,6 +67,9 @@ dependencies {
     // Google Play Services Auth for Google Sign-In
     implementation("com.google.android.gms:play-services-auth:21.1.1")
     
+    // Guava for ListenableFuture (required by WorkManager)
+    implementation("com.google.guava:guava:32.1.3-android")
+    
     implementation(libs.recyclerview)
     
     val composeBom = platform(libs.androidx.compose.bom)
