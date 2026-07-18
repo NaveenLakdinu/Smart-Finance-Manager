@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Savings log entry row for the Goal Details screen -->
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="8dp"
+    android:background="@drawable/bg_input_dark"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="10dp">
+
+    <!-- Dollar icon box -->
+    <TextView
+        android:layout_width="34dp"
+        android:layout_height="34dp"
+        android:background="@drawable/bg_goal_card"
+        android:gravity="center"
+        android:text="$"
+        android:textColor="@color/goal_mint"
+        android:textSize="15sp"
+        android:textStyle="bold"/>
+
+    <View android:layout_width="12dp" android:layout_height="1dp"/>
+
+    <!-- Amount + Note -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvLogAmount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LKR 0.00"
+            android:textColor="@color/goal_mint"
+            android:textSize="14.5sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:id="@+id/tvLogNote"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Savings entry"
+            android:textColor="@color/goal_text_mute"
+            android:textSize="11.5sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <!-- Date -->
+    <TextView
+        android:id="@+id/tvLogDate"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:text="01 Jan"
+        android:textColor="@color/goal_text_dim"
+        android:textSize="11sp"/>
+
+    <!-- Edit button -->
+    <TextView
+        android:id="@+id/btnLogEdit"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:background="@drawable/bg_goal_card"
+        android:gravity="center"
+        android:text="✎"
+        android:textColor="@color/goal_text_mute"
+        android:textSize="13sp"/>
+
+</LinearLayout>

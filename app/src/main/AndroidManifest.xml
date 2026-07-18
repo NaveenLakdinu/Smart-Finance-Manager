@@ -81,11 +81,31 @@
             android:exported="false" />
 
         <activity
+            android:name=".PinLockActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PinSetupActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".BusinessDashboardActivity"
             android:exported="false" />
 
         <activity
             android:name=".StudentDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RoleUpgradeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentWorkerHybridDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentBudgetActivity"
             android:exported="false" />
 
         <activity
@@ -106,6 +126,15 @@
 
         <activity
             android:name=".StudentProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AccountSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FinancialReportsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MyAchievementsActivity"
             android:exported="false" />
 
         <activity
@@ -198,6 +227,16 @@
             android:exported="false" />
         <activity
             android:name=".SavingsPassportActivity"
+            android:exported="false" />
+
+        <!-- Transfer activities -->
+        <activity
+            android:name=".TransferActivity"
+            android:theme="@style/Theme.SmartFinancialManagement"
+            android:exported="false" />
+        <activity
+            android:name=".TransferHistoryActivity"
+            android:theme="@style/Theme.SmartFinancialManagement"
             android:exported="false" />
 
     </application>

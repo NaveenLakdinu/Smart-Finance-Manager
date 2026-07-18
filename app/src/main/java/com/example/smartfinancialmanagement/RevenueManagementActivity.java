@@ -177,7 +177,7 @@ public class RevenueManagementActivity extends AppCompatActivity {
         String[] streams = {"Invoices", "Cash Sales", "Investments", "B2B Grants", "Other"};
         spinSrc.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, streams));
 
-        AlertDialog dialog = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog)
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setView(customView)
                 .create();
 
@@ -223,7 +223,7 @@ public class RevenueManagementActivity extends AppCompatActivity {
 
                 // Handle corrections seamlessly with long-press deletions
                 h.itemView.setOnLongClickListener(v -> {
-                    new AlertDialog.Builder(v.getContext())
+                    new AlertDialog.Builder(v.getContext(), R.style.Theme_SmartFinance_Dialog)
                             .setTitle("Correction Warning")
                             .setMessage("Delete this transaction row item entry permanently?")
                             .setPositiveButton("Delete", (d, w) -> {

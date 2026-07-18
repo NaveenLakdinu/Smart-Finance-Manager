@@ -22,6 +22,10 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -303,6 +307,50 @@ public class UtilityReportActivity extends AppCompatActivity {
             chartImage.scaleToFit(500, 300);
             chartImage.setAlignment(Element.ALIGN_CENTER);
             document.add(chartImage);
+
+            // ── Pie Chart: Bill Amount Distribution ──
+            PieChart pieChart = new PieChart(this);
+            pieChart.setDrawEntryLabels(true);
+            pieChart.setEntryLabelTextSize(10f);
+            pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
+            pieChart.setHoleColor(android.graphics.Color.WHITE);
+            pieChart.setCenterText("Bill\nDistribution");
+            pieChart.setCenterTextSize(12f);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.getLegend().setTextSize(10f);
+
+            java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
+            for (BillReportItem item : receivedReportItems) {
+                pieEntries.add(new PieEntry((float) item.getAmount(), item.getBillName()));
+            }
+            PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+            int[] pieColors = {
+                    android.graphics.Color.parseColor("#A78BFA"),
+                    android.graphics.Color.parseColor("#38BDF8"),
+                    android.graphics.Color.parseColor("#F59E0B"),
+                    android.graphics.Color.parseColor("#F43F5E"),
+                    android.graphics.Color.parseColor("#10B981"),
+                    android.graphics.Color.parseColor("#EC4899")
+            };
+            pieDataSet.setColors(pieColors);
+            pieDataSet.setValueTextSize(10f);
+            pieDataSet.setSliceSpace(2f);
+            PieData pieData = new PieData(pieDataSet);
+            pieChart.setData(pieData);
+
+            pieChart.measure(
+                    android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
+                    android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
+            pieChart.layout(0, 0, 500, 500);
+            Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+            pieChart.draw(new Canvas(pieBitmap));
+
+            ByteArrayOutputStream pieStream = new ByteArrayOutputStream();
+            pieBitmap.compress(Bitmap.CompressFormat.PNG, 100, pieStream);
+            Image pieImage = Image.getInstance(pieStream.toByteArray());
+            pieImage.scaleToFit(450, 450);
+            pieImage.setAlignment(Element.ALIGN_CENTER);
+            document.add(pieImage);
 
             document.close();
             Toast.makeText(this, "PDF Saved to Downloads Folder", Toast.LENGTH_LONG).show();

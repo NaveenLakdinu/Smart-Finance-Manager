@@ -100,7 +100,7 @@ public class LoanFormActivity extends AppCompatActivity implements LoanAdapter.O
                         }
                     }
                     adapter.notifyDataSetChanged();
-                    totalActiveBalance.setText(String.format(Locale.US, "LKR %.2f", total));
+                    totalActiveBalance.setText(CurrencyHelper.formatMoney(LoanFormActivity.this, total));
                 });
     }
 
@@ -113,7 +113,7 @@ public class LoanFormActivity extends AppCompatActivity implements LoanAdapter.O
 
     @Override
     public void onDeleteClick(Loan loan) {
-        new androidx.appcompat.app.AlertDialog.Builder(this)
+        new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setTitle("Delete Loan")
                 .setMessage("Are you sure you want to delete this loan?")
                 .setPositiveButton("Delete", (dialog, which) -> {

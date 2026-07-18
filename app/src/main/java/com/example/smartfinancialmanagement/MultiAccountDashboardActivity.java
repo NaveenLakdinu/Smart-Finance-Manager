@@ -9,11 +9,16 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.card.MaterialCardView;
-
-import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
+import android.widget.EditText;
+import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.button.MaterialButton;
 
 import java.util.Calendar;
 
@@ -25,11 +30,21 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
     private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
 
-    // Simulated account data
-    private String[] accounts = {"Personal Account", "Business Account", "Family Savings"};
-    private String[] balances = {"LKR 125,400.00", "LKR 2,450,000.00", "LKR 45,000.00"};
-    private String[] accountNumbers = {"**** **** 4290", "**** **** 8812", "**** **** 1029"};
+    private List<AccountInfo> accountsList = new ArrayList<>();
     private int currentAccountIndex = 0;
+
+    private static class AccountInfo {
+        String documentId;
+        String name;
+        double balance;
+        String number;
+        AccountInfo(String documentId, String name, double balance, String number) {
+            this.documentId = documentId;
+            this.name = name;
+            this.balance = balance;
+            this.number = number;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,10 +53,10 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
         initViews();
         setupUserDetails();
-        updateAccountUI();
-        
+        loadAccountsFromFirestore();
+
         btnSwitchAccount.setOnClickListener(v -> showAccountSwitchDialog());
-        
+
         btnTopLogout.setOnClickListener(v -> {
             FirebaseAuth.getInstance().signOut();
             Intent intent = new Intent(this, LoginFormActivity.class);
@@ -49,6 +64,8 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             startActivity(intent);
             finish();
         });
+        setupSecurityButton();
+        setupSavingsWidget();
     }
 
     private void initViews() {
@@ -73,10 +90,36 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     }
 
     private void setupActionCards() {
-        cardTransfer.setOnClickListener(v -> Toast.makeText(this, "Transfer - Coming Soon", Toast.LENGTH_SHORT).show());
-        cardStatements.setOnClickListener(v -> Toast.makeText(this, "Statements - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardTransfer.setOnClickListener(v -> {
+            if (accountsList.size() < 2) {
+                Toast.makeText(this, "Add at least 2 accounts to transfer", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            Intent intent = new Intent(MultiAccountDashboardActivity.this, TransferActivity.class);
+            ArrayList<String> docIds = new ArrayList<>();
+            ArrayList<String> names = new ArrayList<>();
+            ArrayList<String> numbers = new ArrayList<>();
+            double[] balances = new double[accountsList.size()];
+            for (int i = 0; i < accountsList.size(); i++) {
+                AccountInfo a = accountsList.get(i);
+                docIds.add(a.documentId);
+                names.add(a.name);
+                numbers.add(a.number);
+                balances[i] = a.balance;
+            }
+            intent.putStringArrayListExtra("DOC_IDS", docIds);
+            intent.putStringArrayListExtra("NAMES", names);
+            intent.putStringArrayListExtra("NUMBERS", numbers);
+            intent.putExtra("BALANCES", balances);
+            intent.putExtra("CURRENT_ACCOUNT_INDEX", currentAccountIndex);
+            startActivity(intent);
+        });
+        cardStatements.setOnClickListener(v -> {
+            Intent intent = new Intent(MultiAccountDashboardActivity.this, TransferHistoryActivity.class);
+            startActivity(intent);
+        });
         cardCards.setOnClickListener(v -> Toast.makeText(this, "Card Management - Coming Soon", Toast.LENGTH_SHORT).show());
-        cardAddAccount.setOnClickListener(v -> Toast.makeText(this, "Add New Account - Coming Soon", Toast.LENGTH_SHORT).show());
+        cardAddAccount.setOnClickListener(v -> showAddAccountDialog());
 
         cardLoanManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, LoanFormActivity.class);
@@ -108,26 +151,269 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private String getGreetingText() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
-        if (hour >= 5 && hour < 12) return "Good Morning 👋";
-        else if (hour >= 12 && hour < 17) return "Good Afternoon ☀️";
-        else if (hour >= 17 && hour < 21) return "Good Evening 🌙";
-        else return "Good Night ✨";
+        if (hour >= 5 && hour < 12) return "Good Morning";
+        else if (hour >= 12 && hour < 17) return "Good Afternoon";
+        else if (hour >= 17 && hour < 21) return "Good Evening";
+        else return "Good Night";
     }
 
     private void updateAccountUI() {
-        txtCurrentAccountName.setText(accounts[currentAccountIndex]);
-        txtAccountBalance.setText(balances[currentAccountIndex]);
-        txtAccountNumber.setText(accountNumbers[currentAccountIndex]);
+        if (accountsList.isEmpty()) {
+            txtCurrentAccountName.setText("No Account");
+            txtAccountBalance.setText("LKR 0.00");
+            txtAccountNumber.setText("----");
+        } else {
+            AccountInfo info = accountsList.get(currentAccountIndex);
+            txtCurrentAccountName.setText(info.name);
+            txtAccountBalance.setText(String.format(Locale.US, "LKR %.2f", info.balance));
+            txtAccountNumber.setText(info.number);
+        }
     }
 
     private void showAccountSwitchDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        if (accountsList.isEmpty()) {
+            Toast.makeText(this, "No accounts available. Please add a new account.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Switch Account");
-        builder.setItems(accounts, (dialog, which) -> {
+        String[] names = new String[accountsList.size()];
+        for (int i = 0; i < accountsList.size(); i++) {
+            names[i] = accountsList.get(i).name;
+        }
+        builder.setItems(names, (dialog, which) -> {
             currentAccountIndex = which;
             updateAccountUI();
-            Toast.makeText(this, "Switched to " + accounts[which], Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Switched to " + names[which], Toast.LENGTH_SHORT).show();
         });
         builder.show();
+    }
+
+    private void showAddAccountDialog() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
+        builder.setTitle("Add New Account");
+
+        LinearLayout container = new LinearLayout(this);
+        container.setOrientation(LinearLayout.VERTICAL);
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        container.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        params.bottomMargin = (int) (12 * getResources().getDisplayMetrics().density);
+
+        EditText editName = new EditText(this);
+        editName.setHint("Account Name (e.g. Savings)");
+        editName.setBackgroundResource(R.drawable.bg_input_dark);
+        editName.setTextColor(android.graphics.Color.WHITE);
+        editName.setHintTextColor(0x80FFFFFF);
+        editName.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+        container.addView(editName, params);
+
+        EditText editNumber = new EditText(this);
+        editNumber.setHint("Account Number");
+        editNumber.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        editNumber.setBackgroundResource(R.drawable.bg_input_dark);
+        editNumber.setTextColor(android.graphics.Color.WHITE);
+        editNumber.setHintTextColor(0x80FFFFFF);
+        editNumber.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+        container.addView(editNumber, params);
+
+        EditText editBalance = new EditText(this);
+        editBalance.setHint("Initial Balance (LKR)");
+        editBalance.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        editBalance.setBackgroundResource(R.drawable.bg_input_dark);
+        editBalance.setTextColor(android.graphics.Color.WHITE);
+        editBalance.setHintTextColor(0x80FFFFFF);
+        editBalance.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+        container.addView(editBalance, params);
+
+        builder.setView(container);
+
+        builder.setPositiveButton("Add", (dialog, which) -> {
+            String name = editName.getText().toString().trim();
+            String number = editNumber.getText().toString().trim();
+            String balanceStr = editBalance.getText().toString().trim();
+
+            if (name.isEmpty() || number.isEmpty() || balanceStr.isEmpty()) {
+                Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            try {
+                double balance = Double.parseDouble(balanceStr);
+
+                java.util.Map<String, Object> accountData = new java.util.HashMap<>();
+                accountData.put("name", name);
+                accountData.put("accountNumber", number);
+                accountData.put("balance", balance);
+
+                FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                        .collection("accounts").add(accountData)
+                        .addOnSuccessListener(documentReference -> {
+                            Toast.makeText(this, "Account added successfully", Toast.LENGTH_SHORT).show();
+                            loadAccountsFromFirestore();
+                        })
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(this, "Failed to add account", Toast.LENGTH_SHORT).show();
+                        });
+
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid balance amount", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void setupSavingsWidget() {
+        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
+        View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
+        View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
+
+        if (txtCurrentSavingsValue != null && btnUpdateSavings != null) {
+            loadSavingsFromFirestore(txtCurrentSavingsValue);
+            btnUpdateSavings.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
+            if (cardSavingsWidget != null) {
+                cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
+            }
+        }
+    }
+
+    private void loadSavingsFromFirestore(TextView txtValue) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String currentSavings = documentSnapshot.getString("currentSavings");
+                        if (currentSavings != null && !currentSavings.trim().isEmpty()) {
+                            try {
+                                double amt = Double.parseDouble(currentSavings.trim());
+                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                            } catch (NumberFormatException e) {
+                                txtValue.setText("LKR " + currentSavings);
+                            }
+                        } else {
+                            txtValue.setText("LKR 0.00");
+                        }
+                    }
+                });
+    }
+
+    private void loadAccountsFromFirestore() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("accounts")
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    accountsList.clear();
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String name = doc.getString("name");
+                        Double balance = doc.getDouble("balance");
+                        String number = doc.getString("accountNumber");
+                        if (name != null && balance != null && number != null) {
+                            accountsList.add(new AccountInfo(doc.getId(), name, balance, number));
+                        }
+                    }
+                    if (!accountsList.isEmpty()) {
+                        currentAccountIndex = Math.min(currentAccountIndex, accountsList.size() - 1);
+                    }
+                    updateAccountUI();
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load accounts: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+    }
+
+    private void showUpdateSavingsDialog(TextView txtValue) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
+        builder.setTitle("Update Current Savings");
+
+        final EditText input = new EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Enter amount (LKR)");
+
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
+        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = paddingPx;
+        params.rightMargin = paddingPx;
+        input.setLayoutParams(params);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String val = input.getText().toString().trim();
+            if (!val.isEmpty()) {
+                try {
+                    double amt = Double.parseDouble(val);
+                    FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                            .update("currentSavings", String.valueOf(amt))
+                            .addOnSuccessListener(aVoid -> {
+                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadAccountsFromFirestore();
+        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
+        if (txtCurrentSavingsValue != null) {
+            loadSavingsFromFirestore(txtCurrentSavingsValue);
+        }
+    }
+
+    private void setupSecurityButton() {
+        View btnSecurity = findViewById(R.id.btnSecurity);
+        if (btnSecurity != null) {
+            btnSecurity.setOnClickListener(v -> {
+                boolean isPinSet = PinHelper.isPinSet(this);
+                String[] options;
+                if (isPinSet) {
+                    options = new String[]{"Change PIN Lock", "Disable PIN Lock"};
+                } else {
+                    options = new String[]{"Enable PIN Lock"};
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
+                builder.setTitle("PIN Lock Security");
+                builder.setItems(options, (dialog, which) -> {
+                    if (!isPinSet) {
+                        Intent intent = new Intent(this, PinSetupActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (which == 0) {
+                            Intent intent = new Intent(this, PinSetupActivity.class);
+                            startActivity(intent);
+                        } else if (which == 1) {
+                            PinHelper.clearPin(this);
+                            Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            });
+        }
     }
 }

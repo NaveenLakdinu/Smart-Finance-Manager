@@ -13,8 +13,10 @@ import android.provider.MediaStore;
 import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.RadioButton;
+import android.view.View;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -27,6 +29,18 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import android.graphics.Bitmap;
+import android.graphics.LinearGradient;
+import android.graphics.Shader;
+import android.graphics.Typeface;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
 
 public class LoanReportActivity extends AppCompatActivity {
 
@@ -104,31 +118,34 @@ public class LoanReportActivity extends AppCompatActivity {
             radioPdf.setChecked(false);
             updateFormatUI();
         });
+
+        // Initial UI update to apply active/inactive styles correctly
+        updateFormatUI();
     }
 
     private void updateFormatUI() {
-        // Highlight the selected card with a blue stroke
-        int activeColor = Color.parseColor("#2563EB");
-        int inactiveColor = Color.parseColor("#E2E8F0");
-        int activeBg = Color.parseColor("#EFF6FF");
-        int inactiveBg = Color.WHITE;
+        // Highlight the selected card with an accent stroke matching our premium dark theme
+        int activeColor = ContextCompat.getColor(this, R.color.hero_accent);
+        int inactiveColor = ContextCompat.getColor(this, R.color.glass_card_border);
+        int activeBg = Color.parseColor("#223E66"); // Slightly lighter highlighted dark blue
+        int inactiveBg = ContextCompat.getColor(this, R.color.glass_card_bg);
 
         if (radioPdf.isChecked()) {
             optionPdf.setStrokeColor(activeColor);
             optionPdf.setStrokeWidth(4);
-            optionPdf.getChildAt(0).setBackgroundColor(activeBg);
+            optionPdf.setCardBackgroundColor(activeBg);
             
             optionCsv.setStrokeColor(inactiveColor);
             optionCsv.setStrokeWidth(2);
-            optionCsv.getChildAt(0).setBackgroundColor(inactiveBg);
+            optionCsv.setCardBackgroundColor(inactiveBg);
         } else {
             optionCsv.setStrokeColor(activeColor);
             optionCsv.setStrokeWidth(4);
-            optionCsv.getChildAt(0).setBackgroundColor(activeBg);
+            optionCsv.setCardBackgroundColor(activeBg);
             
             optionPdf.setStrokeColor(inactiveColor);
             optionPdf.setStrokeWidth(2);
-            optionPdf.getChildAt(0).setBackgroundColor(inactiveBg);
+            optionPdf.setCardBackgroundColor(inactiveBg);
         }
     }
 
@@ -188,6 +205,65 @@ public class LoanReportActivity extends AppCompatActivity {
         saveFileToDownloads(fileName, "text/csv", csvData.toString().getBytes());
     }
 
+    private static final int[] PIE_COLORS = {
+            Color.parseColor("#00D4AA"),
+            Color.parseColor("#A78BFA"),
+            Color.parseColor("#38BDF8"),
+            Color.parseColor("#F59E0B"),
+            Color.parseColor("#F43F5E"),
+            Color.parseColor("#10B981"),
+            Color.parseColor("#EC4899"),
+            Color.parseColor("#6366F1")
+    };
+
+    private Bitmap renderPieChartToBitmap(List<Loan> loans) {
+        PieChart pieChart = new PieChart(this);
+        pieChart.setDrawEntryLabels(true);
+        pieChart.setEntryLabelTextSize(11f);
+        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setHoleColor(Color.parseColor("#0A1628"));
+        pieChart.setTransparentCircleColor(Color.parseColor("#0A1628"));
+        pieChart.setCenterText("Loan\nDistribution");
+        pieChart.setCenterTextSize(14f);
+        pieChart.setCenterTextColor(Color.parseColor("#F0F6FF"));
+        pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setEnabled(true);
+        pieChart.getLegend().setTextColor(Color.parseColor("#7A9CC0"));
+        pieChart.getLegend().setTextSize(11f);
+
+        java.util.List<PieEntry> entries = new ArrayList<>();
+        for (Loan loan : loans) {
+            entries.add(new PieEntry((float) loan.getPrincipalAmount(), loan.getLoanName()));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(PIE_COLORS);
+        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format(Locale.US, "LKR %.0f", value);
+            }
+        });
+        dataSet.setSliceSpace(2f);
+
+        PieData pieData = new PieData(dataSet);
+        pieChart.setData(pieData);
+
+        int size = 500;
+        pieChart.measure(
+                View.MeasureSpec.makeMeasureSpec(size, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(size, View.MeasureSpec.EXACTLY));
+        pieChart.layout(0, 0, size, size);
+
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        c.drawColor(Color.parseColor("#0A1628"));
+        pieChart.draw(c);
+        return bitmap;
+    }
+
     private void generatePdfReport(List<Loan> loans) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create(); // A4 size
@@ -221,18 +297,38 @@ public class LoanReportActivity extends AppCompatActivity {
         paint.setFakeBoldText(false);
         y += 40;
         for (Loan loan : loans) {
-            if (y > 800) { // Very basic pagination check
+            if (y > 800) {
                 document.finishPage(page);
                 page = document.startPage(pageInfo);
                 canvas = page.getCanvas();
                 y = 50;
             }
             canvas.drawText(loan.getLoanName(), 50, y, paint);
-            canvas.drawText(String.format(Locale.US, "$%.2f", loan.getPrincipalAmount()), 200, y, paint);
-            canvas.drawText(String.format(Locale.US, "$%.2f", loan.getMonthlyEmi()), 350, y, paint);
+            canvas.drawText(String.format(Locale.US, "LKR %.2f", loan.getPrincipalAmount()), 200, y, paint);
+            canvas.drawText(String.format(Locale.US, "LKR %.2f", loan.getMonthlyEmi()), 350, y, paint);
             canvas.drawText(loan.getDurationMonths() + "m", 480, y, paint);
             y += 30;
         }
+
+        // ── Pie Chart: Loan Principal Distribution ──
+        document.finishPage(page);
+        page = document.startPage(pageInfo);
+        canvas = page.getCanvas();
+        y = 50;
+
+        paint.setTextSize(16f);
+        paint.setFakeBoldText(true);
+        canvas.drawText("Loan Principal Distribution", 50, y, paint);
+        canvas.drawLine(50, y + 10, 550, y + 10, paint);
+        y += 30;
+
+        Bitmap pieBitmap = renderPieChartToBitmap(loans);
+        // Center the chart on the page
+        int chartSize = 450;
+        int left = (595 - chartSize) / 2;
+        android.graphics.Rect destRect = new android.graphics.Rect(left, y, left + chartSize, y + chartSize);
+        canvas.drawBitmap(pieBitmap, null, destRect, null);
+        pieBitmap.recycle();
 
         document.finishPage(page);
 

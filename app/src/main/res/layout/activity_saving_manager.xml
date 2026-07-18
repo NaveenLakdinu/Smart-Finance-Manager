@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- activity_saving_manager.xml — mirrors SavingManagerScreen (Compose) -->
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/goal_bg"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="16dp"
+        android:paddingTop="36dp"
+        android:paddingBottom="32dp">
+
+        <!-- ── Top Bar ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/btnBack"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:background="@drawable/bg_goal_card"
+                android:gravity="center"
+                android:text="←"
+                android:textColor="@color/goal_text"
+                android:textSize="18sp"/>
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="14dp"
+                android:text="Saving Manager"
+                android:textColor="@color/goal_text"
+                android:textSize="18sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="16dp"/>
+
+        <!-- ── Total Savings Goal Hero Card ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_hero_card"
+            android:orientation="vertical"
+            android:padding="22dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TOTAL SAVINGS GOAL"
+                android:textColor="@color/goal_text_mute"
+                android:textSize="11sp"
+                android:letterSpacing="0.11"/>
+
+            <View android:layout_width="1dp" android:layout_height="8dp"/>
+
+            <TextView
+                android:id="@+id/tvTotalGoal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LKR 0.00"
+                android:textColor="@color/goal_text"
+                android:textSize="25sp"
+                android:textStyle="bold"/>
+
+            <View android:layout_width="1dp" android:layout_height="12dp"/>
+
+            <!-- Progress track -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="4dp"
+                android:background="@drawable/bg_pill">
+                <View
+                    android:id="@+id/progressTotal"
+                    android:layout_width="3dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/goal_mint"/>
+            </FrameLayout>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="24dp"/>
+
+        <!-- ── Section: Saving Actions ── -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Saving actions"
+            android:textColor="@color/goal_text"
+            android:textSize="16sp"
+            android:textStyle="bold"/>
+
+        <View android:layout_width="match_parent" android:layout_height="12dp"/>
+
+        <!-- Action cards row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <!-- Add Goal -->
+            <LinearLayout
+                android:id="@+id/cardAddGoal"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginEnd="6dp"
+                android:background="@drawable/bg_goal_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_circle_mint"
+                    android:gravity="center"
+                    android:text="🎯"
+                    android:textSize="20sp"/>
+                <View android:layout_width="1dp" android:layout_height="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Add goal"
+                    android:textColor="@color/goal_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+
+            <!-- All Goals -->
+            <LinearLayout
+                android:id="@+id/cardAllGoals"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:background="@drawable/bg_goal_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
+                <TextView
+                    android:layout_width="46dp"
+                    android:layout_height="46dp"
+                    android:background="@drawable/bg_circle_blue"
+                    android:gravity="center"
+                    android:text="🏦"
+                    android:textSize="20sp"/>
+                <View android:layout_width="1dp" android:layout_height="10dp"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All goals"
+                    android:textColor="@color/goal_text"
+                    android:textSize="13sp"
+                    android:textStyle="bold"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="26dp"/>
+
+        <!-- ── Section: Active Goals ── -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Active goals"
+                android:textColor="@color/goal_text"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+            <TextView
+                android:id="@+id/tvSeeAll"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="See all →"
+                android:textColor="@color/goal_mint"
+                android:textSize="13sp"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <View android:layout_width="match_parent" android:layout_height="12dp"/>
+
+        <!-- Active goals list (dynamic) -->
+        <LinearLayout
+            android:id="@+id/containerActiveGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"/>
+
+        <TextView
+            android:id="@+id/tvEmptyGoals"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="No ongoing goals yet — tap Add Goal to start one."
+            android:textColor="@color/goal_text_dim"
+            android:textSize="13sp"
+            android:paddingVertical="12dp"/>
+
+    </LinearLayout>
+</ScrollView>

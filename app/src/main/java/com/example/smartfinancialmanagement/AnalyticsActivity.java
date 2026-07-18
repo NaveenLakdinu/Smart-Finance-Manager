@@ -22,6 +22,10 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -316,6 +320,52 @@ public class AnalyticsActivity extends AppCompatActivity {
             chartImage.setSpacingBefore(15);
 
             document.add(chartImage);
+
+            // ── Pie Chart: Revenue vs Expenses Distribution ──
+            PieChart pieChart = new PieChart(this);
+            pieChart.setDrawEntryLabels(true);
+            pieChart.setEntryLabelTextSize(11f);
+            pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
+            pieChart.setHoleColor(android.graphics.Color.WHITE);
+            pieChart.setCenterText("Profit\nBreakdown");
+            pieChart.setCenterTextSize(13f);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.getLegend().setTextSize(10f);
+
+            java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
+            if (currentMonthRevenue > 0) pieEntries.add(new PieEntry((float) currentMonthRevenue, "Revenue"));
+            if (currentMonthExpense > 0) pieEntries.add(new PieEntry((float) currentMonthExpense, "Expenses"));
+            if (currentMonthProfit != 0) pieEntries.add(new PieEntry((float) Math.abs(currentMonthProfit), currentMonthProfit >= 0 ? "Net Profit" : "Net Loss"));
+
+            if (!pieEntries.isEmpty()) {
+                PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+                int[] pieColors = {
+                        android.graphics.Color.parseColor("#10B981"),
+                        android.graphics.Color.parseColor("#F43F5E"),
+                        android.graphics.Color.parseColor("#38BDF8")
+                };
+                pieDataSet.setColors(pieColors);
+                pieDataSet.setValueTextSize(11f);
+                pieDataSet.setSliceSpace(3f);
+                PieData pieData = new PieData(pieDataSet);
+                pieChart.setData(pieData);
+
+                pieChart.measure(
+                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
+                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
+                pieChart.layout(0, 0, 500, 500);
+                Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+                pieChart.draw(new Canvas(pieBitmap));
+
+                ByteArrayOutputStream pieStream = new ByteArrayOutputStream();
+                pieBitmap.compress(Bitmap.CompressFormat.PNG, 100, pieStream);
+                Image pieImage = Image.getInstance(pieStream.toByteArray());
+                pieImage.scaleToFit(450, 450);
+                pieImage.setAlignment(Element.ALIGN_CENTER);
+                pieImage.setSpacingBefore(15);
+                document.add(pieImage);
+            }
+
             document.close();
 
             Toast.makeText(this, "PDF Report saved to Downloads folder!", Toast.LENGTH_LONG).show();

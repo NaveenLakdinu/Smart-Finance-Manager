@@ -39,8 +39,8 @@ public class LoanAdapter extends RecyclerView.Adapter<LoanAdapter.LoanViewHolder
     public void onBindViewHolder(@NonNull LoanViewHolder holder, int position) {
         Loan loan = loanList.get(position);
         holder.txtLoanName.setText(loan.getLoanName());
-        holder.txtLoanAmount.setText(String.format(Locale.US, "LKR %.2f", loan.getPrincipalAmount()));
-        holder.txtLoanEMI.setText(String.format(Locale.US, "LKR %.2f", loan.getMonthlyEmi()));
+        holder.txtLoanAmount.setText(CurrencyHelper.formatMoney(context, loan.getPrincipalAmount()));
+        holder.txtLoanEMI.setText(CurrencyHelper.formatMoney(context, loan.getMonthlyEmi()));
 
         holder.itemView.setOnClickListener(v -> listener.onLoanClick(loan));
         holder.btnDeleteLoan.setOnClickListener(v -> listener.onDeleteClick(loan));
