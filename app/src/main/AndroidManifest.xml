@@ -7,6 +7,7 @@
 
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
         android:allowBackup="true"
@@ -207,6 +208,15 @@
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
 
+        <service
+            android:name=".SmartFinanceMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
+
         <activity
             android:name=".SavingListActivity"
             android:exported="false" />
@@ -238,6 +248,35 @@
             android:name=".TransferHistoryActivity"
             android:theme="@style/Theme.SmartFinancialManagement"
             android:exported="false" />
+
+    
+        <activity
+            android:name=".AddSubscriptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionReportActivity"
+            android:exported="false" />
+        <receiver
+            android:name=".SubscriptionAlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+    
+        <receiver
+            android:name=".SubscriptionBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
 
     </application>
 
