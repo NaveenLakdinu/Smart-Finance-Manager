@@ -6,11 +6,13 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -27,20 +29,20 @@ import java.util.Map;
 
 public class UpdateBillActivity extends AppCompatActivity {
 
-    // View component declarations
+    private static final String TAG = "UpdateBillActivity";
+
     private ImageView backButton;
     private EditText editBillName, editAccountNo, editPaymentDate;
     private Spinner spinnerCategory;
     private Button btnUpdateSubmit;
+    private TextView txtTitle;
 
-    // Database object and Document tracking key
     private FirebaseFirestore db;
     private String docId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Reuse the registration layout XML file directly
         setContentView(R.layout.activity_register_bill);
 
         db = FirebaseFirestore.getInstance();
@@ -49,7 +51,7 @@ public class UpdateBillActivity extends AppCompatActivity {
         setupSpinners();
         setupDatePicker();
 
-        // Extract data passed forward from the list card click target
+        // Fetch the target bill data using the passed ID
         getIntentData();
 
         setupClickListeners();
@@ -62,8 +64,12 @@ public class UpdateBillActivity extends AppCompatActivity {
         editPaymentDate = findViewById(R.id.editPaymentDate);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnUpdateSubmit = findViewById(R.id.btnRegisterSubmit);
+        txtTitle = findViewById(R.id.txtTitle);
 
-        // Dynamically override layout defaults to display an Update UI context
+        if (txtTitle != null) {
+            txtTitle.setText("Update Bill"); // Changes header text to "Update Bill"
+        }
+
         btnUpdateSubmit.setText("Update Bill");
     }
 
@@ -82,26 +88,45 @@ public class UpdateBillActivity extends AppCompatActivity {
         spinnerCategory.setAdapter(categoryAdapter);
     }
 
+    // FIX: Instead of looking for missing Intent extras, we query Firestore directly using the ID
     private void getIntentData() {
         if (getIntent().hasExtra("BILL_ID")) {
             docId = getIntent().getStringExtra("BILL_ID");
-            editBillName.setText(getIntent().getStringExtra("BILL_NAME"));
-            editAccountNo.setText(getIntent().getStringExtra("BILL_ACC"));
-            editPaymentDate.setText(getIntent().getStringExtra("BILL_DATE"));
 
-            // Auto-select the corresponding spinner dropdown element matching passed data
-            String category = getIntent().getStringExtra("BILL_CAT");
+            // Pull the latest document snapshot data directly from the collection
+            db.collection("utilityBill").document(docId).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            UtilityBill bill = documentSnapshot.toObject(UtilityBill.class);
+                            if (bill != null) {
+                                // Populate input fields safely
+                                editBillName.setText(bill.getBillName());
+                                editAccountNo.setText(bill.getAccountNo());
+                                editPaymentDate.setText(bill.getPaymentDate());
 
-            // FIX: Cast explicitly to ArrayAdapter<String> instead of ArrayAdapter<?>
-            @SuppressWarnings("unchecked")
-            ArrayAdapter<String> myAdap = (ArrayAdapter<String>) spinnerCategory.getAdapter();
-
-            if (myAdap != null) {
-                int spinnerPosition = myAdap.getPosition(category);
-                spinnerCategory.setSelection(spinnerPosition);
-            }
+                                // Set matching spinner item position
+                                String category = bill.getCategory();
+                                @SuppressWarnings("unchecked")
+                                ArrayAdapter<String> myAdap = (ArrayAdapter<String>) spinnerCategory.getAdapter();
+                                if (myAdap != null && category != null) {
+                                    int spinnerPosition = myAdap.getPosition(category);
+                                    spinnerCategory.setSelection(spinnerPosition);
+                                }
+                            }
+                        } else {
+                            Toast.makeText(this, "Document does not exist", Toast.LENGTH_SHORT).show();
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e(TAG, "Error fetching bill data", e);
+                        Toast.makeText(this, "Failed to load bill details", Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            Toast.makeText(this, "Error: No Bill ID received", Toast.LENGTH_SHORT).show();
+            finish();
         }
     }
+
     private void setupDatePicker() {
         editPaymentDate.setOnClickListener(v -> {
             final Calendar calendar = Calendar.getInstance();
@@ -122,7 +147,6 @@ public class UpdateBillActivity extends AppCompatActivity {
     private void setupClickListeners() {
         backButton.setOnClickListener(v -> finish());
 
-        // Listens for execution command triggers
         btnUpdateSubmit.setOnClickListener(v -> {
             if (validateForm()) {
                 saveUpdatesToFirebase();
@@ -130,36 +154,30 @@ public class UpdateBillActivity extends AppCompatActivity {
         });
     }
 
-    // Cleaned up core upload logic block mapping clean updates to the Firestore Document
     private void saveUpdatesToFirebase() {
-        btnUpdateSubmit.setEnabled(false); // Lock interface interaction thread
+        if (docId == null) return;
+        btnUpdateSubmit.setEnabled(false);
 
-        // Capture data safely from form inputs
         String name = editBillName.getText().toString().trim();
         String accountNo = editAccountNo.getText().toString().trim();
         String category = spinnerCategory.getSelectedItem().toString();
         String dueDateStr = editPaymentDate.getText().toString().trim();
 
-        // Map key names precisely matching your fields on Cloud Firestore
         Map<String, Object> updates = new HashMap<>();
-        updates.put("name", name);
+        updates.put("billName", name);
         updates.put("accountNo", accountNo);
         updates.put("category", category);
-        updates.put("dueDate", dueDateStr);
+        updates.put("paymentDate", dueDateStr);
 
-        // Target document update deployment line
-        db.collection("bills").document(docId)
+        db.collection("utilityBill").document(docId)
                 .update(updates)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Bill Updated Successfully", Toast.LENGTH_SHORT).show();
-
-                    // Trigger monthly alert reassignment routine using newly formatted parameters
                     scheduleBillNotification(name, dueDateStr);
-
-                    finish(); // Fall back to dashboard display tree
+                    finish();
                 })
                 .addOnFailureListener(e -> {
-                    btnUpdateSubmit.setEnabled(true); // Release UI block on thread exception
+                    btnUpdateSubmit.setEnabled(true);
                     Toast.makeText(this, "Update Failed: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
     }
@@ -171,9 +189,7 @@ public class UpdateBillActivity extends AppCompatActivity {
             if (date != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(date);
-
-                // Alert 3 days before payment due configuration target parameter
-                calendar.add(Calendar.DAY_OF_YEAR, -3);
+                calendar.add(Calendar.DAY_OF_YEAR, -1);
                 calendar.set(Calendar.HOUR_OF_DAY, 9);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);

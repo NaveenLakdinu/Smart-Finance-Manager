@@ -82,7 +82,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         btnTopLogout = findViewById(R.id.btnTopLogout);
         recyclerBusinessFilters = findViewById(R.id.recyclerBusinessFilters);
 
-        // initializeViews() ඇතුළතට මෙය එකතු කරන්න:
         ImageView btnManageBusinesses = findViewById(R.id.btnManageBusinesses);
         btnManageBusinesses.setOnClickListener(v -> {
             startActivity(new Intent(this, ManageBusinessActivity.class));

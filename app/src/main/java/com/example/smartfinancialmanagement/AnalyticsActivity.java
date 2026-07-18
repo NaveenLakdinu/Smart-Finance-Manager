@@ -28,15 +28,23 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+
+// Pure iText 7 Engine Imports
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.colors.DeviceRgb;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.io.font.constants.StandardFonts;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.layout.properties.TextAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -242,7 +250,6 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void generateAnalyticsPDF() {
-        Document document = new Document();
         String filename = "Analytics_Report_" + selectedBusinessFilter.replace(" ", "_") + "_" + System.currentTimeMillis() + ".pdf";
 
         try {
@@ -261,46 +268,73 @@ public class AnalyticsActivity extends AppCompatActivity {
                 outputStream = new java.io.FileOutputStream(file);
             }
 
-            PdfWriter.getInstance(document, outputStream);
-            document.open();
+            if (outputStream == null) {
+                throw new Exception("Failed to open output stream.");
+            }
 
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD, com.itextpdf.text.BaseColor.DARK_GRAY);
-            Font subTitleFont = new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC, com.itextpdf.text.BaseColor.GRAY);
-            Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
-            Font normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
+            // iText 7 Initialization Layout
+            PdfWriter writer = new PdfWriter(outputStream);
+            PdfDocument pdfDoc = new PdfDocument(writer);
+            Document document = new Document(pdfDoc);
 
-            document.add(new Paragraph("SMART FINANCIAL MANAGEMENT", subTitleFont));
-            Paragraph title = new Paragraph("Business Analytics Report", titleFont);
-            title.setSpacingAfter(5);
+            // iText 7 Font Setup
+            PdfFont fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA);
+            PdfFont fontHelveticaBold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
+            PdfFont fontHelveticaOblique = PdfFontFactory.createFont(StandardFonts.HELVETICA_OBLIQUE);
+
+            // App Heading
+            Paragraph appTitle = new Paragraph("SMART FINANCIAL MANAGEMENT")
+                    .setFont(fontHelveticaOblique)
+                    .setFontSize(12)
+                    .setFontColor(ColorConstants.GRAY);
+            document.add(appTitle);
+
+            // Report Title
+            Paragraph title = new Paragraph("Business Analytics Report")
+                    .setFont(fontHelveticaBold)
+                    .setFontSize(22)
+                    .setFontColor(ColorConstants.DARK_GRAY)
+                    .setMarginBottom(5);
             document.add(title);
 
-            Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter, boldFont);
-            filterScope.setSpacingAfter(20);
+            // Scope Title
+            Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter)
+                    .setFont(fontHelveticaBold)
+                    .setFontSize(12)
+                    .setMarginBottom(20);
             document.add(filterScope);
 
-            PdfPTable table = new PdfPTable(2);
-            table.setWidthPercentage(100);
-            table.setSpacingAfter(25);
+            // iText 7 Table Structure (using column widths instead of percentages)
+            float[] columnWidths = {250f, 250f};
+            Table table = new Table(columnWidths);
+            table.setMarginBottom(25);
 
-            addTableCell(table, "Metric Description", boldFont, true);
-            addTableCell(table, "Amount (Rs.)", boldFont, true);
+            // Headings
+            addTableCell(table, "Metric Description", fontHelveticaBold, true);
+            addTableCell(table, "Amount (Rs.)", fontHelveticaBold, true);
 
-            addTableCell(table, "Total Revenue", normalFont, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthRevenue), normalFont, false);
+            // Rows
+            addTableCell(table, "Total Revenue", fontHelvetica, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthRevenue), fontHelvetica, false);
 
-            addTableCell(table, "Total Expenses", normalFont, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthExpense), normalFont, false);
+            addTableCell(table, "Total Expenses", fontHelvetica, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthExpense), fontHelvetica, false);
 
-            addTableCell(table, "Net Profit / Loss", boldFont, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit), boldFont, false);
+            addTableCell(table, "Net Profit / Loss", fontHelveticaBold, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit), fontHelveticaBold, false);
 
-            addTableCell(table, "Profit Margin Percentage", normalFont, false);
-            addTableCell(table, String.format(Locale.getDefault(), "%.2f%%", profitPercentage), normalFont, false);
+            addTableCell(table, "Profit Margin Percentage", fontHelvetica, false);
+            addTableCell(table, String.format(Locale.getDefault(), "%.2f%%", profitPercentage), fontHelvetica, false);
 
             document.add(table);
 
-            document.add(new Paragraph("Visual Analytics Workspace Chart Summary:", boldFont));
+            // Chart Title Description
+            Paragraph chartDesc = new Paragraph("Visual Analytics Workspace Chart Summary:")
+                    .setFont(fontHelveticaBold)
+                    .setFontSize(12);
+            document.add(chartDesc);
 
+            // Chart Processing to Image
             Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             barChartAnalytic.draw(canvas);
@@ -309,13 +343,18 @@ public class AnalyticsActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
-            Image chartImage = Image.getInstance(byteArray);
-            chartImage.scaleToFit(500, 300);
-            chartImage.setAlignment(Element.ALIGN_CENTER);
-            chartImage.setSpacingBefore(15);
+            // iText 7 Image Handling
+            Image chartImage = new Image(ImageDataFactory.create(byteArray));
+            chartImage.setMaxWidth(500f);
+            chartImage.setMaxHeight(300f);
+            chartImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
+            chartImage.setMarginTop(15);
 
             document.add(chartImage);
+
+            // Close handles safely
             document.close();
+            outputStream.close();
 
             Toast.makeText(this, "PDF Report saved to Downloads folder!", Toast.LENGTH_LONG).show();
 
@@ -325,11 +364,11 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
     }
 
-    private void addTableCell(PdfPTable table, String text, Font font, boolean isHeader) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(10);
+    private void addTableCell(Table table, String text, PdfFont font, boolean isHeader) {
+        Cell cell = new Cell().add(new Paragraph(text).setFont(font).setFontSize(12));
+        cell.setPadding(10f);
         if (isHeader) {
-            cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
+            cell.setBackgroundColor(new DeviceRgb(211, 211, 211)); // Light Gray Background
         }
         table.addCell(cell);
     }

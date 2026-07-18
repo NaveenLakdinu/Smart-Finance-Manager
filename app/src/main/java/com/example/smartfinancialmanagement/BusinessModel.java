@@ -4,8 +4,8 @@ public class BusinessModel {
     private String businessName;
     private String businessCategory;
     private String businessPhone;
-    private String businessEmail; // ව්‍යාපාරයේ නිල ඉමේල් එක (changeable)
-    private String ownerEmail;    // 💡 අලුතින් එකතු කළා: අයිතිකරුගේ ස්ථාවර ඉමේල් එක
+    private String businessEmail;
+    private String ownerEmail;
 
     public BusinessModel() {}
 

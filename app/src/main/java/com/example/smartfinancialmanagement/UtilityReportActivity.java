@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,16 +29,16 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.itextpdf.text.BaseColor;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.Element;
-import com.itextpdf.text.Font;
-import com.itextpdf.text.Image;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.Phrase;
-import com.itextpdf.text.pdf.PdfPCell;
-import com.itextpdf.text.pdf.PdfPTable;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.io.image.ImageDataFactory;
+import com.itextpdf.kernel.colors.ColorConstants;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Image;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.properties.TextAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -70,8 +72,6 @@ public class UtilityReportActivity extends AppCompatActivity {
             }
         }
 
-        // 💡 2. FIX: Intent Keys දෙකම පරික්ෂා කිරීම (FINAL_REPORT_ITEMS සහ STAGED_ITEMS)
-        // ඔබ කුමන Key එකකින් දත්ත එව්වත් වරදින්නේ නැතිව මෙතැනදී දත්ත කියවා ගනී.
         if (receivedReportItems == null || receivedReportItems.isEmpty()) {
             if (getIntent() != null) {
                 String targetKey = null;
@@ -104,7 +104,6 @@ public class UtilityReportActivity extends AppCompatActivity {
 
     private void initViews() {
         backButtonContainer = findViewById(R.id.backButtonContainer);
-        // 💡 පැහැදිලිවම XML එකේ ඇති නිවැරදි ID එක බන්ධනය කිරීම
         txtTotalExpenses = findViewById(R.id.txtTotalAmount);
         recyclerReportItems = findViewById(R.id.recyclerReportItems);
         barChartAnalytic = findViewById(R.id.barChartAnalytic);
@@ -112,26 +111,24 @@ public class UtilityReportActivity extends AppCompatActivity {
     }
 
     private void calculateAndDisplayReportData() {
+        // 1. Safe guard against null or empty arrays right out of the gate
         if (receivedReportItems == null || receivedReportItems.isEmpty()) {
             if (txtTotalExpenses != null) txtTotalExpenses.setText("Rs. 0.00");
             Toast.makeText(this, "No bills data received for report!", Toast.LENGTH_LONG).show();
             return;
         }
 
-        // 💡 3. මුළු මුදල නිවැරදිව එකතු කිරීමේ ක්‍රියාවලිය
+        // 2. Clear out old calculations before iterating
         grandTotal = 0.0;
         for (BillReportItem item : receivedReportItems) {
-            grandTotal += item.getAmount();
+            if (item != null) {
+                grandTotal += item.getAmount();
+            }
         }
 
-        // 💡 4. FIX: View එක Null වීම වැළැක්වීමට සෘජුවම අගය ලිවීම සහ Fail-safe එකක් තැබීම
+        // 3. Update the UI text fields reliably
         if (txtTotalExpenses != null) {
             txtTotalExpenses.setText(String.format(Locale.getDefault(), "Rs. %.2f", grandTotal));
-        } else {
-            TextView txtBackup = findViewById(R.id.txtTotalAmount);
-            if (txtBackup != null) {
-                txtBackup.setText(String.format(Locale.getDefault(), "Rs. %.2f", grandTotal));
-            }
         }
 
         recyclerReportItems.setLayoutManager(new LinearLayoutManager(this));
@@ -142,16 +139,26 @@ public class UtilityReportActivity extends AppCompatActivity {
     }
 
     private void renderBeautifulBarChart() {
-        if (receivedReportItems == null || receivedReportItems.isEmpty()) return;
+        if (receivedReportItems == null || receivedReportItems.isEmpty()) {
+            barChartAnalytic.clear();
+            return;
+        }
 
         List<String> uniqueBillNames = new ArrayList<>();
         List<String> uniqueMonths = new ArrayList<>();
 
+        // Populate unique lists while strictly avoiding null entries
         for (BillReportItem item : receivedReportItems) {
-            if (!uniqueBillNames.contains(item.getBillName())) uniqueBillNames.add(item.getBillName());
-            if (!uniqueMonths.contains(item.getTargetMonth())) uniqueMonths.add(item.getTargetMonth());
+            if (item == null) continue;
+            if (item.getBillName() != null && !uniqueBillNames.contains(item.getBillName())) {
+                uniqueBillNames.add(item.getBillName());
+            }
+            if (item.getTargetMonth() != null && !uniqueMonths.contains(item.getTargetMonth())) {
+                uniqueMonths.add(item.getTargetMonth());
+            }
         }
 
+        // If there isn't enough data to draw a chart comparison layout, clear it gracefully instead of crashing
         if (uniqueBillNames.isEmpty() || uniqueMonths.isEmpty()) {
             barChartAnalytic.clear();
             return;
@@ -164,6 +171,7 @@ public class UtilityReportActivity extends AppCompatActivity {
                 Color.parseColor("#10B981"), Color.parseColor("#EC4899")
         };
 
+        // FIX: Loop safely across all available items without expecting exactly 5 entries
         for (int m = 0; m < uniqueMonths.size(); m++) {
             String currentMonth = uniqueMonths.get(m);
             List<BarEntry> entriesForMonth = new ArrayList<>();
@@ -173,11 +181,12 @@ public class UtilityReportActivity extends AppCompatActivity {
                 float amount = 0f;
 
                 for (BillReportItem item : receivedReportItems) {
-                    if (item.getBillName().equals(currentBillName) && item.getTargetMonth().equals(currentMonth)) {
+                    if (item != null && currentBillName.equals(item.getBillName()) && currentMonth.equals(item.getTargetMonth())) {
                         amount = (float) item.getAmount();
                         break;
                     }
                 }
+                // Add a safe fallback entry even if the combination has no values
                 entriesForMonth.add(new BarEntry(b, amount));
             }
 
@@ -200,11 +209,15 @@ public class UtilityReportActivity extends AppCompatActivity {
         int numMonths = uniqueMonths.size();
 
         float barWidth = ((1.0f - groupSpace) / (numMonths > 0 ? numMonths : 1)) - barSpace;
-        if (barWidth <= 0) barWidth = 0.1f;
+        if (barWidth <= 0) barWidth = 0.05f; // Hard fallback minimum width limit to prevent structural division errors
 
         barData.setBarWidth(barWidth);
         barChartAnalytic.setData(barData);
-        barChartAnalytic.groupBars(0f, groupSpace, barSpace);
+
+        // Only grouping views if we have multiple datasets to showcase
+        if (uniqueMonths.size() > 1) {
+            barChartAnalytic.groupBars(0f, groupSpace, barSpace);
+        }
 
         XAxis xAxis = barChartAnalytic.getXAxis();
         xAxis.setValueFormatter(new ValueFormatter() {
@@ -222,11 +235,11 @@ public class UtilityReportActivity extends AppCompatActivity {
         xAxis.setAxisLineColor(Color.parseColor("#52759A"));
         xAxis.setAxisLineWidth(2f);
         xAxis.setGranularity(1f);
-        xAxis.setCenterAxisLabels(true);
+        xAxis.setCenterAxisLabels(uniqueMonths.size() > 1); // Only center alignment text if charts group up
         xAxis.setAxisMinimum(0f);
 
         float groupWidth = barData.getGroupWidth(groupSpace, barSpace);
-        xAxis.setAxisMaximum(groupWidth * uniqueBillNames.size());
+        xAxis.setAxisMaximum(uniqueMonths.size() > 1 ? (groupWidth * uniqueBillNames.size()) : uniqueBillNames.size());
 
         barChartAnalytic.getAxisLeft().setTextColor(Color.parseColor("#7A9CC0"));
         barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#1A3050"));
@@ -246,76 +259,111 @@ public class UtilityReportActivity extends AppCompatActivity {
     private void generatePdfReportFile() {
         if (receivedReportItems == null || receivedReportItems.isEmpty()) return;
 
-        Document document = new Document();
-        String filename = "Utility_Report_" + System.currentTimeMillis() + ".pdf";
+        // 1. Chart capture must take place directly on the main UI thread canvas
+        int w = barChartAnalytic.getWidth() > 0 ? barChartAnalytic.getWidth() : 600;
+        int h = barChartAnalytic.getHeight() > 0 ? barChartAnalytic.getHeight() : 400;
+        Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        barChartAnalytic.draw(new Canvas(bitmap));
 
-        try {
-            OutputStream outputStream;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ContentValues values = new ContentValues();
-                values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
-                values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
-                outputStream = (uri != null) ? getContentResolver().openOutputStream(uri) : null;
-            } else {
-                java.io.File file = new java.io.File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
-                outputStream = new java.io.FileOutputStream(file);
+        Toast.makeText(this, "Generating PDF Report (iText 7)...", Toast.LENGTH_SHORT).show();
+
+        // 2. Delegate file writing tasks to a background thread to prevent UI stuttering
+        new Thread(() -> {
+            String filename = "Utility_Report_" + System.currentTimeMillis() + ".pdf";
+            boolean isSuccess = false;
+
+            try {
+                OutputStream outputStream;
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                    ContentValues values = new ContentValues();
+                    values.put(MediaStore.MediaColumns.DISPLAY_NAME, filename);
+                    values.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+                    values.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+                    Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                    outputStream = (uri != null) ? getContentResolver().openOutputStream(uri) : null;
+                } else {
+                    java.io.File file = new java.io.File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS), filename);
+                    outputStream = new java.io.FileOutputStream(file);
+                }
+
+                if (outputStream == null) throw new Exception("Failed to open storage output stream.");
+
+                // iText 7 Initializer Structure: Writer -> PdfDocument -> Document layout
+                PdfWriter writer = new PdfWriter(outputStream);
+                PdfDocument pdfDoc = new PdfDocument(writer);
+                Document document = new Document(pdfDoc);
+
+                // Add clear headline
+                Paragraph header = new Paragraph("Utility Bills Summary Report")
+                        .setFontSize(20)
+                        .setBold()
+                        .setMarginBottom(15f);
+                document.add(header);
+
+                // Set up a 3-column structural layout grid table
+                float[] columnWidths = {2f, 2f, 2f}; // Normalized proportional widths
+                Table table = new Table(columnWidths);
+                table.useAllAvailableWidth();
+
+                // Headers
+                addTableCell7(table, "Bill Name", true);
+                addTableCell7(table, "Month", true);
+                addTableCell7(table, "Amount", true);
+
+                // Populating row datasets
+                for (BillReportItem item : receivedReportItems) {
+                    addTableCell7(table, item.getBillName(), false);
+                    addTableCell7(table, item.getTargetMonth(), false);
+                    addTableCell7(table, String.format(Locale.getDefault(), "Rs. %.2f", item.getAmount()), false);
+                }
+
+                // Summary Footer Row
+                addTableCell7(table, "Total", true);
+                addTableCell7(table, "", false);
+                addTableCell7(table, String.format(Locale.getDefault(), "Rs. %.2f", grandTotal), true);
+
+                document.add(table);
+
+                // Empty space spacer paragraph
+                document.add(new Paragraph("\n"));
+
+                // Convert MPAndroidChart bitmap capture data safely into an iText 7 block element
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                byte[] bitmapData = stream.toByteArray();
+
+                Image chartImage = new Image(ImageDataFactory.create(bitmapData));
+                chartImage.setMaxWidth(500f);
+                chartImage.setTextAlignment(TextAlignment.CENTER);
+
+                document.add(chartImage);
+
+                // Explicitly close the layout document context
+                document.close();
+                isSuccess = true;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
 
-            if (outputStream == null) throw new Exception("Output stream opening failed.");
-
-            PdfWriter.getInstance(document, outputStream);
-            document.open();
-
-            Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, BaseColor.BLACK);
-            Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
-            Font normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
-
-            document.add(new Paragraph("Utility Bills Summary Report", titleFont));
-            document.add(new Paragraph(" ", normalFont));
-
-            PdfPTable table = new PdfPTable(3);
-            table.setWidthPercentage(100);
-            addTableCell(table, "Bill Name", boldFont, true);
-            addTableCell(table, "Month", boldFont, true);
-            addTableCell(table, "Amount", boldFont, true);
-
-            for (BillReportItem item : receivedReportItems) {
-                addTableCell(table, item.getBillName(), normalFont, false);
-                addTableCell(table, item.getTargetMonth(), normalFont, false);
-                addTableCell(table, String.format(Locale.getDefault(), "Rs. %.2f", item.getAmount()), normalFont, false);
-            }
-            addTableCell(table, "Total", boldFont, false);
-            addTableCell(table, "", normalFont, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %.2f", grandTotal), boldFont, false);
-
-            document.add(table);
-
-            int w = barChartAnalytic.getWidth() > 0 ? barChartAnalytic.getWidth() : 600;
-            int h = barChartAnalytic.getHeight() > 0 ? barChartAnalytic.getHeight() : 400;
-            Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            barChartAnalytic.draw(new Canvas(bitmap));
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image chartImage = Image.getInstance(stream.toByteArray());
-            chartImage.scaleToFit(500, 300);
-            chartImage.setAlignment(Element.ALIGN_CENTER);
-            document.add(chartImage);
-
-            document.close();
-            Toast.makeText(this, "PDF Saved to Downloads Folder", Toast.LENGTH_LONG).show();
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(this, "Failed to compile PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
+            // 3. Deliver completion updates safely back on Android's main loop UI handler
+            boolean finalIsSuccess = isSuccess;
+            new Handler(Looper.getMainLooper()).post(() -> {
+                if (finalIsSuccess) {
+                    Toast.makeText(UtilityReportActivity.this, "PDF Saved to Downloads Folder via iText 7", Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(UtilityReportActivity.this, "Failed to compile PDF document", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
     }
 
-    private void addTableCell(PdfPTable table, String text, Font font, boolean isHeader) {
-        PdfPCell cell = new PdfPCell(new Phrase(text, font));
-        cell.setPadding(8);
-        if (isHeader) cell.setBackgroundColor(BaseColor.LIGHT_GRAY);
+    private void addTableCell7(Table table, String text, boolean isBold) {
+        Cell cell = new Cell().add(new Paragraph(text));
+        cell.setPadding(8f);
+        if (isBold) {
+            cell.setBold();
+            cell.setBackgroundColor(ColorConstants.LIGHT_GRAY);
+        }
         table.addCell(cell);
     }
 

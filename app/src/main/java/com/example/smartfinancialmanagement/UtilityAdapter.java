@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 import java.util.Locale;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class UtilityAdapter extends RecyclerView.Adapter<UtilityAdapter.ViewHolder> {
 
@@ -17,8 +18,10 @@ public class UtilityAdapter extends RecyclerView.Adapter<UtilityAdapter.ViewHold
     private ArrayList<UtilityBill> list;
     private OnUtilityClickListener listener;
 
+    // FIX: Added onCardClick so the activity knows when to open the management screen
     public interface OnUtilityClickListener {
         void onDeleteClick(UtilityBill bill);
+        void onCardClick(UtilityBill bill);
     }
 
     public UtilityAdapter(Context context, ArrayList<UtilityBill> list, OnUtilityClickListener listener) {
@@ -39,7 +42,7 @@ public class UtilityAdapter extends RecyclerView.Adapter<UtilityAdapter.ViewHold
         UtilityBill bill = list.get(position);
 
         holder.txtBillName.setText(bill.getBillName());
-        holder.txtBillDetails.setText(String.format(Locale.US, "LKR %.2f • Due %s • Status: %s", 
+        holder.txtBillDetails.setText(String.format(Locale.US, "LKR %.2f • Due %s • Status: %s",
                 bill.getAmount(), bill.getPaymentDate(), bill.getStatus()));
 
         // Set Category Icon Emoji
@@ -60,11 +63,37 @@ public class UtilityAdapter extends RecyclerView.Adapter<UtilityAdapter.ViewHold
             holder.txtCategoryIcon.setText("📄");
         }
 
-        // We only support delete action for simplicity
-        holder.btnEdit.setVisibility(View.GONE);
-        holder.btnDelete.setOnClickListener(v -> {
+        // Fetch Current User
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        }
+
+        // Manage action buttons visibility based on ownership rules
+        if (bill.getUserId() != null && bill.getUserId().equals(currentUserId)) {
+            holder.btnDelete.setVisibility(View.VISIBLE);
+            holder.btnEdit.setVisibility(View.VISIBLE); // FIX: Enabled the edit icon view visual state
+
+            holder.btnDelete.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onDeleteClick(bill);
+                }
+            });
+
+            holder.btnEdit.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onCardClick(bill);
+                }
+            });
+        } else {
+            holder.btnDelete.setVisibility(View.GONE);
+            holder.btnEdit.setVisibility(View.GONE);
+        }
+
+        // FIX: Makes the whole outer card layout act as an update redirection button
+        holder.itemView.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onDeleteClick(bill);
+                listener.onCardClick(bill);
             }
         });
     }

@@ -254,7 +254,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     intent.putExtra("clientName", clientName);
                     intent.putExtra("dueDate", dueDateString);
 
-                    // 💡 පරිශීලකයාගේ ඊමේල් අවසර තීරණය BroadcastReceiver එක වෙත යැවීම
                     intent.putExtra("isEmailReminderEnabled", isEmailEnabled);
 
                     int uniqueRequestId = Math.abs((clientName + dueDateString).hashCode());

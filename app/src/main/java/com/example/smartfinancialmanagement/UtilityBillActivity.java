@@ -5,12 +5,14 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -18,7 +20,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import android.Manifest;
@@ -29,11 +30,14 @@ import androidx.core.content.ContextCompat;
 
 public class UtilityBillActivity extends AppCompatActivity {
 
+    private static final String TAG = "UtilityBillActivity";
+
     private ImageView btnBack;
     private RecyclerView recyclerBills;
-    private BillAdapter adapter;
-    private List<BillWithId> billList;
+    private UtilityAdapter adapter;
+    private ArrayList<UtilityBill> billList;
     private FirebaseFirestore db;
+    private android.view.View btnManageUtility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,40 +45,80 @@ public class UtilityBillActivity extends AppCompatActivity {
         setContentView(R.layout.activity_utility_bills);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            // Check if the permission has already been granted
             if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
                     != PackageManager.PERMISSION_GRANTED) {
-
-                // Request the permission from the user
                 ActivityCompat.requestPermissions(this,
                         new String[]{Manifest.permission.POST_NOTIFICATIONS}, 101);
             }
         }
 
-        // Initialize Firestore database instance
         db = FirebaseFirestore.getInstance();
         billList = new ArrayList<>();
 
-        // Handle back navigation button click
         btnBack = findViewById(R.id.backButton);
         btnBack.setOnClickListener(v -> finish());
 
-        // Bind and setup the RecyclerView UI component
+        btnManageUtility = findViewById(R.id.recyclerBills);
+        if (btnManageUtility != null) {
+            btnManageUtility.setOnClickListener(v -> {
+                // Open your management/form activity layout to add a new bill
+                Intent intent = new Intent(UtilityBillActivity.this, UtilityReportFormActivity.class);
+                startActivity(intent);
+            });
+        }
+
         recyclerBills = findViewById(R.id.recyclerBills);
         recyclerBills.setLayoutManager(new LinearLayoutManager(this));
-        adapter = new BillAdapter(this, billList);
+
+        // FIX: Replaced the single-parameter lambda with the fully fleshed-out interface listener instance
+        adapter = new UtilityAdapter(this, billList, new UtilityAdapter.OnUtilityClickListener() {
+            @Override
+            public void onDeleteClick(UtilityBill bill) {
+                deleteBillFromFirestore(bill);
+            }
+
+            @Override
+            public void onCardClick(UtilityBill bill) {
+                // Tapping anywhere on the item card or the edit button routes here
+                if (bill.getId() != null) {
+                    Intent intent = new Intent(UtilityBillActivity.this, UpdateBillActivity.class);
+                    intent.putExtra("BILL_ID", bill.getId());
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(UtilityBillActivity.this, "Error: Missing bill tracking code ID", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         recyclerBills.setAdapter(adapter);
 
-        // Begin streaming your data in real-time from Firestore
         listenForRealtimeBills();
     }
 
-    /**
-     * Listens for changes inside your Firestore "bills" collection in real-time.
-     * Updates automatically whenever you add, modify, or delete a bill.
-     */
+    private void deleteBillFromFirestore(UtilityBill bill) {
+        if (bill.getId() == null) return;
+
+        db.collection("utilityBill")
+                .document(bill.getId())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(UtilityBillActivity.this, "Bill deleted successfully!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(UtilityBillActivity.this, "Delete failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
     private void listenForRealtimeBills() {
-        db.collection("bills")
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            Log.e(TAG, "No user logged in.");
+            return;
+        }
+
+        db.collection("utilityBill")
+                .whereEqualTo("userId", currentUserId)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
                         Toast.makeText(this, "Error fetching records: " + error.getMessage(), Toast.LENGTH_SHORT).show();
@@ -82,88 +126,81 @@ public class UtilityBillActivity extends AppCompatActivity {
                     }
 
                     if (value != null) {
-                        billList.clear(); // Clear old local list to prevent duplicates
+                        billList.clear();
 
                         for (DocumentSnapshot doc : value.getDocuments()) {
-                            // Map the Firestore document data back into our local data model structure
-                            RegisterBillActivity.BillModel bill = doc.toObject(RegisterBillActivity.BillModel.class);
+                            UtilityBill bill = doc.toObject(UtilityBill.class);
 
                             if (bill != null) {
-                                // Add the compiled model along with its unique database ID to our rendering collection
-                                billList.add(new BillWithId(doc.getId(), bill));
+                                bill.setId(doc.getId());
+                                billList.add(bill);
 
-                                // Schedule or refresh monthly notification alarms 3 days prior to due dates
-                                scheduleBillNotification(bill.getName(), bill.getDueDate());
+                                // Refresh system notification engine
+                                scheduleBillNotification(bill.getBillName(), bill.getPaymentDate());
                             }
                         }
-                        // Refresh UI presentation changes automatically
                         adapter.notifyDataSetChanged();
                     }
                 });
     }
 
     /**
-     * Checks the target bill date and automatically schedules a system broadcast alarm
-     * exactly 3 days prior to the payment date every month at 9:00 AM.
+     * FIX: Calculates the next upcoming occurrence exactly 1 day before the target monthly day.
+     * Prevents security crashes while safely rolling over target timelines automatically.
      */
     private void scheduleBillNotification(String billName, String dueDateStr) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
         try {
             Date date = sdf.parse(dueDateStr);
             if (date != null) {
-                Calendar calendar = Calendar.getInstance();
-                calendar.setTime(date);
+                Calendar baseCalendar = Calendar.getInstance();
+                baseCalendar.setTime(date);
 
-                // Roll back calendar precisely three days prior to specified field data
-                calendar.add(Calendar.DAY_OF_YEAR, -3);
-                calendar.set(Calendar.HOUR_OF_DAY, 9); // Run alarm routine in morning state
-                calendar.set(Calendar.MINUTE, 0);
-                calendar.set(Calendar.SECOND, 0);
+                // Get the base day configuration (e.g., the 25th)
+                int targetDayOfMonth = baseCalendar.get(Calendar.DAY_OF_MONTH);
+
+                Calendar reminderCalendar = Calendar.getInstance();
+                // Match the target day, but place it in the current month and year
+                reminderCalendar.set(Calendar.DAY_OF_MONTH, targetDayOfMonth);
+                reminderCalendar.set(Calendar.HOUR_OF_DAY, 9);
+                reminderCalendar.set(Calendar.MINUTE, 0);
+                reminderCalendar.set(Calendar.SECOND, 0);
+                reminderCalendar.set(Calendar.MILLISECOND, 0);
+
+                // FIX 1: Shift back by exactly 1 day (due tomorrow logic)
+                reminderCalendar.add(Calendar.DAY_OF_YEAR, -1);
+
+                // FIX 2: Monthly rollover logic. If the calculated reminder day for this month
+                // has already passed, automatically push it forward to next month.
+                if (reminderCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
+                    reminderCalendar.add(Calendar.MONTH, 1);
+                }
 
                 AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
                 Intent intent = new Intent(this, NotificationReceiver.class);
                 intent.putExtra("BILL_NAME", billName);
 
-                // Unique intent token wrapper using matching numeric hashes
                 int uniqueIntentId = billName.hashCode();
 
                 PendingIntent pendingIntent = PendingIntent.getBroadcast(
                         this, uniqueIntentId, intent,
                         PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-                if (alarmManager != null && calendar.getTimeInMillis() > System.currentTimeMillis()) {
+                if (alarmManager != null) {
                     try {
-                        // Fix: Check exact alarm permission on Android 12 (API 31) and above
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-                            // Fallback to an inexact alarm if the exact alarm permission isn't granted
-                            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
                         } else {
-                            // Safe to call setExactAndAllowWhileIdle on older versions or if permission is granted
-                            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
                         }
                     } catch (SecurityException se) {
-                        // Additional safety catch block to handle unexpected SecurityExceptions
                         se.printStackTrace();
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
-        }
-    }
-
-    /**
-     * Custom lightweight object container wrapper linking individual data items
-     * cleanly with their remote Firestore alphanumeric String keys.
-     */
-    public static class BillWithId {
-        public String id;
-        public RegisterBillActivity.BillModel billData;
-
-        public BillWithId(String id, RegisterBillActivity.BillModel billData) {
-            this.id = id;
-            this.billData = billData;
         }
     }
 }
