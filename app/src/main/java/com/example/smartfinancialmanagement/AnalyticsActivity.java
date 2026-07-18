@@ -10,6 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -26,6 +27,8 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -44,7 +47,6 @@ import com.itextpdf.layout.element.Image;
 import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.properties.HorizontalAlignment;
-import com.itextpdf.layout.properties.TextAlignment;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -56,6 +58,7 @@ import java.util.Locale;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
+    private static final String TAG = "AnalyticsActivity";
     private TextView txtRevenueDisplay, txtExpenseDisplay, txtProfitDisplay, txtPercentageDisplay;
     private View btnGoToRevenue, btnGoToExpense;
     private Button btnGeneratePDF;
@@ -63,8 +66,9 @@ public class AnalyticsActivity extends AppCompatActivity {
     private Spinner spinnerBusinessFilter;
 
     private FirebaseFirestore db;
+    private FirebaseAuth mAuth;
     private List<String> filterOptionsList = new ArrayList<>();
-    private String selectedBusinessFilter = "All Businesses"; // Default Option
+    private String selectedBusinessFilter = "All Businesses";
 
     private double currentMonthRevenue = 0.0;
     private double currentMonthExpense = 0.0;
@@ -79,6 +83,8 @@ public class AnalyticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_business_analytic);
 
         db = FirebaseFirestore.getInstance();
+        mAuth = FirebaseAuth.getInstance();
+
         initializeViews();
         setupFilterSpinner();
     }
@@ -109,69 +115,87 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void setupFilterSpinner() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) {
+            Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String currentUserId = user.getUid();
+
         filterOptionsList.clear();
         filterOptionsList.add("All Businesses");
 
-        db.collection("businesses").get().addOnSuccessListener(snapshots -> {
-            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                String bName = doc.getString("businessName");
-                if (bName != null) {
-                    filterOptionsList.add(bName);
-                }
-            }
-
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
-            spinnerBusinessFilter.setAdapter(adapter);
-
-            spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectedBusinessFilter = filterOptionsList.get(position);
-                    fetchMonthlyAnalytics();
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-        });
-    }
-
-    private void fetchMonthlyAnalytics() {
-        String currentMonthToken = yearMonthFormat.format(Calendar.getInstance().getTime());
-
-        // 1. Get Revenues
-        db.collection("revenues").get().addOnSuccessListener(revSnapshots -> {
-            currentMonthRevenue = 0.0;
-            for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
-                String dateStr = doc.getString("date");
-                String bName = doc.getString("selectedBusiness");
-                Double amount = doc.getDouble("amount");
-
-                if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                    if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                        currentMonthRevenue += amount;
-                    }
-                }
-            }
-
-            // 2. Get Expenses
-            db.collection("expenses").get().addOnSuccessListener(expSnapshots -> {
-                currentMonthExpense = 0.0;
-                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
-                    String dateStr = doc.getString("date");
-                    String bName = doc.getString("selectedBusiness");
-                    Double amount = doc.getDouble("amount");
-
-                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                            currentMonthExpense += amount;
+        // 💡 Server-Side Filter: Only fetch businesses that belong to the active logged-in user ID
+        db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        String bName = doc.getString("businessName");
+                        if (bName != null) {
+                            filterOptionsList.add(bName);
                         }
                     }
-                }
 
-                calculateFinalMetrics();
-            });
-        });
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
+                    spinnerBusinessFilter.setAdapter(adapter);
+
+                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            selectedBusinessFilter = filterOptionsList.get(position);
+                            fetchMonthlyAnalytics(currentUserId);
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to load filtered workspace tags: " + e.getMessage()));
+    }
+
+    private void fetchMonthlyAnalytics(String currentUserId) {
+        String currentMonthToken = yearMonthFormat.format(Calendar.getInstance().getTime());
+
+        // 💡 Server-Side Filter: Only pull revenues targeting this specific client user ID
+        db.collection("revenues")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(revSnapshots -> {
+                    currentMonthRevenue = 0.0;
+                    for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
+                        String dateStr = doc.getString("date");
+                        String bName = doc.getString("selectedBusiness");
+                        Double amount = doc.getDouble("amount");
+
+                        if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                            if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                                currentMonthRevenue += amount;
+                            }
+                        }
+                    }
+
+                    // 💡 Server-Side Filter: Only pull expenses targeting this specific client user ID
+                    db.collection("expenses")
+                            .whereEqualTo("userId", currentUserId)
+                            .get()
+                            .addOnSuccessListener(expSnapshots -> {
+                                currentMonthExpense = 0.0;
+                                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
+                                    String dateStr = doc.getString("date");
+                                    String bName = doc.getString("selectedBusiness");
+                                    Double amount = doc.getDouble("amount");
+
+                                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                                            currentMonthExpense += amount;
+                                        }
+                                    }
+                                }
+
+                                calculateFinalMetrics();
+                            });
+                });
     }
 
     private void calculateFinalMetrics() {
@@ -272,24 +296,20 @@ public class AnalyticsActivity extends AppCompatActivity {
                 throw new Exception("Failed to open output stream.");
             }
 
-            // iText 7 Initialization Layout
             PdfWriter writer = new PdfWriter(outputStream);
             PdfDocument pdfDoc = new PdfDocument(writer);
             Document document = new Document(pdfDoc);
 
-            // iText 7 Font Setup
             PdfFont fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA);
             PdfFont fontHelveticaBold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
             PdfFont fontHelveticaOblique = PdfFontFactory.createFont(StandardFonts.HELVETICA_OBLIQUE);
 
-            // App Heading
             Paragraph appTitle = new Paragraph("SMART FINANCIAL MANAGEMENT")
                     .setFont(fontHelveticaOblique)
                     .setFontSize(12)
                     .setFontColor(ColorConstants.GRAY);
             document.add(appTitle);
 
-            // Report Title
             Paragraph title = new Paragraph("Business Analytics Report")
                     .setFont(fontHelveticaBold)
                     .setFontSize(22)
@@ -297,23 +317,19 @@ public class AnalyticsActivity extends AppCompatActivity {
                     .setMarginBottom(5);
             document.add(title);
 
-            // Scope Title
             Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter)
                     .setFont(fontHelveticaBold)
                     .setFontSize(12)
                     .setMarginBottom(20);
             document.add(filterScope);
 
-            // iText 7 Table Structure (using column widths instead of percentages)
             float[] columnWidths = {250f, 250f};
             Table table = new Table(columnWidths);
             table.setMarginBottom(25);
 
-            // Headings
             addTableCell(table, "Metric Description", fontHelveticaBold, true);
             addTableCell(table, "Amount (Rs.)", fontHelveticaBold, true);
 
-            // Rows
             addTableCell(table, "Total Revenue", fontHelvetica, false);
             addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthRevenue), fontHelvetica, false);
 
@@ -328,13 +344,11 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(table);
 
-            // Chart Title Description
             Paragraph chartDesc = new Paragraph("Visual Analytics Workspace Chart Summary:")
                     .setFont(fontHelveticaBold)
                     .setFontSize(12);
             document.add(chartDesc);
 
-            // Chart Processing to Image
             Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             barChartAnalytic.draw(canvas);
@@ -343,7 +357,6 @@ public class AnalyticsActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
-            // iText 7 Image Handling
             Image chartImage = new Image(ImageDataFactory.create(byteArray));
             chartImage.setMaxWidth(500f);
             chartImage.setMaxHeight(300f);
@@ -352,7 +365,6 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(chartImage);
 
-            // Close handles safely
             document.close();
             outputStream.close();
 
@@ -368,7 +380,7 @@ public class AnalyticsActivity extends AppCompatActivity {
         Cell cell = new Cell().add(new Paragraph(text).setFont(font).setFontSize(12));
         cell.setPadding(10f);
         if (isHeader) {
-            cell.setBackgroundColor(new DeviceRgb(211, 211, 211)); // Light Gray Background
+            cell.setBackgroundColor(new DeviceRgb(211, 211, 211));
         }
         table.addCell(cell);
     }

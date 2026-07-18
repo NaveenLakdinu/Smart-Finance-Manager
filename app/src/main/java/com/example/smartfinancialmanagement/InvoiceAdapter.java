@@ -64,7 +64,7 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
             intent.putExtra("unitPrice", invoice.getUnitPrice());
             intent.putExtra("grandTotal", invoice.getGrandTotal());
 
-            // 💡 FIX: InvoiceDetailsActivity හි getIntent().getStringExtra("paymentDueDate")
+            // 💡 MATCHED: Maps directly to InvoiceDetailsActivity's explicit getIntent flags
             intent.putExtra("paymentDueDate", invoice.getPaymentDueDate());
             intent.putExtra("status", invoice.getStatus());
 

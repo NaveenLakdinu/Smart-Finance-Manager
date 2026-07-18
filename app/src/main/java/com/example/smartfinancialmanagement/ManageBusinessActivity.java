@@ -3,6 +3,7 @@ package com.example.smartfinancialmanagement;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,13 +24,13 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class ManageBusinessActivity extends AppCompatActivity {
 
+    private static final String TAG = "ManageBusinessActivity";
     private RecyclerView recyclerManageBiz;
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    private java.lang.String currentUserId;
 
     private List<String> bizNames = new ArrayList<>();
     private List<String> bizIds = new ArrayList<>();
@@ -40,46 +41,51 @@ public class ManageBusinessActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_manage_business); // 💡 XML එක සම්බන්ධ කිරීම
+        setContentView(R.layout.activity_manage_business);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
 
         recyclerManageBiz = findViewById(R.id.recyclerManageBiz);
         recyclerManageBiz.setLayoutManager(new LinearLayoutManager(this));
 
-        loadMyBusinesses();
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            currentUserId = user.getUid();
+            loadMyBusinesses();
+        } else {
+            Toast.makeText(this, "User session not active", Toast.LENGTH_SHORT).show();
+            finish();
+        }
     }
 
     private void loadMyBusinesses() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null || user.getEmail() == null) return;
-        String currentEmail = user.getEmail().toLowerCase(Locale.ROOT).trim();
+        if (currentUserId == null) return;
 
-        db.collection("businesses").get().addOnSuccessListener(snapshots -> {
-            bizNames.clear();
-            bizIds.clear();
-            bizPhones.clear();
-            bizEmails.clear();
-            bizCategories.clear();
+        // 💡 Server-Side Filter: Only pull records that match the authenticated user's ID
+        db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    bizNames.clear();
+                    bizIds.clear();
+                    bizPhones.clear();
+                    bizEmails.clear();
+                    bizCategories.clear();
 
-            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                String owner = doc.getString("ownerEmail");
-                String bizEmail = doc.getString("businessEmail");
-
-                String finalOwner = (owner != null) ? owner.toLowerCase(Locale.ROOT).trim() : "";
-                String finalBizEmail = (bizEmail != null) ? bizEmail.toLowerCase(Locale.ROOT).trim() : "";
-
-                if (finalOwner.equals(currentEmail) || finalBizEmail.equals(currentEmail)) {
-                    bizNames.add(doc.getString("businessName"));
-                    bizIds.add(doc.getId());
-                    bizPhones.add(doc.getString("businessPhone"));
-                    bizEmails.add(doc.getString("businessEmail"));
-                    bizCategories.add(doc.getString("businessCategory"));
-                }
-            }
-            setupAdapter();
-        });
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        bizNames.add(doc.getString("businessName"));
+                        bizIds.add(doc.getId());
+                        bizPhones.add(doc.getString("businessPhone"));
+                        bizEmails.add(doc.getString("businessEmail"));
+                        bizCategories.add(doc.getString("businessCategory"));
+                    }
+                    setupAdapter();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error fetching businesses: " + e.getMessage());
+                    Toast.makeText(ManageBusinessActivity.this, "Failed to load profiles", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void setupAdapter() {
@@ -97,7 +103,7 @@ public class ManageBusinessActivity extends AppCompatActivity {
                 holder.nameTv.setText(name);
                 holder.catTv.setText("Category: " + bizCategories.get(position) + " | Phone: " + bizPhones.get(position));
 
-                // 💡 100% FIX: කාඩ්පත ක්ලික් කළ විට සියලුම දත්ත Intent එකට දමා AddBusinessActivity වෙත යවයි
+                // Click handler sends data packages to AddBusinessActivity for updates
                 holder.itemView.setOnClickListener(v -> {
                     Intent intent = new Intent(ManageBusinessActivity.this, AddBusinessActivity.class);
                     intent.putExtra("IS_UPDATE_MODE", true);
@@ -107,6 +113,12 @@ public class ManageBusinessActivity extends AppCompatActivity {
                     intent.putExtra("BIZ_PHONE", bizPhones.get(position));
                     intent.putExtra("BIZ_EMAIL", bizEmails.get(position));
                     startActivity(intent);
+                });
+
+                // Optional fallback structure: Long click lets them interact with inline quick-actions dialog
+                holder.itemView.setOnLongClickListener(v -> {
+                    showUpdateDeleteDialog(position);
+                    return true;
                 });
             }
 

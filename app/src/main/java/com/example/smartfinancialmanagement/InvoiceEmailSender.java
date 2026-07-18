@@ -2,31 +2,34 @@ package com.example.smartfinancialmanagement;
 
 import java.util.Properties;
 import jakarta.mail.Authenticator;
+import java.util.Locale;
 import jakarta.mail.Message;
 import jakarta.mail.PasswordAuthentication;
 import jakarta.mail.Session;
 import jakarta.mail.Transport;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
-import java.util.Locale;
 
 public class InvoiceEmailSender {
 
-    // (සාමාන්‍ය Gmail Password එක මෙතනට වැඩ කරන්නේ නැත. Google Account -> Security -> App Passwords වෙතින් මෙය සාදාගත යුතුය)
-    private static final String SENDER_EMAIL = "your-business-email@gmail.com";
-    private static final String SENDER_PASSWORD = "your-16-digit-app-password";
+    // Google Account -> Security -> 2-Step Verification -> App Passwords
+    private static final String SENDER_EMAIL = "banukakeerthisinghe@gmail.com";
+    private static final String SENDER_PASSWORD = "dfnpnstbhdqdbgdm";
 
+    /**
+     * Sends an HTML-formatted payment reminder email asynchronously over SMTP.
+     */
     public static void sendInvoiceEmail(String recipientEmail, String clientName, String dueDate, double amount) {
+        // Run network execution inside an isolated background channel to prevent NetworkOnMainThreadExceptions
         new Thread(() -> {
             try {
-
                 Properties properties = new Properties();
                 properties.put("mail.smtp.auth", "true");
                 properties.put("mail.smtp.starttls.enable", "true");
                 properties.put("mail.smtp.host", "smtp.gmail.com");
                 properties.put("mail.smtp.port", "587");
 
-
+                // Enforce secure Modern Transport Layer Security baselines
                 properties.put("mail.smtp.ssl.protocols", "TLSv1.2 TLSv1.3");
 
                 Session session = Session.getInstance(properties, new Authenticator() {
@@ -40,13 +43,16 @@ public class InvoiceEmailSender {
                 message.setFrom(new InternetAddress(SENDER_EMAIL));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(recipientEmail));
 
-                message.setSubject("⚠️ Upcoming Invoice Reminder: " + clientName);
+                message.setSubject("⚠️ Upcoming Invoice Reminder: " + (clientName != null ? clientName : "Client Update"));
+
+                String formattedClient = clientName != null ? clientName : "N/A";
+                String formattedDate = dueDate != null ? dueDate : "N/A";
 
                 String emailContent = "<h3>Dear Business Owner,</h3>"
-                        + "<p>This is an automated reminder that the invoice for <b>" + clientName + "</b> is due tomorrow.</p>"
+                        + "<p>This is an automated reminder that the invoice for <b>" + formattedClient + "</b> is due tomorrow.</p>"
                         + "<ul>"
-                        + "<li><b>Client Name:</b> " + clientName + "</li>"
-                        + "<li><b>Due Date:</b> " + dueDate + "</li>"
+                        + "<li><b>Client Name:</b> " + formattedClient + "</li>"
+                        + "<li><b>Due Date:</b> " + formattedDate + "</li>"
                         + "<li><b>Total Amount:</b> Rs. " + String.format(Locale.getDefault(), "%,.2f", amount) + "</li>"
                         + "</ul>"
                         + "<p>Please ensure payment reconciliation is processed on time.</p>"
@@ -58,7 +64,7 @@ public class InvoiceEmailSender {
                 System.out.println("✉️ Background Email sent successfully to " + recipientEmail);
 
             } catch (Exception e) {
-                System.out.println("❌ Failed to send email: " + e.getMessage());
+                System.out.println("❌ Failed to send email via protocol runner: " + e.getMessage());
                 e.printStackTrace();
             }
         }).start();

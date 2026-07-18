@@ -5,16 +5,16 @@ public class BusinessModel {
     private String businessCategory;
     private String businessPhone;
     private String businessEmail;
-    private String ownerEmail;
+    private String userId; // 💡 Changed from ownerEmail to userId
 
     public BusinessModel() {}
 
-    public BusinessModel(String businessName, String businessCategory, String businessPhone, String businessEmail, String ownerEmail) {
+    public BusinessModel(String businessName, String businessCategory, String businessPhone, String businessEmail, String userId) {
         this.businessName = businessName;
         this.businessCategory = businessCategory;
         this.businessPhone = businessPhone;
         this.businessEmail = businessEmail;
-        this.ownerEmail = ownerEmail;
+        this.userId = userId;
     }
 
     public String getBusinessName() { return businessName; }
@@ -29,7 +29,6 @@ public class BusinessModel {
     public String getBusinessEmail() { return businessEmail; }
     public void setBusinessEmail(String businessEmail) { this.businessEmail = businessEmail; }
 
-    // 💡 Getter and Setter for ownerEmail
-    public String getOwnerEmail() { return ownerEmail; }
-    public void setOwnerEmail(String ownerEmail) { this.ownerEmail = ownerEmail; }
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 }

@@ -62,6 +62,17 @@ public class AddBusinessActivity extends AppCompatActivity {
         String bizPhone = etBusinessPhone.getText().toString().trim();
         String bizEmail = etBusinessEmail.getText().toString().trim();
 
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 💡 Get the UID
+        }
+
+        if (TextUtils.isEmpty(currentUserId)) {
+            Toast.makeText(this, "Authentication error. Please log in again.", Toast.LENGTH_SHORT).show();
+            btnSaveBusiness.setEnabled(true);
+            return;
+        }
+
         if (TextUtils.isEmpty(bizName) || TextUtils.isEmpty(bizCategory) ||
                 TextUtils.isEmpty(bizPhone) || TextUtils.isEmpty(bizEmail)) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -71,14 +82,12 @@ public class AddBusinessActivity extends AppCompatActivity {
         btnSaveBusiness.setEnabled(false);
 
         if (isUpdateMode) {
-            // ==========================================
-            // 📝 UPDATE MODE
-            // ==========================================
             Map<String, Object> updateMap = new HashMap<>();
             updateMap.put("businessName", bizName);
             updateMap.put("businessCategory", bizCategory);
             updateMap.put("businessPhone", bizPhone);
             updateMap.put("businessEmail", bizEmail);
+            updateMap.put("userId", currentUserId); // 💡 Keeping the mapping safe
 
             db.collection("businesses").document(updateDocId)
                     .update(updateMap)
@@ -92,15 +101,8 @@ public class AddBusinessActivity extends AppCompatActivity {
                     });
 
         } else {
-            // ==========================================
-            // ➕ INSERT MODE:
-            // ==========================================
-            String currentOwnerEmail = "";
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                currentOwnerEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            }
-
-            BusinessModel executionModel = new BusinessModel(bizName, bizCategory, bizPhone, bizEmail, currentOwnerEmail);
+            // 💡 Pass currentUserId to the updated constructor
+            BusinessModel executionModel = new BusinessModel(bizName, bizCategory, bizPhone, bizEmail, currentUserId);
 
             db.collection("businesses")
                     .add(executionModel)
