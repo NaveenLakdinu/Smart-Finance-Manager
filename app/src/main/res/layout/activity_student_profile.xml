@@ -61,7 +61,7 @@
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_back"
                     android:contentDescription="Back to Home"
-                    app:tint="#FFFFFF"
+                    app:tint="@color/text_on_dark_primary"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -95,7 +95,7 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_person"
                             android:contentDescription="Profile Avatar"
-                            app:tint="#FFFFFF" />
+                            app:tint="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -115,7 +115,7 @@
                             android:layout_gravity="center"
                             android:text="✏"
                             android:textSize="10sp"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -129,7 +129,7 @@
                     android:layout_marginTop="14dp"
                     android:gravity="center"
                     android:text="Dulani Perera"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:background="@null"
@@ -146,7 +146,7 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:text="dulani@university.lk"
-                    android:textColor="#BCE0FF"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +160,7 @@
                     android:layout_marginTop="3dp"
                     android:gravity="center"
                     android:text="University of Colombo • Year 4"
-                    android:textColor="#BCE0FF"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="12sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileEmail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -198,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -207,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Goals"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -231,7 +231,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs.1.2L"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -240,7 +240,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Saved"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -263,7 +263,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="85"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -272,7 +272,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Score"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -299,9 +299,9 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/glass_card_bg"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    app:cardElevation="0dp"
                     app:strokeWidth="0dp">
 
                     <LinearLayout
@@ -323,7 +323,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="My Achievements"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -331,7 +331,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -344,9 +344,9 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/glass_card_bg"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    app:cardElevation="0dp"
                     app:strokeWidth="0dp">
 
                     <LinearLayout
@@ -368,7 +368,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Financial Reports"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -376,7 +376,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -389,9 +389,9 @@
                     android:layout_marginBottom="24dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/glass_card_bg"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
+                    app:cardElevation="0dp"
                     app:strokeWidth="0dp">
 
                     <LinearLayout
@@ -413,7 +413,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Account Settings"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -421,7 +421,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -438,7 +438,7 @@
                     app:cardBackgroundColor="#FFF5F5"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="#FCA5A5"
+                    app:strokeColor="@color/danger_text"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -461,7 +461,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sign Out"
-                            android:textColor="#EF4444"
+                            android:textColor="@color/danger_text"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -482,7 +482,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Smart Finance v1.0.0"
-                        android:textColor="#9CA3AF"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         android:gravity="center" />
 
@@ -492,7 +492,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Final Year Project • 2026"
-                        android:textColor="#D1D5DB"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="11sp"
                         android:gravity="center" />
 

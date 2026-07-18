@@ -23,14 +23,14 @@
             android:background="@drawable/bg_notification"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="#FFFFFF" />
+            app:tint="@color/text_on_dark_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:text="My Tasks"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
 
@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:text="Daily Assignments"
-        android:textColor="#7A9CC0"
+        android:textColor="@color/text_on_dark_secondary"
         android:textSize="14sp"
         android:letterSpacing="0.1" />
 
@@ -62,7 +62,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -84,7 +84,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Update Inventory Logs"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
                             android:text="High"
-                            android:textColor="#38BDF8"
+                            android:textColor="@color/qa_blue_icon"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -105,14 +105,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Review and update the stock levels for the main warehouse."
-                        android:textColor="#A0AEC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="#1AFFFFFF" />
+                        android:background="@color/divider_dark" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -125,7 +125,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Status: "
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
 
                         <TextView
@@ -142,7 +142,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Due Today"
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -155,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -177,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Weekly Safety Audit"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -188,7 +188,7 @@
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
                             android:text="Medium"
-                            android:textColor="#4ADE80"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -198,14 +198,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Complete the safety checklist for the production floor."
-                        android:textColor="#A0AEC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="#1AFFFFFF" />
+                        android:background="@color/divider_dark" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -218,14 +218,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Status: "
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Pending"
-                            android:textColor="#94A3B8"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -235,7 +235,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Due Tomorrow"
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -248,7 +248,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -270,7 +270,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Client Feedback Report"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -281,7 +281,7 @@
                             android:paddingHorizontal="10dp"
                             android:paddingVertical="4dp"
                             android:text="Low"
-                            android:textColor="#A78BFA"
+                            android:textColor="@color/qa_purple_icon"
                             android:textSize="10sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -291,14 +291,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Summarize the feedback received from the last three deliveries."
-                        android:textColor="#A0AEC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="16dp"
-                        android:background="#1AFFFFFF" />
+                        android:background="@color/divider_dark" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -311,14 +311,14 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Status: "
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Completed"
-                            android:textColor="#4ADE80"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -328,7 +328,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="June 15th"
-                            android:textColor="#718096"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
 

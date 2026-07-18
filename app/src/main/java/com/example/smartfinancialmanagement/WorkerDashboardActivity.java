@@ -71,7 +71,6 @@ if (user != null) {
     txtEarnings.setText("LKR 0.00");
 }
         
-
         txtPayrollStatus.setText("Next payday: June 30th");
     }
 
@@ -138,7 +137,7 @@ if (user != null) {
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
@@ -219,7 +218,7 @@ if (user != null) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);

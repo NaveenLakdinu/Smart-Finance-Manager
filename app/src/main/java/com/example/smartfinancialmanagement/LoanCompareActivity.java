@@ -31,6 +31,15 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import android.graphics.Bitmap;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -120,11 +129,11 @@ public class LoanCompareActivity extends AppCompatActivity {
             data.interestRate = Double.parseDouble(etI.getText().toString().trim());
             data.duration = Integer.parseInt(etD.getText().toString().trim());
             
-            // Extract EMI and Total from the result text (e.g., "EMI: $100.00 | Total: $1200.00")
+            // Extract EMI and Total from the result text (e.g., "EMI: LKR 100.00 | Total: LKR 1200.00")
             String resText = txtRes.getText().toString();
             try {
-                String emiPart = resText.substring(resText.indexOf("$") + 1, resText.indexOf("|")).trim();
-                String totalPart = resText.substring(resText.lastIndexOf("$") + 1).trim();
+                String emiPart = resText.substring(resText.indexOf("LKR") + 3, resText.indexOf("|")).trim();
+                String totalPart = resText.substring(resText.lastIndexOf("LKR") + 3).trim();
                 data.emi = Double.parseDouble(emiPart);
                 data.totalPayable = Double.parseDouble(totalPart);
             } catch (Exception e) {
@@ -138,6 +147,65 @@ public class LoanCompareActivity extends AppCompatActivity {
             dataList.add(data);
         }
         return dataList;
+    }
+
+    private static final int[] PIE_COLORS = {
+            Color.parseColor("#00D4AA"),
+            Color.parseColor("#A78BFA"),
+            Color.parseColor("#38BDF8"),
+            Color.parseColor("#F59E0B"),
+            Color.parseColor("#F43F5E"),
+            Color.parseColor("#10B981"),
+            Color.parseColor("#EC4899"),
+            Color.parseColor("#6366F1")
+    };
+
+    private Bitmap renderComparisonPieChart(List<ComparisonData> dataList) {
+        PieChart pieChart = new PieChart(this);
+        pieChart.setDrawEntryLabels(true);
+        pieChart.setEntryLabelTextSize(11f);
+        pieChart.setEntryLabelColor(Color.WHITE);
+        pieChart.setHoleColor(Color.parseColor("#0A1628"));
+        pieChart.setTransparentCircleColor(Color.parseColor("#0A1628"));
+        pieChart.setCenterText("Total Payable\nComparison");
+        pieChart.setCenterTextSize(14f);
+        pieChart.setCenterTextColor(Color.parseColor("#F0F6FF"));
+        pieChart.getDescription().setEnabled(false);
+        pieChart.getLegend().setEnabled(true);
+        pieChart.getLegend().setTextColor(Color.parseColor("#7A9CC0"));
+        pieChart.getLegend().setTextSize(11f);
+
+        java.util.List<PieEntry> entries = new ArrayList<>();
+        for (ComparisonData data : dataList) {
+            entries.add(new PieEntry((float) data.totalPayable, data.optionLabel + " - " + data.bankName));
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setColors(PIE_COLORS);
+        dataSet.setValueTextSize(12f);
+        dataSet.setValueTextColor(Color.WHITE);
+        dataSet.setValueFormatter(new ValueFormatter() {
+            @Override
+            public String getFormattedValue(float value) {
+                return String.format(Locale.US, "LKR %.0f", value);
+            }
+        });
+        dataSet.setSliceSpace(2f);
+
+        PieData pieData = new PieData(dataSet);
+        pieChart.setData(pieData);
+
+        int size = 500;
+        pieChart.measure(
+                View.MeasureSpec.makeMeasureSpec(size, View.MeasureSpec.EXACTLY),
+                View.MeasureSpec.makeMeasureSpec(size, View.MeasureSpec.EXACTLY));
+        pieChart.layout(0, 0, size, size);
+
+        Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+        Canvas c = new Canvas(bitmap);
+        c.drawColor(Color.parseColor("#0A1628"));
+        pieChart.draw(c);
+        return bitmap;
     }
 
     private void generateDetailedComparisonReport(List<ComparisonData> dataList) {
@@ -247,6 +315,25 @@ public class LoanCompareActivity extends AppCompatActivity {
             y += 20;
         }
 
+        // ── Pie Chart: Total Payable Comparison ──
+        document.finishPage(page);
+        page = document.startPage(pageInfo);
+        canvas = page.getCanvas();
+        y = 50;
+
+        paint.setTextSize(16f);
+        paint.setFakeBoldText(true);
+        canvas.drawText("Total Payable Comparison", 50, y, paint);
+        canvas.drawLine(50, y + 10, 550, y + 10, paint);
+        y += 30;
+
+        Bitmap pieBitmap = renderComparisonPieChart(dataList);
+        int chartSize = 450;
+        int left = (595 - chartSize) / 2;
+        android.graphics.Rect destRect = new android.graphics.Rect(left, y, left + chartSize, y + chartSize);
+        canvas.drawBitmap(pieBitmap, null, destRect, null);
+        pieBitmap.recycle();
+
         document.finishPage(page);
         String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
 
@@ -350,7 +437,7 @@ subscriptionsMonthlyTotal = total;
     }
 
     private void showVisualSuitabilityReport(List<ComparisonData> dataList) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         
         TextView titleView = new TextView(this);
         titleView.setText("Loan Suitability & Commitment Analysis");
@@ -565,12 +652,12 @@ subscriptionsMonthlyTotal = total;
                 }
 
                 double total = emi * n;
-                txtRes.setText(String.format(Locale.US, "EMI: $%.2f | Total: $%.2f", emi, total));
+                txtRes.setText(String.format(Locale.US, "EMI: LKR %.2f | Total: LKR %.2f", emi, total));
             } else {
-                txtRes.setText("EMI: $0.00 | Total: $0.00");
+                txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
             }
         } catch (Exception e) {
-            txtRes.setText("EMI: $0.00 | Total: $0.00");
+            txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
         }
     }
 }

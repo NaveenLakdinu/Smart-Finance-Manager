@@ -131,7 +131,7 @@ public class SavingUpdateGoalActivity extends AppCompatActivity {
 
     private void showDatePicker(TextView targetView) {
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this,
+        DatePickerDialog dialog = new DatePickerDialog(this, R.style.Theme_SmartFinance_DatePicker,
                 (view, year, month, day) -> {
                     String date = String.format(Locale.getDefault(), "%02d/%02d/%d", day, month + 1, year);
                     targetView.setText(date);

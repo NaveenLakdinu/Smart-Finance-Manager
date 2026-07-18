@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  activity_choose_role.xml — Redesigned to premium dark glassmorphic theme.
+  activity_choose_role.xml — Premium dark glassmorphic theme.
   Step 2 of 5 in the registration flow. All IDs preserved for Java compatibility.
 -->
 <ScrollView
@@ -104,7 +104,9 @@
             android:paddingEnd="20dp"
             android:paddingTop="24dp">
 
-            <!-- Student -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- STUDENT ROLE CARD                                          -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/roleStudent"
                 android:layout_width="match_parent"
@@ -121,91 +123,163 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="18dp">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        app:cardBackgroundColor="@color/qa_blue_bg"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp">
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_school"
-                            app:tint="@color/qa_blue_icon" />
-                    </com.google.android.material.card.MaterialCardView>
-
+                    <!-- Top row: icon + title + radio -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            app:cardBackgroundColor="@color/qa_blue_bg"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp">
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_school"
+                                app:tint="@color/qa_blue_icon" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Student"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Budget, savings &amp; student loans"
+                                android:textColor="@color/text_on_dark_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/radioStudent"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_radio_unchecked"
+                            android:contentDescription="Select Student"
+                            app:tint="@color/hero_accent" />
+                    </LinearLayout>
+
+                    <!-- Feature tags row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Student"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_blue"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Budget"
+                            android:textColor="@color/qa_blue_icon"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="Budget, savings &amp; student loans"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_green"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Savings"
+                            android:textColor="@color/qa_green_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_purple"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Loans"
+                            android:textColor="@color/qa_purple_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:background="@drawable/tag_blue"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Budget"
-                                android:textColor="@color/qa_blue_icon"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/tag_green"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Savings"
-                                android:textColor="@color/qa_green_icon"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_amber"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Subscriptions"
+                            android:textColor="@color/qa_amber_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/radioStudent"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_radio_unchecked"
-                        android:contentDescription="Select Student"
-                        app:tint="@color/hero_accent" />
+                    <!-- Feature details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_dark"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="What you get:"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="  •  Monthly budget planner &amp; tracking&#10;  •  Savings goals with progress&#10;  •  Student loan EMI calculator&#10;  •  Subscription manager"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Company Worker -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- COMPANY WORKER ROLE CARD                                   -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/roleWorker"
                 android:layout_width="match_parent"
@@ -222,91 +296,163 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="18dp">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        app:cardBackgroundColor="@color/qa_teal_bg"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp">
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_work"
-                            app:tint="@color/qa_teal_icon" />
-                    </com.google.android.material.card.MaterialCardView>
-
+                    <!-- Top row: icon + title + radio -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            app:cardBackgroundColor="@color/qa_teal_bg"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp">
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_work"
+                                app:tint="@color/qa_teal_icon" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Company Worker"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Payslips, tasks &amp; loan tracker"
+                                android:textColor="@color/text_on_dark_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/radioWorker"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_radio_unchecked"
+                            android:contentDescription="Select Worker"
+                            app:tint="@color/hero_accent" />
+                    </LinearLayout>
+
+                    <!-- Feature tags row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Company Worker"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_blue"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Payslips"
+                            android:textColor="@color/qa_blue_icon"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="Payslips, tasks &amp; loan tracker"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_purple"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Tasks"
+                            android:textColor="@color/qa_purple_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_green"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Loans"
+                            android:textColor="@color/qa_green_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:background="@drawable/tag_blue"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Payslip"
-                                android:textColor="@color/qa_blue_icon"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/tag_purple"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Tasks"
-                                android:textColor="@color/qa_purple_icon"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_amber"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Expenses"
+                            android:textColor="@color/qa_amber_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/radioWorker"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_radio_unchecked"
-                        android:contentDescription="Select Worker"
-                        app:tint="@color/hero_accent" />
+                    <!-- Feature details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_dark"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="What you get:"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="  •  Salary payslip viewer&#10;  •  Work task tracker&#10;  •  Loan EMI calculator&#10;  •  Expense claim manager"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Business Owner -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- BUSINESS OWNER ROLE CARD                                   -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/roleBusiness"
                 android:layout_width="match_parent"
@@ -323,91 +469,163 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="18dp">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        app:cardBackgroundColor="@color/qa_amber_bg"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp">
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_business"
-                            app:tint="@color/qa_amber_icon" />
-                    </com.google.android.material.card.MaterialCardView>
-
+                    <!-- Top row: icon + title + radio -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            app:cardBackgroundColor="@color/qa_amber_bg"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp">
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_business"
+                                app:tint="@color/qa_amber_icon" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Business Owner"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Revenue, expenses &amp; invoices"
+                                android:textColor="@color/text_on_dark_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/radioBusinessOwner"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_radio_unchecked"
+                            android:contentDescription="Select Business Owner"
+                            app:tint="@color/hero_accent" />
+                    </LinearLayout>
+
+                    <!-- Feature tags row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Business Owner"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_amber"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Revenue"
+                            android:textColor="@color/qa_amber_icon"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="Revenue, expenses &amp; invoices"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_green"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Invoices"
+                            android:textColor="@color/qa_green_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_purple"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Analytics"
+                            android:textColor="@color/qa_purple_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:background="@drawable/tag_amber"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Revenue"
-                                android:textColor="@color/qa_amber_icon"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/tag_green"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Invoices"
-                                android:textColor="@color/qa_green_icon"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_blue"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Subscriptions"
+                            android:textColor="@color/qa_blue_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/radioBusinessOwner"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_radio_unchecked"
-                        android:contentDescription="Select Business Owner"
-                        app:tint="@color/hero_accent" />
+                    <!-- Feature details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_dark"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="What you get:"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="  •  Revenue management &amp; tracking&#10;  •  B2B invoice system&#10;  •  Business analytics dashboard&#10;  •  Multi-workspace support"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Multiple Account Holder -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
+            <!-- MULTIPLE ACCOUNTS ROLE CARD                                -->
+            <!-- ═══════════════════════════════════════════════════════════ -->
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/roleMulti"
                 android:layout_width="match_parent"
@@ -424,87 +642,142 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
+                    android:orientation="vertical"
                     android:padding="18dp">
 
-                    <com.google.android.material.card.MaterialCardView
-                        android:layout_width="52dp"
-                        android:layout_height="52dp"
-                        app:cardBackgroundColor="@color/qa_purple_bg"
-                        app:cardCornerRadius="16dp"
-                        app:cardElevation="0dp">
-                        <ImageView
-                            android:layout_width="26dp"
-                            android:layout_height="26dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_group"
-                            app:tint="@color/qa_purple_icon" />
-                    </com.google.android.material.card.MaterialCardView>
-
+                    <!-- Top row: icon + title + radio -->
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="14dp"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            app:cardBackgroundColor="@color/qa_purple_bg"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp">
+                            <ImageView
+                                android:layout_width="26dp"
+                                android:layout_height="26dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_group"
+                                app:tint="@color/qa_purple_icon" />
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Multiple Accounts"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textSize="17sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Manage multiple financial profiles"
+                                android:textColor="@color/text_on_dark_secondary"
+                                android:textSize="13sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:id="@+id/radioMulti"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@drawable/ic_radio_unchecked"
+                            android:contentDescription="Select Multiple Accounts"
+                            app:tint="@color/hero_accent" />
+                    </LinearLayout>
+
+                    <!-- Feature tags row -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Multiple Accounts"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_purple"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Multi-Profile"
+                            android:textColor="@color/qa_purple_icon"
+                            android:textSize="12sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="Manage multiple financial profiles"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
+                            android:layout_marginEnd="6dp"
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_blue"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Transfers"
+                            android:textColor="@color/qa_blue_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="8dp"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginEnd="6dp"
-                                android:background="@drawable/tag_purple"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Multi"
-                                android:textColor="@color/qa_purple_icon"
-                                android:textSize="11sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:background="@drawable/tag_blue"
-                                android:paddingStart="8dp"
-                                android:paddingEnd="8dp"
-                                android:paddingTop="3dp"
-                                android:paddingBottom="3dp"
-                                android:text="Advanced"
-                                android:textColor="@color/qa_blue_icon"
-                                android:textSize="11sp" />
-                        </LinearLayout>
+                            android:layout_marginBottom="4dp"
+                            android:background="@drawable/tag_green"
+                            android:paddingStart="10dp"
+                            android:paddingEnd="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingBottom="4dp"
+                            android:text="Advanced"
+                            android:textColor="@color/qa_green_icon"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
-                    <ImageView
-                        android:id="@+id/radioMulti"
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:src="@drawable/ic_radio_unchecked"
-                        android:contentDescription="Select Multiple Accounts"
-                        app:tint="@color/hero_accent" />
+                    <!-- Feature details -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:background="@drawable/bg_input_dark"
+                        android:orientation="vertical"
+                        android:padding="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="What you get:"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:letterSpacing="0.1" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:text="  •  Multiple account management&#10;  •  Inter-account transfers&#10;  •  Combined financial overview&#10;  •  Role upgrade options"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="12sp"
+                            android:lineSpacingExtra="4dp" />
+                    </LinearLayout>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -517,7 +790,7 @@
                 android:insetBottom="0dp"
                 android:text="Continue"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 app:backgroundTint="@color/hero_accent"
@@ -525,7 +798,7 @@
                 app:icon="@drawable/ic_signup_arrow"
                 app:iconGravity="end"
                 app:iconPadding="8dp"
-                app:iconTint="#FFFFFF" />
+                app:iconTint="@color/text_on_dark_primary" />
 
         </LinearLayout>
     </LinearLayout>

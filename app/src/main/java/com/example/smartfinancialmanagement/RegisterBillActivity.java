@@ -83,7 +83,7 @@ public class RegisterBillActivity extends AppCompatActivity {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    RegisterBillActivity.this,
+                    RegisterBillActivity.this, R.style.Theme_SmartFinance_DatePicker,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
                         // Formats day and month with a leading zero if below 10 (e.g., 05/09/2026)
                         String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, (selectedMonth + 1), selectedYear);

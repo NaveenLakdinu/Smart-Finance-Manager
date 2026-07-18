@@ -58,6 +58,8 @@ dependencies {
     implementation(libs.cardview)
     implementation(libs.firebase.auth)
     implementation(libs.firebase.database)
+    implementation(libs.firebase.messaging)
+    implementation(libs.work)
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)

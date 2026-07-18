@@ -1,6 +1,6 @@
 # AGENTS.md – Quick Guidance for OpenCode Agents
 
-**Purpose** – Capture repo‑specific quirks that are easy to overlook.  Anything not listed here is either obvious from the code/config or not required for typical development tasks.
+**Purpose** – Capture repo‑specific quirks that are easy to overlook. Anything not listed here is either obvious from the code/config or not required for typical development tasks.
 
 ---
 
@@ -16,24 +16,76 @@
 
 ---
 
-## Firebase Firestore Structure (high‑level)
+## Project Overview
+- **Language**: Java (with Jetpack Compose for a few screens)
+- **Architecture**: Single-module Android app, no multi-module setup
+- **Package**: `com.example.smartfinancialmanagement`
+- **Min SDK**: 24, **Target SDK**: 36, **Compile SDK**: 37
+- **Java version**: 11 (source + target compatibility)
+- **Entry point**: `MainActivity` (landing/welcome screen) → `LoginFormActivity` → role-based dashboards
+
+---
+
+## Dependencies (via Version Catalog)
+- Dependencies are declared in `gradle/libs.versions.toml`. When adding a new library, edit that file and reference it via `libs.<alias>` in `app/build.gradle.kts`.
+- Some dependencies (Firestore, iTextPDF, MPAndroidChart, JavaMail) are declared directly in `app/build.gradle.kts` outside the version catalog.
+- Key Firebase services: Auth, Realtime Database, Firestore, Cloud Messaging (FCM)
+- Background work: WorkManager (`libs.work`) for guaranteed background tasks
+- Charts: MPAndroidChart for bar/pie charts in reports
+- PDF: iTextPDF for report generation
+
+---
+
+## UI Design System (Dark Glassmorphic Theme)
+
+The app uses a unified **dark navy glassmorphic** design. All XML layouts must follow these conventions:
+
+### Color Tokens (defined in `colors.xml`)
+Use `@color/` references, **never inline hex**. Key tokens:
+- **Backgrounds**: `@color/surface_primary` (#0A1628), `@color/dash_bg_mid`, `@color/dash_bg_light`
+- **Cards**: `@color/surface_card` (glass_card_bg #1A2F50), `@color/surface_card_border`
+- **Text**: `@color/text_primary` (near-white), `@color/text_secondary_dark`, `@color/text_muted`
+- **Accent**: `@color/hero_accent` (#00D4AA teal) — primary CTA color
+- **Semantic buttons**: `@color/btn_primary` (teal), `@color/btn_danger` (red)
+- **Status**: `@color/badge_success_text` (green), `@color/badge_warning_text` (amber)
+
+### Card Pattern
+All cards use `MaterialCardView` with:
+- `app:cardBackgroundColor="@color/glass_card_bg"`
+- `app:strokeColor="@color/glass_card_border"` (1dp)
+- `app:cardCornerRadius="16dp"` (content) or `"24dp"` (hero)
+- `app:cardElevation="0dp"`
+
+### Button Pattern
+- Primary CTA: `app:backgroundTint="@color/hero_accent"`, dark text, 12dp corners
+- Destructive: red tint or outline with `@color/danger_text`
+- All buttons use `android:textAllCaps="false"`
+
+### Spacing System (defined in `dimens.xml`)
+4dp grid: 4/8/12/16/20/24/32/48dp. Use `@dimen/spacing_*` references.
+
+### Typography (defined in `themes.xml`)
+8 levels: Display (28sp), Headline (24sp), TitleLarge (20sp), Title (16sp), BodyLarge (16sp), Body (14sp), Caption (12sp), Small (11sp). Apply via `android:textAppearance="@style/TextAppearance.App.*"`.
+
+---
+
+## Firebase Firestore Structure
 - Root collection: **`users`** (document ID = Firebase Auth UID).
-- Important fields on the user document (see `DATABASE.md`):
+- **Fields on user document**:
   - `monthlySavingAmount` (String → double)
-  - `monthlySalary` (double, stored inside the **worker_profile** sub‑collection)
   - `currentSavings` (String → double)
+  - `fcmToken` (String — FCM push notification token)
+  - `role` (String — determines dashboard routing)
+  - `status` (String — "active", "suspended", "deactivated")
 - **Sub‑collections** (all under `users/{uid}`):
   - `worker_profile` → field `monthlySalary` (double)
   - `student_profile` → fields `university`, `course`, `studentId`
   - `business_profile` → `businessName`, `regNumber`, `industryType`
   - `multi_profile` → `linkedAccountsCount`, `primaryWorkspace`
-  - `loans` → each loan document has `monthlyEmi`, `principalAmount`, etc.
-  - `utilities` → each document has `amount` (double)
-  - `subscriptions` → each document has `monthlyCost` (double) – **our code now sums this field** instead of a hard‑coded 1500.
-  - **`accounts`** (used by `MultiAccountDashboardActivity`) → each document must contain:
-    - `name` (String)
-    - `balance` (double)
-    - `accountNumber` (String)
+  - `accounts` → each doc: `name` (String), `balance` (double), `accountNumber` (String)
+  - `loans` → each doc: `monthlyEmi`, `principalAmount`, etc.
+  - `utilities` → each doc: `amount` (double)
+  - `subscriptions` → each doc: `name`, `amount` (double), `paymentDay` (int 1-31), `billingCycle` ("Monthly"/"Yearly"), `renewDate` (String "dd/MM/yyyy"), `status`, `logoType`, `createdAt` (long)
 
 > When adding new data to Firestore, follow the exact field names above; any typo will result in missing UI values.
 
@@ -43,9 +95,10 @@
 - **Login flow** → `LoginFormActivity` → on successful sign‑in routes to:
   - `StudentDashboardActivity` (role "Student")
   - `WorkerDashboardActivity` (role "Company worker")
-  - `StudentWorkerHybridDashboardActivity` (hybrid view, also uses worker profile)
+  - `StudentWorkerHybridDashboardActivity` (hybrid view)
   - `MultiAccountDashboardActivity` (role "Multiple account holder")
-- **Data fetching patterns** (all use the same pattern):
+  - `BusinessDashboardActivity` (role "Business owner")
+- **Data fetching pattern** (used everywhere):
   ```java
   FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
   if (user != null) {
@@ -54,24 +107,64 @@
           .<subcollection-or-document>.get() ...
   }
   ```
-- **WorkerDashboardActivity** now calls `loadSalaryFromFirestore(uid)` to populate `txtEarnings`.
-- **StudentWorkerHybridDashboardActivity** falls back to `LKR 0.00` if no salary is present.
-- **InvoiceHubActivity** now calculates `totalOutstandingAmount` by summing `amount` from the `utilities` sub‑collection (via `loadOutstandingAmountFromFirestore`).
-- **MultiAccountDashboardActivity** loads the accounts list from `users/{uid}/accounts` using the new `loadAccountsFromFirestore()` helper.
+- **LoginFormActivity** saves FCM token to Firestore on login and requests `POST_NOTIFICATIONS` permission on Android 13+.
 
 ---
 
-## Gradle Version Catalog
-- Dependencies are declared in `gradle/libs.versions.toml`.  When adding a new library, edit that file and reference it via `libs.<alias>` in `app/build.gradle.kts`.
+## Notification System (3-Layer Reliability)
+
+### FCM Push Notifications (server → device)
+- `SmartFinanceMessagingService` handles token refresh and incoming messages
+- Token saved to `users/{uid}/fcmToken` on every login
+- Works even when app is killed (Google's servers maintain connection)
+
+### AlarmManager (app → device, exact timing)
+- `SubscriptionNotificationScheduler` schedules 3 alarms per subscription: day -2, day -1, day 0 at 9 AM
+- `SubscriptionAlarmReceiver` shows notifications and auto-advances payment date on day 0
+- Uses `setExactAndAllowWhileIdle` for Doze mode compatibility
+
+### WorkManager Fallback (background guarantee)
+- `SubscriptionWorker` runs daily to catch missed alarms
+- `SubscriptionBootReceiver` reschedules all alarms after device reboot
+- Registered in manifest with `BOOT_COMPLETED` and `MY_PACKAGE_REPLACED` intent filters
+
+### Permissions Required
+- `POST_NOTIFICATIONS` (Android 13+)
+- `SCHEDULE_EXACT_ALARM` (Android 12+)
+- `RECEIVE_BOOT_COMPLETED` (reschedule after reboot)
+
+---
+
+## Subscription Management System
+
+### Activities
+- `SubscriptionManagerActivity` — Hub: shows total monthly cost, lists active subscriptions
+- `AddSubscriptionActivity` — Form: plan name, cost, payment day (1-31), cycle, service type
+- `SubscriptionListActivity` — RecyclerView of all subscriptions, tap for detail, long-press to delete
+- `SubscriptionDetailActivity` — View/edit/delete, "Mark as Paid" advances to next cycle
+- `SubscriptionReportActivity` — Total cost + MPAndroidChart bar chart
+
+### Subscription Model (`Subscription.java`)
+Fields: `documentId`, `name`, `amount`, `paymentDay`, `billingCycle`, `renewDate`, `status`, `logoType`, `createdAt`
+Helper: `toMap()` for Firestore writes
+
+### Notification Schedule Example
+Subscription with `paymentDay = 25`, today is June 23:
+- June 23: "Netflix Premium payment of LKR 1500 is due in 2 days"
+- June 24: "Netflix Premium payment of LKR 1500 is due tomorrow"
+- June 25: "Netflix Premium payment of LKR 1500 is due today!" → auto-advance to July 25
 
 ---
 
 ## Common Gotchas
-- **Hard‑coded defaults** were removed. If a user’s profile lacks a field (e.g., `monthlySalary`), the UI now shows `LKR 0.00` instead of a placeholder.
-- **Subscription aggregation** now expects a field `monthlyCost` per subscription document. Existing mock data with a fixed 1500 value will need to be migrated.
-- **Accounts list**: the old static string arrays were replaced. Ensure that an `accounts` sub‑collection exists for each user; otherwise the dashboard shows “No Account”.
-- **Locale formatting**: all currency strings are built with `String.format(Locale.US, "LKR %.2f", value)`.  Supplying non‑numeric strings will cause a `NumberFormatException`.
-- **Firebase initialization**: the project relies on `google-services.json` (already present). Do not modify the package name; it’s defined as `com.example.smartfinancialmanagement` in the `android {}` block.
+- **Hard‑coded defaults**: If a user's profile lacks a field (e.g., `monthlySalary`), the UI shows `LKR 0.00`.
+- **Locale formatting**: All currency strings use `String.format(Locale.US, "LKR %.2f", value)`. Non-numeric strings cause `NumberFormatException`.
+- **Firebase initialization**: Relies on `google-services.json` (already present). Do not modify the package name.
+- **Compose screens**: Only a few screens use Jetpack Compose (`SavingsPassportActivity`, `StudentSavingActivity`, `StudentEventActivity`, budget planner). Most UI is XML layouts.
+- **No ProGuard/R8**: Release builds have `isMinifyEnabled = false`.
+- **Layout XML hardcoded text**: Never leave hardcoded text in layout XML TextViews — always initialize programmatically or leave empty. Hardcoded values flash before Firestore data loads.
+- **AndroidManifest registration**: Every new Activity, Service, and Receiver must be registered in `AndroidManifest.xml`.
+- **Gradle sync**: After adding new dependencies to `libs.versions.toml`, Android Studio may show "Cannot resolve symbol" errors — run `./gradlew clean assembleDebug` and sync Gradle.
 
 ---
 
@@ -79,14 +172,12 @@
 - Unit tests run on the JVM; they cannot access Android framework classes. Use mocking (e.g., Mockito) for `FirebaseAuth` / `FirebaseFirestore` if needed.
 - Instrumented UI tests require an emulator or device. Use `./gradlew connectedAndroidTest` after launching an emulator (`adb devices` to confirm).
 - Lint is non‑blocking (`abortOnError = false`), but run it locally to catch style warnings.
+- Only one unit test file exists (`ExampleUnitTest.java`). Tests are minimal.
 
 ---
 
 ## Where to Find More Info
 - **Database schema** – `DATABASE.md` (full field list).
 - **Gradle build options** – `settings.gradle.kts`, `gradle/libs.versions.toml`.
-- **Project‑specific notes** – `.idea/*.xml` (Android Studio settings) if you need UI layout IDs.
-
----
-
-*This file is intentionally concise: it only contains details that an OpenCode agent would otherwise miss (commands, Firestore field names, data‑loading expectations, and migration points).*
+- **Layout files** – `app/src/main/res/layout/` (90+ XML layouts).
+- **Color tokens** – `app/src/main/res/values/colors.xml` (150+ color definitions).

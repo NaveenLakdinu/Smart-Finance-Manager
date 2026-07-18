@@ -29,7 +29,7 @@
                 android:background="@drawable/bg_notification"
                 android:padding="10dp"
                 android:src="@drawable/ic_arrow_back"
-                app:tint="#FFFFFF" />
+                app:tint="@color/text_on_dark_primary" />
 
             <TextView
                 android:id="@+id/txtTitle"
@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Add Utility Bill"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
 
@@ -48,7 +48,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="#00000000"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -63,7 +63,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="BILL DETAILS"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:letterSpacing="0.1" />
 
@@ -73,7 +73,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:text="Bill Name"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="14sp" />
                 <EditText
                     android:id="@+id/editBillName"
@@ -83,8 +83,8 @@
                     android:background="@drawable/bg_input_feild"
                     android:backgroundTint="#1AFFFFFF"
                     android:hint="e.g. Electricity Bill"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#4A6A8A"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
                     android:paddingHorizontal="16dp" />
 
                 <!-- Amount -->
@@ -93,7 +93,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Account Number"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="14sp" />
                 <EditText
                     android:id="@+id/editAccountNo"
@@ -104,8 +104,8 @@
                     android:backgroundTint="#1AFFFFFF"
                     android:hint="e.g. 1020304050"
                     android:inputType="number"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#4A6A8A"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
                     android:paddingHorizontal="16dp" />
 
                 <!-- Category -->
@@ -114,7 +114,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Category"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="14sp" />
                 <Spinner
                     android:id="@+id/spinnerCategory"
@@ -131,7 +131,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
                     android:text="Due Date"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="14sp" />
                 <EditText
                     android:id="@+id/editPaymentDate"
@@ -143,8 +143,8 @@
                     android:hint="Select Date"
                     android:focusable="false"
                     android:clickable="true"
-                    android:textColor="#FFFFFF"
-                    android:textColorHint="#4A6A8A"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
                     android:paddingHorizontal="16dp" />
 
             </LinearLayout>
@@ -160,7 +160,7 @@
             android:background="@drawable/btn_login_gradient"
             android:text="Save Bill"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="16sp"
             android:textStyle="bold" />
 

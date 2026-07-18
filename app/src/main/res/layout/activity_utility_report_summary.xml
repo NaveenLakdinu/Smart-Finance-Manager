@@ -18,7 +18,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Report Summary"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="20sp"
             android:textStyle="bold" />
     </LinearLayout>
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Review your added bills before generating the final report."
-        android:textColor="#A0AEC0"
+        android:textColor="@color/text_on_dark_secondary"
         android:textSize="14sp" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -57,7 +57,7 @@
             android:backgroundTint="#1AFFFFFF"
             android:text="+ Add More"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="15sp"
             android:textStyle="bold" />
 
@@ -70,10 +70,10 @@
             android:background="@drawable/bg_capsule_white"
             android:text="Generate Report"
             android:textAllCaps="false"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:backgroundTint="#00D4AA" />
+            app:backgroundTint="@color/hero_accent" />
 
     </LinearLayout>
 </LinearLayout>

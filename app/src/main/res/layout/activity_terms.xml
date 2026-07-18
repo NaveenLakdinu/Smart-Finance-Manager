@@ -49,7 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Personal Details"
-            android:textColor="#374151"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="13sp"
             android:layout_marginBottom="14dp"
             android:layout_marginStart="34dp" />
@@ -87,7 +87,7 @@
         android:outlineProvider="none"
         app:cardCornerRadius="28dp"
         app:cardElevation="0dp"
-        app:cardBackgroundColor="#FFFFFF">
+        app:cardBackgroundColor="@color/glass_card_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -99,7 +99,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="I agree the terms and conditions"
-                android:textColor="#111827"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
                 android:paddingStart="20dp"
@@ -112,7 +112,7 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="#F3F4F6"
+                android:background="@color/glass_card_bg"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="8dp" />
@@ -137,7 +137,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Last updated: January 01, 2025"
-                        android:textColor="#9CA3AF"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         android:layout_marginBottom="20dp" />
 
@@ -146,7 +146,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="1. Acceptance of Terms"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -154,7 +154,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="By accessing or using Red Ants Smart Financial Management application, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use our services. We reserve the right to update these terms at any time without prior notice."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="2. User Account &amp; Registration"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -172,7 +172,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="You must provide accurate, complete, and current information during registration. You are responsible for maintaining the confidentiality of your account credentials. You must immediately notify us of any unauthorized use of your account. We reserve the right to terminate accounts that violate our policies."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -182,7 +182,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="3. Financial Data &amp; Privacy"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -190,7 +190,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="All financial data you provide is encrypted and stored securely. We do not share your personal financial information with third parties without your explicit consent. Your data may be used to improve our services and provide personalized financial insights. You can request deletion of your data at any time."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -200,7 +200,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="4. Loan Management Services"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -208,7 +208,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Red Ants provides loan tracking and management tools for informational purposes only. We are not a licensed financial institution or lender. The information provided does not constitute financial advice. Always consult a qualified financial advisor before making any financial decisions."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -218,7 +218,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="5. Subscription &amp; Payments"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -226,7 +226,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Some features of Red Ants require a paid subscription. Subscription fees are billed in advance on a monthly or annual basis. All payments are non-refundable unless required by applicable law. We reserve the right to change subscription pricing with 30 days notice."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -236,7 +236,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="6. Prohibited Activities"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -244,7 +244,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="You agree not to misuse our platform in any way, including but not limited to: entering false financial information, attempting to hack or disrupt our services, using the app for illegal financial activities, or violating any applicable local or international laws."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -254,7 +254,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="7. Limitation of Liability"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -262,7 +262,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Red Ants shall not be liable for any indirect, incidental, or consequential damages arising from your use of our application. We do not guarantee the accuracy of financial calculations or projections. Use of this application is at your own risk."
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="18dp" />
@@ -272,7 +272,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="8. Contact Us"
-                        android:textColor="#111827"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="15sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -280,7 +280,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="If you have any questions about these Terms and Conditions, please contact us at:\n\nEmail: support@redants.com\nPhone: +94 11 234 5678\nAddress: No. 42, Colombo 03, Sri Lanka"
-                        android:textColor="#4B5563"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:lineSpacingMultiplier="1.6"
                         android:layout_marginBottom="8dp" />
@@ -304,7 +304,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#F3F4F6"
+                    android:background="@color/glass_card_bg"
                     android:layout_marginBottom="14dp" />
 
                 <!-- Agree Checkbox -->
@@ -327,7 +327,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="I have read and agree to the Terms and Conditions"
-                        android:textColor="#374151"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:layout_marginStart="10dp"
                         android:lineSpacingMultiplier="1.3" />
@@ -340,7 +340,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="54dp"
                     android:text="Next"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:background="@drawable/btn_next_green"

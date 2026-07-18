@@ -90,7 +90,7 @@ public class SavingGenerateReportActivity extends AppCompatActivity {
 
     private void showDatePicker(TextView targetView, boolean isMonthOnly) {
         Calendar calendar = Calendar.getInstance();
-        DatePickerDialog dialog = new DatePickerDialog(this,
+        DatePickerDialog dialog = new DatePickerDialog(this, R.style.Theme_SmartFinance_DatePicker,
                 (view, year, month, day) -> {
                     String date;
                     if (isMonthOnly) {
