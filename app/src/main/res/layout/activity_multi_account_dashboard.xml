@@ -68,7 +68,7 @@
                         android:id="@+id/txtCurrentAccountName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Personal Account"
+                        android:text=""
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
@@ -171,7 +171,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="LKR 125,400.00"
+                        android:text=""
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="34sp"
                         android:textStyle="bold" />
@@ -198,7 +198,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:text="**** **** 4290"
+                    android:text=""
                     android:textColor="@color/text_on_dark_muted"
                     android:textSize="14sp" />
 
