@@ -174,7 +174,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                 mAuth.signOut();
                                 loginButton.setEnabled(true);
                                 loginButton.setText("LOGIN");
-                                new androidx.appcompat.app.AlertDialog.Builder(this)
+                                new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                         .setTitle("Account Deactivated")
                                         .setMessage("Your account has been permanently deactivated. " +
                                                 "Please contact support if you believe this is a mistake.")
@@ -216,7 +216,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                     mAuth.signOut();
                                     loginButton.setEnabled(true);
                                     loginButton.setText("LOGIN");
-                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                             .setTitle("Account Deactivated")
                                             .setMessage("Your account has been deactivated because " +
                                                     "it remained suspended for more than 30 days. " +
@@ -237,7 +237,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                             .putString("user_role", role)
                                             .apply();
 
-                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                             .setTitle("⚠️ Account Suspended")
                                             .setMessage("Your account has been suspended due to " +
                                                     "not following the agreement. You can still " +

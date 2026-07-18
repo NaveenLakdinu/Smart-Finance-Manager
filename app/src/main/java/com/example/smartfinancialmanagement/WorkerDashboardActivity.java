@@ -137,7 +137,7 @@ if (user != null) {
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
@@ -218,7 +218,7 @@ if (user != null) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);

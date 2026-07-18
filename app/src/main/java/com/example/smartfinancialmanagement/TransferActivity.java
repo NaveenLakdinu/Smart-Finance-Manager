@@ -105,7 +105,7 @@ public class TransferActivity extends AppCompatActivity {
             nameArray[i] = names.get(i) + " - " + String.format(Locale.US, "LKR %.2f", balances.get(i));
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle(isSource ? "Select Source Account" : "Select Destination Account");
         builder.setItems(nameArray, (dialog, which) -> {
             if (isSource) {
@@ -211,7 +211,7 @@ public class TransferActivity extends AppCompatActivity {
             txtDialogNote.setVisibility(View.GONE);
         }
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setView(dialogView)
                 .setPositiveButton("Confirm Transfer", (d, which) -> executeTransfer(amount))
                 .setNegativeButton("Cancel", (d, which) -> d.dismiss())

@@ -62,8 +62,24 @@
     <!-- Dark Dialog Theme -->
     <style name="Theme.SmartFinance.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="dialogCornerRadius">20dp</item>
+        <item name="android:windowBackground">@color/glass_card_bg</item>
+        <item name="android:windowIsFloating">true</item>
         <item name="colorSurface">@color/glass_card_bg</item>
+        <item name="colorOnSurface">@color/text_on_dark_primary</item>
         <item name="android:textColorPrimary">@color/text_on_dark_primary</item>
+        <item name="android:textColorSecondary">@color/text_on_dark_secondary</item>
+        <item name="android:textColorHint">@color/text_on_dark_muted</item>
+        <item name="android:textColor">@color/text_on_dark_primary</item>
+        <item name="textColorAlertDialogListItem">@color/text_on_dark_primary</item>
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Dialog.Button</item>
+        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Dialog.Button</item>
+        <item name="android:divider">@color/divider_dark</item>
+        <item name="android:dividerHeight">1dp</item>
+    </style>
+
+    <!-- Dark Dialog Button Style -->
+    <style name="Widget.App.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/hero_accent</item>
     </style>
 
     <!-- Dark Card Style -->
@@ -118,6 +134,14 @@
     <style name="TextAppearance.App.Small" parent="TextAppearance.MaterialComponents.Caption">
         <item name="android:textSize">11sp</item>
         <item name="android:textColor">@color/text_on_dark_muted</item>
+    </style>
+
+    <!-- Dark DatePicker Theme -->
+    <style name="Theme.SmartFinance.DatePicker" parent="ThemeOverlay.MaterialComponents.Dialog">
+        <item name="android:textColorPrimary">@color/text_on_dark_primary</item>
+        <item name="android:textColorSecondary">@color/text_on_dark_secondary</item>
+        <item name="colorAccent">@color/hero_accent</item>
+        <item name="android:windowBackground">@color/glass_card_bg</item>
     </style>
 
 </resources>

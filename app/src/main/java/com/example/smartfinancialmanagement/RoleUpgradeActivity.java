@@ -103,7 +103,7 @@ public class RoleUpgradeActivity extends AppCompatActivity {
     }
 
     private void showSuccessDialog() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setTitle("🎉 Upgrade Successful!")
                 .setMessage("Congratulations! Your role has been updated to Student-Worker Hybrid. You can now access both student budgeting tools and worker portals from your unified dashboard.")
                 .setPositiveButton("Go to Dashboard", (dialog, which) -> {

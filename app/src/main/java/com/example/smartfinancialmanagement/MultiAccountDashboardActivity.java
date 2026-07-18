@@ -174,7 +174,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             Toast.makeText(this, "No accounts available. Please add a new account.", Toast.LENGTH_SHORT).show();
             return;
         }
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Switch Account");
         String[] names = new String[accountsList.size()];
         for (int i = 0; i < accountsList.size(); i++) {
@@ -192,7 +192,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Add New Account");
 
         LinearLayout container = new LinearLayout(this);
@@ -333,7 +333,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);
@@ -394,7 +394,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
