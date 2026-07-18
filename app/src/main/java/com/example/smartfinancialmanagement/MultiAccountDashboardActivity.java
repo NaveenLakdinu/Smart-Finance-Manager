@@ -111,6 +111,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             intent.putStringArrayListExtra("NAMES", names);
             intent.putStringArrayListExtra("NUMBERS", numbers);
             intent.putExtra("BALANCES", balances);
+            intent.putExtra("CURRENT_ACCOUNT_INDEX", currentAccountIndex);
             startActivity(intent);
         });
         cardStatements.setOnClickListener(v -> {
