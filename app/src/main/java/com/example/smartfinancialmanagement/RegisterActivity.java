@@ -473,17 +473,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Helper method to route users correctly after registration.
-     * New users must configure their PIN lock before accessing the dashboard.
+     * This method is deprecated - use OnboardingActivity instead.
      */
+    @Deprecated
     private void navigateToDashboard(String role) {
-        // Enforce PIN setup immediately after successful registration
-        Intent pinIntent = new Intent(this, PinSetupActivity.class);
-        
-        // PinSetupActivity handles routing to the correct dashboard via its own redirectToDashboard() 
-        // which relies on SharedPreferences "user_role", so we don't need to pass the intent extra here.
-        
-        pinIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(pinIntent);
+        // This method is no longer used - users go through OnboardingActivity first
+        Intent onboardingIntent = new Intent(this, OnboardingActivity.class);
+        onboardingIntent.putExtra("USER_ROLE", role);
+        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(onboardingIntent);
         finish();
     }
 

@@ -277,6 +277,9 @@
         <activity
             android:name=".SubscriptionReportActivity"
             android:exported="false" />
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false" />
         <receiver
             android:name=".SubscriptionAlarmReceiver"
             android:enabled="true"
