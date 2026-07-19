@@ -1,6 +1,8 @@
 package com.example.smartfinancialmanagement;
 
+import android.app.AlertDialog;
 import android.content.Intent;
+import android.widget.Toast;
 import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
@@ -74,7 +76,43 @@ public class StudentDashboardActivity extends AppCompatActivity {
             cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         }
 
+        setupSecurityButton();
+
         loadAchievementData();
+    }
+
+    private void setupSecurityButton() {
+        View btnSecurity = findViewById(R.id.btnSecurity);
+        if (btnSecurity != null) {
+            btnSecurity.setOnClickListener(v -> {
+                boolean isPinSet = PinHelper.isPinSet(this);
+                String[] options;
+                if (isPinSet) {
+                    options = new String[]{"Change PIN Lock", "Disable PIN Lock"};
+                } else {
+                    options = new String[]{"Enable PIN Lock"};
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("PIN Lock Security");
+                builder.setItems(options, (dialog, which) -> {
+                    if (!isPinSet) {
+                        Intent intent = new Intent(this, PinSetupActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (which == 0) {
+                            Intent intent = new Intent(this, PinSetupActivity.class);
+                            startActivity(intent);
+                        } else if (which == 1) {
+                            PinHelper.clearPin(this);
+                            Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            });
+        }
     }
 
     private void loadAchievementData() {
