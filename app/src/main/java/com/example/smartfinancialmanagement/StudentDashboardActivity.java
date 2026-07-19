@@ -10,8 +10,19 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import android.widget.TextView;
+import java.text.NumberFormat;
+import java.util.Locale;
 
 public class StudentDashboardActivity extends AppCompatActivity {
+    
+    private double mTotalIncome = 0;
+    private double mDirectIncome = 0;
+    private double mBudgetIncome = 0;
+    private double mTotalSavings = 0;
+    private double mTotalLoans = 0;
+    private double mTotalUtilityBills = 0;
+    private double mTotalSubscriptions = 0;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,6 +31,13 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
 
         initViews();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserData();
+        recalculateTotalIncome();
     }
 
     private void initViews() {
@@ -34,10 +52,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
             });
         }
 
-        View budgetPlan = findViewById(R.id.budget_plan);
-        if (budgetPlan != null) {
-            budgetPlan.setOnClickListener(v -> startActivity(new Intent(this, BudgetPlannerActivity.class)));
-        }
 
         View btnProfileAvatar = findViewById(R.id.btnProfileAvatar);
         if (btnProfileAvatar != null) {
@@ -51,6 +65,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (cardAchievement != null) {
             cardAchievement.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
         }
+        
         if (cardBudget != null) {
             cardBudget.setOnClickListener(v -> startActivity(new Intent(this, BudgetPlannerActivity.class)));
         }
@@ -75,6 +90,43 @@ public class StudentDashboardActivity extends AppCompatActivity {
         }
 
         loadAchievementData();
+        loadCurrentBalance();
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    String name = documentSnapshot.getString("name");
+                    if (name != null && !name.isEmpty()) {
+                        TextView tvStudentName = findViewById(R.id.tvStudentName);
+                        TextView tvInitials = findViewById(R.id.tvInitials);
+                        
+                        if (tvStudentName != null) {
+                            tvStudentName.setText(name);
+                        }
+                        
+                        if (tvInitials != null) {
+                            // Extract initials
+                            String[] words = name.trim().split("\\s+");
+                            StringBuilder initials = new StringBuilder();
+                            if (words.length > 0 && !words[0].isEmpty()) {
+                                initials.append(words[0].charAt(0));
+                                if (words.length > 1 && !words[words.length - 1].isEmpty()) {
+                                    initials.append(words[words.length - 1].charAt(0));
+                                }
+                            }
+                            tvInitials.setText(initials.toString().toUpperCase(Locale.getDefault()));
+                        }
+                    }
+                }
+            });
     }
 
     private void loadAchievementData() {
@@ -91,16 +143,28 @@ public class StudentDashboardActivity extends AppCompatActivity {
                     savings.add(saving);
                 }
                 
-                double totalSavings = 0;
+                mTotalSavings = 0;
                 for (SavingModel s : savings) {
-                    totalSavings += s.getCurrentAmount();
+                    mTotalSavings += s.getCurrentAmount();
                 }
+                
+                recalculateTotalIncome();
 
-                String level = getSavingsLevel(totalSavings);
+                String level = getSavingsLevel(mTotalSavings);
                 
                 TextView txtAchievementPts = findViewById(R.id.txtAchievementPts);
                 if (txtAchievementPts != null) {
                     txtAchievementPts.setText(level);
+                }
+                
+                TextView txtTrophyIcon = findViewById(R.id.txtTrophyIcon);
+                if (txtTrophyIcon != null) {
+                    switch (level) {
+                        case "Gold Saver": txtTrophyIcon.setText("🥇"); break;
+                        case "Silver Saver": txtTrophyIcon.setText("🥈"); break;
+                        case "Bronze Saver": txtTrophyIcon.setText("🥉"); break;
+                        default: txtTrophyIcon.setText("🏆"); break;
+                    }
                 }
             });
     }
@@ -110,5 +174,114 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (totalSavings >= 25000) return "Silver Saver";
         if (totalSavings >= 5000)  return "Bronze Saver";
         return "Starter";
+    }
+
+    private void loadCurrentBalance() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("incomes")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                
+                mDirectIncome = 0;
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    IncomeModel income = doc.toObject(IncomeModel.class);
+                    mDirectIncome += income.getAmount();
+                }
+                recalculateTotalIncome();
+            });
+
+        // Listen to budget plans for fallback income
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("budgetPlans")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                
+                mBudgetIncome = 0;
+                BudgetModel latestBudget = null;
+                
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    BudgetModel budget = doc.toObject(BudgetModel.class);
+                    if (latestBudget == null) {
+                        latestBudget = budget;
+                    } else if (budget.getCreatedAt() != null && latestBudget.getCreatedAt() != null) {
+                        if (budget.getCreatedAt().after(latestBudget.getCreatedAt())) {
+                            latestBudget = budget;
+                        }
+                    }
+                }
+                
+                if (latestBudget != null) {
+                    mBudgetIncome = latestBudget.getSemesterIncome();
+                }
+                recalculateTotalIncome();
+            });
+
+        // Listen to loans
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("loans")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                mTotalLoans = 0;
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    Double amount = doc.getDouble("principalAmount");
+                    if (amount != null) mTotalLoans += amount;
+                }
+                recalculateTotalIncome();
+            });
+
+        // Listen to utility bills
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("utility_bills")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                mTotalUtilityBills = 0;
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    Double amount = doc.getDouble("amount");
+                    if (amount != null) mTotalUtilityBills += amount;
+                }
+                recalculateTotalIncome();
+            });
+
+        // Listen to subscriptions (acting as expenses)
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("subscriptions")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+                mTotalSubscriptions = 0;
+                for (QueryDocumentSnapshot doc : snapshot) {
+                    Double amount = doc.getDouble("amount");
+                    if (amount != null) mTotalSubscriptions += amount;
+                }
+                recalculateTotalIncome();
+            });
+    }
+
+    private void recalculateTotalIncome() {
+        mTotalIncome = mDirectIncome > 0 ? mDirectIncome : mBudgetIncome;
+        updateUIWithTotalIncome();
+    }
+
+    private void updateUIWithTotalIncome() {
+        double currentBalance = mTotalIncome - mTotalSubscriptions - mTotalSavings - mTotalLoans - mTotalUtilityBills;
+        // If currentBalance goes negative, that's fine to show mathematically.
+        
+        updateBudgetLeft(currentBalance);
+        
+        TextView txtCurrentBalanceValue = findViewById(R.id.txtCurrentBalanceValue);
+        if (txtCurrentBalanceValue != null) {
+            txtCurrentBalanceValue.setText(CurrencyHelper.formatMoney(this, currentBalance));
+        }
+    }
+
+    private void updateBudgetLeft(double currentBalance) {
+        // According to instructions, Budget Left can just mirror Current Balance
+        // or we use the newly computed balance
+        double budgetLeft = currentBalance;
+        if (budgetLeft < 0) budgetLeft = 0;
+        
+        TextView txtBudgetLeftValue = findViewById(R.id.txtBudgetLeftValue);
+        if (txtBudgetLeftValue != null) {
+            txtBudgetLeftValue.setText(CurrencyHelper.formatMoney(this, budgetLeft));
+        }
     }
 }

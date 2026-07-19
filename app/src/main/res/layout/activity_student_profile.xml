@@ -159,7 +159,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
                     android:gravity="center"
-                    android:text="University of Colombo • Year 4"
+                    android:text="Loading..."
                     android:textColor="#BCE0FF"
                     android:textSize="12sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileEmail"
@@ -290,6 +290,7 @@
                 android:orientation="vertical"
                 android:padding="20dp"
                 android:background="#F8FAFC">
+
 
                 <!-- My Achievements Menu Row -->
                 <com.google.android.material.card.MaterialCardView

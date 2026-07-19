@@ -48,6 +48,7 @@
                         app:strokeWidth="0dp">
 
                         <TextView
+                            android:id="@+id/tvInitials"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
@@ -95,9 +96,10 @@
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvStudentName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aiden Ramirez"
+                        android:text="Loading..."
                         android:textColor="#FFFFFF"
                         android:textSize="18sp"
                         android:textStyle="bold" />
@@ -106,6 +108,7 @@
                 <!-- Top Right Actions -->
                 <!-- Trophy icon -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardTrophyIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     app:cardBackgroundColor="@android:color/transparent"
@@ -114,50 +117,12 @@
                     app:strokeWidth="1dp">
 
                     <TextView
+                        android:id="@+id/txtTrophyIcon"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="🏆"
                         android:textSize="16sp" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Budget Plan -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="8dp"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardCornerRadius="18dp"
-                    app:strokeColor="#F59E0B"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:id="@+id/budget_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="👝"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="Budget Plan"
-                            android:textColor="#F59E0B"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Notification -->
@@ -365,9 +330,10 @@
                                         android:textSize="10sp" />
 
                                     <TextView
+                                        android:id="@+id/txtBudgetLeftValue"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="LKR 8,000"
+                                        tools:text="LKR 8,000"
                                         android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />

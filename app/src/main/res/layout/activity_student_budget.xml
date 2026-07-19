@@ -75,7 +75,8 @@
                         android:id="@+id/txtGreeting"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Good Morning, Dulani 👋"
+                        android:text="Loading..."
+                        tools:text="Good Morning, Dulani 👋"
                         android:textColor="#D8E4FF"
                         android:textSize="13sp" />
 
@@ -880,7 +881,7 @@
                                 android:id="@+id/txtSemesterDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Semester: Jun 2026 – Dec 2026"
+                                tools:text="Semester: Jun 2026 – Dec 2026"
                                 android:textColor="#111827"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
@@ -890,7 +891,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="6 months remaining"
+                                tools:text="6 months remaining"
                                 android:textColor="#6B7280"
                                 android:textSize="12sp" />
 
