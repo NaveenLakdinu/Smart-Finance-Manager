@@ -324,9 +324,13 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
 
                                         data.clearData();
-                                        
-                                        // Handle routing (will now route to PIN setup)
-                                        navigateToDashboard(userRole);
+
+                                        // Navigate to OnboardingActivity after successful registration
+                                        Intent onboardingIntent = new Intent(RegisterActivity.this, OnboardingActivity.class);
+                                        onboardingIntent.putExtra("USER_ROLE", userRole);
+                                        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(onboardingIntent);
+                                        finish();
                                     })
                                     .addOnFailureListener(e -> {
                                         timeoutHandler.removeCallbacks(timeoutRunnable);

@@ -207,7 +207,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter total loan amount"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
@@ -237,7 +237,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Monthly payment amount"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
@@ -263,7 +263,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="e.g. 6"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="number"
                                 android:background="@null" />
@@ -626,7 +626,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="e.g. New Car, House, Education"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="textCapSentences"
                                 android:background="@null" />
@@ -655,7 +655,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="0.00"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
@@ -683,7 +683,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:hint="Select goal deadline"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp" />
                             <ImageView android:layout_width="20dp" android:layout_height="20dp"
                                 android:src="@drawable/ic_calendar"
@@ -713,7 +713,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="10,000.00"
-                                android:hintTextColor="#CBD5E1"
+                                android:textColorHint="#CBD5E1"
                                 android:textColor="#111827" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
