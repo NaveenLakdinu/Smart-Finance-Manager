@@ -53,7 +53,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
         initViews();
         setupUserDetails();
-        loadAccountsFromFirestore();
+        updateAccountUI();
 
         btnSwitchAccount.setOnClickListener(v -> showAccountSwitchDialog());
 
