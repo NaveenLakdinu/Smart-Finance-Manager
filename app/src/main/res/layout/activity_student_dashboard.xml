@@ -430,6 +430,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtLoanBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -513,6 +514,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtSubscriptionBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -596,6 +598,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtSavingBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -671,6 +674,7 @@
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtUtilityBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"

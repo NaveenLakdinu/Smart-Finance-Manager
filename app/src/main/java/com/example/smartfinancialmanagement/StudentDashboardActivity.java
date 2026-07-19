@@ -138,9 +138,22 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 if (error != null || snapshot == null) return;
                 
                 List<SavingModel> savings = new ArrayList<>();
+                int activeGoals = 0;
                 for (QueryDocumentSnapshot doc : snapshot) {
                     SavingModel saving = doc.toObject(SavingModel.class);
                     savings.add(saving);
+                    if (!"COMPLETED".equalsIgnoreCase(saving.getStatus())) {
+                        activeGoals++;
+                    }
+                }
+                
+                TextView txtSavingBadge = findViewById(R.id.txtSavingBadge);
+                if (txtSavingBadge != null) {
+                    if (activeGoals > 0) {
+                        txtSavingBadge.setText("On Track");
+                    } else {
+                        txtSavingBadge.setText("No Goals");
+                    }
                 }
                 
                 mTotalSavings = 0;
@@ -224,9 +237,19 @@ public class StudentDashboardActivity extends AppCompatActivity {
             .addSnapshotListener((snapshot, error) -> {
                 if (error != null || snapshot == null) return;
                 mTotalLoans = 0;
+                int activeLoansCount = 0;
                 for (QueryDocumentSnapshot doc : snapshot) {
                     Double amount = doc.getDouble("principalAmount");
                     if (amount != null) mTotalLoans += amount;
+                    
+                    String status = doc.getString("status");
+                    if (!"PAID".equalsIgnoreCase(status) && !"COMPLETED".equalsIgnoreCase(status)) {
+                        activeLoansCount++;
+                    }
+                }
+                TextView txtLoanBadge = findViewById(R.id.txtLoanBadge);
+                if (txtLoanBadge != null) {
+                    txtLoanBadge.setText(activeLoansCount + " Active");
                 }
                 recalculateTotalIncome();
             });
@@ -236,9 +259,19 @@ public class StudentDashboardActivity extends AppCompatActivity {
             .addSnapshotListener((snapshot, error) -> {
                 if (error != null || snapshot == null) return;
                 mTotalUtilityBills = 0;
+                int dueCount = 0;
                 for (QueryDocumentSnapshot doc : snapshot) {
                     Double amount = doc.getDouble("amount");
                     if (amount != null) mTotalUtilityBills += amount;
+                    
+                    String status = doc.getString("status");
+                    if (!"PAID".equalsIgnoreCase(status)) {
+                        dueCount++;
+                    }
+                }
+                TextView txtUtilityBadge = findViewById(R.id.txtUtilityBadge);
+                if (txtUtilityBadge != null) {
+                    txtUtilityBadge.setText(dueCount + " Due");
                 }
                 recalculateTotalIncome();
             });
@@ -248,9 +281,14 @@ public class StudentDashboardActivity extends AppCompatActivity {
             .addSnapshotListener((snapshot, error) -> {
                 if (error != null || snapshot == null) return;
                 mTotalSubscriptions = 0;
+                int subCount = snapshot.size();
                 for (QueryDocumentSnapshot doc : snapshot) {
                     Double amount = doc.getDouble("amount");
                     if (amount != null) mTotalSubscriptions += amount;
+                }
+                TextView txtSubscriptionBadge = findViewById(R.id.txtSubscriptionBadge);
+                if (txtSubscriptionBadge != null) {
+                    txtSubscriptionBadge.setText(subCount + " Plans");
                 }
                 recalculateTotalIncome();
             });
