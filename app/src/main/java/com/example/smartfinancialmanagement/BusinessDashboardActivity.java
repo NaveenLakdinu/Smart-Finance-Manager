@@ -91,12 +91,14 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
         // Click listeners
         findViewById(R.id.cardManageLoan).setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
-        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> startActivity(new Intent(this, SubscriptionActivity.class)));
+        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
         findViewById(R.id.cardManageUtility).setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
         findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
         findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
         findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
+
+        setupSecurityButton();
 
         btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
         btnTopLogout.setOnClickListener(v -> {
@@ -282,6 +284,40 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         };
 
         recyclerBusinessFilters.setAdapter(adapter);
+    }
+
+    private void setupSecurityButton() {
+        View btnSecurity = findViewById(R.id.btnSecurity);
+        if (btnSecurity != null) {
+            btnSecurity.setOnClickListener(v -> {
+                boolean isPinSet = PinHelper.isPinSet(this);
+                String[] options;
+                if (isPinSet) {
+                    options = new String[]{"Change PIN Lock", "Disable PIN Lock"};
+                } else {
+                    options = new String[]{"Enable PIN Lock"};
+                }
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("PIN Lock Security");
+                builder.setItems(options, (dialog, which) -> {
+                    if (!isPinSet) {
+                        Intent intent = new Intent(this, PinSetupActivity.class);
+                        startActivity(intent);
+                    } else {
+                        if (which == 0) {
+                            Intent intent = new Intent(this, PinSetupActivity.class);
+                            startActivity(intent);
+                        } else if (which == 1) {
+                            PinHelper.clearPin(this);
+                            Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", null);
+                builder.show();
+            });
+        }
     }
 
     private void showNotificationPanelDialog() {
