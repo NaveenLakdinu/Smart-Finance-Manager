@@ -65,6 +65,145 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="Profile Information"
+                        android:textColor="#071A33"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"/>
+
+                    <!-- Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Full Name"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditName"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:inputType="textPersonName"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Age -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Age"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditAge"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:inputType="number"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Mobile -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Mobile Number"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditMobile"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:inputType="phone"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- University -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="University"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditUniversity"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:hint="e.g. University of Colombo"
+                        android:inputType="text"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Course -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Course"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditCourse"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:hint="e.g. BSc Computer Science"
+                        android:inputType="text"
+                        android:layout_marginBottom="16dp" />
+
+                    <!-- Student ID -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Student ID"
+                        android:textColor="#666666"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp" />
+                    
+                    <EditText
+                        android:id="@+id/etEditStudentId"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:background="@drawable/bg_input"
+                        android:paddingHorizontal="16dp"
+                        android:textColor="#1F2937"
+                        android:hint="e.g. STU12345"
+                        android:inputType="text"
+                        android:layout_marginBottom="32dp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#E5E7EB"
+                        android:layout_marginBottom="24dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="App Preferences"
+                        android:textColor="#071A33"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"/>
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:text="Preferred Currency"
                         android:textColor="@color/text_on_dark_muted"
                         android:textSize="14sp"

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/surface_primary"
+    android:background="#071A33"
     tools:context=".FinancialReportsActivity">
 
     <!-- Top Bar -->
@@ -25,13 +25,13 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             android:contentDescription="Back"
-            app:tint="@color/text_on_dark_primary" />
+            app:tint="#FFFFFF" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Financial Reports"
-            android:textColor="@color/text_on_dark_primary"
+            android:textColor="#FFFFFF"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="16dp" />
@@ -52,9 +52,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#FFFFFF"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
+                app:cardElevation="4dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -87,7 +87,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Generate Reports"
-                                android:textColor="@color/text_on_dark_primary"
+                                android:textColor="#071A33"
                                 android:textSize="18sp"
                                 android:textStyle="bold" />
 
@@ -95,7 +95,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Generate reports and track your financial goals."
-                                android:textColor="@color/text_on_dark_secondary"
+                                android:textColor="#6B7280"
                                 android:textSize="12sp"
                                 android:layout_marginTop="2dp" />
 
@@ -108,7 +108,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Report Type"
-                        android:textColor="@color/text_on_dark_secondary"
+                        android:textColor="#374151"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="6dp" />
@@ -133,7 +133,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Select Month"
-                            android:textColor="@color/text_on_dark_secondary"
+                            android:textColor="#374151"
                             android:textSize="12sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="6dp" />
@@ -174,7 +174,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Start Date"
-                                android:textColor="@color/text_on_dark_secondary"
+                                android:textColor="#6B7280"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -183,7 +183,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Select Start Date"
-                                android:textColor="@color/text_on_dark_muted"
+                                android:textColor="#9CA3AF"
                                 android:textSize="13sp"
                                 android:layout_marginTop="4dp" />
 
@@ -205,7 +205,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="End Date"
-                                android:textColor="@color/text_on_dark_secondary"
+                                android:textColor="#6B7280"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
 
@@ -214,7 +214,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Select End Date"
-                                android:textColor="@color/text_on_dark_muted"
+                                android:textColor="#9CA3AF"
                                 android:textSize="13sp"
                                 android:layout_marginTop="4dp" />
 
@@ -230,7 +230,7 @@
                         android:layout_marginTop="20dp"
                         android:text="Generate Report"
                         android:textAllCaps="false"
-                        android:textColor="@color/text_on_dark_primary"
+                        android:textColor="#FFFFFF"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:backgroundTint="@null"
@@ -252,172 +252,72 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Report Summary Preview"
-                            android:textColor="@color/text_on_dark_primary"
+                            android:textColor="#1E293B"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             android:layout_marginBottom="12dp" />
 
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:gravity="center_vertical">
-
-                            <ProgressBar
-                                android:id="@+id/progressGoal"
-                                style="?android:attr/progressBarStyleHorizontal"
-                                android:layout_width="0dp"
-                                android:layout_height="12dp"
-                                android:layout_weight="1"
-                                android:progress="60"
-                                android:progressDrawable="@drawable/bg_progress_bar_custom" />
-
-                            <TextView
-                                android:id="@+id/txtProgressPercent"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="60%"
-                                android:textColor="#0F172A"
-                                android:textSize="14sp"
-                                android:textStyle="bold"
-                                android:layout_marginStart="10dp" />
-
-                        </LinearLayout>
-
+                        <!-- 1. Loans Chart -->
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="60% of financial goals completed"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="11sp"
-                            android:layout_marginTop="4dp"
-                            android:layout_marginBottom="16dp" />
-
-                        <LinearLayout
+                            android:text="Loan Details"
+                            android:textColor="#374151"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginTop="8dp"
+                            android:layout_marginBottom="8dp"/>
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/chartLoans"
                             android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="16dp"/>
+
+                        <!-- 2. Subscriptions Chart -->
+                        <TextView
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:text="Subscriptions"
+                            android:textColor="#374151"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp"/>
+                        <com.github.mikephil.charting.charts.PieChart
+                            android:id="@+id/chartSubscriptions"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="16dp"/>
 
-                            <!-- Goals Created Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="8dp">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Goals Created"
-                                    android:textColor="@color/text_on_dark_secondary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/txtGoalsCreatedValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="3"
-                                    android:textColor="@color/text_on_dark_primary"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                        <!-- 3. Utility Bills Chart -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Utility Bills"
+                            android:textColor="#374151"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp"/>
+                        <com.github.mikephil.charting.charts.BarChart
+                            android:id="@+id/chartUtilityBills"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="16dp"/>
 
-                            <!-- Goals Achieved Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="8dp">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Goals Achieved"
-                                    android:textColor="@color/text_on_dark_secondary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/txtGoalsAchievedValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="1"
-                                    android:textColor="@color/text_on_dark_primary"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
+                        <!-- 4. Saving Progress Chart -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saving Progress"
+                            android:textColor="#374151"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            android:layout_marginBottom="8dp"/>
+                        <com.github.mikephil.charting.charts.HorizontalBarChart
+                            android:id="@+id/chartSavings"
+                            android:layout_width="match_parent"
+                            android:layout_height="200dp"
+                            android:layout_marginBottom="8dp"/>
 
-                            <!-- Current Savings Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="8dp">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Current Savings"
-                                    android:textColor="@color/text_on_dark_secondary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/txtCurrentSavingsValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Rs. 12,000"
-                                    android:textColor="@color/text_on_dark_primary"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <!-- Target Savings Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical"
-                                android:layout_marginBottom="8dp">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Target Savings"
-                                    android:textColor="@color/text_on_dark_secondary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/txtTargetSavingsValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Rs. 20,000"
-                                    android:textColor="@color/text_on_dark_primary"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                            <!-- Remaining Amount Row -->
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:gravity="center_vertical">
-                                <TextView
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:text="Remaining Amount"
-                                    android:textColor="@color/text_on_dark_secondary"
-                                    android:textSize="12sp" />
-                                <TextView
-                                    android:id="@+id/txtRemainingValue"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="Rs. 8,000"
-                                    android:textColor="@color/danger_text"
-                                    android:textSize="13sp"
-                                    android:textStyle="bold" />
-                            </LinearLayout>
-
-                        </LinearLayout>
 
                         <!-- Buttons Row -->
                         <LinearLayout
@@ -428,29 +328,13 @@
                             android:weightSum="2">
 
                             <com.google.android.material.button.MaterialButton
-                                android:id="@+id/btnViewDetailedReport"
-                                style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginEnd="6dp"
-                                android:text="Detailed Report"
-                                android:textAllCaps="false"
-                                android:textSize="12sp"
-                                app:cornerRadius="12dp"
-                                app:strokeColor="#3B82F6"
-                                android:textColor="@color/qa_blue_icon" />
-
-                            <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnDownloadPdfReport"
                                 style="@style/Widget.Material3.Button.OutlinedButton"
-                                android:layout_width="0dp"
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:layout_marginStart="6dp"
                                 android:text="Download PDF"
                                 android:textAllCaps="false"
-                                android:textSize="12sp"
+                                android:textSize="14sp"
                                 app:cornerRadius="12dp"
                                 app:strokeColor="#94A3B8"
                                 android:textColor="#475569" />

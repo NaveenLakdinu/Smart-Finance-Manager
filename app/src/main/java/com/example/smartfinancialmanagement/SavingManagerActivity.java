@@ -57,13 +57,19 @@ public class SavingManagerActivity extends AppCompatActivity {
         // Back button
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
 
+        // Wallet button
+        View btnWallet = findViewById(R.id.btnWallet);
+        if (btnWallet != null) {
+            btnWallet.setOnClickListener(v -> startActivity(new Intent(this, AddIncomeActivity.class)));
+        }
+
         // Action card: Add Goal
         findViewById(R.id.cardAddGoal).setOnClickListener(v ->
                 startActivity(new Intent(this, SavingAddGoalActivity.class)));
 
-        // Action card: All Goals
-        findViewById(R.id.cardAllGoals).setOnClickListener(v ->
-                startActivity(new Intent(this, SavingListActivity.class)));
+        // Action card: Report
+        findViewById(R.id.cardReport).setOnClickListener(v ->
+                startActivity(new Intent(this, SavingGenerateReportActivity.class)));
 
         // See all → active goals
         findViewById(R.id.tvSeeAll).setOnClickListener(v ->

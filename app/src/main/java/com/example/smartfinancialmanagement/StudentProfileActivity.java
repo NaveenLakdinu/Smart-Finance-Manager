@@ -9,7 +9,12 @@ import android.os.Bundle;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.view.View;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -43,12 +48,35 @@ public class StudentProfileActivity extends AppCompatActivity {
                 if (result.getResultCode() == Activity.RESULT_OK && result.getData() != null) {
                     Uri selectedImageUri = result.getData().getData();
                     if (selectedImageUri != null) {
-                        imgProfileAvatar.setImageURI(selectedImageUri);
-                        saveAvatarUri(selectedImageUri.toString());
+                        saveImageToInternalStorage(selectedImageUri);
                     }
                 }
             }
     );
+
+    private void saveImageToInternalStorage(Uri uri) {
+        try {
+            InputStream inputStream = getContentResolver().openInputStream(uri);
+            if (inputStream != null) {
+                File file = new File(getFilesDir(), "profile_avatar.jpg");
+                OutputStream outputStream = new FileOutputStream(file);
+                byte[] buffer = new byte[1024];
+                int length;
+                while ((length = inputStream.read(buffer)) > 0) {
+                    outputStream.write(buffer, 0, length);
+                }
+                outputStream.close();
+                inputStream.close();
+                
+                Uri internalUri = Uri.fromFile(file);
+                imgProfileAvatar.setImageURI(internalUri);
+                saveAvatarUri(internalUri.toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Failed to save image", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +103,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         txtStatSavedValue = findViewById(R.id.txtStatSavedValue);
         txtStatScoreValue = findViewById(R.id.txtStatScoreValue);
         
+
         menuAchievements = findViewById(R.id.menuAchievements);
         menuFinancialReports = findViewById(R.id.menuFinancialReports);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
@@ -88,6 +117,13 @@ public class StudentProfileActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        loadUserData();
+        loadStats();
+    }
+
     private void loadUserData() {
         if (user != null) {
             txtProfileEmail.setText(user.getEmail());
@@ -97,6 +133,28 @@ public class StudentProfileActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
                         etProfileName.setText(documentSnapshot.getString("name"));
+                    }
+                });
+
+            // Load University and Course from Firestore
+            db.collection("users").document(user.getUid()).collection("student_profile").document("profile_data").get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String uni = documentSnapshot.getString("university");
+                        String course = documentSnapshot.getString("course");
+                        
+                        TextView txtUni = findViewById(R.id.txtProfileUniversity);
+                        if (txtUni != null) {
+                            if (uni != null && !uni.isEmpty()) {
+                                if (course != null && !course.isEmpty()) {
+                                    txtUni.setText(uni + " • " + course);
+                                } else {
+                                    txtUni.setText(uni);
+                                }
+                            } else {
+                                txtUni.setText("University not set");
+                            }
+                        }
                     }
                 });
         }
@@ -148,8 +206,10 @@ public class StudentProfileActivity extends AppCompatActivity {
         if (btnEditAvatar != null) btnEditAvatar.setOnClickListener(v -> pickImage());
         if (imgProfileAvatar != null) imgProfileAvatar.setOnClickListener(v -> pickImage());
         
+
+        
         if (menuAchievements != null) {
-            menuAchievements.setOnClickListener(v -> startActivity(new Intent(this, MyAchievementsActivity.class)));
+            menuAchievements.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
         }
         
         if (menuFinancialReports != null) {
@@ -172,7 +232,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     }
 
     private void pickImage() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
