@@ -10,7 +10,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -22,31 +21,26 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-// Pure iText 7 Engine Imports
-import com.itextpdf.io.image.ImageDataFactory;
-import com.itextpdf.kernel.colors.ColorConstants;
-import com.itextpdf.kernel.colors.DeviceRgb;
-import com.itextpdf.kernel.font.PdfFont;
-import com.itextpdf.kernel.font.PdfFontFactory;
-import com.itextpdf.io.font.constants.StandardFonts;
-import com.itextpdf.kernel.pdf.PdfDocument;
-import com.itextpdf.kernel.pdf.PdfWriter;
-import com.itextpdf.layout.Document;
-import com.itextpdf.layout.element.Cell;
-import com.itextpdf.layout.element.Image;
-import com.itextpdf.layout.element.Paragraph;
-import com.itextpdf.layout.element.Table;
-import com.itextpdf.layout.properties.HorizontalAlignment;
+import com.itextpdf.text.Document;
+import com.itextpdf.text.Element;
+import com.itextpdf.text.Font;
+import com.itextpdf.text.Image;
+import com.itextpdf.text.Paragraph;
+import com.itextpdf.text.Phrase;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfPTable;
+import com.itextpdf.text.pdf.PdfWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -58,7 +52,6 @@ import java.util.Locale;
 
 public class AnalyticsActivity extends AppCompatActivity {
 
-    private static final String TAG = "AnalyticsActivity";
     private TextView txtRevenueDisplay, txtExpenseDisplay, txtProfitDisplay, txtPercentageDisplay;
     private View btnGoToRevenue, btnGoToExpense;
     private Button btnGeneratePDF;
@@ -66,9 +59,8 @@ public class AnalyticsActivity extends AppCompatActivity {
     private Spinner spinnerBusinessFilter;
 
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
     private List<String> filterOptionsList = new ArrayList<>();
-    private String selectedBusinessFilter = "All Businesses";
+    private String selectedBusinessFilter = "All Businesses"; // Default Option
 
     private double currentMonthRevenue = 0.0;
     private double currentMonthExpense = 0.0;
@@ -83,8 +75,6 @@ public class AnalyticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_business_analytic);
 
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
-
         initializeViews();
         setupFilterSpinner();
     }
@@ -115,87 +105,69 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void setupFilterSpinner() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null) {
-            Toast.makeText(this, "Session expired. Please log in again.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        String currentUserId = user.getUid();
-
         filterOptionsList.clear();
         filterOptionsList.add("All Businesses");
 
-        // 💡 Server-Side Filter: Only fetch businesses that belong to the active logged-in user ID
-        db.collection("businesses")
-                .whereEqualTo("userId", currentUserId)
-                .get()
-                .addOnSuccessListener(snapshots -> {
-                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                        String bName = doc.getString("businessName");
-                        if (bName != null) {
-                            filterOptionsList.add(bName);
-                        }
-                    }
+        db.collection("businesses").get().addOnSuccessListener(snapshots -> {
+            for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                String bName = doc.getString("businessName");
+                if (bName != null) {
+                    filterOptionsList.add(bName);
+                }
+            }
 
-                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
-                    spinnerBusinessFilter.setAdapter(adapter);
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
+            spinnerBusinessFilter.setAdapter(adapter);
 
-                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                            selectedBusinessFilter = filterOptionsList.get(position);
-                            fetchMonthlyAnalytics(currentUserId);
-                        }
+            spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedBusinessFilter = filterOptionsList.get(position);
+                    fetchMonthlyAnalytics();
+                }
 
-                        @Override
-                        public void onNothingSelected(AdapterView<?> parent) {}
-                    });
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Failed to load filtered workspace tags: " + e.getMessage()));
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        });
     }
 
-    private void fetchMonthlyAnalytics(String currentUserId) {
+    private void fetchMonthlyAnalytics() {
         String currentMonthToken = yearMonthFormat.format(Calendar.getInstance().getTime());
 
-        // 💡 Server-Side Filter: Only pull revenues targeting this specific client user ID
-        db.collection("revenues")
-                .whereEqualTo("userId", currentUserId)
-                .get()
-                .addOnSuccessListener(revSnapshots -> {
-                    currentMonthRevenue = 0.0;
-                    for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
-                        String dateStr = doc.getString("date");
-                        String bName = doc.getString("selectedBusiness");
-                        Double amount = doc.getDouble("amount");
+        // 1. Get Revenues
+        db.collection("revenues").get().addOnSuccessListener(revSnapshots -> {
+            currentMonthRevenue = 0.0;
+            for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
+                String dateStr = doc.getString("date");
+                String bName = doc.getString("selectedBusiness");
+                Double amount = doc.getDouble("amount");
 
-                        if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                            if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                                currentMonthRevenue += amount;
-                            }
+                if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                    if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                        currentMonthRevenue += amount;
+                    }
+                }
+            }
+
+            // 2. Get Expenses
+            db.collection("expenses").get().addOnSuccessListener(expSnapshots -> {
+                currentMonthExpense = 0.0;
+                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
+                    String dateStr = doc.getString("date");
+                    String bName = doc.getString("selectedBusiness");
+                    Double amount = doc.getDouble("amount");
+
+                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                            currentMonthExpense += amount;
                         }
                     }
+                }
 
-                    // 💡 Server-Side Filter: Only pull expenses targeting this specific client user ID
-                    db.collection("expenses")
-                            .whereEqualTo("userId", currentUserId)
-                            .get()
-                            .addOnSuccessListener(expSnapshots -> {
-                                currentMonthExpense = 0.0;
-                                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
-                                    String dateStr = doc.getString("date");
-                                    String bName = doc.getString("selectedBusiness");
-                                    Double amount = doc.getDouble("amount");
-
-                                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                                            currentMonthExpense += amount;
-                                        }
-                                    }
-                                }
-
-                                calculateFinalMetrics();
-                            });
-                });
+                calculateFinalMetrics();
+            });
+        });
     }
 
     private void calculateFinalMetrics() {
@@ -274,6 +246,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     }
 
     private void generateAnalyticsPDF() {
+        Document document = new Document();
         String filename = "Analytics_Report_" + selectedBusinessFilter.replace(" ", "_") + "_" + System.currentTimeMillis() + ".pdf";
 
         try {
@@ -292,62 +265,45 @@ public class AnalyticsActivity extends AppCompatActivity {
                 outputStream = new java.io.FileOutputStream(file);
             }
 
-            if (outputStream == null) {
-                throw new Exception("Failed to open output stream.");
-            }
+            PdfWriter.getInstance(document, outputStream);
+            document.open();
 
-            PdfWriter writer = new PdfWriter(outputStream);
-            PdfDocument pdfDoc = new PdfDocument(writer);
-            Document document = new Document(pdfDoc);
+            Font titleFont = new Font(Font.FontFamily.HELVETICA, 22, Font.BOLD, com.itextpdf.text.BaseColor.DARK_GRAY);
+            Font subTitleFont = new Font(Font.FontFamily.HELVETICA, 12, Font.ITALIC, com.itextpdf.text.BaseColor.GRAY);
+            Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD);
+            Font normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
 
-            PdfFont fontHelvetica = PdfFontFactory.createFont(StandardFonts.HELVETICA);
-            PdfFont fontHelveticaBold = PdfFontFactory.createFont(StandardFonts.HELVETICA_BOLD);
-            PdfFont fontHelveticaOblique = PdfFontFactory.createFont(StandardFonts.HELVETICA_OBLIQUE);
-
-            Paragraph appTitle = new Paragraph("SMART FINANCIAL MANAGEMENT")
-                    .setFont(fontHelveticaOblique)
-                    .setFontSize(12)
-                    .setFontColor(ColorConstants.GRAY);
-            document.add(appTitle);
-
-            Paragraph title = new Paragraph("Business Analytics Report")
-                    .setFont(fontHelveticaBold)
-                    .setFontSize(22)
-                    .setFontColor(ColorConstants.DARK_GRAY)
-                    .setMarginBottom(5);
+            document.add(new Paragraph("SMART FINANCIAL MANAGEMENT", subTitleFont));
+            Paragraph title = new Paragraph("Business Analytics Report", titleFont);
+            title.setSpacingAfter(5);
             document.add(title);
 
-            Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter)
-                    .setFont(fontHelveticaBold)
-                    .setFontSize(12)
-                    .setMarginBottom(20);
+            Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter, boldFont);
+            filterScope.setSpacingAfter(20);
             document.add(filterScope);
 
-            float[] columnWidths = {250f, 250f};
-            Table table = new Table(columnWidths);
-            table.setMarginBottom(25);
+            PdfPTable table = new PdfPTable(2);
+            table.setWidthPercentage(100);
+            table.setSpacingAfter(25);
 
-            addTableCell(table, "Metric Description", fontHelveticaBold, true);
-            addTableCell(table, "Amount (Rs.)", fontHelveticaBold, true);
+            addTableCell(table, "Metric Description", boldFont, true);
+            addTableCell(table, "Amount (Rs.)", boldFont, true);
 
-            addTableCell(table, "Total Revenue", fontHelvetica, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthRevenue), fontHelvetica, false);
+            addTableCell(table, "Total Revenue", normalFont, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthRevenue), normalFont, false);
 
-            addTableCell(table, "Total Expenses", fontHelvetica, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthExpense), fontHelvetica, false);
+            addTableCell(table, "Total Expenses", normalFont, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthExpense), normalFont, false);
 
-            addTableCell(table, "Net Profit / Loss", fontHelveticaBold, false);
-            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit), fontHelveticaBold, false);
+            addTableCell(table, "Net Profit / Loss", boldFont, false);
+            addTableCell(table, String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit), boldFont, false);
 
-            addTableCell(table, "Profit Margin Percentage", fontHelvetica, false);
-            addTableCell(table, String.format(Locale.getDefault(), "%.2f%%", profitPercentage), fontHelvetica, false);
+            addTableCell(table, "Profit Margin Percentage", normalFont, false);
+            addTableCell(table, String.format(Locale.getDefault(), "%.2f%%", profitPercentage), normalFont, false);
 
             document.add(table);
 
-            Paragraph chartDesc = new Paragraph("Visual Analytics Workspace Chart Summary:")
-                    .setFont(fontHelveticaBold)
-                    .setFontSize(12);
-            document.add(chartDesc);
+            document.add(new Paragraph("Visual Analytics Workspace Chart Summary:", boldFont));
 
             Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
@@ -357,16 +313,59 @@ public class AnalyticsActivity extends AppCompatActivity {
             bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
             byte[] byteArray = stream.toByteArray();
 
-            Image chartImage = new Image(ImageDataFactory.create(byteArray));
-            chartImage.setMaxWidth(500f);
-            chartImage.setMaxHeight(300f);
-            chartImage.setHorizontalAlignment(HorizontalAlignment.CENTER);
-            chartImage.setMarginTop(15);
+            Image chartImage = Image.getInstance(byteArray);
+            chartImage.scaleToFit(500, 300);
+            chartImage.setAlignment(Element.ALIGN_CENTER);
+            chartImage.setSpacingBefore(15);
 
             document.add(chartImage);
 
+            // ── Pie Chart: Revenue vs Expenses Distribution ──
+            PieChart pieChart = new PieChart(this);
+            pieChart.setDrawEntryLabels(true);
+            pieChart.setEntryLabelTextSize(11f);
+            pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
+            pieChart.setHoleColor(android.graphics.Color.WHITE);
+            pieChart.setCenterText("Profit\nBreakdown");
+            pieChart.setCenterTextSize(13f);
+            pieChart.getDescription().setEnabled(false);
+            pieChart.getLegend().setTextSize(10f);
+
+            java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
+            if (currentMonthRevenue > 0) pieEntries.add(new PieEntry((float) currentMonthRevenue, "Revenue"));
+            if (currentMonthExpense > 0) pieEntries.add(new PieEntry((float) currentMonthExpense, "Expenses"));
+            if (currentMonthProfit != 0) pieEntries.add(new PieEntry((float) Math.abs(currentMonthProfit), currentMonthProfit >= 0 ? "Net Profit" : "Net Loss"));
+
+            if (!pieEntries.isEmpty()) {
+                PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
+                int[] pieColors = {
+                        android.graphics.Color.parseColor("#10B981"),
+                        android.graphics.Color.parseColor("#F43F5E"),
+                        android.graphics.Color.parseColor("#38BDF8")
+                };
+                pieDataSet.setColors(pieColors);
+                pieDataSet.setValueTextSize(11f);
+                pieDataSet.setSliceSpace(3f);
+                PieData pieData = new PieData(pieDataSet);
+                pieChart.setData(pieData);
+
+                pieChart.measure(
+                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
+                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
+                pieChart.layout(0, 0, 500, 500);
+                Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
+                pieChart.draw(new Canvas(pieBitmap));
+
+                ByteArrayOutputStream pieStream = new ByteArrayOutputStream();
+                pieBitmap.compress(Bitmap.CompressFormat.PNG, 100, pieStream);
+                Image pieImage = Image.getInstance(pieStream.toByteArray());
+                pieImage.scaleToFit(450, 450);
+                pieImage.setAlignment(Element.ALIGN_CENTER);
+                pieImage.setSpacingBefore(15);
+                document.add(pieImage);
+            }
+
             document.close();
-            outputStream.close();
 
             Toast.makeText(this, "PDF Report saved to Downloads folder!", Toast.LENGTH_LONG).show();
 
@@ -376,12 +375,12 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
     }
 
-    private void addTableCell(Table table, String text, PdfFont font, boolean isHeader) {
-        Cell cell = new Cell().add(new Paragraph(text).setFont(font).setFontSize(12));
-        cell.setPadding(10f);
+    private void addTableCell(PdfPTable table, String text, Font font, boolean isHeader) {
+        PdfPCell cell = new PdfPCell(new Phrase(text, font));
+        cell.setPadding(10);
         if (isHeader) {
-            cell.setBackgroundColor(new DeviceRgb(211, 211, 211));
+            cell.setBackgroundColor(com.itextpdf.text.BaseColor.LIGHT_GRAY);
         }
         table.addCell(cell);
     }
-}
+} // 💡 Class එක වසා දමන අවසාන වරහන

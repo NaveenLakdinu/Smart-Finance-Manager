@@ -206,7 +206,7 @@ txtEarnings.setText("LKR 0.00"); // default no salary
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
@@ -264,7 +264,7 @@ txtEarnings.setText("LKR 0.00"); // default no salary
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);

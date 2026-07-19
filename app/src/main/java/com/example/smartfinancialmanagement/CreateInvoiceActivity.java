@@ -110,7 +110,7 @@ public class CreateInvoiceActivity extends AppCompatActivity {
             int month = c.get(Calendar.MONTH);
             int day = c.get(Calendar.DAY_OF_MONTH);
 
-            DatePickerDialog datePickerDialog = new DatePickerDialog(this,
+            DatePickerDialog datePickerDialog = new DatePickerDialog(this, R.style.Theme_SmartFinance_DatePicker,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
                         String dateFormatted = String.format(Locale.getDefault(), "%d-%02d-%02d", selectedYear, (selectedMonth + 1), selectedDay);
                         etPaymentDueDate.setText(dateFormatted);
@@ -193,7 +193,7 @@ public class CreateInvoiceActivity extends AppCompatActivity {
             return;
         }
 
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setTitle("Invoice Email Reminder")
                 .setMessage("Would you like to send an automated copy of this invoice reminder to your business email address as well?")
                 .setPositiveButton("Yes, Send Email", (dialog, which) -> saveInvoiceToDatabase(true))

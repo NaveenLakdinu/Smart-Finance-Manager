@@ -133,7 +133,7 @@ public class ManageBusinessActivity extends AppCompatActivity {
     private void showUpdateDeleteDialog(int position) {
         String docId = bizIds.get(position);
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle("Manage: " + bizNames.get(position));
 
         LinearLayout layout = new LinearLayout(this);
@@ -167,7 +167,7 @@ public class ManageBusinessActivity extends AppCompatActivity {
         });
 
         builder.setNegativeButton("Delete", (dialog, which) -> {
-            new AlertDialog.Builder(ManageBusinessActivity.this)
+            new AlertDialog.Builder(ManageBusinessActivity.this, R.style.Theme_SmartFinance_Dialog)
                     .setTitle("Are you sure?")
                     .setMessage("This will permanently delete this workspace.")
                     .setPositiveButton("Yes, Delete", (d, w) -> {

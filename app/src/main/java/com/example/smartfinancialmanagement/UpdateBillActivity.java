@@ -135,7 +135,7 @@ public class UpdateBillActivity extends AppCompatActivity {
             int day = calendar.get(Calendar.DAY_OF_MONTH);
 
             DatePickerDialog datePickerDialog = new DatePickerDialog(
-                    UpdateBillActivity.this,
+                    UpdateBillActivity.this, R.style.Theme_SmartFinance_DatePicker,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
                         String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, (selectedMonth + 1), selectedYear);
                         editPaymentDate.setText(formattedDate);

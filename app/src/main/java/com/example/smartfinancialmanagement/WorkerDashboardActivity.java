@@ -71,6 +71,7 @@ if (user != null) {
     txtEarnings.setText("LKR 0.00");
 }
         
+
         txtPayrollStatus.setText("Next payday: June 30th");
     }
 

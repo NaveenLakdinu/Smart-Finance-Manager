@@ -14,7 +14,6 @@
         <item>Online Payment</item>
     </string-array>
 
-
     <!-- Saving frequency options -->
     <string-array name="saving_frequencies">
         <item>Daily</item>
@@ -26,11 +25,11 @@
     </string-array>
 
     <string-array name="utility_type">
-    <item>Electricity</item>
-    <item>Water</item>
-    <item>Telephone</item>
-    <item>Internet</item>
-    <item>Rent</item>
+        <item>Electricity</item>
+        <item>Water</item>
+        <item>Telephone</item>
+        <item>Internet</item>
+        <item>Rent</item>
     </string-array>
 
     <string-array name="choose_bill">
@@ -53,4 +52,37 @@
     <string name="hint_business_address">Primary Business Location</string>
     <string name="hint_reg_number">BR Number / Tax ID</string>
 
+    <!-- MultiAccount Dashboard -->
+    <string name="profile_letter_default">P</string>
+    <string name="greeting_hello">Hello!</string>
+    <string name="personal_account">Personal Account</string>
+    <string name="current_balance_label">CURRENT BALANCE</string>
+    <string name="balance_placeholder">LKR 125,400.00</string>
+    <string name="change_placeholder">+ 2.4%</string>
+    <string name="account_number_placeholder">**** **** 4290</string>
+    <string name="current_savings_label">CURRENT SAVINGS</string>
+    <string name="lkr_placeholder">LKR 0.00</string>
+    <string name="btn_update">UPDATE</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="action_transfer">Transfer</string>
+    <string name="action_statements">Statements</string>
+    <string name="action_loans">Loans</string>
+    <string name="action_subscriptions">Subscriptions</string>
+    <string name="action_savings">Savings</string>
+    <string name="action_utilities">Utilities</string>
+    <string name="action_cards">Cards</string>
+    <string name="action_add_account">Add Account</string>
+    <string name="cd_notification">Notifications</string>
+    <string name="cd_security">Security</string>
+    <string name="cd_logout">Logout</string>
+    <string name="cd_arrow_down">Dropdown</string>
+    <string name="cd_money">Money</string>
+    <string name="cd_transfer_icon">Transfer</string>
+    <string name="cd_chart">Chart</string>
+    <string name="cd_loan_icon">Loan</string>
+    <string name="cd_calendar">Calendar</string>
+    <string name="cd_bank">Bank</string>
+    <string name="cd_lightbulb">Utilities</string>
+    <string name="cd_card">Card</string>
+    <string name="cd_plus">Add</string>
 </resources>

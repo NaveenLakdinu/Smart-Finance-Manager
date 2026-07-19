@@ -237,7 +237,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         String[] categories = {"Utilities", "Rent & Space", "Salaries", "Inventory Stock", "Marketing", "Other"};
         spinCat.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, categories));
 
-        AlertDialog dialog = new AlertDialog.Builder(this, android.R.style.Theme_DeviceDefault_Dialog)
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setView(customView)
                 .create();
 
@@ -283,7 +283,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
                 h.t2.setTextColor(Color.parseColor("#7A9CC0"));
 
                 h.itemView.setOnLongClickListener(v -> {
-                    new AlertDialog.Builder(v.getContext())
+                    new AlertDialog.Builder(v.getContext(), R.style.Theme_SmartFinance_Dialog)
                             .setTitle("Correction Warning")
                             .setMessage("Delete this expense row item entry permanently?")
                             .setPositiveButton("Delete", (d, w) -> {

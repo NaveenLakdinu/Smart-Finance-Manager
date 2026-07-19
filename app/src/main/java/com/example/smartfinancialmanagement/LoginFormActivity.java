@@ -16,6 +16,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.app.NotificationManager;
 
 public class LoginFormActivity extends AppCompatActivity {
 
@@ -38,6 +44,8 @@ public class LoginFormActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         initViews();
+        requestNotificationPermission();
+        NotificationHelper.createNotificationChannels(this);
         setupListeners();
         checkIfUserLoggedIn();
     }
@@ -174,7 +182,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                 mAuth.signOut();
                                 loginButton.setEnabled(true);
                                 loginButton.setText("LOGIN");
-                                new androidx.appcompat.app.AlertDialog.Builder(this)
+                                new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                         .setTitle("Account Deactivated")
                                         .setMessage("Your account has been permanently deactivated. " +
                                                 "Please contact support if you believe this is a mistake.")
@@ -216,7 +224,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                     mAuth.signOut();
                                     loginButton.setEnabled(true);
                                     loginButton.setText("LOGIN");
-                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                             .setTitle("Account Deactivated")
                                             .setMessage("Your account has been deactivated because " +
                                                     "it remained suspended for more than 30 days. " +
@@ -237,7 +245,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                             .putString("user_role", role)
                                             .apply();
 
-                                    new androidx.appcompat.app.AlertDialog.Builder(this)
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                                             .setTitle("⚠️ Account Suspended")
                                             .setMessage("Your account has been suspended due to " +
                                                     "not following the agreement. You can still " +
@@ -272,6 +280,7 @@ public class LoginFormActivity extends AppCompatActivity {
                                     .apply();
 
                             navigateByRole(role);
+                            saveFcmToken();
                         } else {
                             mAuth.signOut();
                             Toast.makeText(this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
@@ -339,6 +348,30 @@ public class LoginFormActivity extends AppCompatActivity {
      * Routes the user to the correct dashboard based on their Firestore role string.
      * Single source of truth for all role-based navigation in this Activity.
      */
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+    }
+
+    private void saveFcmToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            db.collection("users").document(user.getUid())
+                                    .update("fcmToken", token);
+                        }
+                    }
+                });
+    }
     private void navigateByRole(String role) {
         // Show success toast only for normal (non-suspended) logins
         switch (role) {
@@ -366,6 +399,8 @@ public class LoginFormActivity extends AppCompatActivity {
     /**
      * Converts raw Firebase Auth exception messages into user-friendly strings.
      */
+
+
 
     private String getFriendlyErrorMessage(Exception e) {
         if (e == null) return "Login failed. Please try again.";

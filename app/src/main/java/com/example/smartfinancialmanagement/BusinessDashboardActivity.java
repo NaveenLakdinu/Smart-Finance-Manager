@@ -289,7 +289,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         LinearLayout container = panelView.findViewById(R.id.layoutNotificationsContainer);
         Button btnClose = panelView.findViewById(R.id.btnDismissNotifications);
 
-        AlertDialog dialog = new AlertDialog.Builder(this).setView(panelView).create();
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog).setView(panelView).create();
         if (dialog.getWindow() != null) {
             dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }

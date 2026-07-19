@@ -85,8 +85,13 @@ public class TransferActivity extends AppCompatActivity {
             return;
         }
 
-        sourceIndex = 0;
-        destIndex = docIds.size() > 1 ? 1 : -1;
+        sourceIndex = getIntent().getIntExtra("CURRENT_ACCOUNT_INDEX", 0);
+        if (sourceIndex < 0 || sourceIndex >= docIds.size()) sourceIndex = 0;
+        // Pick first different account as destination
+        destIndex = -1;
+        for (int i = 0; i < docIds.size(); i++) {
+            if (i != sourceIndex) { destIndex = i; break; }
+        }
         updateSourceUI();
         updateDestUI();
     }
@@ -95,7 +100,10 @@ public class TransferActivity extends AppCompatActivity {
         View cardSource = findViewById(R.id.cardSourceAccount);
         View cardDest = findViewById(R.id.cardDestAccount);
 
-        cardSource.setOnClickListener(v -> showAccountPickerDialog(true));
+        // Source account is locked to the currently selected account
+        cardSource.setOnClickListener(null);
+        cardSource.setAlpha(0.7f);
+
         cardDest.setOnClickListener(v -> showAccountPickerDialog(false));
     }
 
@@ -105,7 +113,7 @@ public class TransferActivity extends AppCompatActivity {
             nameArray[i] = names.get(i) + " - " + String.format(Locale.US, "LKR %.2f", balances.get(i));
         }
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
         builder.setTitle(isSource ? "Select Source Account" : "Select Destination Account");
         builder.setItems(nameArray, (dialog, which) -> {
             if (isSource) {
@@ -211,7 +219,7 @@ public class TransferActivity extends AppCompatActivity {
             txtDialogNote.setVisibility(View.GONE);
         }
 
-        AlertDialog dialog = new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setView(dialogView)
                 .setPositiveButton("Confirm Transfer", (d, which) -> executeTransfer(amount))
                 .setNegativeButton("Cancel", (d, which) -> d.dismiss())

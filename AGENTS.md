@@ -26,6 +26,16 @@
 
 ---
 
+## Dependencies (via Version Catalog)
+- Dependencies are declared in `gradle/libs.versions.toml`. When adding a new library, edit that file and reference it via `libs.<alias>` in `app/build.gradle.kts`.
+- Some dependencies (Firestore, iTextPDF, MPAndroidChart, JavaMail) are declared directly in `app/build.gradle.kts` outside the version catalog.
+- Key Firebase services: Auth, Realtime Database, Firestore, Cloud Messaging (FCM)
+- Background work: WorkManager (`libs.work`) for guaranteed background tasks
+- Charts: MPAndroidChart for bar/pie charts in reports
+- PDF: iTextPDF for report generation
+
+---
+
 ## UI Design System (Dark Glassmorphic Theme)
 
 The app uses a unified **dark navy glassmorphic** design. All XML layouts must follow these conventions:
@@ -59,24 +69,23 @@ All cards use `MaterialCardView` with:
 
 ---
 
-## Firebase Firestore Structure (high‑level)
+## Firebase Firestore Structure
 - Root collection: **`users`** (document ID = Firebase Auth UID).
-- Important fields on the user document (see `DATABASE.md`):
+- **Fields on user document**:
   - `monthlySavingAmount` (String → double)
-  - `monthlySalary` (double, stored inside the **worker_profile** sub‑collection)
   - `currentSavings` (String → double)
+  - `fcmToken` (String — FCM push notification token)
+  - `role` (String — determines dashboard routing)
+  - `status` (String — "active", "suspended", "deactivated")
 - **Sub‑collections** (all under `users/{uid}`):
   - `worker_profile` → field `monthlySalary` (double)
   - `student_profile` → fields `university`, `course`, `studentId`
   - `business_profile` → `businessName`, `regNumber`, `industryType`
   - `multi_profile` → `linkedAccountsCount`, `primaryWorkspace`
-  - `loans` → each loan document has `monthlyEmi`, `principalAmount`, etc.
-  - `utilities` → each document has `amount` (double)
-  - `subscriptions` → each document has `monthlyCost` (double) – **our code now sums this field** instead of a hard‑coded 1500.
-  - **`accounts`** (used by `MultiAccountDashboardActivity`) → each document must contain:
-    - `name` (String)
-    - `balance` (double)
-    - `accountNumber` (String)
+  - `accounts` → each doc: `name` (String), `balance` (double), `accountNumber` (String)
+  - `loans` → each doc: `monthlyEmi`, `principalAmount`, etc.
+  - `utilities` → each doc: `amount` (double)
+  - `subscriptions` → each doc: `name`, `amount` (double), `paymentDay` (int 1-31), `billingCycle` ("Monthly"/"Yearly"), `renewDate` (String "dd/MM/yyyy"), `status`, `logoType`, `createdAt` (long)
 
 > When adding new data to Firestore, follow the exact field names above; any typo will result in missing UI values.
 
@@ -86,10 +95,10 @@ All cards use `MaterialCardView` with:
 - **Login flow** → `LoginFormActivity` → on successful sign‑in routes to:
   - `StudentDashboardActivity` (role "Student")
   - `WorkerDashboardActivity` (role "Company worker")
-  - `StudentWorkerHybridDashboardActivity` (hybrid view, also uses worker profile)
+  - `StudentWorkerHybridDashboardActivity` (hybrid view)
   - `MultiAccountDashboardActivity` (role "Multiple account holder")
   - `BusinessDashboardActivity` (role "Business owner")
-- **Data fetching patterns** (all use the same pattern):
+- **Data fetching pattern** (used everywhere):
   ```java
   FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
   if (user != null) {
@@ -98,27 +107,64 @@ All cards use `MaterialCardView` with:
           .<subcollection-or-document>.get() ...
   }
   ```
-- **WorkerDashboardActivity** now calls `loadSalaryFromFirestore(uid)` to populate `txtEarnings`.
-- **StudentWorkerHybridDashboardActivity** falls back to `LKR 0.00` if no salary is present.
-- **InvoiceHubActivity** now calculates `totalOutstandingAmount` by summing `amount` from the `utilities` sub‑collection (via `loadOutstandingAmountFromFirestore`).
-- **MultiAccountDashboardActivity** loads the accounts list from `users/{uid}/accounts` using the new `loadAccountsFromFirestore()` helper.
+- **LoginFormActivity** saves FCM token to Firestore on login and requests `POST_NOTIFICATIONS` permission on Android 13+.
 
 ---
 
-## Gradle Version Catalog
-- Dependencies are declared in `gradle/libs.versions.toml`. When adding a new library, edit that file and reference it via `libs.<alias>` in `app/build.gradle.kts`.
-- Some dependencies (Firestore, iTextPDF, MPAndroidChart, JavaMail) are declared directly in `app/build.gradle.kts` outside the version catalog.
+## Notification System (3-Layer Reliability)
+
+### FCM Push Notifications (server → device)
+- `SmartFinanceMessagingService` handles token refresh and incoming messages
+- Token saved to `users/{uid}/fcmToken` on every login
+- Works even when app is killed (Google's servers maintain connection)
+
+### AlarmManager (app → device, exact timing)
+- `SubscriptionNotificationScheduler` schedules 3 alarms per subscription: day -2, day -1, day 0 at 9 AM
+- `SubscriptionAlarmReceiver` shows notifications and auto-advances payment date on day 0
+- Uses `setExactAndAllowWhileIdle` for Doze mode compatibility
+
+### WorkManager Fallback (background guarantee)
+- `SubscriptionWorker` runs daily to catch missed alarms
+- `SubscriptionBootReceiver` reschedules all alarms after device reboot
+- Registered in manifest with `BOOT_COMPLETED` and `MY_PACKAGE_REPLACED` intent filters
+
+### Permissions Required
+- `POST_NOTIFICATIONS` (Android 13+)
+- `SCHEDULE_EXACT_ALARM` (Android 12+)
+- `RECEIVE_BOOT_COMPLETED` (reschedule after reboot)
+
+---
+
+## Subscription Management System
+
+### Activities
+- `SubscriptionManagerActivity` — Hub: shows total monthly cost, lists active subscriptions
+- `AddSubscriptionActivity` — Form: plan name, cost, payment day (1-31), cycle, service type
+- `SubscriptionListActivity` — RecyclerView of all subscriptions, tap for detail, long-press to delete
+- `SubscriptionDetailActivity` — View/edit/delete, "Mark as Paid" advances to next cycle
+- `SubscriptionReportActivity` — Total cost + MPAndroidChart bar chart
+
+### Subscription Model (`Subscription.java`)
+Fields: `documentId`, `name`, `amount`, `paymentDay`, `billingCycle`, `renewDate`, `status`, `logoType`, `createdAt`
+Helper: `toMap()` for Firestore writes
+
+### Notification Schedule Example
+Subscription with `paymentDay = 25`, today is June 23:
+- June 23: "Netflix Premium payment of LKR 1500 is due in 2 days"
+- June 24: "Netflix Premium payment of LKR 1500 is due tomorrow"
+- June 25: "Netflix Premium payment of LKR 1500 is due today!" → auto-advance to July 25
 
 ---
 
 ## Common Gotchas
-- **Hard‑coded defaults** were removed. If a user's profile lacks a field (e.g., `monthlySalary`), the UI now shows `LKR 0.00` instead of a placeholder.
-- **Subscription aggregation** now expects a field `monthlyCost` per subscription document. Existing mock data with a fixed 1500 value will need to be migrated.
-- **Accounts list**: the old static string arrays were replaced. Ensure that an `accounts` sub‑collection exists for each user; otherwise the dashboard shows "No Account".
-- **Locale formatting**: all currency strings are built with `String.format(Locale.US, "LKR %.2f", value)`. Supplying non‑numeric strings will cause a `NumberFormatException`.
-- **Firebase initialization**: the project relies on `google-services.json` (already present). Do not modify the package name; it's defined as `com.example.smartfinancialmanagement` in the `android {}` block.
+- **Hard‑coded defaults**: If a user's profile lacks a field (e.g., `monthlySalary`), the UI shows `LKR 0.00`.
+- **Locale formatting**: All currency strings use `String.format(Locale.US, "LKR %.2f", value)`. Non-numeric strings cause `NumberFormatException`.
+- **Firebase initialization**: Relies on `google-services.json` (already present). Do not modify the package name.
 - **Compose screens**: Only a few screens use Jetpack Compose (`SavingsPassportActivity`, `StudentSavingActivity`, `StudentEventActivity`, budget planner). Most UI is XML layouts.
 - **No ProGuard/R8**: Release builds have `isMinifyEnabled = false`.
+- **Layout XML hardcoded text**: Never leave hardcoded text in layout XML TextViews — always initialize programmatically or leave empty. Hardcoded values flash before Firestore data loads.
+- **AndroidManifest registration**: Every new Activity, Service, and Receiver must be registered in `AndroidManifest.xml`.
+- **Gradle sync**: After adding new dependencies to `libs.versions.toml`, Android Studio may show "Cannot resolve symbol" errors — run `./gradlew clean assembleDebug` and sync Gradle.
 
 ---
 
@@ -133,9 +179,5 @@ All cards use `MaterialCardView` with:
 ## Where to Find More Info
 - **Database schema** – `DATABASE.md` (full field list).
 - **Gradle build options** – `settings.gradle.kts`, `gradle/libs.versions.toml`.
-- **Layout files** – `app/src/main/res/layout/` (85+ XML layouts).
+- **Layout files** – `app/src/main/res/layout/` (90+ XML layouts).
 - **Color tokens** – `app/src/main/res/values/colors.xml` (150+ color definitions).
-
----
-
-*This file is intentionally concise: it only contains details that an OpenCode agent would otherwise miss (commands, Firestore field names, design system conventions, and migration points).*
