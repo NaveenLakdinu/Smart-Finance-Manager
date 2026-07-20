@@ -219,5 +219,7 @@
     <color name="pill_blue_bg">#162D4A</color>
     <color name="pill_blue_text">#38BDF8</color>
 
+    <!-- Task Screen Colors -->
+    <color name="qa_yellow">#FACC15</color>
 
 </resources>
