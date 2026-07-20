@@ -128,15 +128,17 @@
         <activity
             android:name=".StudentProfileActivity"
             android:exported="false" />
+
+        <activity
+            android:name=".AddIncomeActivity"
+            android:exported="false" />
         <activity
             android:name=".AccountSettingsActivity"
             android:exported="false" />
         <activity
             android:name=".FinancialReportsActivity"
             android:exported="false" />
-        <activity
-            android:name=".MyAchievementsActivity"
-            android:exported="false" />
+
 
         <activity
             android:name=".RevenueManagementActivity"

@@ -19,7 +19,16 @@ public class BudgetRepository {
         FirebaseUser user = auth.getCurrentUser();
         if (user != null) {
             budgetModel.setUserId(user.getUid());
+            return db.collection("users").document(user.getUid()).collection("budgetPlans").add(budgetModel);
         }
         return db.collection("budgetPlans").add(budgetModel);
+    }
+
+    public Task<com.google.firebase.firestore.QuerySnapshot> getUserSavings() {
+        FirebaseUser user = auth.getCurrentUser();
+        if (user != null) {
+            return db.collection("users").document(user.getUid()).collection("savings").get();
+        }
+        return com.google.android.gms.tasks.Tasks.forException(new Exception("User not logged in"));
     }
 }

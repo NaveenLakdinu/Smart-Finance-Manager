@@ -16,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import com.example.smartfinancialmanagement.CurrencyHelper;
 
 public class SavingReportResultActivity extends AppCompatActivity {
 
@@ -84,9 +85,19 @@ public class SavingReportResultActivity extends AppCompatActivity {
 
     private void setReportPeriod() {
         if ("MONTH".equals(reportType)) {
-            tvReportPeriod.setText("Period: " + monthYear);
+            if (monthYear == null || monthYear.isEmpty() || monthYear.equals("MM/YYYY")) {
+                tvReportPeriod.setText("Period: All Time");
+            } else {
+                tvReportPeriod.setText("Period: " + monthYear);
+            }
         } else if ("CUSTOM".equals(reportType)) {
-            tvReportPeriod.setText("Period: " + startDateStr + " to " + endDateStr);
+            if (startDateStr == null || startDateStr.isEmpty() || endDateStr == null || endDateStr.isEmpty()) {
+                tvReportPeriod.setText("Period: All Time");
+            } else {
+                tvReportPeriod.setText("Period: " + startDateStr + " to " + endDateStr);
+            }
+        } else {
+            tvReportPeriod.setText("Period: All Time");
         }
     }
 
@@ -163,12 +174,12 @@ public class SavingReportResultActivity extends AppCompatActivity {
         tvActiveGoals.setText(String.valueOf(activeGoals));
         tvCompletedGoals.setText(String.valueOf(completedGoals));
         
-        tvTotalTarget.setText(String.format(Locale.getDefault(), "$%.2f", totalTarget));
-        tvTotalSaved.setText(String.format(Locale.getDefault(), "$%.2f", totalSaved));
+        tvTotalTarget.setText(CurrencyHelper.formatMoney(this, totalTarget));
+        tvTotalSaved.setText(CurrencyHelper.formatMoney(this, totalSaved));
         
         double remaining = totalTarget - totalSaved;
         if (remaining < 0) remaining = 0;
-        tvTotalRemaining.setText(String.format(Locale.getDefault(), "$%.2f", remaining));
+        tvTotalRemaining.setText(CurrencyHelper.formatMoney(this, remaining));
         
         tvAvgProgress.setText(String.format(Locale.getDefault(), "%.0f%%", avgProgress));
         pbAvgProgress.setProgress((int) avgProgress);
