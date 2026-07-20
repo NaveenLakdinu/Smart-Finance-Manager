@@ -69,7 +69,6 @@
         android:orientation="horizontal"
         android:baselineAligned="false">
 
-        <!-- (Stats cards remain unchanged) -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,7 +82,7 @@
                 android:id="@+id/tvStatTotal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stat_total"
+                android:text="0"
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -109,7 +108,7 @@
                 android:id="@+id/tvStatActive"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stat_active"
+                android:text="0"
                 android:textColor="@color/qa_blue_icon"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -135,7 +134,7 @@
                 android:id="@+id/tvStatDone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stat_done"
+                android:text="0"
                 android:textColor="@color/pill_positive_text"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -161,7 +160,7 @@
                 android:id="@+id/tvStatOverdue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/stat_overdue"
+                android:text="0"
                 android:textColor="#F87171"
                 android:textSize="20sp"
                 android:textStyle="bold" />
@@ -194,7 +193,7 @@
             android:id="@+id/tvOverallPercent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/overall_percent"
+            android:text="0%"
             android:textColor="@color/qa_yellow"
             android:textSize="14sp"
             android:textStyle="bold" />
@@ -208,13 +207,13 @@
             android:layout_width="140dp"
             android:layout_height="6dp"
             android:max="100"
-            android:progress="20"
+            android:progress="0"
             android:progressTint="@color/qa_yellow"
             android:progressBackgroundTint="@color/divider_dark"
             android:scaleY="0.6" />
     </LinearLayout>
 
-    <!-- Search Bar (FIXED: Height to 48dp, added maxWidth) -->
+    <!-- Search Bar -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="48dp"
@@ -321,627 +320,49 @@
         </LinearLayout>
     </HorizontalScrollView>
 
-    <ScrollView
+    <!-- Tasks RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerTasks"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         android:layout_marginTop="16dp"
-        android:scrollbars="none">
+        android:clipToPadding="false"
+        android:paddingBottom="16dp" />
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <!-- Empty state -->
+    <LinearLayout
+        android:id="@+id/emptyState"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_marginTop="16dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <!-- Task 1 (FIXED: Checkbox touch target) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTask1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_glass_card"
-                    android:orientation="vertical"
-                    android:padding="20dp"
-                    android:baselineAligned="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <CheckBox
-                            android:id="@+id/cbTask1"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:padding="13dp"
-                            android:button="@drawable/bg_checkbox_dark" />
-
-                        <TextView
-                            android:id="@+id/tvTitle1"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/task_1_title"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/tag_blue"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/priority_high"
-                            android:textColor="@color/qa_blue_icon"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/task_1_desc"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="13sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginStart="32dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:baselineAligned="false">
-
-                        <ProgressBar
-                            android:id="@+id/progressTask1"
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="4dp"
-                            android:layout_weight="1"
-                            android:max="100"
-                            android:progress="65"
-                            android:progressTint="@color/qa_blue_icon"
-                            android:progressBackgroundTint="@color/divider_dark"
-                            android:scaleY="0.5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/progress_65"
-                            android:textColor="@color/qa_blue_icon"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/subtasks_2_4"
-                        android:textColor="@color/text_on_dark_muted"
-                        android:textSize="11sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@color/divider_dark" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@drawable/ic_clock"
-                            android:contentDescription="@string/cd_status"
-                            app:tint="#FBBF24" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/status_in_progress"
-                            android:textColor="#FBBF24"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:src="@drawable/ic_calendar"
-                            android:contentDescription="@string/cd_due_date"
-                            app:tint="@color/text_on_dark_muted" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/due_today"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:contentDescription="@string/cd_navigate"
-                            app:tint="@color/text_on_dark_muted" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Task 2 (FIXED: Checkbox touch target) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTask2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_glass_card"
-                    android:orientation="vertical"
-                    android:padding="20dp"
-                    android:baselineAligned="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <CheckBox
-                            android:id="@+id/cbTask2"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:padding="13dp"
-                            android:button="@drawable/bg_checkbox_dark" />
-
-                        <TextView
-                            android:id="@+id/tvTitle2"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/task_2_title"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/tag_green"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/priority_medium"
-                            android:textColor="@color/pill_positive_text"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/task_2_desc"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="13sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginStart="32dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:baselineAligned="false">
-
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="4dp"
-                            android:layout_weight="1"
-                            android:max="100"
-                            android:progress="0"
-                            android:progressTint="@color/pill_positive_text"
-                            android:progressBackgroundTint="@color/divider_dark"
-                            android:scaleY="0.5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/progress_0"
-                            android:textColor="@color/pill_positive_text"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/subtasks_0_3"
-                        android:textColor="@color/text_on_dark_muted"
-                        android:textSize="11sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@color/divider_dark" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@drawable/ic_clock_alert"
-                            android:contentDescription="@string/cd_status"
-                            app:tint="@color/text_on_dark_muted" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/status_pending"
-                            android:textColor="@color/text_on_dark_muted"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:src="@drawable/ic_calendar"
-                            android:contentDescription="@string/cd_due_date"
-                            app:tint="@color/text_on_dark_muted" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/due_tomorrow"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:contentDescription="@string/cd_navigate"
-                            app:tint="@color/text_on_dark_muted" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Task 3 (FIXED: Checkbox touch target) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTask3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_glass_card"
-                    android:orientation="vertical"
-                    android:padding="20dp"
-                    android:alpha="0.5"
-                    android:baselineAligned="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <CheckBox
-                            android:id="@+id/cbTask3"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:padding="13dp"
-                            android:checked="true"
-                            android:button="@drawable/bg_checkbox_dark" />
-
-                        <TextView
-                            android:id="@+id/tvTitle3"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/task_3_title"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/tag_purple"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/priority_low"
-                            android:textColor="@color/qa_purple_icon"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/task_3_desc"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="13sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@color/divider_dark" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@drawable/ic_check_circle"
-                            android:contentDescription="@string/cd_status"
-                            app:tint="@color/pill_positive_text" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/status_completed"
-                            android:textColor="@color/pill_positive_text"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:src="@drawable/ic_calendar"
-                            android:contentDescription="@string/cd_due_date"
-                            app:tint="@color/text_on_dark_muted" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/due_june_15"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="12sp" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:contentDescription="@string/cd_navigate"
-                            app:tint="@color/text_on_dark_muted" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <!-- Task 4 (FIXED: Checkbox touch target) -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardTask4"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/bg_glass_card"
-                    android:orientation="vertical"
-                    android:padding="20dp"
-                    android:baselineAligned="false">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <CheckBox
-                            android:id="@+id/cbTask4"
-                            android:layout_width="48dp"
-                            android:layout_height="48dp"
-                            android:padding="13dp"
-                            android:button="@drawable/bg_checkbox_dark" />
-
-                        <TextView
-                            android:id="@+id/tvTitle4"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:layout_marginStart="10dp"
-                            android:text="@string/task_4_title"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/tag_blue"
-                            android:paddingHorizontal="10dp"
-                            android:paddingVertical="4dp"
-                            android:text="@string/priority_high"
-                            android:textColor="@color/qa_blue_icon"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/task_4_desc"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="13sp" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:layout_marginStart="32dp"
-                        android:orientation="horizontal"
-                        android:gravity="center_vertical"
-                        android:baselineAligned="false">
-
-                        <ProgressBar
-                            style="?android:attr/progressBarStyleHorizontal"
-                            android:layout_width="0dp"
-                            android:layout_height="4dp"
-                            android:layout_weight="1"
-                            android:max="100"
-                            android:progress="30"
-                            android:progressTint="#F87171"
-                            android:progressBackgroundTint="@color/divider_dark"
-                            android:scaleY="0.5" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:text="@string/progress_30"
-                            android:textColor="#F87171"
-                            android:textSize="11sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:layout_marginStart="32dp"
-                        android:text="@string/subtasks_1_4"
-                        android:textColor="@color/text_on_dark_muted"
-                        android:textSize="11sp" />
-
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@color/divider_dark" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:baselineAligned="false">
-
-                        <ImageView
-                            android:layout_width="14dp"
-                            android:layout_height="14dp"
-                            android:src="@drawable/ic_alert_octagon"
-                            android:contentDescription="@string/cd_status"
-                            app:tint="#F87171" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/status_overdue"
-                            android:textColor="#F87171"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
-                        <View android:layout_width="0dp" android:layout_height="0dp" android:layout_weight="1"/>
-
-                        <ImageView
-                            android:layout_width="12dp"
-                            android:layout_height="12dp"
-                            android:src="@drawable/ic_calendar"
-                            android:contentDescription="@string/cd_due_date"
-                            app:tint="@color/text_on_dark_muted" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="4dp"
-                            android:text="@string/due_overdue"
-                            android:textColor="#F87171"
-                            android:textSize="12sp" />
-
-                        <ImageView
-                            android:layout_width="16dp"
-                            android:layout_height="16dp"
-                            android:layout_marginStart="4dp"
-                            android:src="@drawable/ic_chevron_right"
-                            android:contentDescription="@string/cd_navigate"
-                            app:tint="@color/text_on_dark_muted" />
-                    </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-        </LinearLayout>
-    </ScrollView>
+            android:text="📝"
+            android:textSize="48sp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="No tasks yet"
+            android:textColor="@color/text_on_dark_primary"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:text="Tap + to add your first task"
+            android:textColor="@color/text_on_dark_muted"
+            android:textSize="13sp" />
+    </LinearLayout>
 
 </LinearLayout>

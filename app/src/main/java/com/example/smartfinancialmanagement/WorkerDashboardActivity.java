@@ -4,19 +4,22 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
-import com.google.android.material.card.MaterialCardView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
-import androidx.appcompat.app.AlertDialog;
-import android.view.View;
-import android.widget.EditText;
 
 public class WorkerDashboardActivity extends AppCompatActivity {
 
@@ -26,6 +29,11 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
     private android.view.View btnTopLogout;
 
+    private RecyclerView recyclerWorkerTasks;
+    private TextView txtViewAllTasks;
+    private List<Task> pendingTasks = new ArrayList<>();
+    private TaskAdapter pendingTaskAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -34,6 +42,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         initViews();
         setupUserDetails();
         setupClickListeners();
+        setupPendingTasks();
     }
 
     private void initViews() {
@@ -50,29 +59,43 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         cardSavingManager = findViewById(R.id.cardSavingManager);
         cardUtilityManager = findViewById(R.id.cardUtilityManager);
-        
+
         btnTopLogout = findViewById(R.id.btnTopLogout);
+        recyclerWorkerTasks = findViewById(R.id.recyclerWorkerTasks);
+        txtViewAllTasks = findViewById(R.id.txtViewAllTasks);
     }
 
     private void setupUserDetails() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        
+
         txtGreeting.setText(getGreetingText());
 
-if (user != null) {
-    String email = user.getEmail();
-    if (email != null && !email.isEmpty()) {
-        txtUserEmail.setText(email);
-        txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
+        if (user != null) {
+            String email = user.getEmail();
+            if (email != null && !email.isEmpty()) {
+                txtUserEmail.setText(email);
+                txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
+            }
+            loadSalaryFromFirestore(user.getUid());
+            updatePayrollStatus();
+        } else {
+            txtEarnings.setText("LKR 0.00");
+        }
     }
-    // Load salary from Firestore
-    loadSalaryFromFirestore(user.getUid());
-} else {
-    txtEarnings.setText("LKR 0.00");
-}
-        
 
-        txtPayrollStatus.setText("Next payday: June 30th");
+    private void updatePayrollStatus() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int daysUntilPayday = daysInMonth - dayOfMonth;
+
+        if (daysUntilPayday <= 0) {
+            txtPayrollStatus.setText("Payday is today!");
+        } else if (daysUntilPayday == 1) {
+            txtPayrollStatus.setText("Next payday: tomorrow");
+        } else {
+            txtPayrollStatus.setText(String.format(Locale.US, "Next payday in %d days", daysUntilPayday));
+        }
     }
 
     private String getGreetingText() {
@@ -87,32 +110,25 @@ if (user != null) {
 
     private void setupClickListeners() {
         cardWorkTasks.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WorkerTasksActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, WorkerTasksActivity.class));
         });
         cardExpenseClaims.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ExpenseClaimsActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, ExpenseClaimsActivity.class));
         });
         cardPayslips.setOnClickListener(v -> {
-            Intent intent = new Intent(this, WorkerPayslipActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, WorkerPayslipActivity.class));
         });
         cardLoanManager.setOnClickListener(v -> {
-            Intent intent = new Intent(this, LoanFormActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, LoanFormActivity.class));
         });
         cardSubscriptionManager.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SubscriptionManagerActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, SubscriptionManagerActivity.class));
         });
         cardSavingManager.setOnClickListener(v -> {
-            Intent intent = new Intent(this, SavingManagerActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, SavingManagerActivity.class));
         });
         cardUtilityManager.setOnClickListener(v -> {
-            Intent intent = new Intent(this, UtilityManagerActivity.class);
-            startActivity(intent);
+            startActivity(new Intent(this, UtilityManagerActivity.class));
         });
 
         btnTopLogout.setOnClickListener(v -> {
@@ -122,12 +138,19 @@ if (user != null) {
             startActivity(intent);
             finish();
         });
+
+        if (txtViewAllTasks != null) {
+            txtViewAllTasks.setOnClickListener(v -> {
+                startActivity(new Intent(this, WorkerTasksActivity.class));
+            });
+        }
+
         setupSecurityButton();
         setupSavingsWidget();
     }
 
     private void setupSecurityButton() {
-        View btnSecurity = findViewById(R.id.btnSecurity);
+        android.view.View btnSecurity = findViewById(R.id.btnSecurity);
         if (btnSecurity != null) {
             btnSecurity.setOnClickListener(v -> {
                 boolean isPinSet = PinHelper.isPinSet(this);
@@ -138,16 +161,14 @@ if (user != null) {
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
-                        Intent intent = new Intent(this, PinSetupActivity.class);
-                        startActivity(intent);
+                        startActivity(new Intent(this, PinSetupActivity.class));
                     } else {
                         if (which == 0) {
-                            Intent intent = new Intent(this, PinSetupActivity.class);
-                            startActivity(intent);
+                            startActivity(new Intent(this, PinSetupActivity.class));
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -162,8 +183,8 @@ if (user != null) {
 
     private void setupSavingsWidget() {
         TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
-        View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
-        View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
+        android.view.View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
+        android.view.View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
 
         if (txtCurrentSavingsValue != null && btnUpdateSavings != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
@@ -172,6 +193,76 @@ if (user != null) {
                 cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
             }
         }
+    }
+
+    private void setupPendingTasks() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        pendingTaskAdapter = new TaskAdapter(pendingTasks, (task, isChecked) -> {
+            String newStatus = isChecked ? "Completed" : "In Progress";
+            int newProgress = isChecked ? 100 : task.getProgress();
+
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .collection("tasks").document(task.getId())
+                    .update("status", newStatus, "progress", newProgress)
+                    .addOnSuccessListener(aVoid -> {
+                        task.setCompleted(isChecked);
+                        loadPendingTasks();
+                    });
+        });
+
+        recyclerWorkerTasks.setLayoutManager(new LinearLayoutManager(this));
+        recyclerWorkerTasks.setAdapter(pendingTaskAdapter);
+        recyclerWorkerTasks.setNestedScrollingEnabled(false);
+
+        loadPendingTasks();
+    }
+
+    private void loadPendingTasks() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .collection("tasks")
+                .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    pendingTasks.clear();
+                    int count = 0;
+                    for (QueryDocumentSnapshot doc : querySnapshot) {
+                        if (count >= 3) break;
+                        String status = doc.getString("status");
+                        if (status == null || !"Completed".equals(status)) {
+                            String id = doc.getId();
+                            String title = doc.getString("title");
+                            String description = doc.getString("description");
+                            String priority = doc.getString("priority");
+                            String dueDate = doc.getString("dueDate");
+                            Long progressLong = doc.getLong("progress");
+                            Long subtasksCompletedLong = doc.getLong("subtasksCompleted");
+                            Long subtasksTotalLong = doc.getLong("subtasksTotal");
+
+                            int progress = progressLong != null ? progressLong.intValue() : 0;
+                            int subtasksCompleted = subtasksCompletedLong != null ? subtasksCompletedLong.intValue() : 0;
+                            int subtasksTotal = subtasksTotalLong != null ? subtasksTotalLong.intValue() : 0;
+
+                            if (title == null) title = "Untitled Task";
+                            if (description == null) description = "No description";
+                            if (priority == null) priority = "Medium";
+                            if (status == null) status = "Pending";
+                            if (dueDate == null) dueDate = "No due date";
+
+                            String subtaskText = subtasksTotal > 0 ?
+                                    subtasksCompleted + "/" + subtasksTotal + " subtasks" : "No subtasks";
+
+                            Task task = new Task(id, title, description, priority, status, dueDate, subtaskText, progress);
+                            pendingTasks.add(task);
+                            count++;
+                        }
+                    }
+                    pendingTaskAdapter.notifyDataSetChanged();
+                });
     }
 
     private void loadSavingsFromFirestore(TextView txtValue) {
@@ -219,7 +310,7 @@ if (user != null) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);
@@ -265,5 +356,11 @@ if (user != null) {
         if (txtCurrentSavingsValue != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
         }
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            loadSalaryFromFirestore(user.getUid());
+            updatePayrollStatus();
+        }
+        loadPendingTasks();
     }
 }

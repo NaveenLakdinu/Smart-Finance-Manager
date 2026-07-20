@@ -198,5 +198,36 @@
     <string name="download_description">Saving your June 2026 payslip PDF…</string>
     <string name="download_started">Download started! Check your notifications.</string>
     <string name="download_error">Error: Unable to start download.</string>
+    <!-- Expense Claims Strings -->
+    <string name="icon_back">←</string>
+    <string name="label_worker_portal">Worker Portal</string>
+    <string name="label_expense_claims">Expense Claims</string>
+    <string name="icon_search">🔍</string>
+    <string name="icon_pending">⏳</string>
+    <string name="label_pending">Pending</string>
+    <string name="amount_pending_preview">LKR 0.00</string>
+    <string name="count_pending_preview">0 Claims</string>
+    <string name="icon_approved">✅</string>
+    <string name="label_approved">Approved</string>
+    <string name="amount_approved_preview">LKR 0.00</string>
+    <string name="count_approved_preview">0 Claims</string>
+    <string name="label_my_claims">My Claims</string>
+    <string name="count_results_preview">0 Results</string>
+    <string name="tab_all">All</string>
+    <string name="tab_pending">Pending</string>
+    <string name="tab_approved">Approved</string>
+    <string name="tab_rejected">Rejected</string>
+    <string name="tab_drafts">Drafts</string>
+    <string name="icon_lightbulb">💡</string>
+    <string name="label_policy_reminder">Policy Reminder</string>
+    <string name="policy_text">Remember to attach receipts for all claims over LKR 5,000.</string>
+    <string name="desc_new_claim">New Claim</string>
+    <string name="icon_receipt">🧾</string>
+    <string name="expense_title">Client Dinner</string>
+    <string name="expense_meta">15 Jun 2026 • Project Alpha</string>
+    <string name="status_approved">Approved</string>
+    <string name="claim_amount">LKR 12,500.00</string>
+    <string name="attachment_icon">📎</string>
+    <string name="receipt_count">2 Receipts</string>
 
 </resources>
