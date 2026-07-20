@@ -16,6 +16,9 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.Calendar;
 
 public class BudgetPlannerActivity extends AppCompatActivity {
 
@@ -42,6 +45,12 @@ public class BudgetPlannerActivity extends AppCompatActivity {
         LinearLayout layoutResults = findViewById(R.id.layoutResults);
         if (layoutResults != null) {
             layoutResults.setVisibility(View.GONE);
+        }
+        
+        // Hide semester summary card on the planner input view
+        MaterialCardView cardSemesterSummary = findViewById(R.id.cardSemesterSummary);
+        if (cardSemesterSummary != null) {
+            cardSemesterSummary.setVisibility(View.GONE);
         }
         
         // Show income card just in case it was hidden
@@ -93,6 +102,8 @@ public class BudgetPlannerActivity extends AppCompatActivity {
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
+        
+        loadUserData();
     }
 
     private void resetDurationButtons() {
@@ -100,6 +111,52 @@ public class BudgetPlannerActivity extends AppCompatActivity {
         for (TextView btn : buttons) {
             btn.setBackgroundResource(R.drawable.bg_segment_inactive);
             btn.setTextColor(Color.parseColor("#5A6470"));
+        }
+    }
+
+    private void loadUserData() {
+        TextView txtGreeting = findViewById(R.id.txtGreeting);
+        if (txtGreeting == null) return;
+
+        String baseGreeting = getGreeting();
+        
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) {
+            txtGreeting.setText(baseGreeting + " 👋");
+            return;
+        }
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    String name = documentSnapshot.getString("name");
+                    if (name != null && !name.isEmpty()) {
+                        String firstName = name.trim().split("\\s+")[0];
+                        txtGreeting.setText(baseGreeting + ", " + firstName + " 👋");
+                    } else {
+                        txtGreeting.setText(baseGreeting + " 👋");
+                    }
+                } else {
+                    txtGreeting.setText(baseGreeting + " 👋");
+                }
+            })
+            .addOnFailureListener(e -> {
+                txtGreeting.setText(baseGreeting + " 👋");
+            });
+    }
+
+    private String getGreeting() {
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            return "Good Morning";
+        } else if (timeOfDay >= 12 && timeOfDay < 17) {
+            return "Good Afternoon";
+        } else {
+            return "Good Evening";
         }
     }
 
