@@ -187,7 +187,9 @@
         <activity
             android:name=".SavingsPassportActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".NotificationListActivity"
+            android:exported="false" />
     </application>
 
 </manifest>

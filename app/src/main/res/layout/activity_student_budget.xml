@@ -98,7 +98,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-                    android:text="Plan your semester budget wisely"
+                    android:text="Plan your budget wisely"
                     android:textColor="#BCE0FF"
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -117,7 +117,7 @@
                 android:paddingEnd="20dp"
                 android:paddingBottom="24dp">
 
-                <!-- Card 1: Income Details -->
+                <!-- Card 1: Income Sources (synced from savings wallet) -->
                 <com.google.android.material.card.MaterialCardView
                     android:id="@+id/cardIncomeDetails"
                     android:layout_width="match_parent"
@@ -134,7 +134,7 @@
                         android:orientation="vertical"
                         android:padding="20dp">
 
-                        <!-- Icon & Section Header -->
+                        <!-- Header row: Icon + Title + Sync Badge -->
                         <LinearLayout
                             android:id="@+id/layoutIncomeTitle"
                             android:layout_width="match_parent"
@@ -160,180 +160,319 @@
                             </FrameLayout>
 
                             <TextView
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
-                                android:text="Income Details"
+                                android:layout_weight="1"
+                                android:text="Income Sources"
                                 android:textColor="#111827"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
+                            <!-- Synced badge -->
+                            <TextView
+                                android:id="@+id/txtSyncedBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/tag_green"
+                                android:paddingStart="10dp"
+                                android:paddingTop="4dp"
+                                android:paddingEnd="10dp"
+                                android:paddingBottom="4dp"
+                                android:text="⟳  Synced with savings"
+                                android:textColor="#10B981"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+
                         </LinearLayout>
 
-                        <!-- Input Field: Monthly Allowance -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Monthly Allowance (Rs.)"
-                            android:textColor="#5A6470"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/editMonthlyAllowance"
+                        <!-- Dynamic income list (populated at runtime) -->
+                        <LinearLayout
+                            android:id="@+id/containerIncomeItems"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="15000"
-                            android:textColor="#111827"
-                            android:textSize="15sp" />
-
-                        <!-- Input Field: Scholarship Amount -->
-                        <TextView
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Scholarship Amount (Rs.)"
-                            android:textColor="#5A6470"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
+                            android:layout_marginTop="16dp"
+                            android:orientation="vertical" />
 
-                        <EditText
-                            android:id="@+id/editScholarshipAmount"
+                        <!-- Empty state label -->
+                        <TextView
+                            android:id="@+id/txtNoIncomes"
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="5000"
-                            android:textColor="#111827"
-                            android:textSize="15sp" />
-
-                        <!-- Input Field: Part-Time Income -->
-                        <TextView
-                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Part-Time Income (Rs.)"
-                            android:textColor="#5A6470"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center"
+                            android:padding="16dp"
+                            android:text="No income sources yet.\nAdd one below to get started."
+                            android:textColor="#9CA3AF"
                             android:textSize="13sp"
-                            android:textStyle="bold" />
+                            android:visibility="gone" />
 
-                        <EditText
-                            android:id="@+id/editPartTimeIncome"
+                        <!-- Divider -->
+                        <View
                             android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="8000"
-                            android:textColor="#111827"
-                            android:textSize="15sp" />
+                            android:layout_height="1dp"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="14dp"
+                            android:background="#E5E7EB" />
 
-                        <!-- Segmented Duration Options -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="Semester Duration (Months)"
-                            android:textColor="#5A6470"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
+                        <!-- Add Income Row -->
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:orientation="horizontal"
-                            android:weightSum="4">
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                            <!-- Option 3M -->
-                            <TextView
-                                android:id="@+id/btnDuration3M"
+                            <EditText
+                                android:id="@+id/editNewIncomeName"
                                 android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="3M"
-                                android:textColor="#5A6470"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
+                                android:layout_height="48dp"
+                                android:layout_weight="2"
+                                android:background="@drawable/bg_budget_input"
+                                android:backgroundTint="@null"
+                                android:hint="Income source name"
+                                android:inputType="text"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:textColor="#111827"
+                                android:textColorHint="#9CA3AF"
+                                android:textSize="13sp" />
 
                             <Space
                                 android:layout_width="8dp"
                                 android:layout_height="1dp" />
 
-                            <!-- Option 4M -->
-                            <TextView
-                                android:id="@+id/btnDuration4M"
+                            <EditText
+                                android:id="@+id/editNewIncomeAmount"
                                 android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="4M"
-                                android:textColor="#5A6470"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
+                                android:layout_height="48dp"
+                                android:layout_weight="1.4"
+                                android:background="@drawable/bg_budget_input"
+                                android:backgroundTint="@null"
+                                android:hint="Amount"
+                                android:inputType="numberDecimal"
+                                android:paddingStart="12dp"
+                                android:paddingEnd="12dp"
+                                android:textColor="#111827"
+                                android:textColorHint="#9CA3AF"
+                                android:textSize="13sp" />
 
                             <Space
                                 android:layout_width="8dp"
                                 android:layout_height="1dp" />
 
-                            <!-- Option 6M (Selected) -->
-                            <TextView
-                                android:id="@+id/btnDuration6M"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_active"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="6M"
+                            <com.google.android.material.button.MaterialButton
+                                android:id="@+id/btnAddIncome"
+                                android:layout_width="wrap_content"
+                                android:layout_height="48dp"
+                                android:insetTop="0dp"
+                                android:insetBottom="0dp"
+                                android:minWidth="0dp"
+                                android:paddingStart="16dp"
+                                android:paddingEnd="16dp"
+                                android:text="Add"
                                 android:textColor="#FFFFFF"
                                 android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <Space
-                                android:layout_width="8dp"
-                                android:layout_height="1dp" />
-
-                            <!-- Option 12M -->
-                            <TextView
-                                android:id="@+id/btnDuration12M"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="12M"
-                                android:textColor="#5A6470"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
+                                android:textStyle="bold"
+                                app:backgroundTint="#1E60FF"
+                                app:cornerRadius="12dp"
+                                app:strokeWidth="0dp" />
 
                         </LinearLayout>
 
-                        <!-- Action Button: Calculate Budget -->
+                        <!-- Budget Period -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Budget period"
+                            android:textColor="#5A6470"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:scrollbars="none">
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/btnDuration1W"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_segment_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="1 week"
+                                    android:textColor="#5A6470"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="8dp"
+                                    android:layout_height="1dp" />
+
+                                <TextView
+                                    android:id="@+id/btnDuration1M"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_segment_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="1 month"
+                                    android:textColor="#5A6470"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="8dp"
+                                    android:layout_height="1dp" />
+
+                                <TextView
+                                    android:id="@+id/btnDuration3M"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_segment_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="3 months"
+                                    android:textColor="#5A6470"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="8dp"
+                                    android:layout_height="1dp" />
+
+                                <TextView
+                                    android:id="@+id/btnDuration6M"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_segment_active"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="6 months"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <Space
+                                    android:layout_width="8dp"
+                                    android:layout_height="1dp" />
+
+                                <TextView
+                                    android:id="@+id/btnDurationCustom"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="40dp"
+                                    android:background="@drawable/bg_segment_inactive"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:gravity="center"
+                                    android:paddingStart="16dp"
+                                    android:paddingEnd="16dp"
+                                    android:text="Custom range"
+                                    android:textColor="#5A6470"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                            </LinearLayout>
+                        </HorizontalScrollView>
+
+                        <!-- Dates Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:orientation="horizontal"
+                            android:weightSum="2">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginEnd="6dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="4dp"
+                                    android:text="Start date"
+                                    android:textColor="#9CA3AF"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/txtStartDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="48dp"
+                                    android:background="@drawable/bg_budget_input"
+                                    android:gravity="center_vertical"
+                                    android:paddingStart="12dp"
+                                    android:paddingEnd="12dp"
+                                    android:text="mm/dd/yyyy"
+                                    android:textColor="#111827"
+                                    android:textSize="13sp"
+                                    app:drawableEndCompat="@drawable/ic_calendar"
+                                    app:drawableTint="#9CA3AF" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginBottom="4dp"
+                                    android:text="End date"
+                                    android:textColor="#9CA3AF"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/txtEndDate"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="48dp"
+                                    android:background="@drawable/bg_budget_input"
+                                    android:gravity="center_vertical"
+                                    android:paddingStart="12dp"
+                                    android:paddingEnd="12dp"
+                                    android:text="mm/dd/yyyy"
+                                    android:textColor="#111827"
+                                    android:textSize="13sp"
+                                    app:drawableEndCompat="@drawable/ic_calendar"
+                                    app:drawableTint="#9CA3AF" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/txtDaysCount"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="0 days in this budget period"
+                            android:textColor="#6B7280"
+                            android:textSize="12sp" />
+
+                        <!-- Calculate Budget button -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnCalculateBudget"
                             android:layout_width="match_parent"
@@ -428,7 +567,7 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="Total Semester Income"
+                                        android:text="Total Income"
                                         android:textColor="#E0E7FF"
                                         android:textSize="13sp" />
 
@@ -788,7 +927,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-                                    android:text="Current budget can last the entire 6-month semester."
+                                    android:text="Current budget can last the entire period."
                                     android:textColor="#374151"
                                     android:textSize="13sp" />
                             </LinearLayout>
@@ -881,7 +1020,7 @@
                                 android:id="@+id/txtSemesterDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                tools:text="Semester: Jun 2026 – Dec 2026"
+                                tools:text="Period: Jun 2026 – Dec 2026"
                                 android:textColor="#111827"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />

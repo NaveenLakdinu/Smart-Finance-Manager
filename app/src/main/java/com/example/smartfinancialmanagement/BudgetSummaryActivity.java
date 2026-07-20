@@ -141,10 +141,13 @@ public class BudgetSummaryActivity extends AppCompatActivity {
         if (txtInsight3 != null) txtInsight3.setText(model.getInsight3());
 
         TextView txtSemesterDate = findViewById(R.id.txtSemesterDate);
-        if (txtSemesterDate != null) txtSemesterDate.setText("Semester: " + model.getSemesterStart() + " – " + model.getSemesterEnd());
+        if (txtSemesterDate != null) txtSemesterDate.setText("Period: " + model.getSemesterStart() + " – " + model.getSemesterEnd());
 
         TextView txtSemesterStatus = findViewById(R.id.txtSemesterStatus);
-        if (txtSemesterStatus != null) txtSemesterStatus.setText(model.getDuration() + " months remaining");
+        if (txtSemesterStatus != null) {
+            int months = (int) Math.round(model.getDuration() / 30.0);
+            txtSemesterStatus.setText(months + " months remaining");
+        }
     }
 
 

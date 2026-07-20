@@ -41,6 +41,7 @@
                     android:layout_height="48dp">
 
                     <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardProfileAvatar"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         app:cardBackgroundColor="#06B6D4"
@@ -56,6 +57,14 @@
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/imgDashboardAvatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone"
+                            android:contentDescription="Profile Photo" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <View
@@ -127,6 +136,7 @@
 
                 <!-- Notification -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardNotification"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="8dp"
@@ -136,12 +146,33 @@
                     app:cardCornerRadius="18dp"
                     app:strokeWidth="0dp">
 
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_notification"
-                        app:tint="#9CA3AF" />
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        
+                        <ImageView
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_notification"
+                            app:tint="#9CA3AF" />
+
+                        <TextView
+                            android:id="@+id/txtUnreadBadge"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
+                            android:layout_gravity="top|end"
+                            android:layout_marginTop="6dp"
+                            android:layout_marginEnd="6dp"
+                            android:background="@drawable/icon_circle_orange"
+                            android:backgroundTint="#EF4444"
+                            android:gravity="center"
+                            android:text="1"
+                            android:textColor="#FFFFFF"
+                            android:textSize="9sp"
+                            android:textStyle="bold"
+                            android:visibility="gone" />
+                    </FrameLayout>
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
@@ -197,6 +228,7 @@
                         app:layout_constraintTop_toBottomOf="@id/txtCurrentBalanceLabel" />
 
                     <TextView
+                        android:id="@+id/txtBalanceTrend"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
@@ -206,7 +238,7 @@
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
-                        android:text="↗ +1.8%"
+                        tools:text="↗ +1.8%"
                         android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -701,11 +733,12 @@
 
             <!-- Footer -->
             <TextView
+                android:id="@+id/txtDashboardFooter"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
-                android:text="Student Financial Dashboard • 2025"
+                tools:text="Student Financial Dashboard • 2025"
                 android:textColor="#6B7280"
                 android:textSize="12sp" />
 

@@ -1,8 +1,12 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -12,6 +16,12 @@ import java.util.List;
 import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.ParseException;
+import java.util.concurrent.TimeUnit;
+import com.google.firebase.firestore.ListenerRegistration;
+import android.widget.FrameLayout;
 
 public class StudentDashboardActivity extends AppCompatActivity {
     
@@ -23,14 +33,18 @@ public class StudentDashboardActivity extends AppCompatActivity {
     private double mTotalUtilityBills = 0;
     private double mTotalSubscriptions = 0;
     
+    private NotificationRepository notificationRepo;
+    private ListenerRegistration unreadCountListener;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
 
-
-
+        notificationRepo = new NotificationRepository();
+        
         initViews();
+        setupNotificationBell();
     }
 
     @Override
@@ -38,6 +52,125 @@ public class StudentDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         recalculateTotalIncome();
+        loadAvatarImage();
+        checkUpcomingDeadlines();
+    }
+    
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (unreadCountListener != null) {
+            unreadCountListener.remove();
+            unreadCountListener = null;
+        }
+    }
+
+    private void setupNotificationBell() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        if (userId == null) return;
+        
+        // Find the notification card and set click listener
+        View cardNotification = findViewById(R.id.cardNotification); // Needs ID in XML
+        if (cardNotification != null) {
+            cardNotification.setOnClickListener(v -> {
+                startActivity(new Intent(this, NotificationListActivity.class));
+            });
+        }
+        
+        // Listen for unread count
+        unreadCountListener = notificationRepo.listenForUnreadCount(userId, count -> {
+            TextView txtUnreadBadge = findViewById(R.id.txtUnreadBadge); // Needs ID in XML
+            if (txtUnreadBadge != null) {
+                if (count > 0) {
+                    txtUnreadBadge.setVisibility(View.VISIBLE);
+                    txtUnreadBadge.setText(String.valueOf(count > 99 ? "99+" : count));
+                } else {
+                    txtUnreadBadge.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void checkUpcomingDeadlines() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        if (userId == null) return;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Date today = new Date();
+
+        // 1. Check Utilities
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("utility_bills")
+            .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String status = doc.getString("status");
+                    if ("Paid".equalsIgnoreCase(status)) continue;
+                    
+                    String paymentDateStr = doc.getString("paymentDate");
+                    if (paymentDateStr != null) {
+                        try {
+                            Date dueDate = sdf.parse(paymentDateStr);
+                            long diffInMillies = dueDate.getTime() - today.getTime();
+                            long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                            
+                            if (diffInDays <= 3) {
+                                String severity = diffInDays < 0 ? "critical" : "info";
+                                String msg = diffInDays < 0 ? "Utility bill overdue: " + doc.getString("billName") : "Utility bill due in " + diffInDays + " days: " + doc.getString("billName");
+                                
+                                NotificationModel notif = new NotificationModel(
+                                    null, userId, "utility_due", "Utility Bill Due", msg, 
+                                    severity, "UtilityManager", doc.getId(), false, System.currentTimeMillis(), "UtilityManagerActivity"
+                                );
+                                notificationRepo.checkAndCreateDuplicateSafe(notif);
+                            }
+                        } catch (ParseException e) {
+                            // ignore parsing error for this item
+                        }
+                    }
+                }
+            });
+
+        // 2. Check Subscriptions
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("subscriptions")
+            .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String renewDateStr = doc.getString("renewDate");
+                    if (renewDateStr != null) {
+                        try {
+                            Date renewDate = sdf.parse(renewDateStr);
+                            long diffInMillies = renewDate.getTime() - today.getTime();
+                            long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                            
+                            if (diffInDays >= 0 && diffInDays <= 3) {
+                                NotificationModel notif = new NotificationModel(
+                                    null, userId, "subscription_due", "Subscription Renewing", 
+                                    doc.getString("name") + " renews in " + diffInDays + " days.", 
+                                    "info", "SubscriptionManager", doc.getId(), false, System.currentTimeMillis(), "SubscriptionManagerActivity"
+                                );
+                                notificationRepo.checkAndCreateDuplicateSafe(notif);
+                            }
+                        } catch (ParseException e) {
+                            // ignore parsing error
+                        }
+                    }
+                }
+            });
+    }
+
+    private void loadAvatarImage() {
+        SharedPreferences prefs = getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE);
+        String uriStr = prefs.getString("avatar_uri", null);
+        ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        TextView tvInitials = findViewById(R.id.tvInitials);
+        if (uriStr != null && imgDashboardAvatar != null) {
+            imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            imgDashboardAvatar.setVisibility(View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(View.GONE);
+        } else {
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(View.VISIBLE);
+        }
     }
 
     private void initViews() {
@@ -92,6 +225,19 @@ public class StudentDashboardActivity extends AppCompatActivity {
         loadAchievementData();
         loadCurrentBalance();
         loadUserData();
+
+        // Hide balance trend until historical data calculation is implemented
+        View txtBalanceTrend = findViewById(R.id.txtBalanceTrend);
+        if (txtBalanceTrend != null) {
+            txtBalanceTrend.setVisibility(View.GONE);
+        }
+
+        // Set dynamic footer year
+        TextView txtDashboardFooter = findViewById(R.id.txtDashboardFooter);
+        if (txtDashboardFooter != null) {
+            int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+            txtDashboardFooter.setText("Student Financial Dashboard • " + currentYear);
+        }
     }
 
     private void loadUserData() {
@@ -131,7 +277,9 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
     private void loadAchievementData() {
         String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
-            FirebaseAuth.getInstance().getCurrentUser().getUid() : "test_user";
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) return;
 
         FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings")
             .addSnapshotListener((snapshot, error) -> {

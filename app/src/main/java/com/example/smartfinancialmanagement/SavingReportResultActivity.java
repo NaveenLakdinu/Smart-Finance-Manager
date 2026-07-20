@@ -16,11 +16,16 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.List;
+import java.util.ArrayList;
+import android.graphics.Canvas;
+import android.graphics.Paint;
+import android.graphics.pdf.PdfDocument;
 import com.example.smartfinancialmanagement.CurrencyHelper;
 
 public class SavingReportResultActivity extends AppCompatActivity {
 
-    private ImageView btnBack, btnExport;
+    private ImageView btnBack;
     private TextView tvReportPeriod, tvHealthScore, tvHealthScoreValue;
     private TextView tvTotalGoals, tvActiveGoals, tvCompletedGoals;
     private TextView tvTotalTarget, tvTotalSaved, tvTotalRemaining, tvAvgProgress;
@@ -30,6 +35,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
     private String userId;
     private String reportType, monthYear, startDateStr, endDateStr;
     private SimpleDateFormat dateFormat;
+    private List<SavingModel> filteredSavings = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +58,6 @@ public class SavingReportResultActivity extends AppCompatActivity {
 
     private void initViews() {
         btnBack = findViewById(R.id.btnBack);
-        btnExport = findViewById(R.id.btnExport);
         tvReportPeriod = findViewById(R.id.tvReportPeriod);
         tvHealthScore = findViewById(R.id.tvHealthScore);
         tvHealthScoreValue = findViewById(R.id.tvHealthScoreValue);
@@ -78,8 +83,21 @@ public class SavingReportResultActivity extends AppCompatActivity {
 
     private void setupListeners() {
         btnBack.setOnClickListener(v -> finish());
-        btnExport.setOnClickListener(v -> {
-            Toast.makeText(this, "Export feature coming soon!", Toast.LENGTH_SHORT).show();
+        
+        findViewById(R.id.btnExportPdf).setOnClickListener(v -> {
+            if (filteredSavings.isEmpty()) {
+                Toast.makeText(this, "No data to export", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            generatePdfReport(filteredSavings);
+        });
+
+        findViewById(R.id.btnExportCsv).setOnClickListener(v -> {
+            if (filteredSavings.isEmpty()) {
+                Toast.makeText(this, "No data to export", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            generateCsvReport(filteredSavings);
         });
     }
 
@@ -114,6 +132,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
                 for (QueryDocumentSnapshot document : task.getResult()) {
                     SavingModel saving = document.toObject(SavingModel.class);
                     if (saving != null && isWithinDateRange(saving.getStartDate(), saving.getTargetDate())) {
+                        filteredSavings.add(saving);
                         totalGoals++;
                         
                         String status = saving.getStatus() != null ? saving.getStatus() : "Active";
@@ -135,6 +154,16 @@ public class SavingReportResultActivity extends AppCompatActivity {
                     }
                 }
 
+                if (totalGoals == 0) {
+                    findViewById(R.id.layoutContent).setVisibility(android.view.View.GONE);
+                    findViewById(R.id.layoutEmptyState).setVisibility(android.view.View.VISIBLE);
+                    Toast.makeText(SavingReportResultActivity.this, "No data found for this period", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    findViewById(R.id.layoutContent).setVisibility(android.view.View.VISIBLE);
+                    findViewById(R.id.layoutEmptyState).setVisibility(android.view.View.GONE);
+                }
+
                 double avgProgress = totalGoals > 0 ? (totalProgressSum / totalGoals) : 0;
                 double completedGoalsPercent = totalGoals > 0 ? ((double) completedGoals / totalGoals) * 100 : 0;
 
@@ -148,23 +177,47 @@ public class SavingReportResultActivity extends AppCompatActivity {
     }
 
     private boolean isWithinDateRange(String start, String end) {
-        if ("MONTH".equals(reportType)) {
-            // For simplicity, if the monthYear is present in start or end date
-            return (start != null && start.contains(monthYear)) || (end != null && end.contains(monthYear));
-        } else if ("CUSTOM".equals(reportType)) {
-            try {
+        try {
+            Date sStart = dateFormat.parse(start);
+            Date sEnd = dateFormat.parse(end);
+            
+            if (sStart == null || sEnd == null) return false;
+
+            if ("MONTH".equals(reportType)) {
+                SimpleDateFormat monthFormat = new SimpleDateFormat("MM/yyyy", Locale.getDefault());
+                Date reportMonth = monthFormat.parse(monthYear);
+                if (reportMonth == null) return true;
+                
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                cal.setTime(reportMonth);
+                cal.set(java.util.Calendar.DAY_OF_MONTH, 1);
+                Date rStart = cal.getTime();
+                
+                cal.set(java.util.Calendar.DAY_OF_MONTH, cal.getActualMaximum(java.util.Calendar.DAY_OF_MONTH));
+                cal.set(java.util.Calendar.HOUR_OF_DAY, 23);
+                cal.set(java.util.Calendar.MINUTE, 59);
+                cal.set(java.util.Calendar.SECOND, 59);
+                Date rEnd = cal.getTime();
+                
+                return !sStart.after(rEnd) && !sEnd.before(rStart);
+
+            } else if ("CUSTOM".equals(reportType)) {
                 Date rStart = dateFormat.parse(startDateStr);
                 Date rEnd = dateFormat.parse(endDateStr);
-                Date sStart = dateFormat.parse(start);
-                Date sEnd = dateFormat.parse(end);
                 
-                // Goal overlaps with the report period if goal_start <= report_end AND goal_end >= report_start
-                if (rStart != null && rEnd != null && sStart != null && sEnd != null) {
+                if (rStart != null && rEnd != null) {
+                    java.util.Calendar cal = java.util.Calendar.getInstance();
+                    cal.setTime(rEnd);
+                    cal.set(java.util.Calendar.HOUR_OF_DAY, 23);
+                    cal.set(java.util.Calendar.MINUTE, 59);
+                    cal.set(java.util.Calendar.SECOND, 59);
+                    rEnd = cal.getTime();
                     return !sStart.after(rEnd) && !sEnd.before(rStart);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
+        } catch (ParseException e) {
+            e.printStackTrace();
+            return false;
         }
         return true;
     }
@@ -195,6 +248,130 @@ public class SavingReportResultActivity extends AppCompatActivity {
         } else {
             tvHealthScore.setText("Needs Improvement");
             tvHealthScore.setTextColor(getResources().getColor(R.color.danger_text, null));
+        }
+    }
+
+    private void generateCsvReport(List<SavingModel> savings) {
+        StringBuilder csvData = new StringBuilder();
+        csvData.append("Saving Name,Target Amount,Current Amount,Start Date,Target Date,Status\n");
+
+        for (SavingModel saving : savings) {
+            csvData.append(String.format(Locale.US, "\"%s\",%.2f,%.2f,%s,%s,%s\n",
+                    saving.getSavingTitle() != null ? saving.getSavingTitle().replace("\"", "\"\"") : "",
+                    saving.getTargetAmount(),
+                    saving.getCurrentAmount(),
+                    saving.getStartDate(),
+                    saving.getTargetDate(),
+                    saving.getStatus() != null ? saving.getStatus() : "Active"));
+        }
+
+        String fileName = "Saving_Report_" + System.currentTimeMillis() + ".csv";
+        saveFileToDownloads(fileName, "text/csv", csvData.toString().getBytes());
+    }
+
+    private void generatePdfReport(List<SavingModel> savings) {
+        PdfDocument document = new PdfDocument();
+        PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create(); // A4 size
+        PdfDocument.Page page = document.startPage(pageInfo);
+        Canvas canvas = page.getCanvas();
+        Paint paint = new Paint();
+
+        // Title
+        paint.setTextSize(18f);
+        paint.setFakeBoldText(true);
+        canvas.drawText("Smart Finance Manager - Saving Report", 50, 50, paint);
+
+        // Date
+        paint.setTextSize(12f);
+        paint.setFakeBoldText(false);
+        String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
+        canvas.drawText("Generated on: " + dateStr, 50, 80, paint);
+        
+        // Report Period
+        canvas.drawText(tvReportPeriod.getText().toString(), 50, 100, paint);
+
+        // Table Headers
+        paint.setFakeBoldText(true);
+        int y = 140;
+        canvas.drawText("Saving Name", 50, y, paint);
+        canvas.drawText("Target", 250, y, paint);
+        canvas.drawText("Current", 350, y, paint);
+        canvas.drawText("Status", 450, y, paint);
+
+        // Divider
+        canvas.drawLine(50, y + 10, 550, y + 10, paint);
+
+        // Table Content
+        paint.setFakeBoldText(false);
+        y += 40;
+        for (SavingModel saving : savings) {
+            if (y > 800) { 
+                document.finishPage(page);
+                page = document.startPage(pageInfo);
+                canvas = page.getCanvas();
+                y = 50;
+            }
+            String title = saving.getSavingTitle() != null ? saving.getSavingTitle() : "Unnamed";
+            if (title.length() > 20) title = title.substring(0, 17) + "...";
+            canvas.drawText(title, 50, y, paint);
+            canvas.drawText(String.format(Locale.US, "$%.2f", saving.getTargetAmount()), 250, y, paint);
+            canvas.drawText(String.format(Locale.US, "$%.2f", saving.getCurrentAmount()), 350, y, paint);
+            canvas.drawText(saving.getStatus() != null ? saving.getStatus() : "Active", 450, y, paint);
+            y += 30;
+        }
+
+        document.finishPage(page);
+
+        String fileName = "Saving_Report_" + System.currentTimeMillis() + ".pdf";
+        
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                android.content.ContentValues contentValues = new android.content.ContentValues();
+                contentValues.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                contentValues.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
+                contentValues.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS);
+
+                android.net.Uri uri = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                if (uri != null) {
+                    java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                    if (outputStream != null) {
+                        document.writeTo(outputStream);
+                        outputStream.close();
+                        Toast.makeText(this, "PDF saved to Downloads", Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Legacy saving not supported in this version", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to save PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        } finally {
+            document.close();
+        }
+    }
+
+    private void saveFileToDownloads(String fileName, String mimeType, byte[] content) {
+        try {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                android.content.ContentValues contentValues = new android.content.ContentValues();
+                contentValues.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName);
+                contentValues.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, mimeType);
+                contentValues.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS);
+
+                android.net.Uri uri = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
+                if (uri != null) {
+                    java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
+                    if (outputStream != null) {
+                        outputStream.write(content);
+                        outputStream.close();
+                        Toast.makeText(this, "File saved to Downloads: " + fileName, Toast.LENGTH_LONG).show();
+                    }
+                }
+            } else {
+                Toast.makeText(this, "Legacy saving not supported", Toast.LENGTH_SHORT).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to save file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }
