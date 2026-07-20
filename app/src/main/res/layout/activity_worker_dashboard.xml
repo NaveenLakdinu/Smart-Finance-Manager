@@ -48,7 +48,7 @@
                     android:id="@+id/txtGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Worker Portal 👋"
+                    android:text=""
                     android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
@@ -57,7 +57,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="worker@company.com"
+                    android:text=""
                     android:textColor="@color/text_on_dark_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
@@ -194,7 +194,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Next payday in 12 days"
+                    android:text=""
                     android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
