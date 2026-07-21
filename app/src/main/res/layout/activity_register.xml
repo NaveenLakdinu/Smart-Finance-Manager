@@ -292,22 +292,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-                    <CheckBox android:id="@+id/checkLoan"
-                        android:layout_width="24dp" android:layout_height="24dp"
-                        android:buttonTint="@color/hero_accent" android:checked="false" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="I have a loan"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="14sp" android:layout_marginStart="10dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginBottom="28dp"
                     android:orientation="horizontal">
                     <CheckBox android:id="@+id/checkTerms"
                         android:layout_width="24dp" android:layout_height="24dp"
@@ -321,36 +306,6 @@
                         android:text="terms &amp; conditions"
                         android:textColor="@color/hero_accent"
                         android:textSize="14sp" android:textStyle="bold" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="12dp"
-                    android:orientation="horizontal">
-                    <CheckBox android:id="@+id/checkSubscription"
-                        android:layout_width="24dp" android:layout_height="24dp"
-                        android:buttonTint="@color/hero_accent" android:checked="false" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="Receive subscription updates"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="14sp" android:layout_marginStart="10dp" />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:layout_marginBottom="28dp"
-                    android:orientation="horizontal">
-                    <CheckBox android:id="@+id/checkSaving"
-                        android:layout_width="24dp" android:layout_height="24dp"
-                        android:buttonTint="@color/hero_accent" android:checked="false" />
-                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                        android:text="I have a saving plan"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="14sp" android:layout_marginStart="10dp" />
                 </LinearLayout>
 
                 <!-- ── Register Button ──────────────────────────────────── -->

@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.example.smartfinancialmanagement"
-    compileSdk = 37
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.smartfinancialmanagement"
@@ -63,6 +63,13 @@ dependencies {
     implementation(libs.credentials)
     implementation(libs.credentials.play.services.auth)
     implementation(libs.googleid)
+    
+    // Google Play Services Auth for Google Sign-In
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    
+    // Guava for ListenableFuture (required by WorkManager)
+    implementation("com.google.guava:guava:32.1.3-android")
+    
     implementation(libs.recyclerview)
     
     val composeBom = platform(libs.androidx.compose.bom)
@@ -85,5 +92,10 @@ dependencies {
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.sun.mail:android-mail:1.6.6")
     implementation("com.sun.mail:android-activation:1.6.6")
+
+    // Facebook Login SDK
+    implementation("com.facebook.android:facebook-android-sdk:16.3.0")
+
+    // Note: Apple Sign-In is implemented using Firebase OAuthProvider (no native SDK needed)
 
 }
