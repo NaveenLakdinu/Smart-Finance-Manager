@@ -47,13 +47,13 @@ public class SubscriptionWorker extends Worker {
                         if (daysUntil >= 0 && daysUntil <= 2) {
                             String message;
                             if (daysUntil == 2) {
-                                message = "Your " + sub.getName() + " payment of LKR " +
+                                message = "Your " + sub.getName() + " payment of Rs " +
                                         String.format("%.0f", sub.getAmount()) + " is due in 2 days";
                             } else if (daysUntil == 1) {
-                                message = "Your " + sub.getName() + " payment of LKR " +
+                                message = "Your " + sub.getName() + " payment of Rs " +
                                         String.format("%.0f", sub.getAmount()) + " is due tomorrow";
                             } else {
-                                message = "Your " + sub.getName() + " payment of LKR " +
+                                message = "Your " + sub.getName() + " payment of Rs " +
                                         String.format("%.0f", sub.getAmount()) + " is due today!";
                             }
 

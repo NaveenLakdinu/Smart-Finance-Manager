@@ -182,6 +182,14 @@
             android:exported="false" />
         <activity
             android:name=".ExpenseClaimListActivity"
+            android:exported="false" />        <activity
+            android:name=".ExpenseClaimAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimReportActivity"
             android:exported="false" />
 
         <activity

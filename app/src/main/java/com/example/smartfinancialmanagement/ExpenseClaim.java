@@ -74,7 +74,7 @@ public class ExpenseClaim implements Serializable {
     public void setWorkerEmail(String workerEmail) { this.workerEmail = workerEmail; }
 
     public String getFormattedAmount() {
-        return String.format(Locale.getDefault(), "LKR %,.2f", amount);
+        return String.format(Locale.getDefault(), "Rs %,.2f", amount);
     }
 
     public int getStatusColor() {

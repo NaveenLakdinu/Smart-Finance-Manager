@@ -103,7 +103,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
             }
             loadSalaryFromFirestore(user.getUid());
         } else {
-            txtEarnings.setText("LKR 0.00");
+            txtEarnings.setText("Rs 0.00");
             txtPayrollStatus.setText(getNextPaydayText());
         }
     }
@@ -116,17 +116,17 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         Double salary = documentSnapshot.getDouble("monthlySalary");
                         if (salary != null && salary > 0) {
-                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", salary));
+                            txtEarnings.setText(String.format(Locale.US, "Rs %.2f", salary));
                         } else {
-                            txtEarnings.setText("LKR 0.00");
+                            txtEarnings.setText("Rs 0.00");
                         }
                     } else {
-                        txtEarnings.setText("LKR 0.00");
+                        txtEarnings.setText("Rs 0.00");
                     }
                     txtPayrollStatus.setText(getNextPaydayText());
                 })
                 .addOnFailureListener(e -> {
-                    txtEarnings.setText("LKR 0.00");
+                    txtEarnings.setText("Rs 0.00");
                     txtPayrollStatus.setText(getNextPaydayText());
                 });
     }
@@ -240,12 +240,12 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                         if (currentSavings != null && !currentSavings.trim().isEmpty()) {
                             try {
                                 double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
+                                txtValue.setText("Rs " + currentSavings);
                             }
                         } else {
-                            txtValue.setText("LKR 0.00");
+                            txtValue.setText("Rs 0.00");
                         }
                     }
                 });
@@ -280,7 +280,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     db.collection("users").document(user.getUid())
                             .update("currentSavings", String.valueOf(amt))
                             .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                                 Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());

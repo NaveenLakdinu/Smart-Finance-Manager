@@ -160,12 +160,12 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private void updateAccountUI() {
         if (accountsList.isEmpty()) {
             txtCurrentAccountName.setText("No Account");
-            txtAccountBalance.setText("LKR 0.00");
+            txtAccountBalance.setText("Rs 0.00");
             txtAccountNumber.setText("----");
         } else {
             AccountInfo info = accountsList.get(currentAccountIndex);
             txtCurrentAccountName.setText(info.name);
-            txtAccountBalance.setText(String.format(Locale.US, "LKR %.2f", info.balance));
+            txtAccountBalance.setText(String.format(Locale.US, "Rs %.2f", info.balance));
             txtAccountNumber.setText(info.number);
         }
     }
@@ -295,12 +295,12 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
                         if (currentSavings != null && !currentSavings.trim().isEmpty()) {
                             try {
                                 double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
+                                txtValue.setText("Rs " + currentSavings);
                             }
                         } else {
-                            txtValue.setText("LKR 0.00");
+                            txtValue.setText("Rs 0.00");
                         }
                     }
                 });
@@ -359,7 +359,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
                     FirebaseFirestore.getInstance().collection("users").document(user.getUid())
                             .update("currentSavings", String.valueOf(amt))
                             .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                                 Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());

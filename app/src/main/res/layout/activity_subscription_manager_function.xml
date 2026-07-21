@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="LKR 4,500.00"
+                    android:text="Rs 4,500.00"
                     android:textColor="@color/text_on_dark_primary"
                     android:textSize="28sp"
                     android:textStyle="bold" />

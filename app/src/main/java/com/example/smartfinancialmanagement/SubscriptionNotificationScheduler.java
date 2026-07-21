@@ -37,13 +37,13 @@ public class SubscriptionNotificationScheduler {
         if (daysUntilPayment <= 2 && daysUntilPayment >= 0) {
             String message;
             if (daysUntilPayment == 2) {
-                message = "Your " + sub.getName() + " payment of LKR " +
+                message = "Your " + sub.getName() + " payment of Rs " +
                         String.format("%.0f", sub.getAmount()) + " is due in 2 days";
             } else if (daysUntilPayment == 1) {
-                message = "Your " + sub.getName() + " payment of LKR " +
+                message = "Your " + sub.getName() + " payment of Rs " +
                         String.format("%.0f", sub.getAmount()) + " is due tomorrow";
             } else {
-                message = "Your " + sub.getName() + " payment of LKR " +
+                message = "Your " + sub.getName() + " payment of Rs " +
                         String.format("%.0f", sub.getAmount()) + " is due today!";
             }
 

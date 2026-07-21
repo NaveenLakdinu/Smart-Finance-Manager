@@ -189,7 +189,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="LKR 0.00"
+                        android:text="Rs 0.00"
                         android:textColor="#FFFFFF"
                         android:textSize="28sp"
                         android:textStyle="bold"
@@ -333,7 +333,7 @@
                                         android:id="@+id/txtBudgetLeftValue"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="LKR 8,000"
+                                        tools:text="Rs 8,000"
                                         android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />
@@ -398,7 +398,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:text="LKR 0.00"
+                            android:text="Rs 0.00"
                             android:textColor="@color/text_on_dark_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />

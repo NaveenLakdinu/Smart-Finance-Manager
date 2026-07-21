@@ -157,7 +157,7 @@
                             android:id="@+id/tvCurrentSaved"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 0.00"
+                            android:text="Rs 0.00"
                             android:textColor="@color/goal_mint"
                             android:textSize="15sp"
                             android:textStyle="bold"/>
@@ -186,7 +186,7 @@
                             android:id="@+id/tvTargetAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 0.00"
+                            android:text="Rs 0.00"
                             android:textColor="@color/goal_text"
                             android:textSize="15sp"
                             android:textStyle="bold"/>
@@ -238,7 +238,7 @@
                     android:id="@+id/tvRemaining"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LKR 0.00"
+                    android:text="Rs 0.00"
                     android:textColor="@color/goal_coral"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
@@ -264,7 +264,7 @@
                     android:id="@+id/tvMonthlyNeed"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="LKR 0.00"
+                    android:text="Rs 0.00"
                     android:textColor="@color/goal_gold"
                     android:textSize="18sp"
                     android:textStyle="bold"/>

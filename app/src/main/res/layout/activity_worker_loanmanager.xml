@@ -145,7 +145,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:text="Pay LKR 5,000 extra/month → Save LKR 42,000 interest → Be debt-free 8 months early!"
+                                android:text="Pay Rs 5,000 extra/month → Save Rs 42,000 interest → Be debt-free 8 months early!"
                                 android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="12sp"
                                 android:lineSpacingExtra="3dp" />
@@ -411,7 +411,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="LKR 1,410,000"
+                        android:text="Rs 1,410,000"
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="30sp"
                         android:textStyle="bold" />
@@ -553,7 +553,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="3dp"
-                                android:text="LKR 61,198"
+                                android:text="Rs 61,198"
                                 android:textColor="@color/text_on_dark_primary"
                                 android:textSize="17sp"
                                 android:textStyle="bold" />
@@ -599,7 +599,7 @@
                         android:gravity="center"
                         android:paddingTop="14dp"
                         android:paddingBottom="14dp"
-                        android:text="PAY ALL EMIs — LKR 61,198"
+                        android:text="PAY ALL EMIs — Rs 61,198"
                         android:textColor="@color/pill_positive_text"
                         android:textSize="14sp"
                         android:textStyle="bold"
@@ -945,7 +945,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
-                                android:text="LKR 42,000"
+                                android:text="Rs 42,000"
                                 android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
@@ -1320,7 +1320,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:text="Saved: LKR 85,000"
+                                    android:text="Saved: Rs 85,000"
                                     android:textColor="@color/pill_positive_text"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
@@ -1330,7 +1330,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:gravity="end"
-                                    android:text="Remaining: LKR 210,000"
+                                    android:text="Remaining: Rs 210,000"
                                     android:textColor="@color/qa_rose_icon"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
@@ -1475,7 +1475,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:lineSpacingExtra="4dp"
-                        android:text="Your debt-to-income ratio is 32% — below the 35% danger zone. Keep it there! Using your Q1 bonus for a LKR 50K lump sum on your Personal Loan will save you 14 months and LKR 28,000 in interest."
+                        android:text="Your debt-to-income ratio is 32% — below the 35% danger zone. Keep it there! Using your Q1 bonus for a Rs 50K lump sum on your Personal Loan will save you 14 months and Rs 28,000 in interest."
                         android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp" />
 

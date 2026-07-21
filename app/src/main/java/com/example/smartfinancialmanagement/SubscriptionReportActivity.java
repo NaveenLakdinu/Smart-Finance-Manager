@@ -73,7 +73,7 @@ public class SubscriptionReportActivity extends AppCompatActivity {
                         totalMonthly += amount;
                     }
 
-                    txtTotalCost.setText(String.format(Locale.US, "LKR %,.2f", totalMonthly));
+                    txtTotalCost.setText(String.format(Locale.US, "Rs %,.2f", totalMonthly));
                     txtTotalCount.setText(allSubs.size() + " active subscription" + (allSubs.size() != 1 ? "s" : ""));
 
                     setupChart(allSubs);
