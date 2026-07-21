@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/glass_card_bg"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Select Month"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:id="@+id/spinnerMonth"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="@color/text_on_dark_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Days Worked"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etDaysWorked"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="e.g. 22"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="number"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Overtime Hours"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etOvertimeHours"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="e.g. 10"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="numberDecimal"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Transport Allowance (LKR)"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etTransportAllowance"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="Auto-calculated if empty"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="numberDecimal"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Performance Bonus (LKR)"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etPerformanceBonus"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="0.00"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="numberDecimal"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="Salary will be auto-calculated from your profile salary."
+        android:textColor="@color/pill_warning_text"
+        android:textSize="11sp"/>
+
+</LinearLayout>

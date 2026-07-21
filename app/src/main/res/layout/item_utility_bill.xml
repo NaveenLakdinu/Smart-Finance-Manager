@@ -45,7 +45,7 @@
                 android:id="@+id/txtBillDetails"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LKR 4,500.00 • Due June 20"
+                android:text="Rs 4,500.00 • Due June 20"
                 android:textColor="@color/text_on_dark_secondary"
                 android:textSize="12sp" />
 

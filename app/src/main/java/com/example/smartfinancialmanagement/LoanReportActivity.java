@@ -243,7 +243,7 @@ public class LoanReportActivity extends AppCompatActivity {
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return String.format(Locale.US, "LKR %.0f", value);
+                return String.format(Locale.US, "Rs %.0f", value);
             }
         });
         dataSet.setSliceSpace(2f);
@@ -304,8 +304,8 @@ public class LoanReportActivity extends AppCompatActivity {
                 y = 50;
             }
             canvas.drawText(loan.getLoanName(), 50, y, paint);
-            canvas.drawText(String.format(Locale.US, "LKR %.2f", loan.getPrincipalAmount()), 200, y, paint);
-            canvas.drawText(String.format(Locale.US, "LKR %.2f", loan.getMonthlyEmi()), 350, y, paint);
+            canvas.drawText(String.format(Locale.US, "Rs %.2f", loan.getPrincipalAmount()), 200, y, paint);
+            canvas.drawText(String.format(Locale.US, "Rs %.2f", loan.getMonthlyEmi()), 350, y, paint);
             canvas.drawText(loan.getDurationMonths() + "m", 480, y, paint);
             y += 30;
         }

@@ -82,7 +82,7 @@ public class SubscriptionDetailActivity extends AppCompatActivity {
 
     private void displaySubscription(Subscription sub) {
         txtDetailName.setText(sub.getName());
-        txtDetailAmount.setText(String.format(Locale.US, "LKR %,.2f", sub.getAmount()));
+        txtDetailAmount.setText(String.format(Locale.US, "Rs %,.2f", sub.getAmount()));
 
         String status = sub.getStatus() != null ? sub.getStatus() : "Active";
         txtDetailStatus.setText(status);

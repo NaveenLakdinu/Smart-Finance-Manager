@@ -187,7 +187,7 @@ public class AddIncomeActivity extends AppCompatActivity {
                         tvSource.setLayoutParams(new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f));
                         
                         TextView tvAmount = new TextView(this);
-                        tvAmount.setText(format.format(income.getAmount()).replace("LKR", "LKR "));
+                        tvAmount.setText(format.format(income.getAmount()).replace("LKR", "Rs "));
                         tvAmount.setTextColor(Color.parseColor("#10B981")); // Mint green
                         tvAmount.setTextSize(16f);
                         tvAmount.setTypeface(null, android.graphics.Typeface.BOLD);
@@ -216,7 +216,7 @@ public class AddIncomeActivity extends AppCompatActivity {
                     }
 
                     if (tvTotalIncomeValue != null) {
-                        tvTotalIncomeValue.setText("Total: " + format.format(totalIncome).replace("LKR", "LKR "));
+                        tvTotalIncomeValue.setText("Total: " + format.format(totalIncome).replace("LKR", "Rs "));
                     }
                 });
     }

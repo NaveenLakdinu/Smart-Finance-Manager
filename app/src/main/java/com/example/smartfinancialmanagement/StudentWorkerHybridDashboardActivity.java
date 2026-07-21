@@ -62,40 +62,33 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         cardSavingManager = findViewById(R.id.cardSavingManager);
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         cardUtilityManager = findViewById(R.id.cardUtilityManager);
-
         cardWorkTasks = findViewById(R.id.cardWorkTasks);
         cardExpenseClaims = findViewById(R.id.cardExpenseClaims);
         cardPayslips = findViewById(R.id.cardPayslips);
     }
 
     private void setupBottomNavigation() {
-        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavigationView);
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setSelectedItemId(R.id.nav_dashboard);
-            bottomNavigationView.setOnItemSelectedListener(item -> {
-                int itemId = item.getItemId();
-                if (itemId == R.id.nav_dashboard) {
-                    return true;
-                } else if (itemId == R.id.nav_budget) {
-                    startActivity(new Intent(this, StudentBudgetActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                } else if (itemId == R.id.nav_loans) {
-                    startActivity(new Intent(this, StudentLoansActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                } else if (itemId == R.id.nav_savings) {
-                    startActivity(new Intent(this, StudentSavingActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                } else if (itemId == R.id.nav_profile) {
-                    startActivity(new Intent(this, StudentProfileActivity.class));
-                    overridePendingTransition(0, 0);
-                    return true;
-                }
-                return false;
-            });
-        }
+        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
+        if (bottomNav == null) return;
+        bottomNav.setOnItemSelectedListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.nav_dashboard) {
+                return true;
+            } else if (itemId == R.id.nav_budget) {
+                startActivity(new Intent(this, StudentBudgetActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_savings) {
+                startActivity(new Intent(this, StudentSavingActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            } else if (itemId == R.id.nav_profile) {
+                startActivity(new Intent(this, StudentProfileActivity.class));
+                overridePendingTransition(0, 0);
+                return true;
+            }
+            return false;
+        });
     }
 
     private void setupUserDetails() {
@@ -109,10 +102,10 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                 txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
             }
             loadSalaryFromFirestore(user.getUid());
-} else {
-    txtEarnings.setText("LKR 0.00");
-    txtPayrollStatus.setText("Next payday: June 30th");
-}
+        } else {
+            txtEarnings.setText("Rs 0.00");
+            txtPayrollStatus.setText(getNextPaydayText());
+        }
     }
 
     private void loadSalaryFromFirestore(String uid) {
@@ -123,33 +116,42 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         Double salary = documentSnapshot.getDouble("monthlySalary");
                         if (salary != null && salary > 0) {
-                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", salary));
+                            txtEarnings.setText(String.format(Locale.US, "Rs %.2f", salary));
                         } else {
-txtEarnings.setText("LKR 0.00"); // default no salary
+                            txtEarnings.setText("Rs 0.00");
                         }
                     } else {
-                        txtEarnings.setText("LKR 0.00"); // default no salary
+                        txtEarnings.setText("Rs 0.00");
                     }
-                    txtPayrollStatus.setText("Next payday: June 30th");
+                    txtPayrollStatus.setText(getNextPaydayText());
                 })
                 .addOnFailureListener(e -> {
-                    txtEarnings.setText("LKR 0.00");
-                    txtPayrollStatus.setText("Next payday: June 30th");
+                    txtEarnings.setText("Rs 0.00");
+                    txtPayrollStatus.setText(getNextPaydayText());
                 });
+    }
+
+    private String getNextPaydayText() {
+        Calendar cal = Calendar.getInstance();
+        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        int daysUntilPayday = daysInMonth - dayOfMonth;
+        if (daysUntilPayday <= 0) return "Payday is today!";
+        if (daysUntilPayday == 1) return "Next payday: tomorrow";
+        return String.format(Locale.US, "Next payday in %d days", daysUntilPayday);
     }
 
     private String getGreetingText() {
         Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
-        if (hour >= 5 && hour < 12) return "Good Morning, Hybrid Scholar 👋";
-        else if (hour >= 12 && hour < 17) return "Good Afternoon, Hybrid Scholar ☀️";
-        else if (hour >= 17 && hour < 21) return "Good Evening, Hybrid Scholar 🌙";
-        else return "Good Night, Hybrid Scholar ✨";
+        if (hour >= 5 && hour < 12) return "Good Morning, Hybrid Scholar \uD83D\uDC4B";
+        else if (hour >= 12 && hour < 17) return "Good Afternoon, Hybrid Scholar \u2600\uFE0F";
+        else if (hour >= 17 && hour < 21) return "Good Evening, Hybrid Scholar \uD83C\uDF19";
+        else return "Good Night, Hybrid Scholar \u2728";
     }
 
     private void setupClickListeners() {
-        // Logout Button
         if (btnTopLogout != null) {
             btnTopLogout.setOnClickListener(v -> {
                 mAuth.signOut();
@@ -160,42 +162,6 @@ txtEarnings.setText("LKR 0.00"); // default no salary
             });
         }
 
-        // Security settings
-        setupSecurityButton();
-
-        // Savings Widget
-        setupSavingsWidget();
-
-        // Student Card Handlers
-        if (cardStudentBudget != null) {
-            cardStudentBudget.setOnClickListener(v -> startActivity(new Intent(this, StudentBudgetActivity.class)));
-        }
-        if (cardLoanManager != null) {
-            cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
-        }
-        if (cardSavingManager != null) {
-            cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, StudentSavingActivity.class)));
-        }
-        if (cardSubscriptionManager != null) {
-            cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
-        }
-        if (cardUtilityManager != null) {
-            cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
-        }
-
-        // Worker Card Handlers
-        if (cardWorkTasks != null) {
-            cardWorkTasks.setOnClickListener(v -> startActivity(new Intent(this, WorkerTasksActivity.class)));
-        }
-        if (cardExpenseClaims != null) {
-            cardExpenseClaims.setOnClickListener(v -> startActivity(new Intent(this, ExpenseClaimsActivity.class)));
-        }
-        if (cardPayslips != null) {
-            cardPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
-        }
-    }
-
-    private void setupSecurityButton() {
         if (btnSecurity != null) {
             btnSecurity.setOnClickListener(v -> {
                 boolean isPinSet = PinHelper.isPinSet(this);
@@ -206,26 +172,51 @@ txtEarnings.setText("LKR 0.00"); // default no salary
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
-                builder.setTitle("PIN Lock Security");
-                builder.setItems(options, (dialog, which) -> {
-                    if (!isPinSet) {
-                        Intent intent = new Intent(this, PinSetupActivity.class);
-                        startActivity(intent);
-                    } else {
-                        if (which == 0) {
-                            Intent intent = new Intent(this, PinSetupActivity.class);
-                            startActivity(intent);
-                        } else if (which == 1) {
-                            PinHelper.clearPin(this);
-                            Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
-                builder.setNegativeButton("Cancel", null);
-                builder.show();
+                new AlertDialog.Builder(this)
+                        .setTitle("PIN Lock Security")
+                        .setItems(options, (dialog, which) -> {
+                            if (!isPinSet) {
+                                startActivity(new Intent(this, PinSetupActivity.class));
+                            } else {
+                                if (which == 0) {
+                                    startActivity(new Intent(this, PinSetupActivity.class));
+                                } else if (which == 1) {
+                                    PinHelper.clearPin(this);
+                                    Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             });
         }
+
+        if (cardStudentBudget != null) {
+            cardStudentBudget.setOnClickListener(v -> startActivity(new Intent(this, StudentBudgetActivity.class)));
+        }
+        if (cardLoanManager != null) {
+            cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
+        }
+        if (cardSavingManager != null) {
+            cardSavingManager.setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
+        }
+        if (cardSubscriptionManager != null) {
+            cardSubscriptionManager.setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
+        }
+        if (cardUtilityManager != null) {
+            cardUtilityManager.setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
+        }
+        if (cardWorkTasks != null) {
+            cardWorkTasks.setOnClickListener(v -> startActivity(new Intent(this, WorkerTasksActivity.class)));
+        }
+        if (cardExpenseClaims != null) {
+            cardExpenseClaims.setOnClickListener(v -> startActivity(new Intent(this, ExpenseClaimsActivity.class)));
+        }
+        if (cardPayslips != null) {
+            cardPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+        }
+
+        setupSavingsWidget();
     }
 
     private void setupSavingsWidget() {
@@ -249,12 +240,12 @@ txtEarnings.setText("LKR 0.00"); // default no salary
                         if (currentSavings != null && !currentSavings.trim().isEmpty()) {
                             try {
                                 double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
+                                txtValue.setText("Rs " + currentSavings);
                             }
                         } else {
-                            txtValue.setText("LKR 0.00");
+                            txtValue.setText("Rs 0.00");
                         }
                     }
                 });
@@ -264,7 +255,7 @@ txtEarnings.setText("LKR 0.00"); // default no salary
         FirebaseUser user = mAuth.getCurrentUser();
         if (user == null) return;
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Update Current Savings");
 
         final EditText input = new EditText(this);
@@ -289,7 +280,7 @@ txtEarnings.setText("LKR 0.00"); // default no salary
                     db.collection("users").document(user.getUid())
                             .update("currentSavings", String.valueOf(amt))
                             .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
                                 Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());

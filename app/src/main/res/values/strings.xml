@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <resources>
     <string name="app_name">Smart Financial</string>
     <string name="select_payment">Select Payment Method</string>
@@ -62,11 +61,11 @@
     <string name="greeting_hello">Hello!</string>
     <string name="personal_account">Personal Account</string>
     <string name="current_balance_label">CURRENT BALANCE</string>
-    <string name="balance_placeholder">LKR 125,400.00</string>
+    <string name="balance_placeholder">Rs 125,400.00</string>
     <string name="change_placeholder">+ 2.4%</string>
     <string name="account_number_placeholder">**** **** 4290</string>
     <string name="current_savings_label">CURRENT SAVINGS</string>
-    <string name="lkr_placeholder">LKR 0.00</string>
+    <string name="lkr_placeholder">Rs 0.00</string>
     <string name="btn_update">UPDATE</string>
     <string name="quick_actions">Quick Actions</string>
     <string name="action_transfer">Transfer</string>
@@ -90,4 +89,150 @@
     <string name="cd_lightbulb">Utilities</string>
     <string name="cd_card">Card</string>
     <string name="cd_plus">Add</string>
+
+    <!-- Worker Tasks -->
+    <string name="my_tasks">My Tasks</string>
+    <string name="daily_assignments">Daily Assignments</string>
+    <string name="stat_total">5</string>
+    <string name="stat_total_label">Total</string>
+    <string name="stat_active">2</string>
+    <string name="stat_active_label">Active</string>
+    <string name="stat_done">1</string>
+    <string name="stat_done_label">Done</string>
+    <string name="stat_overdue">1</string>
+    <string name="stat_overdue_label">Overdue</string>
+    <string name="overall">Overall: </string>
+    <string name="overall_percent">20%%</string>
+    <string name="overall_percent_format">%1$d%%</string>
+    <string name="search_tasks">Search tasks…</string>
+    <string name="filter_all">All (5)</string>
+    <string name="filter_high">High (2)</string>
+    <string name="filter_medium">Medium (2)</string>
+    <string name="filter_low">Low (1)</string>
+
+    <!-- Task 1 -->
+    <string name="task_1_title">Update Inventory Logs</string>
+    <string name="task_1_desc">Review and update the stock levels for the main warehouse.</string>
+    <string name="progress_65">65%%</string>
+    <string name="subtasks_2_4">2/4 subtasks</string>
+
+    <!-- Task 2 -->
+    <string name="task_2_title">Weekly Safety Audit</string>
+    <string name="task_2_desc">Complete the safety checklist for the production floor.</string>
+    <string name="progress_0">0%%</string>
+    <string name="subtasks_0_3">0/3 subtasks</string>
+
+    <!-- Task 3 -->
+    <string name="task_3_title">Client Feedback Report</string>
+    <string name="task_3_desc">Summarize the feedback received from the last three deliveries.</string>
+
+    <!-- Task 4 -->
+    <string name="task_4_title">Equipment Calibration</string>
+    <string name="task_4_desc">Schedule and perform calibration for CNC machines #3 and #7.</string>
+    <string name="progress_30">30%%</string>
+    <string name="subtasks_1_4">¼ subtasks</string>
+    <string name="progress_format">%1$d%%</string>
+
+    <!-- Reusable Task Strings -->
+    <string name="priority_high">High</string>
+    <string name="priority_medium">Medium</string>
+    <string name="priority_low">Low</string>
+    <string name="status_in_progress">In Progress</string>
+    <string name="status_pending">Pending</string>
+    <string name="status_completed">Completed</string>
+    <string name="status_overdue">Overdue</string>
+    <string name="due_today">Due Today</string>
+    <string name="due_tomorrow">Due Tomorrow</string>
+    <string name="due_june_15">June 15th</string>
+    <string name="due_overdue">2 Days Overdue</string>
+
+    <!-- Content Descriptions -->
+    <string name="cd_navigate_back">Navigate Back</string>
+    <string name="cd_add_task">Add Task</string>
+    <string name="cd_search">Search</string>
+    <string name="cd_clear_search">Clear Search</string>
+    <string name="cd_status">Status</string>
+    <string name="cd_due_date">Due Date</string>
+    <string name="cd_navigate">Navigate</string>
+
+    <!-- Worker Payslip -->
+    <string name="salary_payslip">Salary Payslip</string>
+    <string name="paid">Paid</string>
+    <string name="user_initials">JD</string>
+    <string name="employee_name">John Doe</string>
+    <string name="employee_details">EMP-001  •  Production Dept</string>
+    <string name="month_year">MONTH OF JUNE 2026</string>
+    <string name="net_salary">Net Salary</string>
+    <string name="net_salary_amount">Rs 75,000.00</string>
+    <string name="earnings_percent">Earnings (80%)</string>
+    <string name="deductions_percent">Deductions (20%)</string>
+    <string name="days_worked">Days Worked</string>
+    <string name="days_worked_count">22 / 30</string>
+    <string name="overtime">Overtime</string>
+    <string name="overtime_hours">5.5 Hrs</string>
+    <string name="earnings">Earnings</string>
+    <string name="basic_salary">Basic Salary</string>
+    <string name="basic_salary_amount">Rs 60,000.00</string>
+    <string name="transport_allowance">Transport Allowance</string>
+    <string name="allowance_amount">Rs 10,000.00</string>
+    <string name="performance_bonus">Performance Bonus</string>
+    <string name="bonus_amount">Rs 10,000.00</string>
+    <string name="deductions">Deductions</string>
+    <string name="epf_deduction">EPF (8%)</string>
+    <string name="epf_amount">- Rs 4,800.00</string>
+    <string name="income_tax">Income Tax</string>
+    <string name="tax_amount">- Rs 200.00</string>
+    <string name="ytd_title">Year-to-Date (YTD)</string>
+    <string name="total_gross">Total Gross</string>
+    <string name="total_gross_amount">Rs 960,000.00</string>
+    <string name="total_deductions">Total Deductions</string>
+    <string name="total_deductions_ytd_amount">Rs 75,000.00</string>
+    <string name="total_net_ytd">Total Net YTD</string>
+    <string name="total_net_ytd_amount">Rs 885,000.00</string>
+    <string name="share">Share</string>
+    <string name="download_pdf">Download PDF</string>
+
+    <!-- Payslip Backend Strings -->
+    <string name="share_subject">Salary Payslip - June 2026</string>
+    <string name="share_message">Hello,\n\nPlease find my salary payslip details for the month of June 2026:\n\nBasic Salary: Rs 60,000.00\nTransport Allowance: Rs 10,000.00\nPerformance Bonus: Rs 10,000.00\nDeductions: Rs 5,000.00\n\nNet Salary: Rs 75,000.00</string>
+    <string name="share_chooser_title">Share Payslip via</string>
+    <string name="pdf_generation_message">Generating PDF… (Connect your PDF library here)</string>
+
+    <!-- Download Strings -->
+    <string name="download_title">Downloading Payslip</string>
+    <string name="download_description">Saving your June 2026 payslip PDF…</string>
+    <string name="download_started">Download started! Check your notifications.</string>
+    <string name="download_error">Error: Unable to start download.</string>
+    <!-- Expense Claims Strings -->
+    <string name="icon_back">←</string>
+    <string name="label_worker_portal">Worker Portal</string>
+    <string name="label_expense_claims">Expense Claims</string>
+    <string name="icon_search">🔍</string>
+    <string name="icon_pending">⏳</string>
+    <string name="label_pending">Pending</string>
+    <string name="amount_pending_preview">Rs 0.00</string>
+    <string name="count_pending_preview">0 Claims</string>
+    <string name="icon_approved">✅</string>
+    <string name="label_approved">Approved</string>
+    <string name="amount_approved_preview">Rs 0.00</string>
+    <string name="count_approved_preview">0 Claims</string>
+    <string name="label_my_claims">My Claims</string>
+    <string name="count_results_preview">0 Results</string>
+    <string name="tab_all">All</string>
+    <string name="tab_pending">Pending</string>
+    <string name="tab_approved">Approved</string>
+    <string name="tab_rejected">Rejected</string>
+    <string name="tab_drafts">Drafts</string>
+    <string name="icon_lightbulb">💡</string>
+    <string name="label_policy_reminder">Policy Reminder</string>
+    <string name="policy_text">Remember to attach receipts for all claims over Rs 5,000.</string>
+    <string name="desc_new_claim">New Claim</string>
+    <string name="icon_receipt">🧾</string>
+    <string name="expense_title">Client Dinner</string>
+    <string name="expense_meta">15 Jun 2026 • Project Alpha</string>
+    <string name="status_approved">Approved</string>
+    <string name="claim_amount">Rs 12,500.00</string>
+    <string name="attachment_icon">📎</string>
+    <string name="receipt_count">2 Receipts</string>
+
 </resources>

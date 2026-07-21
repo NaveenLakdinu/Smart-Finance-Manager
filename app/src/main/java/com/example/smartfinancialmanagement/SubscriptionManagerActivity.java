@@ -118,7 +118,7 @@ public class SubscriptionManagerActivity extends AppCompatActivity {
                         total += amount;
                     }
 
-                    txtTotalSubscription.setText(String.format(Locale.US, "LKR %,.2f", total));
+                    txtTotalSubscription.setText(String.format(Locale.US, "Rs %,.2f", total));
                     adapter.notifyDataSetChanged();
                 });
     }

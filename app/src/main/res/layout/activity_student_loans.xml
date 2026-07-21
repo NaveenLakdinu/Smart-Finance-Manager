@@ -1114,7 +1114,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="3dp"
-                                        android:text="Due 15 Jun · Monthly"
+                                        android:text=""
                                         android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
 
@@ -1225,7 +1225,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="3dp"
-                                        android:text="Due 20 Jun · Monthly"
+                                        android:text=""
                                         android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
 
@@ -1309,7 +1309,7 @@
                                             android:id="@+id/txtSubMicrosoftName"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Microsoft 365"
+                                            android:text=""
                                             android:textColor="@color/text_on_dark_primary"
                                             android:textSize="14sp"
                                             android:textStyle="bold"
@@ -1335,7 +1335,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="3dp"
-                                        android:text="Due 1 Jul · Monthly"
+                                        android:text=""
                                         android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
 
@@ -1447,7 +1447,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="3dp"
-                                        android:text="Due 5 Jul · Monthly"
+                                        android:text=""
                                         android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
 

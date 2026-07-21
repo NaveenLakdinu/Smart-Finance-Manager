@@ -37,7 +37,7 @@ public class TransferAdapter extends RecyclerView.Adapter<TransferAdapter.Transf
 
         holder.txtFrom.setText(info.fromAccount);
         holder.txtTo.setText(info.toAccount);
-        holder.txtAmount.setText(String.format(Locale.US, "LKR %.2f", info.amount));
+        holder.txtAmount.setText(String.format(Locale.US, "Rs %.2f", info.amount));
 
         if (info.note != null && !info.note.isEmpty()) {
             holder.txtNote.setText(info.note);

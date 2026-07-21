@@ -110,7 +110,7 @@ public class TransferActivity extends AppCompatActivity {
     private void showAccountPickerDialog(boolean isSource) {
         String[] nameArray = new String[names.size()];
         for (int i = 0; i < names.size(); i++) {
-            nameArray[i] = names.get(i) + " - " + String.format(Locale.US, "LKR %.2f", balances.get(i));
+            nameArray[i] = names.get(i) + " - " + String.format(Locale.US, "Rs %.2f", balances.get(i));
         }
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
@@ -131,7 +131,7 @@ public class TransferActivity extends AppCompatActivity {
     private void updateSourceUI() {
         if (sourceIndex < 0 || sourceIndex >= names.size()) return;
         txtSourceName.setText(names.get(sourceIndex));
-        txtSourceBalance.setText(String.format(Locale.US, "LKR %.2f", balances.get(sourceIndex)));
+        txtSourceBalance.setText(String.format(Locale.US, "Rs %.2f", balances.get(sourceIndex)));
         txtSourceNumber.setText(numbers.get(sourceIndex));
         updateAvailableText();
     }
@@ -139,13 +139,13 @@ public class TransferActivity extends AppCompatActivity {
     private void updateDestUI() {
         if (destIndex < 0 || destIndex >= names.size()) return;
         txtDestName.setText(names.get(destIndex));
-        txtDestBalance.setText(String.format(Locale.US, "LKR %.2f", balances.get(destIndex)));
+        txtDestBalance.setText(String.format(Locale.US, "Rs %.2f", balances.get(destIndex)));
         txtDestNumber.setText(numbers.get(destIndex));
     }
 
     private void updateAvailableText() {
         if (sourceIndex >= 0 && sourceIndex < balances.size()) {
-            txtAvailable.setText(String.format(Locale.US, "Available: LKR %.2f", balances.get(sourceIndex)));
+            txtAvailable.setText(String.format(Locale.US, "Available: Rs %.2f", balances.get(sourceIndex)));
         }
     }
 
@@ -195,7 +195,7 @@ public class TransferActivity extends AppCompatActivity {
         String fromName = names.get(sourceIndex);
         String toName = names.get(destIndex);
         String note = editNote.getText().toString().trim();
-        String amountFormatted = String.format(Locale.US, "LKR %.2f", amount);
+        String amountFormatted = String.format(Locale.US, "Rs %.2f", amount);
 
         // Inflate custom dialog layout
         View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_transfer_confirm, null);

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/glass_card_bg"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Claim Title"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"/>
+
+    <EditText
+        android:id="@+id/etClaimTitle"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="e.g. Travel Reimbursement"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="text"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Category"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <Spinner
+        android:id="@+id/spinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="@color/text_on_dark_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Amount (LKR)"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etClaimAmount"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="0.00"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="numberDecimal"
+        android:background="@android:color/transparent"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expense Date"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <TextView
+        android:id="@+id/tvExpenseDate"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:background="@drawable/bg_glass_card"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:text="Tap to select date"
+        android:textColor="@color/text_on_dark_muted"
+        android:textSize="14sp"
+        android:clickable="true"
+        android:focusable="true" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/etClaimDescription"
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:layout_marginTop="6dp"
+        android:hint="Describe the expense"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="textMultiLine"
+        android:gravity="top"
+        android:background="@android:color/transparent"/>
+
+</LinearLayout>

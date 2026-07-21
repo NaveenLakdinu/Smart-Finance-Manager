@@ -42,6 +42,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         recalculateTotalIncome();
+        
+        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
+        if (txtCurrentSavingsValue != null) {
+            loadSavingsFromFirestore(txtCurrentSavingsValue);
+        }
     }
 
     private void initViews() {
@@ -249,14 +254,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         builder.show();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
-        if (txtCurrentSavingsValue != null) {
-            loadSavingsFromFirestore(txtCurrentSavingsValue);
-        }
-    }
+
 
     private void loadAchievementData() {
         String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 

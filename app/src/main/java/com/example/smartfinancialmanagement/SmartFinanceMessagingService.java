@@ -17,7 +17,7 @@ public class SmartFinanceMessagingService extends FirebaseMessagingService {
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        Log.d(TAG, "FCM Token refreshed: " + token);
+        // Token refreshed (not logged for security)
         saveTokenToFirestore(token);
     }
 
