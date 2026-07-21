@@ -6,7 +6,8 @@ import java.util.Locale;
 
 public class BudgetCalculator {
 
-    public BudgetModel calculateBudget(double allowance, double scholarship, double partTime, int duration) {
+    public BudgetModel calculateBudget(double allowance, double scholarship, double partTime, int duration,
+                                       double totalSavings, double actualSpending, double targetGoal, double currentSaving, double entertainmentSpending) {
         BudgetModel model = new BudgetModel();
         model.setMonthlyAllowance(allowance);
         model.setScholarship(scholarship);
@@ -34,36 +35,74 @@ public class BudgetCalculator {
         double monthlyBudget = semesterIncome / duration;
         model.setMonthlyBudget(monthlyBudget);
 
-        // Financial Score & Health Status
-        int score = 70;
-        if (scholarship > 0) score += 10;
-        if (partTime > 0) score += 10;
-        if (monthlyIncome < 15000) score -= 20;
-        if (duration >= 6) score -= 5;
+        // --- Calculate Financial Score (Out of 100) ---
         
-        score = Math.max(0, Math.min(100, score)); // clamp 0-100
-        model.setFinancialScore(score);
+        // A. Savings Rate (40 Points)
+        int savingsRateScore = 10; // Default below 10%
+        if (semesterIncome > 0) {
+            double savingsRate = (totalSavings / semesterIncome) * 100;
+            if (savingsRate >= 20) savingsRateScore = 40;
+            else if (savingsRate >= 15) savingsRateScore = 30;
+            else if (savingsRate >= 10) savingsRateScore = 20;
+        }
 
+        // B. Budget Control (30 Points)
+        int budgetControlScore = 30; // Default stays within budget
+        if (actualSpending > monthlyBudget) {
+            // Determine if exceeded or far exceeded (let's say > 20% is far exceeded)
+            if (actualSpending > monthlyBudget * 1.2) {
+                budgetControlScore = 10; // far exceeded
+            } else {
+                budgetControlScore = 20; // exceeded
+            }
+        }
+
+        // C. Goal Progress (20 Points)
+        int goalProgressScore = 5; // Default below 40%
+        if (targetGoal > 0) {
+            double progress = (currentSaving / targetGoal) * 100;
+            if (progress >= 80) goalProgressScore = 20;
+            else if (progress >= 60) goalProgressScore = 15;
+            else if (progress >= 40) goalProgressScore = 10;
+        }
+
+        // D. Expense Management (10 Points)
+        int expenseScore = 5; // Default too much
+        if (semesterIncome > 0) {
+            double entertainmentPercent = (entertainmentSpending / semesterIncome) * 100;
+            if (entertainmentPercent <= 5) expenseScore = 10;
+        }
+
+        int totalScore = savingsRateScore + budgetControlScore + goalProgressScore + expenseScore;
+        totalScore = Math.max(0, Math.min(100, totalScore)); // clamp 0-100
+        model.setFinancialScore(totalScore);
+
+        // --- Health Categories ---
         String status;
-        if (score >= 90) status = "Excellent Financial Health";
-        else if (score >= 75) status = "Very Good Financial Health";
-        else if (score >= 60) status = "Good Financial Health";
-        else if (score >= 40) status = "Needs Better Budgeting";
-        else status = "Poor Financial Health";
+        if (totalScore >= 90) status = "Excellent";
+        else if (totalScore >= 75) status = "Very Good";
+        else if (totalScore >= 60) status = "Good";
+        else if (totalScore >= 40) status = "Average";
+        else status = "Needs Improvement";
         model.setHealthStatus(status);
 
-        // Quick Insights
+        // --- Quick Insights ---
+        
+        // Insight 1
         long dailyRounded = Math.round(dailyBudget);
         model.setInsight1("You can safely spend Rs." + dailyRounded + "/day.");
         
-        if (duration >= 6) {
+        // Insight 2
+        double expectedSemesterSpending = actualSpending * duration;
+        if (expectedSemesterSpending <= semesterIncome) {
             model.setInsight2("Current budget can last the entire semester.");
         } else {
-            model.setInsight2("Current budget covers your selected semester.");
+            model.setInsight2("Warning: Budget may run out before semester ends.");
         }
         
+        // Insight 3
         long saveAmount = Math.round(monthlyBudget * 0.15);
-        model.setInsight3("Consider saving Rs." + saveAmount + " (15%) monthly.");
+        model.setInsight3("Consider saving Rs." + saveAmount + " monthly.");
 
         // Semester Date Range
         Calendar cal = Calendar.getInstance();

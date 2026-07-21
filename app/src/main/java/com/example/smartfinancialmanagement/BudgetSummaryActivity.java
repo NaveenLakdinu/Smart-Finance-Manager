@@ -11,8 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.progressindicator.CircularProgressIndicator;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class BudgetSummaryActivity extends AppCompatActivity {
@@ -45,28 +48,79 @@ public class BudgetSummaryActivity extends AppCompatActivity {
 
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (model != null) populateData();
+    }
+
     private void initViews() {
         View btnBack = findViewById(R.id.btnBackContainer);
         if (btnBack != null) {
             btnBack.setOnClickListener(v -> finish());
         }
+        
+        loadUserData();
+    }
+
+    private void loadUserData() {
+        TextView txtGreeting = findViewById(R.id.txtGreeting);
+        if (txtGreeting == null) return;
+
+        String baseGreeting = getGreeting();
+        
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) {
+            txtGreeting.setText(baseGreeting + " 👋");
+            return;
+        }
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    String name = documentSnapshot.getString("name");
+                    if (name != null && !name.isEmpty()) {
+                        String firstName = name.trim().split("\\s+")[0];
+                        txtGreeting.setText(baseGreeting + ", " + firstName + " 👋");
+                    } else {
+                        txtGreeting.setText(baseGreeting + " 👋");
+                    }
+                } else {
+                    txtGreeting.setText(baseGreeting + " 👋");
+                }
+            })
+            .addOnFailureListener(e -> {
+                txtGreeting.setText(baseGreeting + " 👋");
+            });
+    }
+
+    private String getGreeting() {
+        Calendar c = Calendar.getInstance();
+        int timeOfDay = c.get(Calendar.HOUR_OF_DAY);
+
+        if (timeOfDay >= 0 && timeOfDay < 12) {
+            return "Good Morning";
+        } else if (timeOfDay >= 12 && timeOfDay < 17) {
+            return "Good Afternoon";
+        } else {
+            return "Good Evening";
+        }
     }
 
     private void populateData() {
-        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(new Locale("en", "LK"));
-        currencyFormat.setMaximumFractionDigits(0);
-        
         TextView txtTotalIncome = findViewById(R.id.txtTotalIncome);
-        if (txtTotalIncome != null) txtTotalIncome.setText(currencyFormat.format(model.getSemesterIncome()));
+        if (txtTotalIncome != null) txtTotalIncome.setText(CurrencyHelper.formatMoney(this, model.getSemesterIncome()));
 
         TextView txtDailyLimit = findViewById(R.id.txtDailyLimit);
-        if (txtDailyLimit != null) txtDailyLimit.setText(currencyFormat.format(model.getDailyBudget()));
+        if (txtDailyLimit != null) txtDailyLimit.setText(CurrencyHelper.formatMoney(this, model.getDailyBudget()));
 
         TextView txtWeeklyLimit = findViewById(R.id.txtWeeklyLimit);
-        if (txtWeeklyLimit != null) txtWeeklyLimit.setText(currencyFormat.format(model.getWeeklyBudget()));
+        if (txtWeeklyLimit != null) txtWeeklyLimit.setText(CurrencyHelper.formatMoney(this, model.getWeeklyBudget()));
 
         TextView txtMonthlyLimit = findViewById(R.id.txtMonthlyLimit);
-        if (txtMonthlyLimit != null) txtMonthlyLimit.setText(currencyFormat.format(model.getMonthlyBudget()));
+        if (txtMonthlyLimit != null) txtMonthlyLimit.setText(CurrencyHelper.formatMoney(this, model.getMonthlyBudget()));
 
         CircularProgressIndicator progressHealthScore = findViewById(R.id.progressHealthScore);
         if (progressHealthScore != null) progressHealthScore.setProgress(model.getFinancialScore());

@@ -6,14 +6,33 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -23,17 +42,31 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.app.NotificationManager;
 
+import java.util.Arrays;
+import java.util.Collections;
+
 public class LoginFormActivity extends AppCompatActivity {
 
     private EditText usernameInput, passwordInput;
     private ImageView passwordToggle;
     private TextView signUpLink, forgotPassword;
     private com.google.android.material.button.MaterialButton loginButton;
-    private ImageView googleBtn, facebookBtn, appleBtn;
+    private ImageButton googleBtn, facebookBtn, appleBtn;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private boolean isPasswordVisible = false;
+
+    // Google Sign-In
+    private GoogleSignInClient googleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
+
+    // Facebook Login
+    private CallbackManager callbackManager;
+
+    // Activity Result Launchers
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
+    private ActivityResultLauncher<Intent> appleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +75,18 @@ public class LoginFormActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
+
+        // Initialize Facebook SDK
+        callbackManager = CallbackManager.Factory.create();
+
+        // Configure Google Sign-In
+        configureGoogleSignIn();
+
+        // Initialize Activity Result Launchers
+        initializeActivityLaunchers();
+
+        // Register Facebook Callback
+        registerFacebookCallback();
 
         initViews();
         requestNotificationPermission();
@@ -86,9 +131,25 @@ public class LoginFormActivity extends AppCompatActivity {
             handleForgotPassword();
         });
 
-        googleBtn.setOnClickListener(v -> Toast.makeText(this, "Google Login - Configuration Required", Toast.LENGTH_SHORT).show());
-        facebookBtn.setOnClickListener(v -> Toast.makeText(this, "Facebook Login - Configuration Required", Toast.LENGTH_SHORT).show());
-        appleBtn.setOnClickListener(v -> Toast.makeText(this, "Apple Login - Configuration Required", Toast.LENGTH_SHORT).show());
+        // Google Sign-In
+        googleBtn.setOnClickListener(v -> {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
+
+        // Facebook Login
+        facebookBtn.setOnClickListener(v -> {
+            LoginManager.getInstance().logInWithReadPermissions(
+                    LoginFormActivity.this,
+                    callbackManager,
+                    Arrays.asList("email", "public_profile")
+            );
+        });
+
+        // Apple Sign-In
+        appleBtn.setOnClickListener(v -> {
+            handleAppleSignIn();
+        });
     }
 
     private void handleForgotPassword() {
@@ -417,5 +478,140 @@ public class LoginFormActivity extends AppCompatActivity {
         if (msg.contains("network") || msg.contains("Network"))
             return "Network error. Please check your internet connection.";
         return "Login failed. Please check your credentials.";
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Google Sign-In Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void configureGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    private void initializeActivityLaunchers() {
+        // Google Sign-In Result Launcher
+        googleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            firebaseAuthWithGoogle(account.getIdToken());
+                        } catch (ApiException e) {
+                            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
+        // Apple Sign-In Result Launcher
+        appleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Apple Sign-In result handling would go here
+                    // Note: Full Apple Sign-In implementation requires additional setup
+                    Toast.makeText(this, "Apple Sign-In requires additional configuration", Toast.LENGTH_SHORT).show();
+                }
+        );
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    } else {
+                        Toast.makeText(this, "Google Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Facebook Login Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void registerFacebookCallback() {
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handleFacebookLogin(loginResult);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(LoginFormActivity.this, "Facebook Login cancelled", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Toast.makeText(LoginFormActivity.this, "Facebook Login error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void handleFacebookLogin(LoginResult loginResult) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    } else {
+                        Toast.makeText(this, "Facebook Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Apple Sign-In Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void handleAppleSignIn() {
+        OAuthProvider provider = OAuthProvider.newBuilder("apple.com")
+                .setScopes(Arrays.asList("email", "name"))
+                .build();
+
+        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
+        if (pendingResultTask != null) {
+            // There's already a pending result, wait for it
+            pendingResultTask.addOnSuccessListener(authResult -> {
+                FirebaseUser user = authResult.getUser();
+                if (user != null) {
+                    checkUserInFirestore(user.getUid());
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // Start the sign-in flow
+            mAuth.startActivityForSignInWithProvider(this, provider)
+                    .addOnSuccessListener(authResult -> {
+                        FirebaseUser user = authResult.getUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Pass result to Facebook SDK
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

@@ -52,6 +52,11 @@
     <string name="hint_business_address">Primary Business Location</string>
     <string name="hint_reg_number">BR Number / Tax ID</string>
 
+    <!-- OAuth Configuration -->
+    <string name="default_web_client_id" translatable="false">YOUR_GOOGLE_WEB_CLIENT_ID_HERE</string>
+    <string name="facebook_app_id" translatable="false">YOUR_FACEBOOK_APP_ID_HERE</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fbYOUR_FACEBOOK_APP_ID_HERE</string>
+
     <!-- MultiAccount Dashboard -->
     <string name="profile_letter_default">P</string>
     <string name="greeting_hello">Hello!</string>

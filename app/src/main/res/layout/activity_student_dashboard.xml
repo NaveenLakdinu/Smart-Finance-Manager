@@ -43,16 +43,17 @@
                     <com.google.android.material.card.MaterialCardView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        app:cardBackgroundColor="@color/hero_accent"
+                        app:cardBackgroundColor="#06B6D4"
                         app:cardCornerRadius="24dp"
                         app:strokeWidth="0dp">
 
                         <TextView
+                            android:id="@+id/tvInitials"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
                             android:text="AR"
-                            android:textColor="@color/text_on_dark_primary"
+                            android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
                     </com.google.android.material.card.MaterialCardView>
@@ -63,44 +64,6 @@
                         android:layout_gravity="bottom|end"
                         android:background="@drawable/icon_circle_green" />
                 </FrameLayout>
-
-                    <FrameLayout
-                        android:id="@+id/btnSecurity"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_back_circle"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_lock"
-                            app:tint="@color/text_on_dark_primary" />
-
-                    </FrameLayout>
-
-                    <FrameLayout
-                        android:id="@+id/btnTopLogout"
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:layout_marginStart="10dp"
-                        android:background="@drawable/bg_back_circle"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground">
-
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_power"
-                            app:tint="@color/text_on_dark_primary" />
-
-                    </FrameLayout>
 
                 <!-- Name & Role -->
                 <LinearLayout
@@ -120,23 +83,24 @@
                             android:layout_width="14dp"
                             android:layout_height="14dp"
                             android:src="@drawable/ic_school"
-                            app:tint="@color/pill_positive_text" />
+                            app:tint="#10B981" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
                             android:text="Student"
-                            android:textColor="@color/pill_positive_text"
+                            android:textColor="#10B981"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
 
                     <TextView
+                        android:id="@+id/tvStudentName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Aiden Ramirez"
-                        android:textColor="@color/text_on_dark_primary"
+                        android:text="Loading..."
+                        android:textColor="#FFFFFF"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -144,58 +108,21 @@
                 <!-- Top Right Actions -->
                 <!-- Trophy icon -->
                 <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardTrophyIcon"
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     app:cardBackgroundColor="@android:color/transparent"
                     app:cardCornerRadius="18dp"
-                    app:strokeColor="@color/pill_positive_text"
+                    app:strokeColor="#10B981"
                     app:strokeWidth="1dp">
 
                     <TextView
+                        android:id="@+id/txtTrophyIcon"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:gravity="center"
                         android:text="🏆"
                         android:textSize="16sp" />
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- Budget Plan -->
-                <com.google.android.material.card.MaterialCardView
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="8dp"
-                    android:visibility="gone"
-                    android:clickable="true"
-                    android:focusable="true"
-                    app:cardBackgroundColor="@android:color/transparent"
-                    app:cardCornerRadius="18dp"
-                    app:strokeColor="@color/pill_warning_text"
-                    app:strokeWidth="1dp">
-
-                    <LinearLayout
-                        android:id="@+id/budget_plan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal"
-                        android:paddingStart="12dp"
-                        android:paddingEnd="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="👝"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="6dp"
-                            android:text="Budget Plan"
-                            android:textColor="@color/pill_warning_text"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Notification -->
@@ -205,7 +132,7 @@
                     android:layout_marginStart="8dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="@color/glass_card_bg"
+                    app:cardBackgroundColor="#1C2B40"
                     app:cardCornerRadius="18dp"
                     app:strokeWidth="0dp">
 
@@ -214,7 +141,7 @@
                         android:layout_height="18dp"
                         android:layout_gravity="center"
                         android:src="@drawable/ic_notification"
-                        app:tint="@color/text_on_dark_muted" />
+                        app:tint="#9CA3AF" />
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
@@ -223,10 +150,10 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#14253A"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/glass_card_border"
+                app:cardElevation="4dp"
+                app:strokeColor="#1F3A5A"
                 app:strokeWidth="1dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -241,7 +168,7 @@
                         android:layout_marginEnd="-50dp"
                         android:alpha="0.2"
                         android:background="@drawable/bg_profile_circle"
-                        android:backgroundTint="@color/hero_accent"
+                        android:backgroundTint="#06B6D4"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
 
@@ -251,7 +178,7 @@
                         android:layout_height="wrap_content"
                         android:letterSpacing="0.1"
                         android:text="CURRENT BALANCE"
-                        android:textColor="@color/text_on_dark_muted"
+                        android:textColor="#9CA3AF"
                         android:textSize="11sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -263,7 +190,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="LKR 48,250.00"
-                        android:textColor="@color/text_on_dark_primary"
+                        android:textColor="#FFFFFF"
                         android:textSize="28sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -274,13 +201,13 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
                         android:background="@drawable/bg_pill_green"
-                        android:backgroundTint="@color/pill_positive_bg"
+                        android:backgroundTint="#064E3B"
                         android:paddingStart="8dp"
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
                         android:text="↗ +1.8%"
-                        android:textColor="@color/pill_positive_text"
+                        android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         app:layout_constraintBottom_toBottomOf="@id/txtCurrentBalanceValue"
@@ -305,9 +232,9 @@
                             android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
-                            app:cardBackgroundColor="@color/glass_card_bg"
+                            app:cardBackgroundColor="#1C2B40"
                             app:cardCornerRadius="20dp"
-                            app:strokeColor="@color/glass_card_border"
+                            app:strokeColor="#2A3E59"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -340,7 +267,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Achievement"
-                                        android:textColor="@color/text_on_dark_muted"
+                                        android:textColor="#9CA3AF"
                                         android:textSize="10sp" />
 
                                     <TextView
@@ -348,7 +275,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="1,240 pts"
-                                        android:textColor="@color/text_on_dark_primary"
+                                        android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -364,9 +291,9 @@
                             android:layout_weight="1"
                             android:clickable="true"
                             android:focusable="true"
-                            app:cardBackgroundColor="@color/glass_card_bg"
+                            app:cardBackgroundColor="#1C2B40"
                             app:cardCornerRadius="20dp"
-                            app:strokeColor="@color/glass_card_border"
+                            app:strokeColor="#2A3E59"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -399,14 +326,15 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Budget Left"
-                                        android:textColor="@color/text_on_dark_muted"
+                                        android:textColor="#9CA3AF"
                                         android:textSize="10sp" />
 
                                     <TextView
+                                        android:id="@+id/txtBudgetLeftValue"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="LKR 8,000"
-                                        android:textColor="@color/text_on_dark_primary"
+                                        tools:text="LKR 8,000"
+                                        android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -507,14 +435,14 @@
                 <View
                     android:layout_width="4dp"
                     android:layout_height="22dp"
-                    android:background="@color/hero_accent" />
+                    android:background="#06B6D4" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="Quick Actions"
-                    android:textColor="@color/text_on_dark_primary"
+                    android:textColor="#FFFFFF"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -527,7 +455,7 @@
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#172236"
                 app:cardCornerRadius="16dp"
                 app:strokeColor="#20324D"
                 app:strokeWidth="1dp">
@@ -551,7 +479,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_school"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="#FFFFFF" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -565,7 +493,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Loan Management"
-                            android:textColor="@color/text_on_dark_primary"
+                            android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -574,10 +502,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Track &amp; repay loans"
-                            android:textColor="@color/text_on_dark_muted"
+                            android:textColor="#9CA3AF"
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtLoanBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -588,7 +517,7 @@
                             android:paddingEnd="8dp"
                             android:paddingBottom="4dp"
                             android:text="2 Active"
-                            android:textColor="@color/hero_accent"
+                            android:textColor="#06B6D4"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -598,7 +527,7 @@
                         android:layout_height="16dp"
                         android:rotation="180"
                         android:src="@drawable/ic_back"
-                        app:tint="@color/text_on_dark_muted" />
+                        app:tint="#9CA3AF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -610,7 +539,7 @@
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#172236"
                 app:cardCornerRadius="16dp"
                 app:strokeColor="#292147"
                 app:strokeWidth="1dp">
@@ -634,7 +563,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_compare"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="#FFFFFF" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -648,7 +577,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Subscription Management"
-                            android:textColor="@color/text_on_dark_primary"
+                            android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -657,10 +586,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Manage your subscriptions"
-                            android:textColor="@color/text_on_dark_muted"
+                            android:textColor="#9CA3AF"
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtSubscriptionBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -671,7 +601,7 @@
                             android:paddingEnd="8dp"
                             android:paddingBottom="4dp"
                             android:text="5 Plans"
-                            android:textColor="@color/hero_accent"
+                            android:textColor="#06B6D4"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -681,7 +611,7 @@
                         android:layout_height="16dp"
                         android:rotation="180"
                         android:src="@drawable/ic_back"
-                        app:tint="@color/text_on_dark_muted" />
+                        app:tint="#9CA3AF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -693,9 +623,9 @@
                 android:layout_marginBottom="12dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#172236"
                 app:cardCornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="#193A32"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -717,7 +647,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_savings_wave"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="#FFFFFF" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -731,7 +661,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Saving Management"
-                            android:textColor="@color/text_on_dark_primary"
+                            android:textColor="#FFFFFF"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -740,10 +670,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Grow your savings"
-                            android:textColor="@color/text_on_dark_muted"
+                            android:textColor="#9CA3AF"
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtSavingBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -754,7 +685,7 @@
                             android:paddingEnd="8dp"
                             android:paddingBottom="4dp"
                             android:text="On Track"
-                            android:textColor="@color/hero_accent"
+                            android:textColor="#06B6D4"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -764,7 +695,7 @@
                         android:layout_height="16dp"
                         android:rotation="180"
                         android:src="@drawable/ic_back"
-                        app:tint="@color/text_on_dark_muted" />
+                        app:tint="#9CA3AF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -776,9 +707,9 @@
                 android:layout_marginBottom="24dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="#172236"
                 app:cardCornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="#3E2718"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -800,7 +731,7 @@
                             android:layout_height="24dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lighting"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="#FFFFFF" />
                     </com.google.android.material.card.MaterialCardView>
 
                     <LinearLayout
@@ -815,10 +746,11 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Bills &amp; utilities"
-                            android:textColor="@color/text_on_dark_muted"
+                            android:textColor="#9CA3AF"
                             android:textSize="13sp" />
 
                         <TextView
+                            android:id="@+id/txtUtilityBadge"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -829,7 +761,7 @@
                             android:paddingEnd="8dp"
                             android:paddingBottom="4dp"
                             android:text="3 Due"
-                            android:textColor="@color/hero_accent"
+                            android:textColor="#06B6D4"
                             android:textSize="11sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -839,7 +771,7 @@
                         android:layout_height="16dp"
                         android:rotation="180"
                         android:src="@drawable/ic_back"
-                        app:tint="@color/text_on_dark_muted" />
+                        app:tint="#9CA3AF" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
@@ -850,8 +782,9 @@
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:text="Student Financial Dashboard • 2025"
-                android:textColor="@color/text_on_dark_secondary"
+                android:textColor="#6B7280"
                 android:textSize="12sp" />
+
         </LinearLayout>
     </ScrollView>
 
