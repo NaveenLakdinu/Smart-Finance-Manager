@@ -7,10 +7,12 @@ import android.os.Bundle;
 import android.view.View;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -40,6 +42,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         recalculateTotalIncome();
+        
+        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
+        if (txtCurrentSavingsValue != null) {
+            loadSavingsFromFirestore(txtCurrentSavingsValue);
+        }
     }
 
     private void initViews() {
@@ -92,6 +99,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         }
 
         setupSecurityButton();
+        setupSavingsWidget();
 
         loadAchievementData();
         loadCurrentBalance();
@@ -166,6 +174,87 @@ public class StudentDashboardActivity extends AppCompatActivity {
             });
         }
     }
+
+    private void setupSavingsWidget() {
+        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
+        View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
+        View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
+
+        if (txtCurrentSavingsValue != null && btnUpdateSavings != null) {
+            loadSavingsFromFirestore(txtCurrentSavingsValue);
+            btnUpdateSavings.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
+            if (cardSavingsWidget != null) {
+                cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
+            }
+        }
+    }
+
+    private void loadSavingsFromFirestore(TextView txtValue) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String currentSavings = documentSnapshot.getString("currentSavings");
+                        if (currentSavings != null && !currentSavings.trim().isEmpty()) {
+                            try {
+                                double amt = Double.parseDouble(currentSavings.trim());
+                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                            } catch (NumberFormatException e) {
+                                txtValue.setText("LKR " + currentSavings);
+                            }
+                        } else {
+                            txtValue.setText("LKR 0.00");
+                        }
+                    }
+                });
+    }
+
+    private void showUpdateSavingsDialog(TextView txtValue) {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update Current Savings");
+
+        final android.widget.EditText input = new android.widget.EditText(this);
+        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        input.setHint("Enter amount (LKR)");
+
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
+        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
+                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
+        params.leftMargin = paddingPx;
+        params.rightMargin = paddingPx;
+        input.setLayoutParams(params);
+        container.addView(input);
+        builder.setView(container);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String val = input.getText().toString().trim();
+            if (!val.isEmpty()) {
+                try {
+                    double amt = Double.parseDouble(val);
+                    FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                            .update("currentSavings", String.valueOf(amt))
+                            .addOnSuccessListener(aVoid -> {
+                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+                } catch (NumberFormatException e) {
+                    Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+
 
     private void loadAchievementData() {
         String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 

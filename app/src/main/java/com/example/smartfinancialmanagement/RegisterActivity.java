@@ -24,7 +24,7 @@ import java.util.Locale;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFullName, etAge, etEmail, etMobile, etPassword;
-    private CheckBox loanCheckbox, termsCheckbox, subscriptionCheckbox, savingPlanCheckbox;
+    private CheckBox termsCheckbox;
     private Button btnRegister;
     private android.widget.ProgressBar progressBar;
     private ImageView passwordToggle;
@@ -95,10 +95,7 @@ public class RegisterActivity extends AppCompatActivity {
             }
         });
 
-        loanCheckbox = findViewById(R.id.checkLoan);
         termsCheckbox = findViewById(R.id.checkTerms);
-        subscriptionCheckbox = findViewById(R.id.checkSubscription);
-        savingPlanCheckbox = findViewById(R.id.checkSaving);
         btnRegister = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
 
@@ -116,39 +113,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // 3. CheckBox Click Listeners
-        loanCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (loanCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, LoanDetailsActivity.class));
-            } else {
-                UserRegistrationData.getInstance().hasLoan = false;
-            }
-        });
-
         termsCheckbox.setOnClickListener(v -> {
             saveDataToSingleton();
             if (termsCheckbox.isChecked()) {
                 startActivity(new Intent(RegisterActivity.this, TermsActivity.class));
             } else {
                 UserRegistrationData.getInstance().isTermsAccepted = false;
-            }
-        });
-
-        subscriptionCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (subscriptionCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, SubscriptionActivity.class));
-            } else {
-                UserRegistrationData.getInstance().receiveUpdates = false;
-            }
-        });
-
-        savingPlanCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (savingPlanCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, SavingPlanActivity.class));
-            } else {
-                UserRegistrationData.getInstance().hasSavingPlan = false;
             }
         });
 
@@ -177,10 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile.setText(data.mobile);
         etPassword.setText(data.password);
 
-        loanCheckbox.setChecked(data.hasLoan);
         termsCheckbox.setChecked(data.isTermsAccepted);
-        subscriptionCheckbox.setChecked(data.receiveUpdates);
-        savingPlanCheckbox.setChecked(data.hasSavingPlan);
     }
 
     private void registerUser() {
@@ -357,9 +324,13 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
 
                                         data.clearData();
-                                        
-                                        // Handle routing (will now route to PIN setup)
-                                        navigateToDashboard(userRole);
+
+                                        // Navigate to OnboardingActivity after successful registration
+                                        Intent onboardingIntent = new Intent(RegisterActivity.this, OnboardingActivity.class);
+                                        onboardingIntent.putExtra("USER_ROLE", userRole);
+                                        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(onboardingIntent);
+                                        finish();
                                     })
                                     .addOnFailureListener(e -> {
                                         timeoutHandler.removeCallbacks(timeoutRunnable);
@@ -502,17 +473,15 @@ public class RegisterActivity extends AppCompatActivity {
 
     /**
      * Helper method to route users correctly after registration.
-     * New users must configure their PIN lock before accessing the dashboard.
+     * This method is deprecated - use OnboardingActivity instead.
      */
+    @Deprecated
     private void navigateToDashboard(String role) {
-        // Enforce PIN setup immediately after successful registration
-        Intent pinIntent = new Intent(this, PinSetupActivity.class);
-        
-        // PinSetupActivity handles routing to the correct dashboard via its own redirectToDashboard() 
-        // which relies on SharedPreferences "user_role", so we don't need to pass the intent extra here.
-        
-        pinIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(pinIntent);
+        // This method is no longer used - users go through OnboardingActivity first
+        Intent onboardingIntent = new Intent(this, OnboardingActivity.class);
+        onboardingIntent.putExtra("USER_ROLE", role);
+        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(onboardingIntent);
         finish();
     }
 
@@ -539,10 +508,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (etMobile != null) etMobile.setText("");
         if (etPassword != null) etPassword.setText("");
 
-        if (loanCheckbox != null) loanCheckbox.setChecked(false);
         if (termsCheckbox != null) termsCheckbox.setChecked(false);
-        if (subscriptionCheckbox != null) subscriptionCheckbox.setChecked(false);
-        if (savingPlanCheckbox != null) savingPlanCheckbox.setChecked(false);
 
         if (etFullName != null) etFullName.requestFocus();
         System.out.println("✅ All input fields cleared after registration");

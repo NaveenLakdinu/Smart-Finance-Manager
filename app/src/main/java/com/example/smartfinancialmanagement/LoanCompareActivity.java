@@ -129,7 +129,7 @@ public class LoanCompareActivity extends AppCompatActivity {
             data.interestRate = Double.parseDouble(etI.getText().toString().trim());
             data.duration = Integer.parseInt(etD.getText().toString().trim());
             
-            // Extract EMI and Total from the result text (e.g., "EMI: LKR 100.00 | Total: LKR 1200.00")
+            // Extract EMI and Total from the result text (e.g., "EMI: Rs 100.00 | Total: Rs 1200.00")
             String resText = txtRes.getText().toString();
             try {
                 String emiPart = resText.substring(resText.indexOf("LKR") + 3, resText.indexOf("|")).trim();
@@ -187,7 +187,7 @@ public class LoanCompareActivity extends AppCompatActivity {
         dataSet.setValueFormatter(new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return String.format(Locale.US, "LKR %.0f", value);
+                return String.format(Locale.US, "Rs %.0f", value);
             }
         });
         dataSet.setSliceSpace(2f);
@@ -233,13 +233,13 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         paint.setTextSize(11f);
         paint.setFakeBoldText(false);
-        canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: LKR %.2f", userMonthlyIncome), 45, 130, paint);
+        canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
         
         double existingCommitments = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
-        canvas.drawText(String.format(Locale.US, "• Existing Commitments: LKR %.2f", existingCommitments), 45, 150, paint);
-        canvas.drawText(String.format(Locale.US, "  - Active Loans EMI: LKR %.2f", activeLoansMonthlyTotal), 55, 170, paint);
-        canvas.drawText(String.format(Locale.US, "  - Utility Bills: LKR %.2f", utilitiesMonthlyTotal), 55, 190, paint);
-        canvas.drawText(String.format(Locale.US, "  - Subscriptions: LKR %.2f", subscriptionsMonthlyTotal), 55, 210, paint);
+        canvas.drawText(String.format(Locale.US, "• Existing Commitments: Rs %.2f", existingCommitments), 45, 150, paint);
+        canvas.drawText(String.format(Locale.US, "  - Active Loans EMI: Rs %.2f", activeLoansMonthlyTotal), 55, 170, paint);
+        canvas.drawText(String.format(Locale.US, "  - Utility Bills: Rs %.2f", utilitiesMonthlyTotal), 55, 190, paint);
+        canvas.drawText(String.format(Locale.US, "  - Subscriptions: Rs %.2f", subscriptionsMonthlyTotal), 55, 210, paint);
         
         canvas.drawLine(40, 225, 555, 225, paint);
 
@@ -261,7 +261,7 @@ public class LoanCompareActivity extends AppCompatActivity {
             canvas.drawText(data.optionLabel + " (" + data.bankName + ")", 45, y, paint);
             paint.setFakeBoldText(false);
 
-            canvas.drawText(String.format(Locale.US, "EMI: LKR %.2f | Commitment: LKR %.2f | Net Cash Flow: LKR %.2f", 
+            canvas.drawText(String.format(Locale.US, "EMI: Rs %.2f | Commitment: Rs %.2f | Net Cash Flow: Rs %.2f", 
                     data.emi, totalExpenses, remaining), 45, y + 18, paint);
 
             paint.setFakeBoldText(true);
@@ -308,10 +308,10 @@ public class LoanCompareActivity extends AppCompatActivity {
                 y = 50;
             }
             canvas.drawText(data.optionLabel + " - " + data.bankName, 40, y, paint);
-            canvas.drawText(String.format(Locale.US, "LKR %.0f", data.principal), 180, y, paint);
+            canvas.drawText(String.format(Locale.US, "Rs %.0f", data.principal), 180, y, paint);
             canvas.drawText(String.format(Locale.US, "%.2f%%", data.interestRate), 280, y, paint);
-            canvas.drawText(String.format(Locale.US, "LKR %.2f", data.emi), 345, y, paint);
-            canvas.drawText(String.format(Locale.US, "LKR %.2f", data.totalPayable), 445, y, paint);
+            canvas.drawText(String.format(Locale.US, "Rs %.2f", data.emi), 345, y, paint);
+            canvas.drawText(String.format(Locale.US, "Rs %.2f", data.totalPayable), 445, y, paint);
             y += 20;
         }
 
@@ -455,7 +455,7 @@ subscriptionsMonthlyTotal = total;
         container.setBackgroundColor(Color.parseColor("#071A33"));
 
         TextView introText = new TextView(this);
-        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: LKR %.2f\nExisting commitments: Loans (LKR %.2f) + Utilities (LKR %.2f) + Subscriptions (LKR %.2f)", 
+        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)", 
                 userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
         introText.setTextColor(Color.parseColor("#BCE0FF"));
         introText.setTextSize(13f);
@@ -491,9 +491,9 @@ subscriptionsMonthlyTotal = total;
 
             TextView detailsText = new TextView(this);
             detailsText.setText(String.format(Locale.US, 
-                    "• Proposed EMI: LKR %.2f/mo\n" +
-                    "• Total Monthly Commitment: LKR %.2f/mo\n" +
-                    "• Net Cash Flow: LKR %.2f/mo", 
+                    "• Proposed EMI: Rs %.2f/mo\n" +
+                    "• Total Monthly Commitment: Rs %.2f/mo\n" +
+                    "• Net Cash Flow: Rs %.2f/mo", 
                     data.emi, totalExpenses, remaining));
             detailsText.setTextColor(Color.parseColor("#D8E4FF"));
             detailsText.setTextSize(13f);
@@ -652,12 +652,12 @@ subscriptionsMonthlyTotal = total;
                 }
 
                 double total = emi * n;
-                txtRes.setText(String.format(Locale.US, "EMI: LKR %.2f | Total: LKR %.2f", emi, total));
+                txtRes.setText(String.format(Locale.US, "EMI: Rs %.2f | Total: Rs %.2f", emi, total));
             } else {
-                txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
+                txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
             }
         } catch (Exception e) {
-            txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
+            txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
         }
     }
 }

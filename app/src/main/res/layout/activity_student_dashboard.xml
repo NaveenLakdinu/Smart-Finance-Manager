@@ -52,7 +52,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:gravity="center"
-                            android:text="AR"
+                            android:text=""
                             android:textColor="#FFFFFF"
                             android:textSize="18sp"
                             android:textStyle="bold" />
@@ -89,7 +89,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="Student"
+                            android:text=""
                             android:textColor="#10B981"
                             android:textSize="12sp"
                             android:textStyle="bold" />
@@ -189,7 +189,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="LKR 48,250.00"
+                        android:text="Rs 0.00"
                         android:textColor="#FFFFFF"
                         android:textSize="28sp"
                         android:textStyle="bold"
@@ -206,7 +206,7 @@
                         android:paddingTop="4dp"
                         android:paddingEnd="8dp"
                         android:paddingBottom="4dp"
-                        android:text="↗ +1.8%"
+                        android:text=""
                         android:textColor="#10B981"
                         android:textSize="12sp"
                         android:textStyle="bold"
@@ -274,7 +274,7 @@
                                         android:id="@+id/txtAchievementPts"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:text="1,240 pts"
+                                        android:text="0 pts"
                                         android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />
@@ -333,7 +333,7 @@
                                         android:id="@+id/txtBudgetLeftValue"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        tools:text="LKR 8,000"
+                                        tools:text="Rs 8,000"
                                         android:textColor="#FFFFFF"
                                         android:textSize="13sp"
                                         android:textStyle="bold" />
@@ -344,6 +344,82 @@
                     </LinearLayout>
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Savings Card -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSavingsWidget"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardBackgroundColor="@color/glass_card_bg"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/glass_card_border"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="16dp"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_function_icon_green"
+                        android:gravity="center"
+                        android:text="💰"
+                        android:textSize="20sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="14dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="CURRENT SAVINGS"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="10sp"
+                            android:letterSpacing="0.1"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/txtCurrentSavingsValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="Rs 0.00"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/btnUpdateSavings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_green"
+                        android:paddingStart="12dp"
+                        android:paddingEnd="12dp"
+                        android:paddingTop="6dp"
+                        android:paddingBottom="6dp"
+                        android:text="UPDATE"
+                        android:textColor="@color/pill_positive_text"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
 
             </com.google.android.material.card.MaterialCardView>
 

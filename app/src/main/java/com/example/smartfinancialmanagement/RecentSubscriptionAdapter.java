@@ -66,7 +66,7 @@ public class RecentSubscriptionAdapter extends RecyclerView.Adapter<RecentSubscr
         holder.txtStatus.setText(status);
 
         if (holder.txtAmount != null) {
-            holder.txtAmount.setText(String.format("LKR %,.2f", subscription.getAmount()));
+            holder.txtAmount.setText(String.format("Rs %,.2f", subscription.getAmount()));
         }
 
         setLogo(holder.txtLogo, logoType, name);

@@ -81,7 +81,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:text="Due on: June 25, 2026"
+                    android:text=""
                     android:textColor="@color/qa_purple_icon"
                     android:textSize="13sp"
                     android:textStyle="bold" />
@@ -292,14 +292,14 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="May 2026 • Paid"
+                            android:text=""
                             android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="LKR 4,200"
+                        android:text="Rs 0.00"
                         android:textColor="@color/text_on_dark_primary"
                         android:textStyle="bold" />
                 </LinearLayout>

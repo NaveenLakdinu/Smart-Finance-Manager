@@ -207,4 +207,19 @@
     <color name="sp_stat_chip_bg">#F7F5EE</color>
     <color name="sp_ink_button_dark">#2B4B8C</color>
     <color name="sp_streak_bg_mid">#1C3C70</color>
+
+    <!-- Expense Claims - Missing Colors -->
+    <color name="bg_dashboard">#0A1628</color>
+    <color name="pill_purple_bg">#251840</color>
+    <color name="pill_purple_border">#3D2660</color>
+    <color name="pill_orange_bg">#2A1C08</color>
+    <color name="pill_orange_text">#FCD34D</color>
+    <color name="pill_red_bg">#2D0F1A</color>
+    <color name="pill_red_text">#FB7185</color>
+    <color name="pill_blue_bg">#162D4A</color>
+    <color name="pill_blue_text">#38BDF8</color>
+
+    <!-- Task Screen Colors -->
+    <color name="qa_yellow">#FACC15</color>
+
 </resources>

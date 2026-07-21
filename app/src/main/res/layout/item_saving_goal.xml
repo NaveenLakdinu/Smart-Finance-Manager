@@ -74,7 +74,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="LKR 0.00"
+                android:text="Rs 0.00"
                 android:textColor="@color/goal_text_mute"
                 android:textSize="13sp"/>
 
@@ -89,7 +89,7 @@
                 android:id="@+id/tvCurrent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="LKR 0.00"
+                android:text="Rs 0.00"
                 android:textColor="@color/goal_mint"
                 android:textSize="13sp"
                 android:textStyle="bold"/>

@@ -70,7 +70,7 @@ public class SubscriptionAlarmReceiver extends BroadcastReceiver {
         int daysUntil = (int) ((cal.getTimeInMillis() - System.currentTimeMillis()) / (1000 * 60 * 60 * 24));
 
         if (daysUntil == 1) {
-            String msg = "Your " + subName + " payment of LKR " + String.format("%.0f", amount) + " is due tomorrow";
+            String msg = "Your " + subName + " payment of Rs " + String.format("%.0f", amount) + " is due tomorrow";
             Subscription sub = new Subscription(subName, "", "Active", "", amount, paymentDay, "Monthly", 0);
             SubscriptionNotificationScheduler.scheduleAll(context, userId, docId, sub);
         }

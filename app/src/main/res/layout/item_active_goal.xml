@@ -52,7 +52,7 @@
                     android:id="@+id/txtActiveGoalTarget"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Target: LKR 1.5M"
+                    android:text="Target: Rs 1.5M"
                     android:textColor="@color/text_on_dark_secondary"
                     android:textSize="12sp" />
             </LinearLayout>
