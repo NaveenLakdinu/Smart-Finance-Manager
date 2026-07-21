@@ -31,24 +31,48 @@ public class BudgetViewModel extends ViewModel {
 
         isLoading.setValue(true);
 
-        try {
-            BudgetModel model = calculator.calculateBudget(allowance, scholarship, partTime, duration);
-            
-            repository.saveBudgetPlan(model).addOnCompleteListener(task -> {
+        repository.getUserSavings().addOnCompleteListener(fetchTask -> {
+            if (!fetchTask.isSuccessful()) {
                 isLoading.setValue(false);
-                if (task.isSuccessful()) {
-                    DocumentReference docRef = task.getResult();
-                    if (docRef != null) {
-                        model.setDocumentId(docRef.getId());
+                errorMessage.setValue(fetchTask.getException() != null ? fetchTask.getException().getMessage() : "Failed to fetch savings");
+                return;
+            }
+
+            double totalSavings = 0;
+            double targetGoal = 0;
+            double currentSaving = 0;
+
+            for (com.google.firebase.firestore.QueryDocumentSnapshot doc : fetchTask.getResult()) {
+                SavingModel saving = doc.toObject(SavingModel.class);
+                totalSavings += saving.getCurrentAmount();
+                targetGoal += saving.getTargetAmount();
+                currentSaving += saving.getCurrentAmount();
+            }
+
+            // Defaults for currently untracked fields
+            double actualSpending = 0;
+            double entertainmentSpending = 0;
+
+            try {
+                BudgetModel model = calculator.calculateBudget(allowance, scholarship, partTime, duration,
+                        totalSavings, actualSpending, targetGoal, currentSaving, entertainmentSpending);
+                
+                repository.saveBudgetPlan(model).addOnCompleteListener(task -> {
+                    isLoading.setValue(false);
+                    if (task.isSuccessful()) {
+                        DocumentReference docRef = task.getResult();
+                        if (docRef != null) {
+                            model.setDocumentId(docRef.getId());
+                        }
+                        calculationSuccess.setValue(model);
+                    } else {
+                        errorMessage.setValue(task.getException() != null ? task.getException().getMessage() : "Failed to save budget plan");
                     }
-                    calculationSuccess.setValue(model);
-                } else {
-                    errorMessage.setValue(task.getException() != null ? task.getException().getMessage() : "Failed to save budget plan");
-                }
-            });
-        } catch (Exception e) {
-            isLoading.setValue(false);
-            errorMessage.setValue("Error calculating budget: " + e.getMessage());
-        }
+                });
+            } catch (Exception e) {
+                isLoading.setValue(false);
+                errorMessage.setValue("Error calculating budget: " + e.getMessage());
+            }
+        });
     }
 }
