@@ -180,6 +180,9 @@
         <activity
             android:name=".ExpenseClaimsActivity"
             android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimListActivity"
+            android:exported="false" />
 
         <activity
             android:name=".InvoiceHubActivity"

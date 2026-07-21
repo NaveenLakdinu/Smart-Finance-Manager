@@ -1,7 +1,11 @@
 package com.example.smartfinancialmanagement;
 
+import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -15,6 +19,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Locale;
 
 public class ExpenseClaimsActivity extends AppCompatActivity {
@@ -85,7 +92,7 @@ public class ExpenseClaimsActivity extends AppCompatActivity {
                     }
                 })
                 .addOnFailureListener(e -> {
-                    // Silently handle - UI shows default value
+                    // Silently handle
                 });
     }
 
@@ -98,36 +105,91 @@ public class ExpenseClaimsActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     int total = 0, pending = 0, approved = 0, rejected = 0;
-                    double totalAmount = 0;
+                    double totalAmount = 0, pendingAmount = 0, approvedAmount = 0;
+                    StringBuilder claimDetails = new StringBuilder();
 
                     for (QueryDocumentSnapshot doc : querySnapshot) {
                         total++;
+                        String title = doc.getString("title");
+                        String category = doc.getString("category");
                         String status = doc.getString("status");
-                        Long amount = doc.getLong("amount");
-                        double amt = amount != null ? amount.doubleValue() : 0;
+                        String date = doc.getString("expenseDate");
+                        Long amountLong = doc.getLong("amount");
+                        double amt = amountLong != null ? amountLong.doubleValue() : 0;
                         totalAmount += amt;
 
-                        if ("PENDING".equalsIgnoreCase(status)) pending++;
-                        else if ("APPROVED".equalsIgnoreCase(status)) approved++;
-                        else if ("REJECTED".equalsIgnoreCase(status)) rejected++;
+                        if ("PENDING".equalsIgnoreCase(status)) {
+                            pending++;
+                            pendingAmount += amt;
+                        } else if ("APPROVED".equalsIgnoreCase(status)) {
+                            approved++;
+                            approvedAmount += amt;
+                        } else if ("REJECTED".equalsIgnoreCase(status)) {
+                            rejected++;
+                        }
+
+                        claimDetails.append(String.format(Locale.US,
+                                "%s | %s | %s | %s | LKR %,.2f\n",
+                                title != null ? title : "N/A",
+                                category != null ? category : "N/A",
+                                date != null ? date : "N/A",
+                                status != null ? status : "N/A",
+                                amt));
                     }
 
                     String report = String.format(Locale.US,
-                            "Expense Claims Report\n\n" +
+                            "EXPENSE CLAIMS REPORT\n" +
+                            "====================\n\n" +
                             "Total Claims: %d\n" +
-                            "Pending: %d\n" +
-                            "Approved: %d\n" +
+                            "Pending: %d (LKR %,.2f)\n" +
+                            "Approved: %d (LKR %,.2f)\n" +
                             "Rejected: %d\n\n" +
-                            "Total Amount: LKR %,.2f",
-                            total, pending, approved, rejected, totalAmount);
+                            "Total Amount: LKR %,.2f\n\n" +
+                            "---------------------\n" +
+                            "CLAIM DETAILS:\n" +
+                            "---------------------\n" +
+                            "%s",
+                            total, pending, pendingAmount, approved, approvedAmount, rejected, totalAmount,
+                            claimDetails.length() > 0 ? claimDetails.toString() : "No claims found\n");
 
                     new AlertDialog.Builder(this)
                             .setTitle("Expense Report")
                             .setMessage(report)
-                            .setPositiveButton("OK", null)
+                            .setPositiveButton("Download Report", (d, w) -> downloadReport(report))
+                            .setNegativeButton("Close", null)
                             .show();
                 })
                 .addOnFailureListener(e ->
                         Toast.makeText(this, "Failed to generate report", Toast.LENGTH_SHORT).show());
+    }
+
+    private void downloadReport(String reportContent) {
+        try {
+            String fileName = "ExpenseReport_" + System.currentTimeMillis() + ".txt";
+            OutputStream outputStream;
+
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
+                ContentValues values = new ContentValues();
+                values.put(MediaStore.Downloads.DISPLAY_NAME, fileName);
+                values.put(MediaStore.Downloads.MIME_TYPE, "text/plain");
+                values.put(MediaStore.Downloads.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
+
+                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, values);
+                outputStream = getContentResolver().openOutputStream(uri);
+            } else {
+                File downloadsDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+                File file = new File(downloadsDir, fileName);
+                outputStream = new FileOutputStream(file);
+            }
+
+            if (outputStream != null) {
+                outputStream.write(reportContent.getBytes());
+                outputStream.flush();
+                outputStream.close();
+                Toast.makeText(this, "Report downloaded to Downloads folder", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Download failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 }
