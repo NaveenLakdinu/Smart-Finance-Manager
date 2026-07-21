@@ -30,6 +30,14 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import android.graphics.Canvas;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.renderer.XAxisRenderer;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Transformer;
+import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.itextpdf.text.Document;
@@ -41,6 +49,7 @@ import com.itextpdf.text.Phrase;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
@@ -108,28 +117,44 @@ public class AnalyticsActivity extends AppCompatActivity {
         filterOptionsList.clear();
         filterOptionsList.add("All Businesses");
 
-        db.collection("businesses").get().addOnSuccessListener(snapshots -> {
-            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                String bName = doc.getString("businessName");
-                if (bName != null) {
-                    filterOptionsList.add(bName);
-                }
-            }
+        // 💡 SECURED: Get the current logged-in user's unique identifier
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser() != null ?
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : "";
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
-            spinnerBusinessFilter.setAdapter(adapter);
+        if (currentUserId.isEmpty()) {
+            Toast.makeText(this, "User session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectedBusinessFilter = filterOptionsList.get(position);
-                    fetchMonthlyAnalytics();
-                }
+        // 💡 SECURED: Constrain the data lookup on the server side using the userId field
+        db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        String bName = doc.getString("businessName");
+                        if (bName != null) {
+                            filterOptionsList.add(bName);
+                        }
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-        });
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
+                    spinnerBusinessFilter.setAdapter(adapter);
+
+                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            selectedBusinessFilter = filterOptionsList.get(position);
+                            fetchMonthlyAnalytics();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to load business filters.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void fetchMonthlyAnalytics() {
@@ -218,7 +243,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         barChartAnalytic.setData(barData);
 
-        final String[] labels = new String[]{"Revenue", "Expenses", "Net Profit"};
+        final String[] labels = new String[]{"Monthly\nRevenue", "Monthly\nExpenses", "Net\nProfit"};
         XAxis xAxis = barChartAnalytic.getXAxis();
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -230,6 +255,13 @@ public class AnalyticsActivity extends AppCompatActivity {
             }
         });
 
+        barChartAnalytic.setXAxisRenderer(new CustomXAxisRenderer(
+                barChartAnalytic.getViewPortHandler(),
+                xAxis,
+                barChartAnalytic.getTransformer(com.github.mikephil.charting.components.YAxis.AxisDependency.LEFT)
+        ));
+
+        barChartAnalytic.setExtraBottomOffset(15f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.parseColor("#7A9CC0"));
         xAxis.setDrawGridLines(false);
@@ -383,4 +415,26 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
         table.addCell(cell);
     }
-} // 💡 Class එක වසා දමන අවසාන වරහන
+
+    public class CustomXAxisRenderer extends XAxisRenderer {
+
+        public CustomXAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
+            super(viewPortHandler, xAxis, trans);
+        }
+
+        @Override
+        protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
+            // 💡 Check if the label contains a custom line split instruction
+            if (formattedLabel != null && formattedLabel.contains("\n")) {
+                String[] lines = formattedLabel.split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    float vOffset = i * mAxisLabelPaint.getTextSize(); // Move down for each subsequent text line
+                    Utils.drawXAxisValue(c, lines[i], x, y + vOffset, mAxisLabelPaint, anchor, angleDegrees);
+                }
+            } else {
+                super.drawLabel(c, formattedLabel, x, y, anchor, angleDegrees);
+            }
+        }
+    }
+
+}
