@@ -23,6 +23,7 @@
 - **Min SDK**: 24, **Target SDK**: 36, **Compile SDK**: 37
 - **Java version**: 11 (source + target compatibility)
 - **Entry point**: `MainActivity` (landing/welcome screen) → `LoginFormActivity` → role-based dashboards
+- **ProGuard/R8**: Enabled (`isMinifyEnabled = true`) – APK is obfuscated
 
 ---
 
@@ -86,6 +87,9 @@ All cards use `MaterialCardView` with:
   - `loans` → each doc: `monthlyEmi`, `principalAmount`, etc.
   - `utilities` → each doc: `amount` (double)
   - `subscriptions` → each doc: `name`, `amount` (double), `paymentDay` (int 1-31), `billingCycle` ("Monthly"/"Yearly"), `renewDate` (String "dd/MM/yyyy"), `status`, `logoType`, `createdAt` (long)
+  - `tasks` → each doc: `title`, `description`, `priority`, `status`, `dueDate`, `progress`, `createdAt`
+  - `expense_claims` → each doc: `title`, `category`, `amount`, `expenseDate`, `description`, `status`, `workerEmail`, `createdAt`
+  - `payslips` → each doc: `monthYear`, `basicSalary`, `transportAllowance`, `performanceBonus`, `epfDeduction`, `incomeTax`, `netSalary`, `daysWorked`, `overtimeHours`, `createdAt`
 
 > When adding new data to Firestore, follow the exact field names above; any typo will result in missing UI values.
 
@@ -108,6 +112,38 @@ All cards use `MaterialCardView` with:
   }
   ```
 - **LoginFormActivity** saves FCM token to Firestore on login and requests `POST_NOTIFICATIONS` permission on Android 13+.
+
+---
+
+## Worker Portal Features
+
+### My Tasks (`WorkerTasksActivity`)
+- Full Firestore CRUD at `users/{uid}/tasks`
+- Add task dialog with title, description, priority, due date
+- Search and filter by priority
+- RecyclerView with `TaskAdapter`
+
+### Expense Claims System
+- **Hub**: `ExpenseClaimsActivity` — summary cards + 3 action buttons
+- **New Claim**: `ExpenseClaimAddActivity` — form to submit claims
+- **History**: `ExpenseClaimHistoryActivity` — list with filters (All/Pending/Approved/Rejected)
+- **Report**: `ExpenseClaimReportActivity` — pie chart, stats, claims list, download
+- All activities registered in `AndroidManifest.xml`
+
+### Payslips (`WorkerPayslipActivity`)
+- Generate payslips from worker profile salary
+- Auto-calculate EPF (8%), income tax, allowances
+- Month selector, YTD summary, PDF download
+
+---
+
+## Expense Claims Navigation Flow
+```
+Worker Dashboard → Expense Claims Hub
+    ├── New Claim → ExpenseClaimAddActivity (form)
+    ├── History → ExpenseClaimHistoryActivity (dashboard)
+    └── Report → ExpenseClaimReportActivity (chart + download)
+```
 
 ---
 
@@ -150,21 +186,22 @@ Helper: `toMap()` for Firestore writes
 
 ### Notification Schedule Example
 Subscription with `paymentDay = 25`, today is June 23:
-- June 23: "Netflix Premium payment of LKR 1500 is due in 2 days"
-- June 24: "Netflix Premium payment of LKR 1500 is due tomorrow"
-- June 25: "Netflix Premium payment of LKR 1500 is due today!" → auto-advance to July 25
+- June 23: "Netflix Premium payment of Rs 1,500 is due in 2 days"
+- June 24: "Netflix Premium payment of Rs 1,500 is due tomorrow"
+- June 25: "Netflix Premium payment of Rs 1,500 is due today!" → auto-advance to July 25
 
 ---
 
 ## Common Gotchas
-- **Hard‑coded defaults**: If a user's profile lacks a field (e.g., `monthlySalary`), the UI shows `LKR 0.00`.
-- **Locale formatting**: All currency strings use `String.format(Locale.US, "LKR %.2f", value)`. Non-numeric strings cause `NumberFormatException`.
+- **Hard‑coded defaults**: If a user's profile lacks a field (e.g., `monthlySalary`), the UI shows `Rs 0.00`.
+- **Locale formatting**: All currency strings use `String.format(Locale.US, "Rs %,.2f", value)`. Non-numeric strings cause `NumberFormatException`.
 - **Firebase initialization**: Relies on `google-services.json` (already present). Do not modify the package name.
 - **Compose screens**: Only a few screens use Jetpack Compose (`SavingsPassportActivity`, `StudentSavingActivity`, `StudentEventActivity`, budget planner). Most UI is XML layouts.
-- **No ProGuard/R8**: Release builds have `isMinifyEnabled = false`.
 - **Layout XML hardcoded text**: Never leave hardcoded text in layout XML TextViews — always initialize programmatically or leave empty. Hardcoded values flash before Firestore data loads.
 - **AndroidManifest registration**: Every new Activity, Service, and Receiver must be registered in `AndroidManifest.xml`.
 - **Gradle sync**: After adding new dependencies to `libs.versions.toml`, Android Studio may show "Cannot resolve symbol" errors — run `./gradlew clean assembleDebug` and sync Gradle.
+- **Firestore orderBy crashes**: If any document lacks the `orderBy` field, the query will fail. Use `.get()` without `orderBy` or ensure all documents have the field.
+- **AlertDialog theme**: Use `new AlertDialog.Builder(this)` (not `R.style.Theme_SmartFinance_Dialog`) for consistent theming across activities.
 
 ---
 
