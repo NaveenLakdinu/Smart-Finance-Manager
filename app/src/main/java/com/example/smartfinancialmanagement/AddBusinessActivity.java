@@ -22,7 +22,6 @@ public class AddBusinessActivity extends AppCompatActivity {
     private ImageView btnBack;
     private FirebaseFirestore db;
 
-    // 💡 Update Mode එක හඳුනාගැනීම සඳහා Variables දෙකක් එකතු කරමු
     private boolean isUpdateMode = false;
     private String updateDocId = "";
 
@@ -42,22 +41,18 @@ public class AddBusinessActivity extends AppCompatActivity {
 
         btnBack.setOnClickListener(v -> finish());
 
-        // 💡 1. ManageBusinessesActivity එකෙන් දත්ත එවලා තියෙනවද කියා පරීක්ෂා කිරීම (Intent Check)
         if (getIntent() != null && getIntent().getBooleanExtra("IS_UPDATE_MODE", false)) {
             isUpdateMode = true;
             updateDocId = getIntent().getStringExtra("BIZ_ID");
 
-            // ලැබුණු පැරණි දත්ත Fields වලට Auto-Fill කිරීම
             etBusinessName.setText(getIntent().getStringExtra("BIZ_NAME"));
             etBusinessCategory.setText(getIntent().getStringExtra("BIZ_CATEGORY"));
             etBusinessPhone.setText(getIntent().getStringExtra("BIZ_PHONE"));
             etBusinessEmail.setText(getIntent().getStringExtra("BIZ_EMAIL"));
 
-            // බොත්තමේ Text එක "Update Workspace Entity" ලෙස වෙනස් කිරීම
             btnSaveBusiness.setText("Update Workspace Entity");
         }
 
-        // 💡 2. බොත්තම ක්ලික් කළ විට Insert ද Update ද කියා බුද්ධිමත්ව තීරණය කරයි
         btnSaveBusiness.setOnClickListener(v -> handleBusinessSubmission());
     }
 
@@ -67,7 +62,17 @@ public class AddBusinessActivity extends AppCompatActivity {
         String bizPhone = etBusinessPhone.getText().toString().trim();
         String bizEmail = etBusinessEmail.getText().toString().trim();
 
-        // සරල Validation එකක් (Fields හිස්දැයි බැලීම)
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 💡 Get the UID
+        }
+
+        if (TextUtils.isEmpty(currentUserId)) {
+            Toast.makeText(this, "Authentication error. Please log in again.", Toast.LENGTH_SHORT).show();
+            btnSaveBusiness.setEnabled(true);
+            return;
+        }
+
         if (TextUtils.isEmpty(bizName) || TextUtils.isEmpty(bizCategory) ||
                 TextUtils.isEmpty(bizPhone) || TextUtils.isEmpty(bizEmail)) {
             Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
@@ -77,20 +82,18 @@ public class AddBusinessActivity extends AppCompatActivity {
         btnSaveBusiness.setEnabled(false);
 
         if (isUpdateMode) {
-            // ==========================================
-            // 📝 UPDATE MODE: පවතින ලේඛනය යාවත්කාලීන කිරීම
-            // ==========================================
             Map<String, Object> updateMap = new HashMap<>();
             updateMap.put("businessName", bizName);
             updateMap.put("businessCategory", bizCategory);
             updateMap.put("businessPhone", bizPhone);
             updateMap.put("businessEmail", bizEmail);
+            updateMap.put("userId", currentUserId); // 💡 Keeping the mapping safe
 
             db.collection("businesses").document(updateDocId)
                     .update(updateMap)
                     .addOnSuccessListener(aVoid -> {
                         Toast.makeText(this, "Business Updated Successfully!", Toast.LENGTH_SHORT).show();
-                        finish(); // Dashboard හෝ කලින් පිටුවට යාමට
+                        finish();
                     })
                     .addOnFailureListener(e -> {
                         btnSaveBusiness.setEnabled(true);
@@ -98,15 +101,8 @@ public class AddBusinessActivity extends AppCompatActivity {
                     });
 
         } else {
-            // ==========================================
-            // ➕ INSERT MODE: අලුතින් ව්‍යාපාරයක් එකතු කිරීම (ඔබේ පැරණි කේතය)
-            // ==========================================
-            String currentOwnerEmail = "";
-            if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-                currentOwnerEmail = FirebaseAuth.getInstance().getCurrentUser().getEmail();
-            }
-
-            BusinessModel executionModel = new BusinessModel(bizName, bizCategory, bizPhone, bizEmail, currentOwnerEmail);
+            // 💡 Pass currentUserId to the updated constructor
+            BusinessModel executionModel = new BusinessModel(bizName, bizCategory, bizPhone, bizEmail, currentUserId);
 
             db.collection("businesses")
                     .add(executionModel)

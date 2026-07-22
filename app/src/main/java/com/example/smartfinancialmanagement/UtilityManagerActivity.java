@@ -18,6 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
+import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -54,10 +55,10 @@ public class UtilityManagerActivity extends AppCompatActivity {
 
     // Helper class to associate a BillModel with its dynamically calculated next due date
     private static class CalculatedBill implements Comparable<CalculatedBill> {
-        RegisterBillActivity.BillModel bill;
+        UtilityBill bill;
         Date nextDueDate;
 
-        CalculatedBill(RegisterBillActivity.BillModel bill, Date nextDueDate) {
+        CalculatedBill(UtilityBill bill, Date nextDueDate) {
             this.bill = bill;
             this.nextDueDate = nextDueDate;
         }
@@ -97,15 +98,25 @@ public class UtilityManagerActivity extends AppCompatActivity {
     }
 
     private void fetchDashboardDataFromFirestore() {
-        db.collection("bills")
+        // Get current user ID
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            Log.e(TAG, "No user logged in.");
+            return;
+        }
+
+        db.collection("utilityBill")
+                .whereEqualTo("userId", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     List<CalculatedBill> calculatedBills = new ArrayList<>();
 
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
-                        RegisterBillActivity.BillModel bill = doc.toObject(RegisterBillActivity.BillModel.class);
-                        if (bill != null && bill.getDueDate() != null) {
-                            Date nextDue = calculateNextDueDate(bill.getDueDate());
+                        UtilityBill bill = doc.toObject(UtilityBill.class);
+                        if (bill != null && bill.getPaymentDate() != null) {
+                            Date nextDue = calculateNextDueDate(bill.getPaymentDate());
                             if (nextDue != null) {
                                 calculatedBills.add(new CalculatedBill(bill, nextDue));
                             }
@@ -118,10 +129,10 @@ public class UtilityManagerActivity extends AppCompatActivity {
 
                         // 1. POPULATE HERO CARD WITH THE TRUE CLOSEST UPCOMING BILL
                         CalculatedBill closestCalculated = calculatedBills.get(0);
-                        RegisterBillActivity.BillModel closestBill = closestCalculated.bill;
+                        UtilityBill closestBill = closestCalculated.bill;
 
                         if (txtHeroBillName != null) {
-                            txtHeroBillName.setText(closestBill.getName());
+                            txtHeroBillName.setText(closestBill.getBillName()); // FIX: Use getBillName()
                         }
 
                         if (txtHeroBillDueDate != null) {
@@ -141,7 +152,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
 
                         for (int i = 0; i < itemsToShow; i++) {
                             CalculatedBill item = calculatedBills.get(i);
-                            RegisterBillActivity.BillModel currentBill = item.bill;
+                            UtilityBill currentBill = item.bill;
 
                             View rowCard = inflater.inflate(R.layout.item_bill, layoutRecentBills, false);
 
@@ -150,7 +161,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
                             TextView txtDate = rowCard.findViewById(R.id.txtBillItemDate);
                             ImageView imgIcon = rowCard.findViewById(R.id.imgCategoryIcon);
 
-                            if (txtName != null) txtName.setText(currentBill.getName());
+                            if (txtName != null) txtName.setText(currentBill.getBillName());
                             if (txtAccNo != null) txtAccNo.setText("Acc: " + currentBill.getAccountNo());
 
                             if (txtDate != null) {
@@ -174,7 +185,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
 
                             // FIX: Make recent bill layout row clickable to open details/view list
                             rowCard.setOnClickListener(v -> {
-                                Intent intent = new Intent(UtilityManagerActivity.this, UtilityBillActivity.class);
+                                Intent intent = new Intent(UtilityManagerActivity.this, UpdateBillActivity.class);
                                 startActivity(intent);
                             });
 
@@ -239,7 +250,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
     /**
      * Schedules a recurring monthly notification 1 day before the computed next due date.
      */
-    private void scheduleNotification(RegisterBillActivity.BillModel bill, Date nextDueDate) {
+    private void scheduleNotification(UtilityBill bill, Date nextDueDate) {
         Calendar today = Calendar.getInstance();
         Calendar reminderCal = Calendar.getInstance();
         reminderCal.setTime(nextDueDate);
@@ -256,9 +267,9 @@ public class UtilityManagerActivity extends AppCompatActivity {
         }
 
         Intent intent = new Intent(this, NotificationReceiver.class);
-        intent.putExtra("BILL_NAME", bill.getName());
+        intent.putExtra("BILL_NAME", bill.getBillName());
 
-        int pendingIntentId = bill.getName().hashCode();
+        int pendingIntentId = bill.getBillName().hashCode();
 
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 this,

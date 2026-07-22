@@ -76,7 +76,7 @@
                     android:letterSpacing="0.15" />
 
                 <TextView
-                    android:id="@+id/txtTotalExpenses"
+                    android:id="@+id/txtTotalAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"

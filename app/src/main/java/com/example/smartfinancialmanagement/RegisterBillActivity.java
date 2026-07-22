@@ -9,10 +9,10 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
-
-// Firebase Firestore library to communicate with your cloud database
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -24,9 +24,10 @@ public class RegisterBillActivity extends AppCompatActivity {
 
     // UI elements declaration
     private ImageView backButton;
-    private EditText editBillName, editAccountNo, editPaymentDate; // Changed editAmount to editAccountNo
+    private EditText editBillName, editAccountNo, editPaymentDate;
     private Spinner spinnerCategory;
     private Button btnRegisterSubmit;
+    private TextView txtTitle;
 
     // Database instance variable
     private FirebaseFirestore db;
@@ -50,10 +51,15 @@ public class RegisterBillActivity extends AppCompatActivity {
     private void initViews() {
         backButton = findViewById(R.id.backButton);
         editBillName = findViewById(R.id.editBillName);
-        editAccountNo = findViewById(R.id.editAccountNo); // Linked to the new XML ID
+        editAccountNo = findViewById(R.id.editAccountNo);
         editPaymentDate = findViewById(R.id.editPaymentDate);
         spinnerCategory = findViewById(R.id.spinnerCategory);
         btnRegisterSubmit = findViewById(R.id.btnRegisterSubmit);
+        txtTitle = findViewById(R.id.txtTitle);
+
+        if (txtTitle != null) {
+            txtTitle.setText("Register Bill");
+        }
     }
 
     // Populates the drop-down menu with your defined bill categories
@@ -85,7 +91,6 @@ public class RegisterBillActivity extends AppCompatActivity {
             DatePickerDialog datePickerDialog = new DatePickerDialog(
                     RegisterBillActivity.this, R.style.Theme_SmartFinance_DatePicker,
                     (view, selectedYear, selectedMonth, selectedDay) -> {
-                        // Formats day and month with a leading zero if below 10 (e.g., 05/09/2026)
                         String formattedDate = String.format(Locale.getDefault(), "%02d/%02d/%d", selectedDay, (selectedMonth + 1), selectedYear);
                         editPaymentDate.setText(formattedDate);
                     }, year, month, day);
@@ -95,10 +100,8 @@ public class RegisterBillActivity extends AppCompatActivity {
 
     // Listens for clicks on actionable elements (Back arrow & Save button)
     private void setupClickListeners() {
-        // Closes this screen and returns to the previous dashboard activity
         backButton.setOnClickListener(v -> finish());
 
-        // Submits the data to the cloud only if user inputs clear standard error validation
         btnRegisterSubmit.setOnClickListener(v -> {
             if (validateForm()) {
                 saveBillToFirebase();
@@ -110,26 +113,42 @@ public class RegisterBillActivity extends AppCompatActivity {
     private void saveBillToFirebase() {
         // Extract plain values from UI fields
         String name = editBillName.getText().toString().trim();
-        String accountNo = editAccountNo.getText().toString().trim(); // Stored as String to protect leading zeros
+        String accountNo = editAccountNo.getText().toString().trim();
         String category = spinnerCategory.getSelectedItem().toString();
         String dueDateStr = editPaymentDate.getText().toString().trim();
 
-        // Create an instance of our nested BillModel, forcing the status to start as "Pending"
-        BillModel newBill = new BillModel(name, accountNo, category, dueDateStr);
+        // Get the currently logged-in user's unique ID
+        String currentUserId = "";
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        } else {
+            Toast.makeText(this, "Error: User not logged in!", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // FIX: Matches the 8-argument constructor in UtilityBill exactly
+        UtilityBill newBill = new UtilityBill(
+                name,
+                accountNo,
+                0.0,                      // Default amount until paid/updated
+                category,
+                dueDateStr,
+                "Pending",                // Initial status
+                System.currentTimeMillis(),// Creation timestamp
+                currentUserId
+        );
 
         // Temporarily freeze button to prevent double-submit network spamming
         btnRegisterSubmit.setEnabled(false);
 
-        // Uploads the mapped object to a collection named "bills"
-        db.collection("bills")
+        // Uploads the mapped object to your collection
+        db.collection("utilityBill")
                 .add(newBill)
                 .addOnSuccessListener(documentReference -> {
-                    // Triggers if write is successful
                     Toast.makeText(RegisterBillActivity.this, "Bill Saved Successfully!", Toast.LENGTH_SHORT).show();
                     finish(); // Return to previous dashboard screen
                 })
                 .addOnFailureListener(e -> {
-                    // Triggers if there's a connection/permission failure
                     btnRegisterSubmit.setEnabled(true); // Unfreeze button so the user can retry
                     Toast.makeText(RegisterBillActivity.this, "Failed to save: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 });
@@ -145,7 +164,6 @@ public class RegisterBillActivity extends AppCompatActivity {
             editAccountNo.setError("Enter account number");
             return false;
         }
-        // Validates that user didn't leave the dropdown selection on "Select Category" (position 0)
         if (spinnerCategory.getSelectedItemPosition() == 0) {
             Toast.makeText(this, "Select a category", Toast.LENGTH_SHORT).show();
             return false;
@@ -154,44 +172,6 @@ public class RegisterBillActivity extends AppCompatActivity {
             editPaymentDate.setError("Select date");
             return false;
         }
-        return true; // Form is clean and safe to upload
-    }
-
-    // =========================================================================
-    // NESTED STATIC MODEL CLASS FOR FIREBASE
-    // This replaces a standalone Bill.java file completely.
-    // =========================================================================
-    public static class BillModel {
-        private String name;
-        private String accountNo; // Changed from 'double amount' to 'String accountNo'
-        private String category;
-        private String dueDate;
-
-
-        // Mandated empty constructor. Firebase requires this to map incoming structural data values.
-        public BillModel() {}
-
-        // Initialization constructor used when compiling the document model before uploading
-        public BillModel(String name, String accountNo, String category, String dueDate) {
-            this.name = name;
-            this.accountNo = accountNo;
-            this.category = category;
-            this.dueDate = dueDate;
-
-        }
-
-        // Getters & Setters are required by Firestore reflection to parse object fields into document properties
-        public String getName() { return name; }
-        public void setName(String name) { this.name = name; }
-
-        public String getAccountNo() { return accountNo; }
-        public void setAccountNo(String accountNo) { this.accountNo = accountNo; }
-
-        public String getCategory() { return category; }
-        public void setCategory(String category) { this.category = category; }
-
-        public String getDueDate() { return dueDate; }
-        public void setDueDate(String dueDate) { this.dueDate = dueDate; }
-
+        return true;
     }
 }

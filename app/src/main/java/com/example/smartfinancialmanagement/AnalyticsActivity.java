@@ -1,4 +1,3 @@
-
 package com.example.smartfinancialmanagement;
 
 import android.content.ContentValues;
@@ -23,16 +22,24 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.renderer.XAxisRenderer;
+import com.github.mikephil.charting.utils.MPPointF;
+import com.github.mikephil.charting.utils.Transformer;
+import com.github.mikephil.charting.utils.Utils;
+import com.github.mikephil.charting.utils.ViewPortHandler;
+
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
 import com.itextpdf.text.Document;
 import com.itextpdf.text.Element;
 import com.itextpdf.text.Font;
@@ -57,11 +64,15 @@ public class AnalyticsActivity extends AppCompatActivity {
     private View btnGoToRevenue, btnGoToExpense;
     private Button btnGeneratePDF;
     private BarChart barChartAnalytic;
-    private Spinner spinnerBusinessFilter;
+    private Spinner spinnerBusinessFilter, spinnerMonthFilter;
 
     private FirebaseFirestore db;
     private List<String> filterOptionsList = new ArrayList<>();
-    private String selectedBusinessFilter = "All Businesses"; // Default Option
+    private List<String> monthOptionsList = new ArrayList<>();
+    private List<String> monthTokensList = new ArrayList<>(); // Format: "yyyy-MM"
+
+    private String selectedBusinessFilter = "All Businesses";
+    private String selectedMonthToken = "";                   // Selected "yyyy-MM" format string
 
     private double currentMonthRevenue = 0.0;
     private double currentMonthExpense = 0.0;
@@ -69,6 +80,7 @@ public class AnalyticsActivity extends AppCompatActivity {
     private double profitPercentage = 0.0;
 
     private SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+    private SimpleDateFormat monthDisplayFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +89,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         initializeViews();
+        setupMonthSpinner();
         setupFilterSpinner();
     }
 
@@ -88,6 +101,7 @@ public class AnalyticsActivity extends AppCompatActivity {
         btnGeneratePDF = findViewById(R.id.btnGeneratePDF);
         barChartAnalytic = findViewById(R.id.barChartAnalytic);
         spinnerBusinessFilter = findViewById(R.id.spinnerBusinessFilter);
+        spinnerMonthFilter = findViewById(R.id.spinnerMonthFilter);
         btnGoToRevenue = findViewById(R.id.layoutRevenueCard);
         btnGoToExpense = findViewById(R.id.layoutExpenseCard);
 
@@ -105,70 +119,132 @@ public class AnalyticsActivity extends AppCompatActivity {
         });
     }
 
+    // 💡 NEW: POPULATE DYNAMIC MONTH OPTIONS (Current Month + Past 12 Months)
+    private void setupMonthSpinner() {
+        monthOptionsList.clear();
+        monthTokensList.clear();
+
+        Calendar cal = Calendar.getInstance();
+
+        // Add current month & previous 12 months dynamically
+        for (int i = 0; i < 12; i++) {
+            if (i == 0) {
+                monthOptionsList.add("Current Month (" + monthDisplayFormat.format(cal.getTime()) + ")");
+            } else if (i == 1) {
+                monthOptionsList.add("Last Month (" + monthDisplayFormat.format(cal.getTime()) + ")");
+            } else {
+                monthOptionsList.add(monthDisplayFormat.format(cal.getTime()));
+            }
+
+            monthTokensList.add(yearMonthFormat.format(cal.getTime()));
+            cal.add(Calendar.MONTH, -1); // Step back 1 month
+        }
+
+        selectedMonthToken = monthTokensList.get(0); // Default to current month
+
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthOptionsList);
+        spinnerMonthFilter.setAdapter(monthAdapter);
+
+        spinnerMonthFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                selectedMonthToken = monthTokensList.get(position);
+                fetchMonthlyAnalytics();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+    }
+
     private void setupFilterSpinner() {
         filterOptionsList.clear();
         filterOptionsList.add("All Businesses");
 
-        db.collection("businesses").get().addOnSuccessListener(snapshots -> {
-            for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                String bName = doc.getString("businessName");
-                if (bName != null) {
-                    filterOptionsList.add(bName);
-                }
-            }
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser() != null ?
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : "";
 
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
-            spinnerBusinessFilter.setAdapter(adapter);
+        if (currentUserId.isEmpty()) {
+            Toast.makeText(this, "User session expired. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                    selectedBusinessFilter = filterOptionsList.get(position);
-                    fetchMonthlyAnalytics();
-                }
+        db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(snapshots -> {
+                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
+                        String bName = doc.getString("businessName");
+                        if (bName != null) {
+                            filterOptionsList.add(bName);
+                        }
+                    }
 
-                @Override
-                public void onNothingSelected(AdapterView<?> parent) {}
-            });
-        });
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, filterOptionsList);
+                    spinnerBusinessFilter.setAdapter(adapter);
+
+                    spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            selectedBusinessFilter = filterOptionsList.get(position);
+                            fetchMonthlyAnalytics();
+                        }
+
+                        @Override
+                        public void onNothingSelected(AdapterView<?> parent) {}
+                    });
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to load business filters.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void fetchMonthlyAnalytics() {
-        String currentMonthToken = yearMonthFormat.format(Calendar.getInstance().getTime());
+        String currentUserId = FirebaseAuth.getInstance().getCurrentUser() != null ?
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : "";
 
-        // 1. Get Revenues
-        db.collection("revenues").get().addOnSuccessListener(revSnapshots -> {
-            currentMonthRevenue = 0.0;
-            for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
-                String dateStr = doc.getString("date");
-                String bName = doc.getString("selectedBusiness");
-                Double amount = doc.getDouble("amount");
+        if (currentUserId.isEmpty()) return;
 
-                if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                    if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                        currentMonthRevenue += amount;
-                    }
-                }
-            }
+        // 1. Fetch Revenues filtered by userId and selected Month Token ("yyyy-MM")
+        db.collection("revenues")
+                .whereEqualTo("userId", currentUserId)
+                .get()
+                .addOnSuccessListener(revSnapshots -> {
+                    currentMonthRevenue = 0.0;
+                    for (DocumentSnapshot doc : revSnapshots.getDocuments()) {
+                        String dateStr = doc.getString("date");
+                        String bName = doc.getString("selectedBusiness");
+                        Double amount = doc.getDouble("amount");
 
-            // 2. Get Expenses
-            db.collection("expenses").get().addOnSuccessListener(expSnapshots -> {
-                currentMonthExpense = 0.0;
-                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
-                    String dateStr = doc.getString("date");
-                    String bName = doc.getString("selectedBusiness");
-                    Double amount = doc.getDouble("amount");
-
-                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
-                            currentMonthExpense += amount;
+                        // Match selected Month Token (e.g. "2026-07")
+                        if (amount != null && dateStr != null && dateStr.startsWith(selectedMonthToken)) {
+                            if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                                currentMonthRevenue += amount;
+                            }
                         }
                     }
-                }
 
-                calculateFinalMetrics();
-            });
-        });
+                    // 2. Fetch Expenses filtered by userId and selected Month Token ("yyyy-MM")
+                    db.collection("expenses")
+                            .whereEqualTo("userId", currentUserId)
+                            .get()
+                            .addOnSuccessListener(expSnapshots -> {
+                                currentMonthExpense = 0.0;
+                                for (DocumentSnapshot doc : expSnapshots.getDocuments()) {
+                                    String dateStr = doc.getString("date");
+                                    String bName = doc.getString("selectedBusiness");
+                                    Double amount = doc.getDouble("amount");
+
+                                    if (amount != null && dateStr != null && dateStr.startsWith(selectedMonthToken)) {
+                                        if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
+                                            currentMonthExpense += amount;
+                                        }
+                                    }
+                                }
+
+                                calculateFinalMetrics();
+                            });
+                });
     }
 
     private void calculateFinalMetrics() {
@@ -219,7 +295,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         barChartAnalytic.setData(barData);
 
-        final String[] labels = new String[]{"Revenue", "Expenses", "Net Profit"};
+        final String[] labels = new String[]{"Monthly\nRevenue", "Monthly\nExpenses", "Net\nProfit"};
         XAxis xAxis = barChartAnalytic.getXAxis();
         xAxis.setValueFormatter(new ValueFormatter() {
             @Override
@@ -231,6 +307,13 @@ public class AnalyticsActivity extends AppCompatActivity {
             }
         });
 
+        barChartAnalytic.setXAxisRenderer(new CustomXAxisRenderer(
+                barChartAnalytic.getViewPortHandler(),
+                xAxis,
+                barChartAnalytic.getTransformer(com.github.mikephil.charting.components.YAxis.AxisDependency.LEFT)
+        ));
+
+        barChartAnalytic.setExtraBottomOffset(15f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.parseColor("#7A9CC0"));
         xAxis.setDrawGridLines(false);
@@ -248,7 +331,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
     private void generateAnalyticsPDF() {
         Document document = new Document();
-        String filename = "Analytics_Report_" + selectedBusinessFilter.replace(" ", "_") + "_" + System.currentTimeMillis() + ".pdf";
+        String filename = "Analytics_Report_" + selectedMonthToken + "_" + selectedBusinessFilter.replace(" ", "_") + ".pdf";
 
         try {
             OutputStream outputStream;
@@ -275,11 +358,11 @@ public class AnalyticsActivity extends AppCompatActivity {
             Font normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL);
 
             document.add(new Paragraph("SMART FINANCIAL MANAGEMENT", subTitleFont));
-            Paragraph title = new Paragraph("Business Analytics Report", titleFont);
+            Paragraph title = new Paragraph("Business Analytics Report (" + selectedMonthToken + ")", titleFont);
             title.setSpacingAfter(5);
             document.add(title);
 
-            Paragraph filterScope = new Paragraph("Filtered Scope: " + selectedBusinessFilter, boldFont);
+            Paragraph filterScope = new Paragraph("Filtered Business: " + selectedBusinessFilter, boldFont);
             filterScope.setSpacingAfter(20);
             document.add(filterScope);
 
@@ -306,8 +389,10 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(new Paragraph("Visual Analytics Workspace Chart Summary:", boldFont));
 
+            // Bar Chart Dark Render
             Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
+            canvas.drawColor(Color.parseColor("#071A33"));
             barChartAnalytic.draw(canvas);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -321,16 +406,18 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(chartImage);
 
-            // ── Pie Chart: Revenue vs Expenses Distribution ──
+            // Pie Chart Dark Render
             PieChart pieChart = new PieChart(this);
             pieChart.setDrawEntryLabels(true);
             pieChart.setEntryLabelTextSize(11f);
             pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
-            pieChart.setHoleColor(android.graphics.Color.WHITE);
+            pieChart.setHoleColor(android.graphics.Color.parseColor("#071A33"));
             pieChart.setCenterText("Profit\nBreakdown");
+            pieChart.setCenterTextColor(android.graphics.Color.WHITE);
             pieChart.setCenterTextSize(13f);
             pieChart.getDescription().setEnabled(false);
             pieChart.getLegend().setTextSize(10f);
+            pieChart.getLegend().setTextColor(android.graphics.Color.WHITE);
 
             java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
             if (currentMonthRevenue > 0) pieEntries.add(new PieEntry((float) currentMonthRevenue, "Revenue"));
@@ -345,6 +432,7 @@ public class AnalyticsActivity extends AppCompatActivity {
                         android.graphics.Color.parseColor("#38BDF8")
                 };
                 pieDataSet.setColors(pieColors);
+                pieDataSet.setValueTextColor(android.graphics.Color.WHITE);
                 pieDataSet.setValueTextSize(11f);
                 pieDataSet.setSliceSpace(3f);
                 PieData pieData = new PieData(pieDataSet);
@@ -354,8 +442,11 @@ public class AnalyticsActivity extends AppCompatActivity {
                         android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
                         android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
                 pieChart.layout(0, 0, 500, 500);
+
                 Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
-                pieChart.draw(new Canvas(pieBitmap));
+                Canvas pieCanvas = new Canvas(pieBitmap);
+                pieCanvas.drawColor(Color.parseColor("#071A33"));
+                pieChart.draw(pieCanvas);
 
                 ByteArrayOutputStream pieStream = new ByteArrayOutputStream();
                 pieBitmap.compress(Bitmap.CompressFormat.PNG, 100, pieStream);
@@ -367,7 +458,6 @@ public class AnalyticsActivity extends AppCompatActivity {
             }
 
             document.close();
-
             Toast.makeText(this, "PDF Report saved to Downloads folder!", Toast.LENGTH_LONG).show();
 
         } catch (Exception e) {
@@ -384,4 +474,23 @@ public class AnalyticsActivity extends AppCompatActivity {
         }
         table.addCell(cell);
     }
-} //
+
+    public class CustomXAxisRenderer extends XAxisRenderer {
+        public CustomXAxisRenderer(ViewPortHandler viewPortHandler, XAxis xAxis, Transformer trans) {
+            super(viewPortHandler, xAxis, trans);
+        }
+
+        @Override
+        protected void drawLabel(Canvas c, String formattedLabel, float x, float y, MPPointF anchor, float angleDegrees) {
+            if (formattedLabel != null && formattedLabel.contains("\n")) {
+                String[] lines = formattedLabel.split("\n");
+                for (int i = 0; i < lines.length; i++) {
+                    float vOffset = i * mAxisLabelPaint.getTextSize();
+                    Utils.drawXAxisValue(c, lines[i], x, y + vOffset, mAxisLabelPaint, anchor, angleDegrees);
+                }
+            } else {
+                super.drawLabel(c, formattedLabel, x, y, anchor, angleDegrees);
+            }
+        }
+    }
+}
