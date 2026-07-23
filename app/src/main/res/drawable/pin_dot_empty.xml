@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- pin_dot_empty.xml – empty/unfilled PIN dot indicator -->
+<!-- PIN dot — empty/unfilled state — forest green outline -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
     <stroke
         android:width="2dp"
-        android:color="#00D4AA" />
+        android:color="@color/forest_600" />
     <solid android:color="#00000000" />
     <size
         android:width="18dp"

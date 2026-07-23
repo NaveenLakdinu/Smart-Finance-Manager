@@ -22,8 +22,8 @@
         android:layout_height="56dp"
         android:text="Add Account"
         android:textColor="@color/text_on_dark_primary"
-        android:backgroundTint="#222222"
-        app:strokeColor="#444444"
+        android:backgroundTint="@color/forest_800"
+        app:strokeColor="@color/forest_600"
         app:strokeWidth="1dp"
         app:cornerRadius="12dp"
         android:layout_centerInParent="true"/>

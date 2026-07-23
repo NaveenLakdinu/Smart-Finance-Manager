@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Forest green gradient background — replaces purple -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android">
     <gradient
-        android:startColor="#0A1628"
-        android:centerColor="#0D1F3C"
-        android:endColor="#091220"
+        android:startColor="@color/forest_700"
+        android:centerColor="@color/forest_800"
+        android:endColor="@color/forest_900"
         android:angle="180" />
 </shape>

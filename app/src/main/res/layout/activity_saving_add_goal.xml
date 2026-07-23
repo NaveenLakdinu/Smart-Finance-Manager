@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/dash_bg_deep"
+    android:background="@drawable/bg_dashboard"
     android:fitsSystemWindows="true">
 
     <LinearLayout
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="Add Saving Goal"
-                android:textColor="@color/white"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </RelativeLayout>
@@ -42,10 +42,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="16dp"
-            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
-            app:strokeColor="@color/glass_card_border"
+            app:strokeColor="@color/forest_600"
             app:strokeWidth="1dp">
 
             <LinearLayout
@@ -66,7 +66,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_glass_card"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="e.g. New Laptop"
                     android:textColorHint="@color/text_on_dark_muted"
                     android:textColor="@color/text_on_dark_primary"
@@ -85,7 +85,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_glass_card"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="0.00"
                     android:inputType="numberDecimal"
                     android:textColorHint="@color/text_on_dark_muted"
@@ -105,7 +105,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:layout_marginTop="8dp"
-                    android:background="@drawable/bg_glass_card"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="0.00"
                     android:inputType="numberDecimal"
                     android:textColorHint="@color/text_on_dark_muted"
@@ -178,11 +178,13 @@
 
         <!-- Summary Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginBottom="24dp"
-            app:cardBackgroundColor="@color/dash_bg_light"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp">
 
@@ -229,7 +231,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="$0.00"
-                        android:textColor="@color/pill_positive_text"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -262,8 +264,8 @@
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:text="Save Goal"
-                android:textColor="@color/white"
-                app:backgroundTint="@color/button_blue"
+                android:textColor="@color/text_on_dark_primary"
+                app:backgroundTint="@color/button_secondary"
                 app:cornerRadius="12dp" />
         </LinearLayout>
 

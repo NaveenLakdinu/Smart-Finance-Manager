@@ -49,7 +49,9 @@
         android:layout_marginTop="14dp"
         app:cardCornerRadius="28dp"
         app:cardElevation="0dp"
-        app:strokeWidth="0dp">
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -127,7 +129,9 @@
                 android:focusable="true"
                 app:cardCornerRadius="19dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
                 <TextView
                     android:id="@+id/txtFilterPending"
                     android:layout_width="wrap_content"
@@ -136,7 +140,7 @@
                     android:gravity="center"
                     android:paddingHorizontal="20dp"
                     android:text="Pending"
-                    android:textColor="#071A33"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </com.google.android.material.card.MaterialCardView>
@@ -150,7 +154,9 @@
                 android:focusable="true"
                 app:cardCornerRadius="19dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
                 <TextView
                     android:id="@+id/txtFilterPaid"
                     android:layout_width="wrap_content"
@@ -172,7 +178,9 @@
                 android:focusable="true"
                 app:cardCornerRadius="19dp"
                 app:cardElevation="0dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
                 <TextView
                     android:id="@+id/txtFilterDue"
                     android:layout_width="wrap_content"
@@ -198,8 +206,9 @@
         android:layout_marginTop="14dp"
         app:cardCornerRadius="14dp"
         app:strokeWidth="1dp"
-        app:strokeColor="@color/divider_dark"
-        app:cardBackgroundColor="#0A1D37">
+        app:strokeColor="@color/forest_600"
+        app:cardBackgroundColor="@color/forest_700"
+        app:cardElevation="0dp">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -234,7 +243,9 @@
         android:layout_marginTop="14dp"
         app:cardCornerRadius="20dp"
         app:cardElevation="0dp"
-        app:strokeWidth="0dp">
+        app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvInvoices"
@@ -261,7 +272,7 @@
         android:layout_margin="24dp"
         app:backgroundTint="@color/hero_accent"
         android:src="@android:drawable/ic_input_add"
-        app:tint="#071A33"
+        app:tint="@color/text_on_dark_primary"
         app:fabSize="normal"
         app:elevation="8dp"
         android:contentDescription="Create invoice trigger shortcut" />

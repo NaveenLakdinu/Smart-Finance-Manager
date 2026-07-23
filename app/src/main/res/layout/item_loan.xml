@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/white"
+    app:cardBackgroundColor="@color/forest_700"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 
@@ -34,7 +36,7 @@
                 android:layout_height="24dp"
                 android:layout_alignParentEnd="true"
                 android:src="@android:drawable/ic_menu_delete"
-                app:tint="#EF4444" />
+                app:tint="@color/danger_text" />
         </RelativeLayout>
 
         <LinearLayout

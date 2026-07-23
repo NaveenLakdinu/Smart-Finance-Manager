@@ -330,6 +330,7 @@ public class RegisterActivity extends AppCompatActivity {
                                         onboardingIntent.putExtra("USER_ROLE", userRole);
                                         onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                                         startActivity(onboardingIntent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                                         finish();
                                     })
                                     .addOnFailureListener(e -> {
@@ -482,6 +483,7 @@ public class RegisterActivity extends AppCompatActivity {
         onboardingIntent.putExtra("USER_ROLE", role);
         onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(onboardingIntent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 

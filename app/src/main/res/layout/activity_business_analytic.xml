@@ -87,9 +87,11 @@
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="28dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,9 +157,11 @@
                 android:layout_height="90dp"
                 android:layout_marginEnd="8dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#1A3050"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="18dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
                 <LinearLayout
                     android:id="@+id/layoutRevenueCard"
@@ -191,9 +195,11 @@
                 android:layout_height="90dp"
                 android:layout_marginStart="8dp"
                 android:layout_weight="1"
-                app:cardBackgroundColor="#1A3050"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="18dp"
-                app:strokeWidth="0dp">
+                app:strokeWidth="0dp"
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
                 <LinearLayout
                     android:id="@+id/layoutExpenseCard"
@@ -241,7 +247,10 @@
             android:layout_height="280dp"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -263,7 +272,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="12dp"
-                    android:background="#122544" />
+                    android:background="@color/forest_700" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

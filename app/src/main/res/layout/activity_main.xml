@@ -7,6 +7,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/bg_dashboard"
     tools:context=".MainActivity">
 
 
@@ -37,6 +38,7 @@
         android:id="@+id/logoContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:gravity="center"
         android:orientation="vertical"
         android:background="@android:color/transparent"
@@ -64,16 +66,18 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:letterSpacing="0.45"
+            android:id="@+id/brandLabel"
             android:text="RED ANTS"
             android:textColor="@color/black"
             android:textSize="11sp" />
 
         <!-- Divider line -->
         <View
+            android:id="@+id/dividerLine"
             android:layout_width="40dp"
             android:layout_height="2dp"
             android:layout_marginTop="6dp"
-            android:background="#4A90D9" />
+            android:background="@color/forest_300" />
 
         <!-- Main Title -->
         <TextView
@@ -84,7 +88,7 @@
             android:gravity="center"
             android:letterSpacing="0.10"
             android:lineSpacingMultiplier="1.3"
-            android:shadowColor="#5599CC"
+            android:shadowColor="@color/forest_300"
             android:shadowDx="0"
             android:shadowDy="2"
             android:shadowRadius="12"
@@ -100,6 +104,7 @@
         android:id="@+id/bottomPanel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="invisible"
         android:orientation="vertical"
         android:gravity="center"
         android:background="@drawable/bottom_panel_bg"
@@ -144,7 +149,7 @@
             app:elevation="0dp"
             app:icon="@drawable/ic_login_arrow"
             app:iconGravity="end"
-            app:iconTint="#AACCFF"
+            app:iconTint="@color/forest_300"
             app:iconSize="18dp" />
 
         <!-- SIGN UP BUTTON -->
@@ -154,7 +159,7 @@
             android:layout_height="54dp"
             android:text="Sign Up"
             android:textAllCaps="false"
-            android:textColor="#1E3D7A"
+            android:textColor="@color/forest_800"
             android:textSize="17sp"
             android:textStyle="bold"
             android:letterSpacing="0.05"
@@ -167,7 +172,7 @@
             app:elevation="0dp"
             app:icon="@drawable/ic_signup_arrow"
             app:iconGravity="end"
-            app:iconTint="#2D5A9E"
+            app:iconTint="@color/forest_600"
             app:iconSize="18dp" />
 
     </LinearLayout>

@@ -97,7 +97,7 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/bg_input_feild"
+                android:background="@drawable/bg_input_dark"
                 android:paddingHorizontal="16dp" />
 
             <TextView
@@ -114,12 +114,12 @@
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="20dp"
-                android:background="@drawable/bg_input_feild"
+                android:background="@drawable/bg_input_dark"
                 android:hint="Bill Amount"
                 android:inputType="numberDecimal"
                 android:paddingHorizontal="16dp"
                 android:textColor="@color/text_on_dark_primary"
-                android:textColorHint="#52759A"
+                android:textColorHint="@color/text_on_dark_muted"
                 android:textSize="14sp" />
 
             <TextView
@@ -135,7 +135,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
                 android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input_feild"
+                android:background="@drawable/bg_input_dark"
                 android:paddingHorizontal="16dp" />
 
         </LinearLayout>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/glass_card_bg"
+    android:background="@color/forest_700"
     android:padding="20dp">
 
     <TextView
@@ -15,68 +16,81 @@
         android:textStyle="bold"
         android:layout_marginBottom="16dp" />
 
+    <!-- Target Business Profile -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Target Business Profile"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"/>
+        android:textSize="12sp" />
 
     <Spinner
         android:id="@+id/dialogSpinnerBusiness"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
-        android:backgroundTint="@color/text_on_dark_primary" />
+        android:background="@drawable/bg_input_dark"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp" />
 
+    <!-- Expense Category -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Expense Category"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/SpinnerCategory"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
-        android:backgroundTint="@color/text_on_dark_primary" />
+        android:background="@drawable/bg_input_dark"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp" />
 
+    <!-- Paid Amount -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Paid Amount (Rs.)"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/dialogEdtAmount"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
+        android:background="@drawable/bg_input_dark"
         android:hint="0.00"
-        android:textColorHint="#4A607A"
+        android:inputType="numberDecimal"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
         android:textColor="@color/text_on_dark_primary"
-        android:inputType="numberDecimal"/>
+        android:textColorHint="@color/text_on_dark_muted"
+        android:textSize="14sp" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:text="⚠️ Transaction will automatically lock into current month timeline matrix logs."
+        android:layout_marginTop="12dp"
+        android:text="Transaction will automatically lock into current month timeline matrix logs."
         android:textColor="@color/pill_warning_text"
-        android:textSize="11sp"/>
+        android:textSize="11sp" />
 
-    <Button
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/dialogBtnSubmit"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="52dp"
         android:layout_marginTop="18dp"
-        android:backgroundTint="@color/danger_text"
-        android:text="SAVE EXPENSE TRANSACTION"
-        android:textColor="@color/text_on_dark_primary"
-        android:textStyle="bold"/>
+        android:backgroundTint="@color/hero_accent"
+        android:text="Save Expense"
+        android:textAllCaps="false"
+        android:textColor="#FFFFFF"
+        android:textSize="15sp"
+        app:cornerRadius="14dp" />
 </LinearLayout>

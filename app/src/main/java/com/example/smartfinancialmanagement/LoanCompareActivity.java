@@ -48,6 +48,9 @@ import androidx.appcompat.app.AlertDialog;
 
 public class LoanCompareActivity extends AppCompatActivity {
 
+    private static final int MIN_LOAN_OPTIONS = 2;
+    private static final int MAX_LOAN_OPTIONS = 10;
+
     private ImageView btnBack;
     private LinearLayout loanCardsContainer;
     private MaterialCardView btnAddOption;
@@ -62,7 +65,6 @@ public class LoanCompareActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String uid;
 
-    // Helper class for comparison data
     private static class ComparisonData {
         String optionLabel;
         String bankName;
@@ -82,8 +84,7 @@ public class LoanCompareActivity extends AppCompatActivity {
         fetchFinancialData();
         setupListeners();
 
-        // Start with 3 default options as requested
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < MIN_LOAN_OPTIONS; i++) {
             addLoanOptionCard();
         }
     }
@@ -98,7 +99,7 @@ public class LoanCompareActivity extends AppCompatActivity {
     private void setupListeners() {
         btnBack.setOnClickListener(v -> finish());
         btnAddOption.setOnClickListener(v -> addLoanOptionCard());
-        
+
         btnCompare.setOnClickListener(v -> {
             if (validateAllCards()) {
                 List<ComparisonData> dataList = extractComparisonData();
@@ -115,7 +116,7 @@ public class LoanCompareActivity extends AppCompatActivity {
         for (int i = 0; i < childCount; i++) {
             View cardView = loanCardsContainer.getChildAt(i);
             ComparisonData data = new ComparisonData();
-            
+
             TextView title = cardView.findViewById(R.id.txtLoanOptionTitle);
             EditText etBank = cardView.findViewById(R.id.etBankName);
             EditText etP = cardView.findViewById(R.id.etPrincipal);
@@ -128,8 +129,7 @@ public class LoanCompareActivity extends AppCompatActivity {
             data.principal = Double.parseDouble(etP.getText().toString().trim());
             data.interestRate = Double.parseDouble(etI.getText().toString().trim());
             data.duration = Integer.parseInt(etD.getText().toString().trim());
-            
-            // Extract EMI and Total from the result text (e.g., "EMI: Rs 100.00 | Total: Rs 1200.00")
+
             String resText = txtRes.getText().toString();
             try {
                 String emiPart = resText.substring(resText.indexOf("LKR") + 3, resText.indexOf("|")).trim();
@@ -137,21 +137,20 @@ public class LoanCompareActivity extends AppCompatActivity {
                 data.emi = Double.parseDouble(emiPart);
                 data.totalPayable = Double.parseDouble(totalPart);
             } catch (Exception e) {
-                // Fallback to calculation if parsing fails
                 double r = data.interestRate / (12 * 100);
                 if (r == 0) data.emi = data.principal / data.duration;
                 else data.emi = (data.principal * r * Math.pow(1 + r, data.duration)) / (Math.pow(1 + r, data.duration) - 1);
                 data.totalPayable = data.emi * data.duration;
             }
-            
+
             dataList.add(data);
         }
         return dataList;
     }
 
     private static final int[] PIE_COLORS = {
-            Color.parseColor("#00D4AA"),
-            Color.parseColor("#A78BFA"),
+            Color.parseColor("#8EB69B"),
+            Color.parseColor("#9B8BFA"),
             Color.parseColor("#38BDF8"),
             Color.parseColor("#F59E0B"),
             Color.parseColor("#F43F5E"),
@@ -165,8 +164,8 @@ public class LoanCompareActivity extends AppCompatActivity {
         pieChart.setDrawEntryLabels(true);
         pieChart.setEntryLabelTextSize(11f);
         pieChart.setEntryLabelColor(Color.WHITE);
-        pieChart.setHoleColor(Color.parseColor("#0A1628"));
-        pieChart.setTransparentCircleColor(Color.parseColor("#0A1628"));
+        pieChart.setHoleColor(Color.parseColor("#051F20"));
+        pieChart.setTransparentCircleColor(Color.parseColor("#051F20"));
         pieChart.setCenterText("Total Payable\nComparison");
         pieChart.setCenterTextSize(14f);
         pieChart.setCenterTextColor(Color.parseColor("#F0F6FF"));
@@ -203,7 +202,7 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bitmap);
-        c.drawColor(Color.parseColor("#0A1628"));
+        c.drawColor(Color.parseColor("#051F20"));
         pieChart.draw(c);
         return bitmap;
     }
@@ -215,18 +214,16 @@ public class LoanCompareActivity extends AppCompatActivity {
         Canvas canvas = page.getCanvas();
         Paint paint = new Paint();
 
-        // 1. Header
         paint.setTextSize(20f);
         paint.setFakeBoldText(true);
         canvas.drawText("Detailed Loan Comparison & Suitability Analysis", 40, 50, paint);
-        
+
         paint.setTextSize(11f);
         paint.setFakeBoldText(false);
         String dateStr = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault()).format(new Date());
         canvas.drawText("Generated on: " + dateStr, 40, 75, paint);
         canvas.drawLine(40, 85, 555, 85, paint);
 
-        // 2. Financial Context Summary
         paint.setTextSize(13f);
         paint.setFakeBoldText(true);
         canvas.drawText("Your Financial Context (Monthly Basis)", 40, 110, paint);
@@ -234,16 +231,15 @@ public class LoanCompareActivity extends AppCompatActivity {
         paint.setTextSize(11f);
         paint.setFakeBoldText(false);
         canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
-        
+
         double existingCommitments = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
         canvas.drawText(String.format(Locale.US, "• Existing Commitments: Rs %.2f", existingCommitments), 45, 150, paint);
         canvas.drawText(String.format(Locale.US, "  - Active Loans EMI: Rs %.2f", activeLoansMonthlyTotal), 55, 170, paint);
         canvas.drawText(String.format(Locale.US, "  - Utility Bills: Rs %.2f", utilitiesMonthlyTotal), 55, 190, paint);
         canvas.drawText(String.format(Locale.US, "  - Subscriptions: Rs %.2f", subscriptionsMonthlyTotal), 55, 210, paint);
-        
+
         canvas.drawLine(40, 225, 555, 225, paint);
 
-        // 3. Side-by-Side Suitability Analysis
         paint.setTextSize(13f);
         paint.setFakeBoldText(true);
         canvas.drawText("Option-by-Option Suitability Assessment", 40, 250, paint);
@@ -261,7 +257,7 @@ public class LoanCompareActivity extends AppCompatActivity {
             canvas.drawText(data.optionLabel + " (" + data.bankName + ")", 45, y, paint);
             paint.setFakeBoldText(false);
 
-            canvas.drawText(String.format(Locale.US, "EMI: Rs %.2f | Commitment: Rs %.2f | Net Cash Flow: Rs %.2f", 
+            canvas.drawText(String.format(Locale.US, "EMI: Rs %.2f | Commitment: Rs %.2f | Net Cash Flow: Rs %.2f",
                     data.emi, totalExpenses, remaining), 45, y + 18, paint);
 
             paint.setFakeBoldText(true);
@@ -282,7 +278,6 @@ public class LoanCompareActivity extends AppCompatActivity {
         canvas.drawLine(40, y + 5, 555, y + 5, paint);
         y += 25;
 
-        // 4. Detailed Side-by-Side Comparison Table
         paint.setTextSize(13f);
         paint.setFakeBoldText(true);
         canvas.drawText("Side-by-Side Comparison Table", 40, y, paint);
@@ -315,7 +310,6 @@ public class LoanCompareActivity extends AppCompatActivity {
             y += 20;
         }
 
-        // ── Pie Chart: Total Payable Comparison ──
         document.finishPage(page);
         page = document.startPage(pageInfo);
         canvas = page.getCanvas();
@@ -380,7 +374,7 @@ public class LoanCompareActivity extends AppCompatActivity {
                         userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
                     } catch (NumberFormatException ignored) {}
                 }
-                
+
                 String role = documentSnapshot.getString("role");
                 if (userMonthlyIncome <= 0 && "Company worker".equals(role)) {
                     db.collection("users").document(uid).collection("worker_profile").document("profile_data")
@@ -392,12 +386,7 @@ public class LoanCompareActivity extends AppCompatActivity {
                                         userMonthlyIncome = salary;
                                     }
                                 }
-                                if (userMonthlyIncome <= 0) {
-                                    /* default income removed */
-                                }
                             });
-                } else if (userMonthlyIncome <= 0) {
-                    /* default income removed */
                 }
             }
         });
@@ -426,36 +415,36 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).collection("subscriptions").get().addOnSuccessListener(queryDocumentSnapshots -> {
             double total = 0;
-for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-    Double cost = doc.getDouble("monthlyCost");
-    if (cost != null) {
-        total += cost;
-    }
-}
-subscriptionsMonthlyTotal = total;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                Double cost = doc.getDouble("monthlyCost");
+                if (cost != null) {
+                    total += cost;
+                }
+            }
+            subscriptionsMonthlyTotal = total;
         });
     }
 
     private void showVisualSuitabilityReport(List<ComparisonData> dataList) {
         AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
-        
+
         TextView titleView = new TextView(this);
         titleView.setText("Loan Suitability & Commitment Analysis");
         titleView.setTextSize(18f);
         titleView.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         titleView.setTextColor(Color.parseColor("#FFFFFF"));
         titleView.setPadding(40, 40, 40, 20);
-        titleView.setBackgroundColor(Color.parseColor("#071A33"));
+        titleView.setBackgroundColor(Color.parseColor("#FFFFFF"));
         builder.setCustomTitle(titleView);
 
         android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
         container.setPadding(30, 30, 30, 30);
-        container.setBackgroundColor(Color.parseColor("#071A33"));
+        container.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
         TextView introText = new TextView(this);
-        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)", 
+        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
                 userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
         introText.setTextColor(Color.parseColor("#BCE0FF"));
         introText.setTextSize(13f);
@@ -469,7 +458,7 @@ subscriptionsMonthlyTotal = total;
             card.setCardElevation(6f);
             card.setRadius(24f);
             card.setUseCompatPadding(true);
-            
+
             LinearLayout cardContent = new LinearLayout(this);
             cardContent.setOrientation(LinearLayout.VERTICAL);
             cardContent.setPadding(32, 32, 32, 32);
@@ -490,10 +479,10 @@ subscriptionsMonthlyTotal = total;
             cardContent.addView(nameText);
 
             TextView detailsText = new TextView(this);
-            detailsText.setText(String.format(Locale.US, 
+            detailsText.setText(String.format(Locale.US,
                     "• Proposed EMI: Rs %.2f/mo\n" +
                     "• Total Monthly Commitment: Rs %.2f/mo\n" +
-                    "• Net Cash Flow: Rs %.2f/mo", 
+                    "• Net Cash Flow: Rs %.2f/mo",
                     data.emi, totalExpenses, remaining));
             detailsText.setTextColor(Color.parseColor("#D8E4FF"));
             detailsText.setTextSize(13f);
@@ -518,21 +507,21 @@ subscriptionsMonthlyTotal = total;
             generateDetailedComparisonReport(dataList);
         });
         builder.setNegativeButton("Close", null);
-        
+
         AlertDialog dialog = builder.create();
         dialog.show();
-        
+
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#4ADE80"));
         dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
-        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#071A33")));
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#FFFFFF")));
     }
 
     private boolean validateAllCards() {
         boolean allValid = true;
         int childCount = loanCardsContainer.getChildCount();
 
-        if (childCount == 0) {
-            android.widget.Toast.makeText(this, "Please add at least one loan option", android.widget.Toast.LENGTH_SHORT).show();
+        if (childCount < MIN_LOAN_OPTIONS) {
+            Toast.makeText(this, "Please add at least " + MIN_LOAN_OPTIONS + " loan options to compare", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -544,7 +533,7 @@ subscriptionsMonthlyTotal = total;
         }
 
         if (!allValid) {
-            android.widget.Toast.makeText(this, "Please fix the errors in your loan options", android.widget.Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fix the errors in your loan options", Toast.LENGTH_SHORT).show();
         }
 
         return allValid;
@@ -585,27 +574,45 @@ subscriptionsMonthlyTotal = total;
     }
 
     private void addLoanOptionCard() {
+        int currentCount = loanCardsContainer.getChildCount();
+        if (currentCount >= MAX_LOAN_OPTIONS) {
+            Toast.makeText(this, "Maximum " + MAX_LOAN_OPTIONS + " loan options allowed", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         optionCount++;
         LayoutInflater inflater = LayoutInflater.from(this);
         View cardView = inflater.inflate(R.layout.item_loan_compare_card, loanCardsContainer, false);
 
-        TextView title = cardView.findViewById(R.id.txtLoanOptionTitle);
-        title.setText("Option " + (char) ('A' + (optionCount - 1)));
+        setupCardLogic(cardView);
 
         ImageView btnRemove = cardView.findViewById(R.id.btnRemoveLoan);
-        
-        // Only show remove button for options after the first 3
-        if (optionCount > 3) {
-            btnRemove.setVisibility(View.VISIBLE);
-            btnRemove.setOnClickListener(v -> {
-                loanCardsContainer.removeView(cardView);
-                // Note: Title letters won't auto-update without re-iterating, 
-                // but this keeps implementation simple.
-            });
-        }
+        btnRemove.setOnClickListener(v -> {
+            loanCardsContainer.removeView(cardView);
+            refreshOptionTitles();
+            updateAddButtonVisibility();
+        });
 
-        setupCardLogic(cardView);
         loanCardsContainer.addView(cardView);
+        refreshOptionTitles();
+        updateAddButtonVisibility();
+    }
+
+    private void refreshOptionTitles() {
+        int childCount = loanCardsContainer.getChildCount();
+        for (int i = 0; i < childCount; i++) {
+            View cardView = loanCardsContainer.getChildAt(i);
+            TextView title = cardView.findViewById(R.id.txtLoanOptionTitle);
+            title.setText("Option " + (char) ('A' + i));
+
+            ImageView btnRemove = cardView.findViewById(R.id.btnRemoveLoan);
+            btnRemove.setVisibility(childCount > MIN_LOAN_OPTIONS ? View.VISIBLE : View.GONE);
+        }
+    }
+
+    private void updateAddButtonVisibility() {
+        int count = loanCardsContainer.getChildCount();
+        btnAddOption.setVisibility(count >= MAX_LOAN_OPTIONS ? View.GONE : View.VISIBLE);
     }
 
     private void setupCardLogic(View cardView) {

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="8dp"
-    android:background="@drawable/bg_input_dark"
+    android:background="@drawable/bg_dashboard"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="10dp">
@@ -17,7 +17,7 @@
         android:background="@drawable/bg_goal_card"
         android:gravity="center"
         android:text="$"
-        android:textColor="@color/goal_mint"
+        android:textColor="@color/text_on_dark_primary"
         android:textSize="15sp"
         android:textStyle="bold"/>
 
@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Rs 0.00"
-            android:textColor="@color/goal_mint"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="14.5sp"
             android:textStyle="bold"/>
 
@@ -44,7 +44,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Savings entry"
-            android:textColor="@color/goal_text_mute"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="11.5sp"
             android:maxLines="1"
             android:ellipsize="end"/>
@@ -57,7 +57,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="01 Jan"
-        android:textColor="@color/goal_text_dim"
+        android:textColor="@color/text_on_dark_primary"
         android:textSize="11sp"/>
 
     <!-- Edit button -->
@@ -68,7 +68,7 @@
         android:background="@drawable/bg_goal_card"
         android:gravity="center"
         android:text="✎"
-        android:textColor="@color/goal_text_mute"
+        android:textColor="@color/text_on_dark_primary"
         android:textSize="13sp"/>
 
 </LinearLayout>

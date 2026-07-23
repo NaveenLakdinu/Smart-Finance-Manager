@@ -42,8 +42,8 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
 
         // Update card style statuses dynamically
         if (status.equals("paid")) {
-            holder.txtStatusBadge.setTextColor(Color.parseColor("#071A33"));
-            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#00D4AA"));
+            holder.txtStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
+            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#8EB69B"));
         } else if (status.equals("due")) {
             holder.txtStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
             holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#FF5555"));

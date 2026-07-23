@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/goal_bg">
+    android:background="@drawable/bg_dashboard">
 
     <!-- Main scrollable list -->
     <LinearLayout
@@ -28,7 +28,7 @@
                 android:background="@drawable/bg_goal_card"
                 android:gravity="center"
                 android:text="←"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"/>
 
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:text="Saving Goals"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="17sp"
                 android:textStyle="bold"/>
 
@@ -62,7 +62,7 @@
                 android:layout_height="wrap_content"
                 android:text="🔍"
                 android:textSize="14sp"
-                android:textColor="@color/goal_text_mute"/>
+                android:textColor="@color/text_on_dark_primary"/>
 
             <View android:layout_width="10dp" android:layout_height="1dp"/>
 
@@ -71,9 +71,9 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@null"
+                android:background="@drawable/bg_input_dark"
                 android:hint="Search goals..."
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textColorHint="@color/goal_text_dim"
                 android:textSize="14sp"
                 android:singleLine="true"
@@ -114,7 +114,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:text="No goals match here yet."
-            android:textColor="@color/goal_text_dim"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="13sp"
             android:paddingVertical="24dp"/>
 

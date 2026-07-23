@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- bg_function_icon_green — sage green circle for quick action icons -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android" android:shape="oval">
-    <solid android:color="#4CAF50" />
+    <solid android:color="@color/forest_300" />
 </shape>

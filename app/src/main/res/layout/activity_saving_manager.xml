@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/goal_bg"
+    android:background="@drawable/bg_dashboard"
     android:fillViewport="true">
 
     <LinearLayout
@@ -29,7 +29,7 @@
                 android:background="@drawable/bg_goal_card"
                 android:gravity="center"
                 android:text="←"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"/>
 
             <TextView
@@ -38,7 +38,7 @@
                 android:layout_weight="1"
                 android:layout_marginStart="14dp"
                 android:text="Saving Manager"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"/>
 
@@ -66,7 +66,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="TOTAL SAVINGS GOAL"
-                android:textColor="@color/goal_text_mute"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="11sp"
                 android:letterSpacing="0.11"/>
 
@@ -77,7 +77,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs 0.00"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="25sp"
                 android:textStyle="bold"/>
 
@@ -103,7 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Saving actions"
-            android:textColor="@color/goal_text"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="16sp"
             android:textStyle="bold"/>
 
@@ -139,7 +139,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Add goal"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -167,7 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Report"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -186,7 +186,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Active goals"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"/>
             <TextView
@@ -194,7 +194,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See all →"
-                android:textColor="@color/goal_mint"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -214,7 +214,7 @@
             android:layout_height="wrap_content"
             android:visibility="gone"
             android:text="No ongoing goals yet — tap Add Goal to start one."
-            android:textColor="@color/goal_text_dim"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="13sp"
             android:paddingVertical="12dp"/>
 

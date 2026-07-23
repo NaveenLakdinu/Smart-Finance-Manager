@@ -109,7 +109,7 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
         txtInvoiceStatusBadge.setText(status.toUpperCase());
 
         if (status.equalsIgnoreCase("paid")) {
-            txtInvoiceStatusBadge.setTextColor(Color.parseColor("#071A33"));
+            txtInvoiceStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
             txtInvoiceStatusBadge.setBackgroundColor(Color.parseColor("#4ADE80"));
 
             btnMarkPaid.setText("MARK AS UNPAID");
@@ -126,7 +126,7 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
 
             btnMarkPaid.setText("MARK AS PAID & RECONCILE");
             btnMarkPaid.setBackgroundColor(Color.parseColor("#4ADE80"));
-            btnMarkPaid.setTextColor(Color.parseColor("#071A33"));
+            btnMarkPaid.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
 

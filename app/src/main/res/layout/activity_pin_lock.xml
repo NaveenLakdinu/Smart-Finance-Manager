@@ -9,7 +9,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_dashboard"
+    android:background="@color/forest_900"
     android:gravity="center_horizontal"
     android:orientation="vertical"
     android:padding="28dp">
@@ -29,11 +29,11 @@
         android:layout_width="80dp"
         android:layout_height="80dp"
         android:layout_marginTop="32dp"
-        app:cardBackgroundColor="@color/qa_teal_bg"
+        app:cardBackgroundColor="@color/forest_700"
         app:cardCornerRadius="26dp"
         app:cardElevation="0dp"
-        app:strokeColor="@color/hero_accent"
-        app:strokeWidth="1.5dp">
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
         <ImageView
             android:layout_width="40dp"
@@ -108,10 +108,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
-        app:cardBackgroundColor="@color/glass_card_bg"
+        app:cardBackgroundColor="@color/forest_700"
         app:cardCornerRadius="24dp"
         app:cardElevation="0dp"
-        app:strokeColor="@color/glass_card_border"
+        app:strokeColor="@color/forest_600"
         app:strokeWidth="1dp">
 
         <GridLayout
@@ -133,8 +133,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -148,8 +149,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -163,8 +165,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <!-- Row 2 -->
@@ -179,8 +182,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -194,8 +198,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -209,8 +214,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <!-- Row 3 -->
@@ -225,8 +231,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -240,8 +247,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -255,8 +263,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <!-- Row 4 -->
@@ -277,8 +286,9 @@
                 android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.button.MaterialButton
@@ -289,11 +299,12 @@
                 android:layout_columnWeight="1"
                 android:layout_margin="5dp"
                 android:text="⌫"
-                android:textColor="@color/hero_accent"
+                android:textColor="@color/forest_300"
                 android:textSize="22sp"
                 android:textStyle="bold"
+                app:backgroundTint="@color/forest_700"
                 app:cornerRadius="16dp"
-                app:strokeColor="@color/glass_card_border"
+                app:strokeColor="@color/forest_600"
                 app:strokeWidth="1dp" />
 
         </GridLayout>

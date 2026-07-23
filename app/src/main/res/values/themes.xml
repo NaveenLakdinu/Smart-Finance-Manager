@@ -1,70 +1,95 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
 
-    <style name="Theme.SmartFinancialManagement" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/hero_accent</item>
-        <item name="colorPrimaryVariant">@color/hero_accent_dim</item>
-        <item name="colorSecondary">@color/hero_accent</item>
-        <item name="android:windowBackground">@color/dash_bg_deep</item>
-        <item name="android:statusBarColor">@color/status_bar</item>
-        <item name="android:navigationBarColor">@color/dash_bg_mid</item>
+    <!-- ============================================================ -->
+    <!-- BASE APP THEME — Forest Green Dark                           -->
+    <!-- ============================================================ -->
+    <style name="Theme.SmartFinancialManagement" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="colorPrimary">@color/forest_300</item>
+        <item name="colorPrimaryVariant">@color/forest_600</item>
+        <item name="colorSecondary">@color/forest_300</item>
+        <item name="android:windowBackground">@color/forest_900</item>
+        <item name="android:statusBarColor">@color/forest_900</item>
+        <item name="android:navigationBarColor">@color/forest_800</item>
         <item name="android:textColorPrimary">@color/text_on_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_on_dark_secondary</item>
         <item name="android:textColorHint">@color/text_on_dark_muted</item>
-        <item name="colorOnPrimary">@color/dash_bg_deep</item>
-        <item name="colorSurface">@color/glass_card_bg</item>
+        <item name="colorOnPrimary">@color/forest_900</item>
+        <item name="colorSurface">@color/forest_700</item>
         <item name="colorOnSurface">@color/text_on_dark_primary</item>
+        <!-- Green ripple replaces purple -->
+        <item name="colorControlHighlight">@color/ripple_green</item>
+        <item name="colorControlActivated">@color/forest_300</item>
+        <item name="colorAccent">@color/forest_300</item>
     </style>
 
-    <style name="Widget.App.Button.Green" parent="Widget.Material3.Button">
-        <item name="android:backgroundTint">@color/brand_green</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">12dp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
+    <!-- ============================================================ -->
+    <!-- BUTTON STYLES                                                -->
+    <!-- ============================================================ -->
 
-    <style name="Widget.App.Button.DarkBlue" parent="Widget.Material3.Button">
-        <item name="android:backgroundTint">@color/brand_dark_blue</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">15dp</item>
-        <item name="android:textAllCaps">false</item>
-    </style>
-
-    <style name="Widget.App.EditText" parent="Widget.AppCompat.EditText">
-        <item name="android:background">@drawable/edittext_rounded_bg</item>
-        <item name="android:padding">15dp</item>
-        <item name="android:textSize">14sp</item>
-    </style>
-
-    <style name="SwitchThemeBlue" parent="Widget.AppCompat.CompoundButton.Switch">
-        <item name="colorControlActivated">@color/qa_blue_icon</item>
-    </style>
-
-    <!-- Dark Glassmorphic Button Styles -->
+    <!-- Primary filled CTA (sage green bg, deep forest text) -->
     <style name="Widget.App.Button.Teal" parent="Widget.MaterialComponents.Button">
-        <item name="backgroundTint">@color/hero_accent</item>
-        <item name="android:textColor">@color/dash_bg_deep</item>
+        <item name="backgroundTint">@color/forest_300</item>
+        <item name="android:textColor">@color/forest_900</item>
         <item name="cornerRadius">12dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
+    <!-- Alias kept for compatibility -->
+    <style name="Widget.App.Button.Green" parent="Widget.App.Button.Teal"/>
+
+    <!-- Dark blue alias → now forest themed -->
+    <style name="Widget.App.Button.DarkBlue" parent="Widget.MaterialComponents.Button">
+        <item name="android:backgroundTint">@color/forest_700</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="cornerRadius">12dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">48dp</item>
+    </style>
+
+    <!-- Outlined / ghost button -->
     <style name="Widget.App.Button.Outline.Dark" parent="Widget.MaterialComponents.Button.OutlinedButton">
-        <item name="strokeColor">@color/glass_card_border</item>
+        <item name="strokeColor">@color/forest_600</item>
         <item name="android:textColor">@color/text_on_dark_primary</item>
         <item name="backgroundTint">@android:color/transparent</item>
         <item name="cornerRadius">12dp</item>
+        <item name="android:minHeight">48dp</item>
     </style>
 
+    <!-- Text link button -->
     <style name="Widget.App.Button.Text.Dark" parent="Widget.MaterialComponents.Button.TextButton">
-        <item name="android:textColor">@color/hero_accent</item>
+        <item name="android:textColor">@color/forest_300</item>
     </style>
 
-    <!-- Dark Dialog Theme -->
+    <!-- ============================================================ -->
+    <!-- EDIT TEXT                                                    -->
+    <!-- ============================================================ -->
+    <style name="Widget.App.EditText" parent="Widget.AppCompat.EditText">
+        <item name="android:background">@drawable/bg_input_dark</item>
+        <item name="android:padding">15dp</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/text_on_dark_primary</item>
+        <item name="android:textColorHint">@color/text_on_dark_muted</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- SWITCH / CHECKBOX                                            -->
+    <!-- ============================================================ -->
+    <style name="SwitchThemeGreen" parent="Widget.AppCompat.CompoundButton.Switch">
+        <item name="colorControlActivated">@color/forest_300</item>
+    </style>
+    <!-- Keep old name as alias -->
+    <style name="SwitchThemeBlue" parent="SwitchThemeGreen"/>
+
+    <!-- ============================================================ -->
+    <!-- DIALOGS                                                      -->
+    <!-- ============================================================ -->
     <style name="Theme.SmartFinance.Dialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="dialogCornerRadius">20dp</item>
-        <item name="android:windowBackground">@color/glass_card_bg</item>
+        <item name="android:windowBackground">@color/forest_700</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="colorSurface">@color/glass_card_bg</item>
+        <item name="colorSurface">@color/forest_700</item>
         <item name="colorOnSurface">@color/text_on_dark_primary</item>
         <item name="android:textColorPrimary">@color/text_on_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_on_dark_secondary</item>
@@ -73,27 +98,31 @@
         <item name="textColorAlertDialogListItem">@color/text_on_dark_primary</item>
         <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Dialog.Button</item>
         <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Dialog.Button</item>
-        <item name="android:divider">@color/divider_dark</item>
+        <item name="android:divider">@color/forest_600</item>
         <item name="android:dividerHeight">1dp</item>
+        <item name="colorAccent">@color/forest_300</item>
     </style>
 
-    <!-- Dark Dialog Button Style -->
     <style name="Widget.App.Dialog.Button" parent="Widget.MaterialComponents.Button.TextButton.Dialog">
-        <item name="android:textColor">@color/hero_accent</item>
+        <item name="android:textColor">@color/forest_300</item>
     </style>
 
-    <!-- Dark Card Style -->
+    <!-- ============================================================ -->
+    <!-- CARDS                                                        -->
+    <!-- ============================================================ -->
     <style name="Widget.App.Card.Dark" parent="Widget.MaterialComponents.CardView">
-        <item name="cardBackgroundColor">@color/glass_card_bg</item>
-        <item name="strokeColor">@color/glass_card_border</item>
+        <item name="cardBackgroundColor">@color/forest_700</item>
+        <item name="strokeColor">@color/forest_600</item>
         <item name="strokeWidth">1dp</item>
         <item name="cardCornerRadius">16dp</item>
         <item name="cardElevation">0dp</item>
     </style>
 
-    <!-- Typography Styles (standalone, no implicit parent) -->
+    <!-- ============================================================ -->
+    <!-- TYPOGRAPHY                                                   -->
+    <!-- ============================================================ -->
     <style name="TextAppearance.App.Display" parent="TextAppearance.MaterialComponents.Headline1">
-        <item name="android:textSize">28sp</item>
+        <item name="android:textSize">32sp</item>
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textColor">@color/text_on_dark_primary</item>
     </style>
@@ -123,7 +152,7 @@
 
     <style name="TextAppearance.App.Body" parent="TextAppearance.MaterialComponents.Body2">
         <item name="android:textSize">14sp</item>
-        <item name="android:textColor">@color/text_on_dark_primary</item>
+        <item name="android:textColor">@color/text_on_dark_secondary</item>
     </style>
 
     <style name="TextAppearance.App.Caption" parent="TextAppearance.MaterialComponents.Caption">
@@ -136,12 +165,27 @@
         <item name="android:textColor">@color/text_on_dark_muted</item>
     </style>
 
-    <!-- Dark DatePicker Theme -->
+    <style name="TextAppearance.App.Amount" parent="TextAppearance.MaterialComponents.Headline3">
+        <item name="android:textSize">28sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/forest_100</item>
+    </style>
+
+    <style name="TextAppearance.App.AmountSmall" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">18sp</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">@color/forest_100</item>
+    </style>
+
+    <!-- ============================================================ -->
+    <!-- DATE PICKER                                                  -->
+    <!-- ============================================================ -->
     <style name="Theme.SmartFinance.DatePicker" parent="ThemeOverlay.MaterialComponents.Dialog">
         <item name="android:textColorPrimary">@color/text_on_dark_primary</item>
         <item name="android:textColorSecondary">@color/text_on_dark_secondary</item>
-        <item name="colorAccent">@color/hero_accent</item>
-        <item name="android:windowBackground">@color/glass_card_bg</item>
+        <item name="colorAccent">@color/forest_300</item>
+        <item name="android:windowBackground">@color/forest_700</item>
+        <item name="colorControlActivated">@color/forest_300</item>
     </style>
 
 </resources>
