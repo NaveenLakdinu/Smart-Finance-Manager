@@ -47,7 +47,7 @@
                     android:background="@drawable/bg_profile_circle"
                     android:gravity="center"
                     android:text="A"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
 
@@ -65,7 +65,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Good Morning 👋"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -73,8 +73,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="user@email.com"
-                    android:textColor="#F0F6FF"
+                    android:text=""
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -148,7 +148,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TOTAL SUBSCRIPTIONS"
-                    android:textColor="#7A9CC0"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:letterSpacing="0.15" />
 
@@ -174,7 +174,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="ACTIVE"
-                        android:textColor="#4ADE80"
+                        android:textColor="@color/pill_positive_text"
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
@@ -201,7 +201,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="00"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="58sp"
                         android:textStyle="bold"
                         android:lineSpacingMultiplier="0.9" />
@@ -212,7 +212,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="4dp">
-                        <View android:layout_width="32dp" android:layout_height="3dp" android:background="#00D4AA" />
+                        <View android:layout_width="32dp" android:layout_height="3dp" android:background="@color/hero_accent" />
                         <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
                         <View android:layout_width="4dp" android:layout_height="3dp" android:background="#1E3A6E" android:layout_marginStart="4dp" />
                     </LinearLayout>
@@ -242,10 +242,86 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:text="Manage your plans easily"
-                android:textColor="#7A9CC0"
+                android:textColor="@color/text_on_dark_secondary"
                 android:textSize="13sp" />
 
         </LinearLayout>
+
+        <!-- Savings Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSavingsWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/glass_card_bg"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/glass_card_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_function_icon_green"
+                    android:gravity="center"
+                    android:text="💰"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT SAVINGS"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="10sp"
+                        android:letterSpacing="0.1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtCurrentSavingsValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Rs 0.00"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnUpdateSavings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_green"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="UPDATE"
+                    android:textColor="@color/pill_positive_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <!-- ══════════════════════════════════════════ -->
         <!--   SECTION TITLE: Finance Tools            -->
@@ -268,7 +344,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Finance Tools"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -281,7 +357,7 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:text="4 modules"
-                android:textColor="#4ADE80"
+                android:textColor="@color/pill_positive_text"
                 android:textSize="11sp" />
 
         </LinearLayout>
@@ -304,7 +380,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp">
 
@@ -334,7 +410,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Manage Loan"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -343,7 +419,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="#38BDF8" />
+                        android:background="@color/qa_blue_icon" />
 
                 </LinearLayout>
 
@@ -360,7 +436,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp">
 
@@ -389,7 +465,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Subscriptions"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -398,7 +474,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="#A78BFA" />
+                        android:background="@color/qa_purple_icon" />
 
                 </LinearLayout>
 
@@ -424,7 +500,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp">
 
@@ -453,7 +529,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Savings"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -462,7 +538,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="#4ADE80" />
+                        android:background="@color/pill_positive_text" />
 
                 </LinearLayout>
 
@@ -479,7 +555,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp">
 
@@ -508,7 +584,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Utilities"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -517,7 +593,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="#F59E0B" />
+                        android:background="@color/pill_warning_text" />
 
                 </LinearLayout>
 
@@ -553,7 +629,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Recent Subscriptions"
-                    android:textColor="#F0F6FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -562,7 +638,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all →"
-                    android:textColor="#00D4AA"
+                    android:textColor="@color/hero_accent"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 

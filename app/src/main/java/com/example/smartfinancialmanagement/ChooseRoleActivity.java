@@ -8,11 +8,12 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.card.MaterialCardView;
 
 public class ChooseRoleActivity extends AppCompatActivity {
 
     // Role card views
-    LinearLayout roleStudent, roleWorker, roleBusiness, roleMulti;
+    MaterialCardView roleStudent, roleWorker, roleBusiness, roleMulti;
     // Radio icons
     ImageView radioStudent, radioWorker, radioBusinessOwner, radioMulti;
     // Continue button
@@ -21,7 +22,7 @@ public class ChooseRoleActivity extends AppCompatActivity {
     String selectedRole = null;
 
     // Role card IDs mapped
-    LinearLayout[] allCards;
+    MaterialCardView[] allCards;
     ImageView[] allRadios;
 
     // 💡 FIXED: Mapped keys directly to match RegisterActivity switch cases precisely
@@ -45,7 +46,7 @@ public class ChooseRoleActivity extends AppCompatActivity {
 
         continueBtn       = findViewById(R.id.continueBtn);
 
-        allCards  = new LinearLayout[]{roleStudent, roleWorker, roleBusiness, roleMulti};
+        allCards  = new MaterialCardView[]{roleStudent, roleWorker, roleBusiness, roleMulti};
         allRadios = new ImageView[]{radioStudent, radioWorker, radioBusinessOwner, radioMulti};
 
         // Back
@@ -75,6 +76,9 @@ public class ChooseRoleActivity extends AppCompatActivity {
             intent.putExtra("USER_ROLE", selectedRole);
             startActivity(intent);
         });
+
+        // Set default selection to Student
+        selectRole(0);
     }
 
     private void selectRole(int idx) {

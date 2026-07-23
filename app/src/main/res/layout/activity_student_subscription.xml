@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4FA">
+    android:background="@color/dash_bg_deep">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:text="Loan &amp; Subscriptions"
-            android:textColor="@android:color/white"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="26sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
@@ -79,7 +79,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Rs.245,000"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -118,7 +118,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Rs.2,739"
-                    android:textColor="@android:color/white"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -141,9 +141,9 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="4dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="1dp"
+                app:cardElevation="0dp"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
@@ -164,7 +164,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
                         android:text="Loan Management"
-                        android:textColor="#757575"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp" />
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
@@ -177,7 +177,7 @@
                 android:layout_marginStart="4dp"
                 app:cardBackgroundColor="#1A6AF6"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
@@ -191,7 +191,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="📊 Subscriptions"
-                        android:textColor="@android:color/white"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -207,9 +207,9 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/glass_card_bg"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
             app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toStartOf="@+id/monthlyCostCard"
             app:layout_constraintStart_toStartOf="parent"
@@ -225,7 +225,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Active Subscriptions"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/text_on_dark_muted"
                     android:textSize="12sp" />
 
                 <TextView
@@ -246,9 +246,9 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="24dp"
-            app:cardBackgroundColor="@android:color/white"
+            app:cardBackgroundColor="@color/glass_card_bg"
             app:cardCornerRadius="16dp"
-            app:cardElevation="2dp"
+            app:cardElevation="0dp"
             app:cardUseCompatPadding="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/activeSubsCard"
@@ -264,7 +264,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monthly Cost"
-                    android:textColor="#9E9E9E"
+                    android:textColor="@color/text_on_dark_muted"
                     android:textSize="12sp" />
 
                 <TextView
@@ -272,7 +272,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Rs.2739"
-                    android:textColor="#212121"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="24sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -293,9 +293,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="1dp">
+                app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -319,7 +319,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="Netflix"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/iconNetflix"
@@ -331,7 +331,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_tag_gray"
                         android:text="Entertainment"
-                        android:textColor="#757575"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="@id/nameNetflix"
                         app:layout_constraintStart_toEndOf="@id/nameNetflix"
@@ -341,8 +341,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Due 15 Jun • Monthly"
-                        android:textColor="#9E9E9E"
+                        android:text=""
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@id/nameNetflix"
                         app:layout_constraintTop_toBottomOf="@id/nameNetflix" />
@@ -352,7 +352,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs.1490"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -376,9 +376,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="1dp">
+                app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -402,7 +402,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="Spotify"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/iconSpotify"
@@ -414,7 +414,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_tag_gray"
                         android:text="Music"
-                        android:textColor="#757575"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="@id/nameSpotify"
                         app:layout_constraintStart_toEndOf="@id/nameSpotify"
@@ -424,8 +424,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Due 20 Jun • Monthly"
-                        android:textColor="#9E9E9E"
+                        android:text=""
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@id/nameSpotify"
                         app:layout_constraintTop_toBottomOf="@id/nameSpotify" />
@@ -435,7 +435,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs.399"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -459,9 +459,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="1dp">
+                app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -484,8 +484,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
-                        android:text="Microsoft 365"
-                        android:textColor="#212121"
+                        android:text=""
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/iconMs"
@@ -497,7 +497,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_tag_gray"
                         android:text="Productivity"
-                        android:textColor="#757575"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="@id/nameMs"
                         app:layout_constraintStart_toEndOf="@id/nameMs"
@@ -507,8 +507,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Due 1 Jul • Monthly"
-                        android:textColor="#9E9E9E"
+                        android:text=""
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@id/nameMs"
                         app:layout_constraintTop_toBottomOf="@id/nameMs" />
@@ -518,7 +518,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs.850"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -542,9 +542,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@android:color/white"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="1dp">
+                app:cardElevation="0dp">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
@@ -568,7 +568,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="16dp"
                         android:text="iCloud 50GB"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toEndOf="@id/iconIcloud"
@@ -580,7 +580,7 @@
                         android:layout_marginStart="8dp"
                         android:background="@drawable/bg_tag_gray"
                         android:text="Storage"
-                        android:textColor="#757575"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="10sp"
                         app:layout_constraintBottom_toBottomOf="@id/nameIcloud"
                         app:layout_constraintStart_toEndOf="@id/nameIcloud"
@@ -590,8 +590,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="Due 5 Jul • Monthly"
-                        android:textColor="#9E9E9E"
+                        android:text=""
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         app:layout_constraintStart_toStartOf="@id/nameIcloud"
                         app:layout_constraintTop_toBottomOf="@id/nameIcloud" />
@@ -601,7 +601,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Rs.250"
-                        android:textColor="#212121"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
                         app:layout_constraintEnd_toEndOf="parent"

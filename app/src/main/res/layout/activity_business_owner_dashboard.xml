@@ -40,7 +40,7 @@
                     android:background="@drawable/bg_profile_circle"
                     android:gravity="center"
                     android:text="B"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </FrameLayout>
@@ -56,8 +56,8 @@
                     android:id="@+id/txtGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Good Morning 👋"
-                    android:textColor="#7A9CC0"
+                    android:text="Welcome Back,"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -65,9 +65,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
-                    android:text="business@email.com"
-                    android:textColor="#F0F6FF"
-                    android:textSize="15sp"
+                    android:text=""
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textSize="16sp"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -90,6 +90,25 @@
                     android:layout_gravity="top|end"
                     android:layout_margin="8dp"
                     android:background="@drawable/bg_pill_green" />
+            </FrameLayout>
+
+            <FrameLayout
+                android:id="@+id/btnSecurity"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_lock"
+                    app:tint="@color/text_on_dark_primary" />
+
             </FrameLayout>
 
             <FrameLayout
@@ -129,8 +148,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="OUTSTANDING B2B RECEIVABLES"
-                    android:textColor="#7A9CC0"
+                    android:text="TOTAL COMBINED RECEIVABLES"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="11sp"
                     android:letterSpacing="0.15" />
 
@@ -148,8 +167,8 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="TRADE CREDIT"
-                        android:textColor="#4ADE80"
+                        android:text="ALL WORKSPACES"
+                        android:textColor="@color/pill_positive_text"
                         android:textSize="10sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -172,8 +191,8 @@
                         android:id="@+id/txtTotalCount"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Rs. 450K"
-                        android:textColor="#FFFFFF"
+                        android:text="Rs. 0"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="36sp"
                         android:textStyle="bold" />
 
@@ -182,7 +201,7 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal"
                         android:layout_marginTop="8dp">
-                        <View android:layout_width="32dp" android:layout_height="3dp" android:background="#00D4AA" />
+                        <View android:layout_width="32dp" android:layout_height="3dp" android:background="@color/hero_accent" />
                         <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
                         <View android:layout_width="4dp" android:layout_height="3dp" android:background="#1E3A6E" android:layout_marginStart="4dp" />
                     </LinearLayout>
@@ -193,7 +212,7 @@
                     android:layout_height="72dp"
                     android:background="@drawable/bg_calendar_circle"
                     android:gravity="center"
-                    android:text="🏢"
+                    android:text="📊"
                     android:textSize="32sp" />
             </LinearLayout>
 
@@ -202,15 +221,183 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:text="Pending collection from corporate partners"
-                android:textColor="#7A9CC0"
+                android:text="Sum total across all your registered entities"
+                android:textColor="@color/text_on_dark_secondary"
                 android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Savings Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSavingsWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/glass_card_bg"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/glass_card_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_function_icon_green"
+                    android:gravity="center"
+                    android:text="💰"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT SAVINGS"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="10sp"
+                        android:letterSpacing="0.1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtCurrentSavingsValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Rs 0.00"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnUpdateSavings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_green"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="UPDATE"
+                    android:textColor="@color/pill_positive_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <View
+                    android:layout_width="4dp"
+                    android:layout_height="16dp"
+                    android:layout_marginEnd="8dp"
+                    android:background="@drawable/bg_teal_bar" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="My Businesses"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/btnManageBusinesses"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginEnd="4dp"
+                    android:padding="4dp"
+                    android:contentDescription="Manage Businesses"
+                    android:src="@android:drawable/ic_menu_manage"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardStaticBizAdd"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginEnd="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackground"
+                    app:cardCornerRadius="19dp"
+                    app:cardElevation="0dp">
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:background="#1E293B"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingStart="14dp"
+                        android:paddingEnd="14dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="➕ "
+                            android:textSize="12sp" />
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Add Business"
+                            android:textColor="@color/hero_accent"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/recyclerBusinessFilters"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal"
+                    android:scrollbars="none"
+                    app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="26dp"
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
@@ -225,7 +412,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Finance Tools"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -238,7 +425,7 @@
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:text="6 modules"
-                android:textColor="#4ADE80"
+                android:textColor="@color/pill_positive_text"
                 android:textSize="11sp" />
         </LinearLayout>
 
@@ -257,7 +444,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -280,7 +467,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Manage Loan"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -297,7 +484,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -320,7 +507,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Subscriptions"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -342,7 +529,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -365,7 +552,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Manage Utility"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -382,7 +569,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -405,7 +592,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Saving Manager"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -427,7 +614,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -450,7 +637,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="B2B Invoices"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -467,7 +654,7 @@
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
                 app:cardCornerRadius="22dp"
-                app:cardElevation="4dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -490,7 +677,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:text="Analytics"
-                        android:textColor="#E8F4FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -522,7 +709,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Recent Subscriptions"
-                    android:textColor="#F0F6FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -531,7 +718,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all →"
-                    android:textColor="#00D4AA"
+                    android:textColor="@color/hero_accent"
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -555,7 +742,7 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_weight="1"
-                android:background="#1A3050" />
+                android:background="@color/divider_dark" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -563,7 +750,7 @@
                 android:layout_marginStart="14dp"
                 android:layout_marginEnd="14dp"
                 android:text="END OF DASHBOARD"
-                android:textColor="#2A4A6A"
+                android:textColor="@color/text_on_dark_muted"
                 android:textSize="10sp"
                 android:letterSpacing="0.18" />
 
@@ -571,10 +758,12 @@
                 android:layout_width="0dp"
                 android:layout_height="1dp"
                 android:layout_weight="1"
-                android:background="#1A3050" />
+                android:background="@color/divider_dark" />
         </LinearLayout>
 
-        <Space android:layout_width="match_parent" android:layout_height="32dp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="32dp" />
 
     </LinearLayout>
 </ScrollView>

@@ -22,25 +22,25 @@
             android:gravity="center_vertical"
             android:orientation="horizontal">
 
-            <TextView
+            <ImageView
                 android:id="@+id/btnBack"
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
-                android:gravity="center"
-                android:text="←"
-                android:textColor="#F0F6FF"
-                android:textSize="20sp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_on_dark_primary"
+                android:scaleType="centerInside"
                 android:clickable="true"
                 android:focusable="true"
-                android:foreground="?attr/selectableItemBackground" />
+                android:foreground="?attr/selectableItemBackground"
+                android:contentDescription="Back Button" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:text="New B2B Invoice"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
@@ -50,17 +50,48 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:text="CLIENT DETAILS"
-            android:textColor="#7A9CC0"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp"
             android:textStyle="bold"
             android:letterSpacing="0.08" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:text="SELECT BUSINESS WORKSPACE"
+            android:textColor="@color/text_on_dark_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColorHint="#527196"
+            app:hintTextColor="@color/hero_accent"
+            app:boxStrokeColor="#1A3050"
+            app:boxStrokeWidth="1dp">
+
+            <AutoCompleteTextView
+                android:id="@+id/spinnerBusinessDropdown"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="Choose your workspace"
+                android:textColor="@color/text_on_dark_primary"
+                android:background="@null"
+                android:inputType="none"
+                android:paddingHorizontal="16dp" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColorHint="#527196"
-            app:hintTextColor="#00D4AA"
+            app:hintTextColor="@color/hero_accent"
             app:boxStrokeColor="#1A3050"
             app:boxStrokeWidth="1dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -69,7 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:hint="Company / Client Name"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:inputType="textCapWords"
                 android:paddingHorizontal="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -79,7 +110,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
             android:textColorHint="#527196"
-            app:hintTextColor="#00D4AA"
+            app:hintTextColor="@color/hero_accent"
             app:boxStrokeColor="#1A3050"
             app:boxStrokeWidth="1dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
@@ -88,7 +119,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:hint="Business Registration No (Optional)"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:inputType="textCapCharacters"
                 android:paddingHorizontal="16dp"/>
         </com.google.android.material.textfield.TextInputLayout>
@@ -96,9 +127,41 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="SETTLEMENT DETAILS"
+            android:textColor="@color/text_on_dark_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColorHint="#527196"
+            app:hintTextColor="@color/hero_accent"
+            app:boxStrokeColor="#1A3050"
+            app:boxStrokeWidth="1dp">
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etPaymentDueDate"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:hint="Expected Payment Get Date"
+                android:textColor="@color/text_on_dark_primary"
+                android:focusable="false"
+                android:clickable="true"
+                android:inputType="none"
+                android:paddingHorizontal="16dp"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
             android:text="BILLING ITEMS"
-            android:textColor="#7A9CC0"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp"
             android:textStyle="bold"
             android:letterSpacing="0.08" />
@@ -115,14 +178,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.4"
                 android:textColorHint="#527196"
-                app:hintTextColor="#00D4AA"
+                app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etItemName"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:hint="Item"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:inputType="text" />
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,14 +198,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
                 android:textColorHint="#527196"
-                app:hintTextColor="#00D4AA"
+                app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etQty"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:hint="Qty"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:inputType="number"
                     android:gravity="center_horizontal"/>
             </com.google.android.material.textfield.TextInputLayout>
@@ -156,14 +219,14 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:textColorHint="#527196"
-                app:hintTextColor="#00D4AA"
+                app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/etPrice"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
                     android:hint="Price"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:inputType="numberDecimal"/>
             </com.google.android.material.textfield.TextInputLayout>
         </LinearLayout>
@@ -173,7 +236,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
             app:cardCornerRadius="20dp"
-            app:cardElevation="4dp"
+            app:cardElevation="0dp"
             app:strokeWidth="0dp">
 
             <LinearLayout
@@ -190,7 +253,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Subtotal"
-                        android:textColor="#B9C7D9"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp" />
                     <TextView
                         android:id="@+id/txtSubtotal"
@@ -198,7 +261,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="Rs. 0.00"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -207,7 +270,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
                     android:layout_marginVertical="12dp"
-                    android:background="#1A3050" />
+                    android:background="@color/divider_dark" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -216,7 +279,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Grand Total"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp"
                         android:textStyle="bold" />
                     <TextView
@@ -225,7 +288,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true"
                         android:text="Rs. 0.00"
-                        android:textColor="#00D4AA"
+                        android:textColor="@color/hero_accent"
                         android:textSize="18sp"
                         android:textStyle="bold" />
                 </RelativeLayout>
@@ -237,7 +300,7 @@
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="28dp"
-            app:backgroundTint="#00D4AA"
+            app:backgroundTint="@color/hero_accent"
             android:text="GENERATE &amp; SAVE INVOICE"
             android:textColor="#071A33"
             android:textSize="15sp"

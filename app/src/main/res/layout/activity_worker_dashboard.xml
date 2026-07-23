@@ -33,7 +33,7 @@
                 android:background="@drawable/bg_profile_circle"
                 android:gravity="center"
                 android:text="W"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="22sp"
                 android:textStyle="bold" />
 
@@ -48,8 +48,8 @@
                     android:id="@+id/txtGreeting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Worker Portal 👋"
-                    android:textColor="#7A9CC0"
+                    android:text=""
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -57,8 +57,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:text="worker@company.com"
-                    android:textColor="#F0F6FF"
+                    android:text=""
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="15sp"
                     android:textStyle="bold" />
 
@@ -72,6 +72,25 @@
                 android:gravity="center"
                 android:text="🔔"
                 android:textSize="20sp" />
+
+            <FrameLayout
+                android:id="@+id/btnSecurity"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/bg_notification"
+                android:clickable="true"
+                android:focusable="true"
+                android:foreground="?attr/selectableItemBackground">
+
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:src="@drawable/ic_lock"
+                    app:tint="@color/text_on_dark_primary" />
+
+            </FrameLayout>
 
             <FrameLayout
                 android:id="@+id/btnTopLogout"
@@ -99,7 +118,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="#00000000"
+            app:cardBackgroundColor="@android:color/transparent"
             app:cardCornerRadius="28dp"
             app:cardElevation="0dp">
 
@@ -122,20 +141,20 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="MONTHLY EARNINGS"
-                        android:textColor="#7A9CC0"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"
                         android:letterSpacing="0.12" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#0F3320"
+                        android:background="@color/pill_positive_bg"
                         android:paddingStart="10dp"
                         android:paddingEnd="10dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="4dp"
                         android:text="THIS MONTH"
-                        android:textColor="#4ADE80"
+                        android:textColor="@color/pill_positive_text"
                         android:textSize="10sp"
                         android:textStyle="bold" />
 
@@ -154,8 +173,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="LKR 0.00"
-                        android:textColor="#FFFFFF"
+                        android:text="Rs 0.00"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="38sp"
                         android:textStyle="bold" />
 
@@ -175,15 +194,91 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="Next payday in 12 days"
-                    android:textColor="#7A9CC0"
+                    android:text=""
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp" />
 
                 <View
                     android:layout_width="48dp"
                     android:layout_height="3dp"
                     android:layout_marginTop="16dp"
-                    android:background="#00D4AA" />
+                    android:background="@color/hero_accent" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Savings Card -->
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cardSavingsWidget"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:cardBackgroundColor="@color/glass_card_bg"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/glass_card_border"
+            android:clickable="true"
+            android:focusable="true"
+            android:foreground="?attr/selectableItemBackground">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="16dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_function_icon_green"
+                    android:gravity="center"
+                    android:text="💰"
+                    android:textSize="20sp" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="14dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="CURRENT SAVINGS"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="10sp"
+                        android:letterSpacing="0.1"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/txtCurrentSavingsValue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="Rs 0.00"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/btnUpdateSavings"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_pill_green"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    android:paddingTop="6dp"
+                    android:paddingBottom="6dp"
+                    android:text="UPDATE"
+                    android:textColor="@color/pill_positive_text"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
@@ -201,14 +296,14 @@
                 android:layout_width="4dp"
                 android:layout_height="18dp"
                 android:layout_marginEnd="10dp"
-                android:background="#00D4AA" />
+                android:background="@color/hero_accent" />
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Worker Portal"
-                android:textColor="#F0F6FF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
@@ -216,7 +311,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="4 modules"
-                android:textColor="#4A6A8A"
+                android:textColor="@color/text_on_dark_muted"
                 android:textSize="12sp" />
 
         </LinearLayout>
@@ -237,7 +332,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -262,7 +357,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="My Tasks"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -271,7 +366,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#38BDF8" />
+                        android:background="@color/qa_blue_icon" />
 
                 </LinearLayout>
 
@@ -288,7 +383,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -313,7 +408,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Expense Claims"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -322,7 +417,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#A78BFA" />
+                        android:background="@color/qa_purple_icon" />
 
                 </LinearLayout>
 
@@ -346,7 +441,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -371,7 +466,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Payslips"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -380,7 +475,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#FCD34D" />
+                        android:background="@color/pill_warning_text" />
 
                 </LinearLayout>
 
@@ -397,7 +492,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -422,7 +517,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Loan Manager"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -431,7 +526,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#F59E0B" />
+                        android:background="@color/pill_warning_text" />
 
                 </LinearLayout>
 
@@ -455,7 +550,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -480,7 +575,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Subscriptions"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -489,7 +584,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#38BDF8" />
+                        android:background="@color/qa_blue_icon" />
 
                 </LinearLayout>
 
@@ -506,7 +601,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -531,7 +626,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Savings"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -540,7 +635,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#4ADE80" />
+                        android:background="@color/pill_positive_text" />
 
                 </LinearLayout>
 
@@ -564,7 +659,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
 
@@ -589,7 +684,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Utilities"
-                        android:textColor="#F0F6FF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold"
                         android:gravity="center" />
@@ -598,7 +693,7 @@
                         android:layout_width="20dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="6dp"
-                        android:background="#F59E0B" />
+                        android:background="@color/pill_warning_text" />
 
                 </LinearLayout>
 
@@ -626,14 +721,14 @@
                     android:layout_width="4dp"
                     android:layout_height="18dp"
                     android:layout_marginEnd="10dp"
-                    android:background="#00D4AA" />
+                    android:background="@color/hero_accent" />
 
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Pending Tasks"
-                    android:textColor="#F0F6FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="17sp"
                     android:textStyle="bold" />
 
@@ -642,7 +737,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="View all →"
-                    android:textColor="#00D4AA"
+                    android:textColor="@color/hero_accent"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 

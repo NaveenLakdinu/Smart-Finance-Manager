@@ -6,16 +6,44 @@ import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.facebook.CallbackManager;
+import com.facebook.FacebookCallback;
+import com.facebook.FacebookException;
+import com.facebook.login.LoginManager;
+import com.facebook.login.LoginResult;
+import com.google.android.gms.auth.api.signin.GoogleSignIn;
+import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
+import com.google.android.gms.common.api.ApiException;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.GoogleAuthProvider;
+import com.google.firebase.auth.OAuthProvider;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import android.app.NotificationManager;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 public class LoginFormActivity extends AppCompatActivity {
 
@@ -23,11 +51,22 @@ public class LoginFormActivity extends AppCompatActivity {
     private ImageView passwordToggle;
     private TextView signUpLink, forgotPassword;
     private com.google.android.material.button.MaterialButton loginButton;
-    private ImageView googleBtn, facebookBtn, appleBtn;
+    private ImageButton googleBtn, facebookBtn, appleBtn;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
     private boolean isPasswordVisible = false;
+
+    // Google Sign-In
+    private GoogleSignInClient googleSignInClient;
+    private static final int RC_SIGN_IN = 9001;
+
+    // Facebook Login
+    private CallbackManager callbackManager;
+
+    // Activity Result Launchers
+    private ActivityResultLauncher<Intent> googleSignInLauncher;
+    private ActivityResultLauncher<Intent> appleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +76,21 @@ public class LoginFormActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
 
+        // Initialize Facebook SDK
+        callbackManager = CallbackManager.Factory.create();
+
+        // Configure Google Sign-In
+        configureGoogleSignIn();
+
+        // Initialize Activity Result Launchers
+        initializeActivityLaunchers();
+
+        // Register Facebook Callback
+        registerFacebookCallback();
+
         initViews();
+        requestNotificationPermission();
+        NotificationHelper.createNotificationChannels(this);
         setupListeners();
         checkIfUserLoggedIn();
     }
@@ -78,9 +131,25 @@ public class LoginFormActivity extends AppCompatActivity {
             handleForgotPassword();
         });
 
-        googleBtn.setOnClickListener(v -> Toast.makeText(this, "Google Login - Configuration Required", Toast.LENGTH_SHORT).show());
-        facebookBtn.setOnClickListener(v -> Toast.makeText(this, "Facebook Login - Configuration Required", Toast.LENGTH_SHORT).show());
-        appleBtn.setOnClickListener(v -> Toast.makeText(this, "Apple Login - Configuration Required", Toast.LENGTH_SHORT).show());
+        // Google Sign-In
+        googleBtn.setOnClickListener(v -> {
+            Intent signInIntent = googleSignInClient.getSignInIntent();
+            googleSignInLauncher.launch(signInIntent);
+        });
+
+        // Facebook Login
+        facebookBtn.setOnClickListener(v -> {
+            LoginManager.getInstance().logInWithReadPermissions(
+                    LoginFormActivity.this,
+                    callbackManager,
+                    Arrays.asList("email", "public_profile")
+            );
+        });
+
+        // Apple Sign-In
+        appleBtn.setOnClickListener(v -> {
+            handleAppleSignIn();
+        });
     }
 
     private void handleForgotPassword() {
@@ -164,6 +233,97 @@ public class LoginFormActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
                         DocumentSnapshot document = task.getResult();
                         if (document != null && document.exists()) {
+
+                            String status = document.getString("status");
+
+                            // ──────────────────────────────────────────────────────────────
+                            // 🚫 DEACTIVATED: Hard block — do not let the user in at all
+                            // ──────────────────────────────────────────────────────────────
+                            if ("deactivated".equalsIgnoreCase(status)) {
+                                mAuth.signOut();
+                                loginButton.setEnabled(true);
+                                loginButton.setText("LOGIN");
+                                new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
+                                        .setTitle("Account Deactivated")
+                                        .setMessage("Your account has been permanently deactivated. " +
+                                                "Please contact support if you believe this is a mistake.")
+                                        .setPositiveButton("OK", null)
+                                        .setCancelable(false)
+                                        .show();
+                                return;
+                            }
+
+                            // ──────────────────────────────────────────────────────────────
+                            // ⚠️ SUSPENDED: Warning — allow login but show notice.
+                            //    If suspended for ≥ 30 days → auto-deactivate and hard block.
+                            // ──────────────────────────────────────────────────────────────
+                            if ("suspended".equalsIgnoreCase(status)) {
+                                com.google.firebase.Timestamp suspendedAt =
+                                        document.getTimestamp("suspendedAt");
+
+                                boolean autoDeactivated = false;
+
+                                if (suspendedAt != null) {
+                                    long suspendedMillis = suspendedAt.toDate().getTime();
+                                    long thirtyDaysMillis = 30L * 24 * 60 * 60 * 1000;
+                                    long elapsed = System.currentTimeMillis() - suspendedMillis;
+
+                                    if (elapsed >= thirtyDaysMillis) {
+                                        // 30 days have passed — escalate to deactivated
+                                        db.collection("users").document(uid)
+                                                .update(
+                                                        "status", "deactivated",
+                                                        "deactivatedAt",
+                                                        com.google.firebase.firestore.FieldValue.serverTimestamp()
+                                                );
+                                        autoDeactivated = true;
+                                    }
+                                }
+
+                                if (autoDeactivated) {
+                                    // Show deactivation message after auto-escalation
+                                    mAuth.signOut();
+                                    loginButton.setEnabled(true);
+                                    loginButton.setText("LOGIN");
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
+                                            .setTitle("Account Deactivated")
+                                            .setMessage("Your account has been deactivated because " +
+                                                    "it remained suspended for more than 30 days. " +
+                                                    "Please contact support for assistance.")
+                                            .setPositiveButton("OK", null)
+                                            .setCancelable(false)
+                                            .show();
+                                    return;
+                                } else {
+                                    // Still within the 30-day window — warn but let them in
+                                    // Store role first, then show warning on top of dashboard
+                                    String role = document.getString("role");
+                                    if (role == null) role = "Student";
+                                    final String finalRole = role;
+
+                                    getSharedPreferences("UserData", MODE_PRIVATE)
+                                            .edit()
+                                            .putString("user_role", role)
+                                            .apply();
+
+                                    new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
+                                            .setTitle("⚠️ Account Suspended")
+                                            .setMessage("Your account has been suspended due to " +
+                                                    "not following the agreement. You can still " +
+                                                    "access the app, but your account may be " +
+                                                    "permanently deactivated if this is not resolved.")
+                                            .setPositiveButton("I Understand", (dialog, which) -> {
+                                                navigateByRole(finalRole);
+                                            })
+                                            .setCancelable(false)
+                                            .show();
+                                    return; // Navigation handled inside dialog callback
+                                }
+                            }
+
+                            // ──────────────────────────────────────────────────────────────
+                            // ✅ ACTIVE (or no status field): Normal login flow
+                            // ──────────────────────────────────────────────────────────────
                             Toast.makeText(this, "Login Successful!", Toast.LENGTH_SHORT).show();
 
                             // 💡 FIXED: Read the role and check against synchronized capitalized strings
@@ -180,29 +340,8 @@ public class LoginFormActivity extends AppCompatActivity {
                                     .putString("user_role", role)
                                     .apply();
 
-                            // 💡 FIXED: Evaluated switch-case strings to align perfectly with DB values
-                            // 💡 LoginFormActivity එකේ checkUserInFirestore මෙතඩ් එක ඇතුළේ තියෙන switch එක මේ විදිහට අප්ඩේට් කරන්න:
-                            switch (role) {
-                                case "Company worker":
-                                    navigateToWorkerDashboard(role);
-                                    break;
-
-                                case "Multiple account holder":
-                                    navigateToMultiAccountDashboard(role);
-                                    break;
-
-                                case "Student":
-                                    navigateToStudentDashboard(role);
-                                    break;
-
-                                case "Business owner":
-                                    navigateToBusinessDashboard(role);
-                                    break;
-
-                                default:
-                                    navigateToDashboard(role);
-                                    break;
-                            }
+                            navigateByRole(role);
+                            saveFcmToken();
                         } else {
                             mAuth.signOut();
                             Toast.makeText(this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
@@ -257,9 +396,73 @@ public class LoginFormActivity extends AppCompatActivity {
         finish();
     }
 
+    private void navigateToHybridDashboard(String role) {
+        Intent intent = new Intent(LoginFormActivity.this, StudentWorkerHybridDashboardActivity.class);
+        intent.putExtra("CURRENT_USER_ROLE", role);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+
+    /**
+     * Routes the user to the correct dashboard based on their Firestore role string.
+     * Single source of truth for all role-based navigation in this Activity.
+     */
+
+    private void requestNotificationPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, android.Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{android.Manifest.permission.POST_NOTIFICATIONS}, 1001);
+            }
+        }
+    }
+
+    private void saveFcmToken() {
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        String token = task.getResult();
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            db.collection("users").document(user.getUid())
+                                    .update("fcmToken", token);
+                        }
+                    }
+                });
+    }
+    private void navigateByRole(String role) {
+        // Show success toast only for normal (non-suspended) logins
+        switch (role) {
+            case "Company worker":
+                navigateToWorkerDashboard(role);
+                break;
+            case "Multiple account holder":
+                navigateToMultiAccountDashboard(role);
+                break;
+            case "Student":
+                navigateToStudentDashboard(role);
+                break;
+            case "Business owner":
+                navigateToBusinessDashboard(role);
+                break;
+            case "student_worker_hybrid":
+                navigateToHybridDashboard(role);
+                break;
+            default:
+                navigateToDashboard(role);
+                break;
+        }
+    }
+
     /**
      * Converts raw Firebase Auth exception messages into user-friendly strings.
      */
+
+
+
     private String getFriendlyErrorMessage(Exception e) {
         if (e == null) return "Login failed. Please try again.";
         String msg = e.getMessage();
@@ -275,5 +478,140 @@ public class LoginFormActivity extends AppCompatActivity {
         if (msg.contains("network") || msg.contains("Network"))
             return "Network error. Please check your internet connection.";
         return "Login failed. Please check your credentials.";
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Google Sign-In Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void configureGoogleSignIn() {
+        GoogleSignInOptions gso = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken(getString(R.string.default_web_client_id))
+                .requestEmail()
+                .build();
+
+        googleSignInClient = GoogleSignIn.getClient(this, gso);
+    }
+
+    private void initializeActivityLaunchers() {
+        // Google Sign-In Result Launcher
+        googleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
+                        try {
+                            GoogleSignInAccount account = task.getResult(ApiException.class);
+                            firebaseAuthWithGoogle(account.getIdToken());
+                        } catch (ApiException e) {
+                            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
+        );
+
+        // Apple Sign-In Result Launcher
+        appleSignInLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    // Apple Sign-In result handling would go here
+                    // Note: Full Apple Sign-In implementation requires additional setup
+                    Toast.makeText(this, "Apple Sign-In requires additional configuration", Toast.LENGTH_SHORT).show();
+                }
+        );
+    }
+
+    private void firebaseAuthWithGoogle(String idToken) {
+        AuthCredential credential = GoogleAuthProvider.getCredential(idToken, null);
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    } else {
+                        Toast.makeText(this, "Google Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Facebook Login Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void registerFacebookCallback() {
+        LoginManager.getInstance().registerCallback(callbackManager,
+                new FacebookCallback<LoginResult>() {
+                    @Override
+                    public void onSuccess(LoginResult loginResult) {
+                        handleFacebookLogin(loginResult);
+                    }
+
+                    @Override
+                    public void onCancel() {
+                        Toast.makeText(LoginFormActivity.this, "Facebook Login cancelled", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onError(FacebookException error) {
+                        Toast.makeText(LoginFormActivity.this, "Facebook Login error: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    private void handleFacebookLogin(LoginResult loginResult) {
+        AuthCredential credential = FacebookAuthProvider.getCredential(loginResult.getAccessToken().getToken());
+        mAuth.signInWithCredential(credential)
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    } else {
+                        Toast.makeText(this, "Facebook Authentication failed", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    // ──────────────────────────────────────────────────────────────
+    // Apple Sign-In Implementation
+    // ──────────────────────────────────────────────────────────────
+    private void handleAppleSignIn() {
+        OAuthProvider provider = OAuthProvider.newBuilder("apple.com")
+                .setScopes(Arrays.asList("email", "name"))
+                .build();
+
+        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
+        if (pendingResultTask != null) {
+            // There's already a pending result, wait for it
+            pendingResultTask.addOnSuccessListener(authResult -> {
+                FirebaseUser user = authResult.getUser();
+                if (user != null) {
+                    checkUserInFirestore(user.getUid());
+                }
+            }).addOnFailureListener(e -> {
+                Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            });
+        } else {
+            // Start the sign-in flow
+            mAuth.startActivityForSignInWithProvider(this, provider)
+                    .addOnSuccessListener(authResult -> {
+                        FirebaseUser user = authResult.getUser();
+                        if (user != null) {
+                            checkUserInFirestore(user.getUid());
+                        }
+                    })
+                    .addOnFailureListener(e -> {
+                        Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        // Pass result to Facebook SDK
+        callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

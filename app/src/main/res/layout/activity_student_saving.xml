@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4F7FB"
+    android:background="@color/dash_bg_deep"
     tools:context=".StudentSavingActivity">
 
     <!-- Top Blue Header Background -->
@@ -46,7 +46,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Track • Save • Achieve"
-                    android:textColor="#D8E4FF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text="Savings Management"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="22sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -64,10 +64,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp"
-                app:strokeColor="#E5E7EB"
+                app:strokeColor="@color/divider_dark"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -83,7 +83,7 @@
                         android:background="@drawable/bg_segment_active"
                         android:gravity="center"
                         android:text="💰 Savings &amp; Goals"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
 
@@ -94,7 +94,7 @@
                         android:background="@android:color/transparent"
                         android:gravity="center"
                         android:text="🎓 Award Tracker"
-                        android:textColor="#6B7280"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
@@ -108,7 +108,7 @@
                 android:layout_marginTop="16dp"
                 app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="24dp"
-                app:cardElevation="6dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp" />
 
             <!-- Savings Level Card -->
@@ -117,9 +117,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -146,7 +146,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Savings Level"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -157,7 +157,7 @@
                             android:paddingHorizontal="12dp"
                             android:paddingVertical="4dp"
                             android:text="🥇 Gold"
-                            android:textColor="#B45309"
+                            android:textColor="@color/pill_warning_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -166,11 +166,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:background="#FFFBEB"
+                        android:background="@color/pill_warning_bg"
                         android:gravity="center"
                         android:padding="12dp"
                         android:text="🏆 Maximum level reached! You're a Gold Saver 🎉"
-                        android:textColor="#B45309"
+                        android:textColor="@color/pill_warning_text"
                         android:textSize="13sp" />
 
                 </LinearLayout>
@@ -182,9 +182,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -212,7 +212,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Achievement Center"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -220,7 +220,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="4 earned"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="12sp" />
                     </LinearLayout>
 
@@ -229,7 +229,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="Complete milestones to unlock rewards"
-                        android:textColor="#9CA3AF"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp" />
 
                     <!-- EARNED -->
@@ -251,7 +251,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="EARNED"
-                            android:textColor="#16A34A"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -294,7 +294,7 @@
                                     android:background="@drawable/icon_circle_green"
                                     android:gravity="center"
                                     android:text="✓"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -304,7 +304,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Bronze Saver"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -313,18 +313,18 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Save Rs. 5,000"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:background="#FDE68A"
+                                android:background="@color/pill_warning_bg"
                                 android:paddingHorizontal="8dp"
                                 android:paddingVertical="2dp"
                                 android:text="EARNED ✓"
-                                android:textColor="#B45309"
+                                android:textColor="@color/pill_warning_text"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -336,7 +336,7 @@
                             android:layout_columnWeight="1"
                             android:layout_marginStart="6dp"
                             android:layout_marginBottom="12dp"
-                            android:background="#F3F4F6"
+                            android:background="@color/glass_card_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -359,7 +359,7 @@
                                     android:background="@drawable/icon_circle_green"
                                     android:gravity="center"
                                     android:text="✓"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -369,7 +369,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Silver Saver"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -378,18 +378,18 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Save Rs. 25,000"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:background="#E5E7EB"
+                                android:background="@color/divider_dark"
                                 android:paddingHorizontal="8dp"
                                 android:paddingVertical="2dp"
                                 android:text="EARNED ✓"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -400,7 +400,7 @@
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
                             android:layout_marginEnd="6dp"
-                            android:background="#FFFBEB"
+                            android:background="@color/pill_warning_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -423,7 +423,7 @@
                                     android:background="@drawable/icon_circle_green"
                                     android:gravity="center"
                                     android:text="✓"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -433,7 +433,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Gold Saver"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -442,18 +442,18 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Save Rs. 50,000"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:background="#FDE68A"
+                                android:background="@color/pill_warning_bg"
                                 android:paddingHorizontal="8dp"
                                 android:paddingVertical="2dp"
                                 android:text="EARNED ✓"
-                                android:textColor="#B45309"
+                                android:textColor="@color/pill_warning_text"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -487,7 +487,7 @@
                                     android:background="@drawable/icon_circle_green"
                                     android:gravity="center"
                                     android:text="✓"
-                                    android:textColor="#FFFFFF"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -497,7 +497,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Smart Saver"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -506,7 +506,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Reach a goal before deadline"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <TextView
@@ -543,7 +543,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="LOCKED"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -591,7 +591,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Goal Master"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -600,7 +600,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Complete 3 Saving Goals"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <LinearLayout
@@ -615,14 +615,14 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="Progress"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="10sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="0%"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -672,7 +672,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
                                 android:text="Consistent Saver"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -681,7 +681,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Save every month for 6 months"
-                                android:textColor="#4B5563"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="11sp" />
 
                             <LinearLayout
@@ -696,14 +696,14 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="Progress"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="10sp" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="50%"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="10sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -738,7 +738,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Savings Goals"
-                    android:textColor="#111827"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -749,7 +749,7 @@
                     android:paddingHorizontal="16dp"
                     android:paddingVertical="8dp"
                     android:text="+ Add Goal"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -760,9 +760,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -801,7 +801,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Buy New Laptop"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -809,7 +809,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🕒 2 months remaining"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -817,7 +817,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="75%"
-                            android:textColor="#10B981"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -841,7 +841,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs.90,000 saved"
-                            android:textColor="#10B981"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
@@ -851,7 +851,7 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:text="of Rs.120,000"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -867,7 +867,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
-                            android:background="#F8FAFC"
+                            android:background="@color/dash_bg_deep"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -875,7 +875,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="REMAINING"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -884,7 +884,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.30,000"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -894,7 +894,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="#EFF6FF"
+                            android:background="@color/qa_blue_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -911,7 +911,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.15,000"
-                                android:textColor="#2563EB"
+                                android:textColor="@color/qa_blue_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -926,9 +926,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -968,6 +968,8 @@
                                 android:layout_height="wrap_content"
                                 android:text="Books"
                                 android:textColor="#111827"
+                                android:text="Semester Books"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -975,7 +977,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🕒 1 months remaining"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -983,7 +985,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="72%"
-                            android:textColor="#3B82F6"
+                            android:textColor="@color/qa_blue_icon"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -995,7 +997,7 @@
                         android:layout_marginTop="16dp"
                         android:progress="72"
                         android:progressBackgroundTint="#F3F4F6"
-                        android:progressTint="#3B82F6" />
+                        android:progressTint="@color/qa_blue_icon" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1007,7 +1009,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs.18,000 saved"
-                            android:textColor="#10B981"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
@@ -1017,7 +1019,7 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:text="of Rs.25,000"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -1033,7 +1035,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
-                            android:background="#F8FAFC"
+                            android:background="@color/dash_bg_deep"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1041,7 +1043,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="REMAINING"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -1050,7 +1052,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.7,000"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1060,7 +1062,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="#EFF6FF"
+                            android:background="@color/qa_blue_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1077,7 +1079,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.7,000"
-                                android:textColor="#2563EB"
+                                android:textColor="@color/qa_blue_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1092,9 +1094,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -1133,7 +1135,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="Emergency Fund"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -1141,7 +1143,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="🕒 5 months remaining"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -1149,7 +1151,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="24%"
-                            android:textColor="#F59E0B"
+                            android:textColor="@color/pill_warning_text"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -1173,7 +1175,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs.12,000 saved"
-                            android:textColor="#10B981"
+                            android:textColor="@color/pill_positive_text"
                             android:textSize="11sp"
                             android:textStyle="bold" />
 
@@ -1183,7 +1185,7 @@
                             android:layout_weight="1"
                             android:gravity="end"
                             android:text="of Rs.50,000"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -1199,7 +1201,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_weight="1"
-                            android:background="#F8FAFC"
+                            android:background="@color/dash_bg_deep"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1207,7 +1209,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="REMAINING"
-                                android:textColor="#9CA3AF"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -1216,7 +1218,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.38,000"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1226,7 +1228,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="#EFF6FF"
+                            android:background="@color/qa_blue_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1243,7 +1245,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.7,600"
-                                android:textColor="#2563EB"
+                                android:textColor="@color/qa_blue_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1260,7 +1262,7 @@
                 android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="#FF6B6B"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -1294,7 +1296,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3-Month Saving Streak!"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -1364,9 +1366,9 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
+                app:cardElevation="0dp"
                 app:strokeWidth="0dp">
 
                 <LinearLayout
@@ -1400,7 +1402,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Smart Tip"
-                            android:textColor="#111827"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="14sp"
                             android:textStyle="bold" />
 
@@ -1409,7 +1411,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Saving Rs.0 per month for 3 months will unlock your next achievement level!"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="12sp" />
                     </LinearLayout>
                 </LinearLayout>

@@ -1,38 +1,50 @@
 package com.example.smartfinancialmanagement;
 
+import android.graphics.Color;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.Locale;
 
 public class InvoiceDetailsActivity extends AppCompatActivity {
 
-    private TextView btnBack;
-    private TextView txtInvoiceStatusBadge;
-    private TextView txtDetInvoiceNum;
-    private TextView txtDetClientName;
-    private TextView txtDetClientBRN;
-    private TextView txtDetItemName;
-    private TextView txtDetQty;
-    private TextView txtDetPrice;
-    private TextView txtDetTotal;
+    private TextView txtInvoiceStatusBadge, txtDetInvoiceNum, txtDetClientName, txtDetClientBRN;
+    private TextView txtDetItemName, txtDetQty, txtDetPrice, txtDetTotal;
+    private ImageView btnBack;
+    private MaterialButton btnMarkPaid, btnDeleteInvoice;
 
-    private MaterialButton btnMarkPaid;
-    private MaterialButton btnSendReminder;
+    private FirebaseFirestore db;
+    private String clientName, selectedBusiness, status, dueDate;
+    private double grandTotal;
+
+    private String invoiceDocId = "";
+    private TextView txtDetBusinessWorkspace;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invoice_detail);
 
+        db = FirebaseFirestore.getInstance();
+
         initializeViews();
-        setupListeners();
-        loadInvoiceData();
+        getIntentData();
+        setupClickListeners();
     }
 
     private void initializeViews() {
-        btnBack = findViewById(R.id.btnBack);
+        btnBack = findViewById(R.id.bBack);
         txtInvoiceStatusBadge = findViewById(R.id.txtInvoiceStatusBadge);
         txtDetInvoiceNum = findViewById(R.id.txtDetInvoiceNum);
         txtDetClientName = findViewById(R.id.txtDetClientName);
@@ -42,29 +54,166 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
         txtDetPrice = findViewById(R.id.txtDetPrice);
         txtDetTotal = findViewById(R.id.txtDetTotal);
         btnMarkPaid = findViewById(R.id.btnMarkPaid);
-        btnSendReminder = findViewById(R.id.btnSendReminder);
+        btnDeleteInvoice = findViewById(R.id.btnSendReminder);
+        txtDetBusinessWorkspace = findViewById(R.id.txtDetBusinessWorkspace);
     }
 
-    private void setupListeners() {
+    private void getIntentData() {
+        if (getIntent() != null) {
+            clientName = getIntent().getStringExtra("clientName");
+            selectedBusiness = getIntent().getStringExtra("selectedBusiness");
+            status = getIntent().getStringExtra("status");
+            dueDate = getIntent().getStringExtra("paymentDueDate");
+            grandTotal = getIntent().getDoubleExtra("grandTotal", 0.0);
+
+            if (status == null) status = "pending";
+
+            txtDetClientName.setText(clientName);
+            txtDetClientBRN.setText(getIntent().getStringExtra("clientBRN"));
+            txtDetItemName.setText(getIntent().getStringExtra("itemName"));
+            txtDetQty.setText(String.valueOf(getIntent().getIntExtra("quantity", 1)));
+
+            double unitPrice = getIntent().getDoubleExtra("unitPrice", 0.0);
+            txtDetPrice.setText(String.format(Locale.getDefault(), "Rs. %.2f", unitPrice));
+            txtDetTotal.setText(String.format(Locale.getDefault(), "Rs. %.2f", grandTotal));
+
+            txtDetInvoiceNum.setText("#INV-" + Math.abs(clientName.hashCode() % 10000));
+
+            if (selectedBusiness != null && !selectedBusiness.isEmpty()) {
+                txtDetBusinessWorkspace.setText("Workspace: " + selectedBusiness);
+            } else {
+                txtDetBusinessWorkspace.setText("Business Commercial Statement");
+            }
+
+            configureStatusUI();
+        }
+    }
+
+    private void configureStatusUI() {
+        txtInvoiceStatusBadge.setText(status.toUpperCase());
+
+        if (status.equalsIgnoreCase("paid")) {
+            txtInvoiceStatusBadge.setTextColor(Color.parseColor("#071A33"));
+            txtInvoiceStatusBadge.setBackgroundColor(Color.parseColor("#4ADE80"));
+
+            btnMarkPaid.setText("MARK AS UNPAID");
+            btnMarkPaid.setBackgroundColor(Color.parseColor("#FF5555"));
+            btnMarkPaid.setTextColor(Color.parseColor("#FFFFFF"));
+        } else {
+            if (status.equalsIgnoreCase("due")) {
+                txtInvoiceStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
+                txtInvoiceStatusBadge.setBackgroundColor(Color.parseColor("#FF5555"));
+            } else {
+                txtInvoiceStatusBadge.setTextColor(Color.parseColor("#FFB800"));
+                txtInvoiceStatusBadge.setBackgroundColor(Color.parseColor("#1A3050"));
+            }
+
+            btnMarkPaid.setText("MARK AS PAID & RECONCILE");
+            btnMarkPaid.setBackgroundColor(Color.parseColor("#4ADE80"));
+            btnMarkPaid.setTextColor(Color.parseColor("#071A33"));
+        }
+    }
+
+    private void setupClickListeners() {
         btnBack.setOnClickListener(v -> finish());
-
-        btnMarkPaid.setOnClickListener(v -> {
-            // Update status UI state dynamically
-            txtInvoiceStatusBadge.setText("PAID");
-            txtInvoiceStatusBadge.setTextColor(android.graphics.Color.parseColor("#4ADE80"));
-
-            Toast.makeText(this, "Invoice reconciled successfully!", Toast.LENGTH_SHORT).show();
-            btnMarkPaid.setEnabled(false);
-            btnSendReminder.setEnabled(false);
-        });
-
-        btnSendReminder.setOnClickListener(v -> {
-            Toast.makeText(this, "Reminder alert notification dispatched to partner!", Toast.LENGTH_SHORT).show();
-        });
+        btnMarkPaid.setOnClickListener(v -> toggleInvoicePaidStatus());
+        btnDeleteInvoice.setOnClickListener(v -> deleteInvoiceRecord());
     }
 
-    private void loadInvoiceData() {
-        // Intended target location to extract intent bundles when hooking up real dashboard database items
-        // Example: String invoiceNum = getIntent().getStringExtra("INVOICE_NUM");
+    private void toggleInvoicePaidStatus() {
+        String newStatus;
+        if (status.equalsIgnoreCase("paid")) {
+            newStatus = determinePendingOrOverdue(dueDate);
+        } else {
+            newStatus = "paid";
+        }
+
+        db.collection("invoices")
+                .whereEqualTo("clientName", clientName)
+                .whereEqualTo("grandTotal", grandTotal)
+                .whereEqualTo("paymentDueDate", dueDate)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
+                        String docId = document.getId();
+
+                        // 💡 Firestore එකෙන් email reminder අවසරය කියවා ගැනීම
+                        boolean isEmailReminderEnabled = false;
+                        if (document.contains("emailReminderEnabled")) {
+                            Boolean enabled = document.getBoolean("emailReminderEnabled");
+                            if (enabled != null) isEmailReminderEnabled = enabled;
+                        }
+                        final boolean finalIsEmailEnabled = isEmailReminderEnabled;
+
+                        // 💡 Firestore එකෙන් businessEmail එක කියවා ගැනීම
+                        String emailFromDb = "";
+                        if (document.contains("businessEmail")) {
+                            emailFromDb = document.getString("businessEmail");
+                        }
+                        if (emailFromDb == null) emailFromDb = "";
+                        final String finalBusinessEmail = emailFromDb;
+
+                        db.collection("invoices").document(docId)
+                                .update("status", newStatus)
+                                .addOnSuccessListener(aVoid -> {
+                                    status = newStatus;
+                                    configureStatusUI();
+                                    Toast.makeText(this, "Invoice registry updated to " + newStatus, Toast.LENGTH_SHORT).show();
+
+                                    // 💡 FIX: පරාමිතීන් 6 ම නිවැරදිව ලබා දී ඇත
+                                    if (status.equalsIgnoreCase("paid")) {
+                                        // ඉන්වොයිසිය PAID වුවහොත් පවතින Alarm එක අවලංගු කරයි
+                                        InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
+                                    } else {
+                                        // නැවත UNPAID කළහොත් අලුතින් Alarm එකක් දමයි (සියලුම පරාමිතීන් 6 ම ලබා දී ඇත)
+                                        InvoiceReminderScheduler.scheduleInvoiceReminder(
+                                                InvoiceDetailsActivity.this,
+                                                clientName,
+                                                dueDate,
+                                                finalIsEmailEnabled,
+                                                finalBusinessEmail, // 5 වෙනි පරාමිතිය (String)
+                                                grandTotal          // 6 වෙනි පරාමිතිය (double)
+                                        );
+                                    }
+                                });
+                    }
+                });
+    }
+
+    private String determinePendingOrOverdue(String dateStr) {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        try {
+            Date parsedDate = sdf.parse(dateStr);
+            if (parsedDate != null && parsedDate.before(new Date())) {
+                return "due";
+            }
+        } catch (ParseException ignored) {}
+        return "pending";
+    }
+
+    private void deleteInvoiceRecord() {
+        db.collection("invoices")
+                .whereEqualTo("clientName", clientName)
+                .whereEqualTo("grandTotal", grandTotal)
+                .whereEqualTo("paymentDueDate", dueDate)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.isEmpty()) {
+                        String docId = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        db.collection("invoices").document(docId)
+                                .delete()
+                                .addOnSuccessListener(aVoid -> {
+
+                                    // 💡 ReminderScheduler Class එක භාවිතා කර Alarm එක අවලංගු කිරීම
+                                    InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
+
+                                    Toast.makeText(this, "Invoice deleted successfully!", Toast.LENGTH_SHORT).show();
+                                    finish();
+                                });
+                    } else {
+                        Toast.makeText(this, "Document reference matching parameters not found", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }

@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="#071A33"
+    android:background="@color/surface_primary"
     tools:context=".AccountSettingsActivity">
 
     <!-- Top Bar -->
@@ -25,13 +25,13 @@
             android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@drawable/ic_back"
             android:contentDescription="Back"
-            app:tint="#FFFFFF" />
+            app:tint="@color/text_on_dark_primary" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Account Settings"
-            android:textColor="#FFFFFF"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginStart="16dp" />
@@ -52,9 +52,9 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#FFFFFF"
+                app:cardBackgroundColor="@color/glass_card_bg"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardElevation="0dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -205,7 +205,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Preferred Currency"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp"/>
 
@@ -220,7 +220,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Security"
-                        android:textColor="#071A33"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
@@ -229,7 +229,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Update Password"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp"/>
 
@@ -258,10 +258,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="56dp"
                         android:text="Save Changes"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textStyle="bold"
                         app:cornerRadius="12dp"
-                        app:backgroundTint="#4CAF50"/>
+                        app:backgroundTint="@color/btn_primary"/>
 
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>

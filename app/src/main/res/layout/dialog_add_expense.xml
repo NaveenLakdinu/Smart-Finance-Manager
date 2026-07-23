@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/glass_card_bg"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Log New Expense Entry"
+        android:textColor="@color/text_on_dark_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Target Business Profile"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"/>
+
+    <Spinner
+        android:id="@+id/dialogSpinnerBusiness"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="@color/text_on_dark_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Expense Category"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <Spinner
+        android:id="@+id/SpinnerCategory"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:backgroundTint="@color/text_on_dark_primary" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Paid Amount (Rs.)"
+        android:textColor="@color/text_on_dark_secondary"
+        android:textStyle="bold"
+        android:layout_marginTop="12dp"/>
+
+    <EditText
+        android:id="@+id/dialogEdtAmount"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="6dp"
+        android:hint="0.00"
+        android:textColorHint="#4A607A"
+        android:textColor="@color/text_on_dark_primary"
+        android:inputType="numberDecimal"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="⚠️ Transaction will automatically lock into current month timeline matrix logs."
+        android:textColor="@color/pill_warning_text"
+        android:textSize="11sp"/>
+
+    <Button
+        android:id="@+id/dialogBtnSubmit"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="@color/danger_text"
+        android:text="SAVE EXPENSE TRANSACTION"
+        android:textColor="@color/text_on_dark_primary"
+        android:textStyle="bold"/>
+</LinearLayout>

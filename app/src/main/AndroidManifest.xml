@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -14,6 +18,14 @@
         android:roundIcon="@drawable/logo"
         android:supportsRtl="true"
         android:theme="@style/Theme.SmartFinancialManagement">
+
+        <!-- Facebook Configuration -->
+        <meta-data
+            android:name="com.facebook.sdk.ApplicationId"
+            android:value="@string/facebook_app_id" />
+        <meta-data
+            android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/fb_login_protocol_scheme" />
 
         <activity
             android:name=".MainActivity"
@@ -27,7 +39,14 @@
 
         <activity
             android:name=".LoginFormActivity"
-            android:exported="false" />
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="@string/fb_login_protocol_scheme" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".RegisterActivity"
             android:exported="false" />
@@ -78,11 +97,31 @@
             android:exported="false" />
 
         <activity
+            android:name=".PinLockActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".PinSetupActivity"
+            android:exported="false" />
+
+        <activity
             android:name=".BusinessDashboardActivity"
             android:exported="false" />
 
         <activity
             android:name=".StudentDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".RoleUpgradeActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentWorkerHybridDashboardActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".StudentBudgetActivity"
             android:exported="false" />
 
         <activity
@@ -139,6 +178,15 @@
             android:name=".UtilityReportActivity"
             android:exported="false" />
         <activity
+            android:name=".UpdateBillActivity"
+            android:exported="false" />
+        <activity
+            android:name=".UtilityReportFormActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ReportSummaryActivity"
+            android:exported="false" />
+        <activity
             android:name=".SavingManagerActivity"
             android:exported="false" />
         <activity
@@ -146,6 +194,17 @@
             android:exported="false" />
         <activity
             android:name=".ExpenseClaimsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimListActivity"
+            android:exported="false" />        <activity
+            android:name=".ExpenseClaimAddActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimHistoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpenseClaimReportActivity"
             android:exported="false" />
 
         <activity
@@ -157,6 +216,17 @@
         <activity
             android:name=".InvoiceDetailsActivity"
             android:exported="false" />
+        <activity
+            android:name=".AddBusinessActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ManageBusinessActivity"
+            android:exported="false" />
+
+        <receiver
+            android:name=".InvoiceReminderReceiver"
+            android:enabled="true"
+            android:exported="false" />
 
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"
@@ -165,6 +235,15 @@
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_icon"
             android:resource="@mipmap/ic_launcher" />
+
+        <service
+            android:name=".SmartFinanceMessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
+            </intent-filter>
+        </service>
+
 
         <activity
             android:name=".SavingListActivity"
@@ -190,6 +269,50 @@
         <activity
             android:name=".NotificationListActivity"
             android:exported="false" />
+
+        <!-- Transfer activities -->
+        <activity
+            android:name=".TransferActivity"
+            android:theme="@style/Theme.SmartFinancialManagement"
+            android:exported="false" />
+        <activity
+            android:name=".TransferHistoryActivity"
+            android:theme="@style/Theme.SmartFinancialManagement"
+            android:exported="false" />
+
+    
+        <activity
+            android:name=".AddSubscriptionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionListActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".SubscriptionReportActivity"
+            android:exported="false" />
+        <activity
+            android:name=".OnboardingActivity"
+            android:exported="false" />
+        <receiver
+            android:name=".SubscriptionAlarmReceiver"
+            android:enabled="true"
+            android:exported="false" />
+
+    
+        <receiver
+            android:name=".SubscriptionBootReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
+
+
     </application>
 
 </manifest>

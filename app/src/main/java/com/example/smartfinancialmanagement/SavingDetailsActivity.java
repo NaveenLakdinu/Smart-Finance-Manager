@@ -422,7 +422,7 @@ public class SavingDetailsActivity extends AppCompatActivity {
     // ─── Delete goal ──────────────────────────────────────────────────────────
 
     private void showDeleteDialog() {
-        new AlertDialog.Builder(this)
+        new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
                 .setTitle("Delete Goal")
                 .setMessage("Are you sure you want to delete this saving goal?")
                 .setPositiveButton("Delete", (d, w) -> deleteGoal())

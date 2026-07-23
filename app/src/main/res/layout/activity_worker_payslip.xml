@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
@@ -9,12 +10,10 @@
     android:padding="20dp">
 
     <!-- Header -->
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="32dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_marginTop="32dp">
 
         <ImageView
             android:id="@+id/btnBack"
@@ -23,36 +22,65 @@
             android:background="@drawable/bg_notification"
             android:padding="10dp"
             android:src="@drawable/ic_arrow_back"
-            app:tint="#FFFFFF" />
+            app:tint="@color/text_on_dark_primary"
+            android:layout_centerVertical="true"
+            android:contentDescription="@string/cd_navigate_back" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/btnBack"
             android:layout_marginStart="16dp"
-            android:text="Salary Payslip"
-            android:textColor="#FFFFFF"
+            android:text="@string/salary_payslip"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:layout_centerVertical="true" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/tvStatusBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="28dp"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/tag_green"
+            android:gravity="center"
+            android:paddingHorizontal="14dp"
+            android:text="@string/paid"
+            android:textColor="@color/pill_positive_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            tools:ignore="RelativeOverlap" />
+    </RelativeLayout>
+
+    <!-- Month Selector -->
+    <Spinner
+        android:id="@+id/spinnerMonth"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/bg_glass_card"
+        android:paddingHorizontal="12dp"
+        android:backgroundTint="@color/text_on_dark_secondary" />
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:layout_marginTop="24dp"
-        android:scrollbars="none">
+        android:layout_marginTop="16dp"
+        android:scrollbars="none"
+        android:clipToPadding="false">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <!-- Summary Card -->
+            <!-- Hero Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="#00000000"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
 
@@ -64,10 +92,11 @@
                     android:padding="24dp">
 
                     <TextView
+                        android:id="@+id/tvMonthYear"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="MONTH OF JUNE 2026"
-                        android:textColor="#7A9CC0"
+                        android:text="-- -- ----"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"
                         android:letterSpacing="0.1" />
 
@@ -75,35 +104,162 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:text="Net Salary"
-                        android:textColor="#FFFFFF"
+                        android:text="@string/net_salary"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="16sp" />
 
                     <TextView
+                        android:id="@+id/tvNetSalary"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:text="LKR 75,000.00"
-                        android:textColor="#FFFFFF"
+                        android:text="Rs 0.00"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="32sp"
                         android:textStyle="bold" />
 
                     <View
-                        android:layout_width="40dp"
-                        android:layout_height="3dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="4dp"
+                        android:layout_marginTop="20dp"
+                        android:background="@color/divider_dark" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
                         android:layout_marginTop="16dp"
-                        android:background="#4ADE80" />
+                        android:orientation="horizontal">
+
+                        <View
+                            android:id="@+id/viewEarningsBar"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="80"
+                            android:background="@color/pill_positive_text" />
+
+                        <View
+                            android:id="@+id/viewDeductionsBar"
+                            android:layout_width="0dp"
+                            android:layout_height="match_parent"
+                            android:layout_weight="20"
+                            android:background="@color/danger_text" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvEarningsPercent"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text=""
+                            android:textColor="@color/pill_positive_text"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvDeductionsPercent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text=""
+                            android:textColor="@color/danger_text"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Details Card -->
+            <!-- Attendance & Overtime -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginEnd="8dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_glass_card"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/days_worked"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/tvDaysWorked"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0"
+                            android:textColor="@color/qa_blue_icon"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="8dp"
+                    app:cardBackgroundColor="@android:color/transparent"
+                    app:cardCornerRadius="20dp"
+                    app:cardElevation="0dp">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_glass_card"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/overtime"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="11sp" />
+
+                        <TextView
+                            android:id="@+id/tvOvertimeHours"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="0h"
+                            android:textColor="@color/qa_yellow"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <!-- Earnings Breakdown -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                app:cardBackgroundColor="#00000000"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@android:color/transparent"
                 app:cardCornerRadius="24dp"
                 app:cardElevation="0dp">
 
@@ -118,7 +274,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Earnings"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -132,12 +288,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Basic Salary"
-                            android:textColor="#A0AEC0" />
+                            android:textColor="@color/text_on_dark_secondary" />
                         <TextView
+                            android:id="@+id/tvBasicSalary"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 60,000.00"
-                            android:textColor="#FFFFFF" />
+                            android:text="Rs 0.00"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -150,12 +308,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Transport Allowance"
-                            android:textColor="#A0AEC0" />
+                            android:textColor="@color/text_on_dark_secondary" />
                         <TextView
+                            android:id="@+id/tvTransportAllowance"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 10,000.00"
-                            android:textColor="#FFFFFF" />
+                            android:text="Rs 0.00"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -168,26 +328,28 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Performance Bonus"
-                            android:textColor="#A0AEC0" />
+                            android:textColor="@color/text_on_dark_secondary" />
                         <TextView
+                            android:id="@+id/tvPerformanceBonus"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 10,000.00"
-                            android:textColor="#FFFFFF" />
+                            android:text="Rs 0.00"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginTop="20dp"
-                        android:background="#1AFFFFFF" />
+                        android:background="@color/divider_dark" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="20dp"
                         android:text="Deductions"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:textStyle="bold" />
 
@@ -200,13 +362,15 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="EPF (8%)"
-                            android:textColor="#A0AEC0" />
+                            android:text="EPF Deduction"
+                            android:textColor="@color/text_on_dark_secondary" />
                         <TextView
+                            android:id="@+id/tvEpfDeduction"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 4,800.00"
-                            android:textColor="#F87171" />
+                            android:text="Rs 0.00"
+                            android:textColor="@color/danger_text"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                     <LinearLayout
@@ -218,28 +382,170 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Tax"
-                            android:textColor="#A0AEC0" />
+                            android:text="Income Tax"
+                            android:textColor="@color/text_on_dark_secondary" />
                         <TextView
+                            android:id="@+id/tvIncomeTax"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="LKR 200.00"
-                            android:textColor="#F87171" />
+                            android:text="Rs 0.00"
+                            android:textColor="@color/danger_text"
+                            android:textStyle="bold" />
                     </LinearLayout>
 
                 </LinearLayout>
-
             </com.google.android.material.card.MaterialCardView>
 
+            <!-- YTD Summary -->
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:cardBackgroundColor="@android:color/transparent"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_glass_card"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Year-to-Date Summary"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total Gross"
+                            android:textColor="@color/text_on_dark_secondary" />
+                        <TextView
+                            android:id="@+id/tvYtdGross"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rs 0.00"
+                            android:textColor="@color/text_on_dark_primary" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total Deductions"
+                            android:textColor="@color/text_on_dark_secondary" />
+                        <TextView
+                            android:id="@+id/tvYtdDeductions"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rs 0.00"
+                            android:textColor="@color/danger_text" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@color/divider_dark" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Total Net YTD"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/tvYtdNet"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Rs 0.00"
+                            android:textColor="@color/qa_yellow"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Empty State -->
+            <LinearLayout
+                android:id="@+id/emptyState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:layout_marginTop="48dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="📄"
+                    android:textSize="48sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:text="No payslips available"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="Payslips will appear here once generated"
+                    android:textColor="@color/text_on_dark_muted"
+                    android:textSize="13sp" />
+            </LinearLayout>
+
+            <!-- Generate Payslip Button -->
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/btnGeneratePayslip"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/btn_login_gradient"
+                android:text="Generate Payslip"
+                android:textAllCaps="false"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+            <!-- Download Button -->
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btnDownload"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
                 android:background="@drawable/btn_login_gradient"
-                android:text="Download PDF"
+                android:text="@string/download_pdf"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

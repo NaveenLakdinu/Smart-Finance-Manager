@@ -24,7 +24,7 @@ import java.util.Locale;
 public class RegisterActivity extends AppCompatActivity {
 
     private EditText etFullName, etAge, etEmail, etMobile, etPassword;
-    private CheckBox loanCheckbox, termsCheckbox, subscriptionCheckbox, savingPlanCheckbox;
+    private CheckBox termsCheckbox;
     private Button btnRegister;
     private android.widget.ProgressBar progressBar;
     private ImageView passwordToggle;
@@ -87,16 +87,15 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(android.text.Editable s) {
                 String fullName = s.toString();
-                if (!fullName.matches("^[a-zA-Z\\s]+$")) {
+                if (!fullName.isEmpty() && !fullName.matches("^[a-zA-Z\\s]+$")) {
                     etFullName.setError("Please enter a valid name (letters and spaces only)");
+                } else {
+                    etFullName.setError(null);
                 }
             }
         });
 
-        loanCheckbox = findViewById(R.id.checkLoan);
         termsCheckbox = findViewById(R.id.checkTerms);
-        subscriptionCheckbox = findViewById(R.id.checkSubscription);
-        savingPlanCheckbox = findViewById(R.id.checkSaving);
         btnRegister = findViewById(R.id.btnRegister);
         progressBar = findViewById(R.id.progressBar);
 
@@ -114,39 +113,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
 
         // 3. CheckBox Click Listeners
-        loanCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (loanCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, LoanDetailsActivity.class));
-            } else {
-                UserRegistrationData.getInstance().hasLoan = false;
-            }
-        });
-
         termsCheckbox.setOnClickListener(v -> {
             saveDataToSingleton();
             if (termsCheckbox.isChecked()) {
                 startActivity(new Intent(RegisterActivity.this, TermsActivity.class));
             } else {
                 UserRegistrationData.getInstance().isTermsAccepted = false;
-            }
-        });
-
-        subscriptionCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (subscriptionCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, SubscriptionActivity.class));
-            } else {
-                UserRegistrationData.getInstance().receiveUpdates = false;
-            }
-        });
-
-        savingPlanCheckbox.setOnClickListener(v -> {
-            saveDataToSingleton();
-            if (savingPlanCheckbox.isChecked()) {
-                startActivity(new Intent(RegisterActivity.this, SavingPlanActivity.class));
-            } else {
-                UserRegistrationData.getInstance().hasSavingPlan = false;
             }
         });
 
@@ -175,10 +147,7 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile.setText(data.mobile);
         etPassword.setText(data.password);
 
-        loanCheckbox.setChecked(data.hasLoan);
         termsCheckbox.setChecked(data.isTermsAccepted);
-        subscriptionCheckbox.setChecked(data.receiveUpdates);
-        savingPlanCheckbox.setChecked(data.hasSavingPlan);
     }
 
     private void registerUser() {
@@ -355,16 +324,25 @@ public class RegisterActivity extends AppCompatActivity {
                                         Toast.makeText(this, "Registration Complete!", Toast.LENGTH_SHORT).show();
 
                                         data.clearData();
-                                        clearAllFields();
 
-                                        // Handle conditional routing based on dashboard page availability
-                                        navigateToDashboard(userRole);
+                                        // Navigate to OnboardingActivity after successful registration
+                                        Intent onboardingIntent = new Intent(RegisterActivity.this, OnboardingActivity.class);
+                                        onboardingIntent.putExtra("USER_ROLE", userRole);
+                                        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                        startActivity(onboardingIntent);
+                                        finish();
                                     })
                                     .addOnFailureListener(e -> {
                                         timeoutHandler.removeCallbacks(timeoutRunnable);
                                         setLoadingState(false);
                                         System.err.println("❌ Firestore Batch Commit Error: " + e.getMessage());
                                         e.printStackTrace();
+                                        
+                                        // Rollback: Delete the Auth user if Firestore save fails
+                                        if (mAuth.getCurrentUser() != null) {
+                                            mAuth.getCurrentUser().delete();
+                                        }
+                                        
                                         Toast.makeText(this, "Database Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                                     });
                                     
@@ -373,6 +351,12 @@ public class RegisterActivity extends AppCompatActivity {
                             setLoadingState(false);
                             System.err.println("❌ Logic Error during registration: " + e.getMessage());
                             e.printStackTrace();
+                            
+                            // Rollback: Delete the Auth user if an exception occurs
+                            if (mAuth.getCurrentUser() != null) {
+                                mAuth.getCurrentUser().delete();
+                            }
+                            
                             Toast.makeText(this, "Internal Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
                         
@@ -488,41 +472,16 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     /**
-     // Helper method to safely route users to their designated dashboards without crashes.
-     // Fallback to primary DashboardActivity occurs if role-specific screens are not yet created.
+     * Helper method to route users correctly after registration.
+     * This method is deprecated - use OnboardingActivity instead.
      */
+    @Deprecated
     private void navigateToDashboard(String role) {
-        Intent dashboardIntent;
-
-        // 💡 FIXED: Now perfectly matches synchronized capitalized strings coming from ChooseRoleActivity
-        switch (role) {
-            case "Company worker":
-                dashboardIntent = new Intent(this, WorkerDashboardActivity.class);
-                break;
-
-            case "Multiple account holder":
-                dashboardIntent = new Intent(this, MultiAccountDashboardActivity.class);
-                break;
-
-            case "Student":
-                dashboardIntent = new Intent(this, StudentDashboardActivity.class);
-                break;
-
-            case "Business owner":
-                dashboardIntent = new Intent(this, BusinessDashboardActivity.class);
-                break;
-
-            default:
-                dashboardIntent = new Intent(this, DashboardActivity.class);
-                break;
-        }
-
-        // Carry over the current user role explicitly to update conditional dashboard typography
-        dashboardIntent.putExtra("CURRENT_USER_ROLE", role);
-
-        // Clear activity stack completely to avoid navigation loop issues on back button press
-        dashboardIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-        startActivity(dashboardIntent);
+        // This method is no longer used - users go through OnboardingActivity first
+        Intent onboardingIntent = new Intent(this, OnboardingActivity.class);
+        onboardingIntent.putExtra("USER_ROLE", role);
+        onboardingIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(onboardingIntent);
         finish();
     }
 
@@ -549,10 +508,7 @@ public class RegisterActivity extends AppCompatActivity {
         if (etMobile != null) etMobile.setText("");
         if (etPassword != null) etPassword.setText("");
 
-        if (loanCheckbox != null) loanCheckbox.setChecked(false);
         if (termsCheckbox != null) termsCheckbox.setChecked(false);
-        if (subscriptionCheckbox != null) subscriptionCheckbox.setChecked(false);
-        if (savingPlanCheckbox != null) savingPlanCheckbox.setChecked(false);
 
         if (etFullName != null) etFullName.requestFocus();
         System.out.println("✅ All input fields cleared after registration");
