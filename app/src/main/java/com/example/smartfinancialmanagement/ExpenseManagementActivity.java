@@ -31,10 +31,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import android.widget.Toast;
-import android.util.Log;
 
 public class ExpenseManagementActivity extends AppCompatActivity {
 
@@ -119,89 +115,6 @@ public class ExpenseManagementActivity extends AppCompatActivity {
             // Hero Card view displays ONLY this month's calculations aggregate balance
             txtTotalExpenses.setText(String.format(Locale.getDefault(), "Rs. %.2f", currentMonthHeroGrandTotal));
 
-            saveExpenseToFirestore(amount, date, spinnerExpenseCategory.getSelectedItem().toString(), edtExpenseDescription.getText().toString());
-            
-        });
-    }
-
-    private void saveExpenseToFirestore(String amountStr, String date, String category, String description) {
-        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
-            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
-        if (userId == null) return;
-
-        double amount = Double.parseDouble(amountStr);
-
-        Map<String, Object> expense = new HashMap<>();
-        expense.put("amount", amount);
-        expense.put("date", date);
-        expense.put("category", category);
-        expense.put("description", description);
-        expense.put("createdAt", System.currentTimeMillis());
-
-        FirebaseFirestore.getInstance().collection("users").document(userId).collection("expenses")
-            .add(expense)
-            .addOnSuccessListener(documentReference -> {
-                Toast.makeText(this, "Expense Saved", Toast.LENGTH_SHORT).show();
-                checkBudgetLimits(userId, amount);
-                clearFields();
-            })
-            .addOnFailureListener(e -> Toast.makeText(this, "Failed to save expense", Toast.LENGTH_SHORT).show());
-    }
-
-    private void checkBudgetLimits(String userId, double newExpenseAmount) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        
-        // Fetch budget
-        db.collection("users").document(userId).collection("budgetPlans")
-            .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
-            .limit(1)
-            .get()
-            .addOnSuccessListener(budgetDocs -> {
-                if (!budgetDocs.isEmpty()) {
-                    BudgetModel budget = budgetDocs.getDocuments().get(0).toObject(BudgetModel.class);
-                    if (budget != null) {
-                        double monthlyLimit = budget.getMonthlyBudget();
-                        
-                        // Fetch all expenses to get a total (simplified logic)
-                        db.collection("users").document(userId).collection("expenses")
-                            .get()
-                            .addOnSuccessListener(expenseDocs -> {
-                                double totalExpenses = 0;
-                                for (QueryDocumentSnapshot doc : expenseDocs) {
-                                    Double amt = doc.getDouble("amount");
-                                    if (amt != null) totalExpenses += amt;
-                                }
-                                
-                                NotificationRepository repo = new NotificationRepository();
-                                
-                                if (totalExpenses > monthlyLimit) {
-                                    NotificationModel notif = new NotificationModel(
-                                        null, userId, "budget_critical", "Budget Exceeded! 🚨", 
-                                        "You have exceeded your monthly budget of " + CurrencyHelper.formatMoney(this, monthlyLimit), 
-                                        "critical", "BudgetPlanner", "budget_" + budget.getDocumentId(), false, 
-                                        System.currentTimeMillis(), "BudgetPlannerActivity"
-                                    );
-                                    repo.checkAndCreateDuplicateSafe(notif);
-                                } else if (totalExpenses > monthlyLimit * 0.8) {
-                                    NotificationModel notif = new NotificationModel(
-                                        null, userId, "budget_warning", "Budget Warning ⚠️", 
-                                        "You have spent over 80% of your monthly budget.", 
-                                        "warning", "BudgetPlanner", "budget_" + budget.getDocumentId(), false, 
-                                        System.currentTimeMillis(), "BudgetPlannerActivity"
-                                    );
-                                    repo.checkAndCreateDuplicateSafe(notif);
-                                }
-                            });
-                    }
-                }
-            });
-    }
-
-    private void clearFields() {
-        edtExpenseAmount.setText("");
-        edtExpenseDate.setText("");
-        edtExpenseDescription.setText("");
-        spinnerExpenseCategory.setSelection(0);
             populateBusinessRowCards(businessTotalsMap);
             setupHistoryRecycler();
         });

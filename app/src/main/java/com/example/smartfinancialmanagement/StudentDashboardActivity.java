@@ -62,8 +62,9 @@ public class StudentDashboardActivity extends AppCompatActivity {
         TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
         if (txtCurrentSavingsValue != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
+        }
+    }
 
-    
     @Override
     protected void onStop() {
         super.onStop();
