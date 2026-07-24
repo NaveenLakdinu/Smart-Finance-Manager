@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
+    
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -39,7 +39,7 @@
                 android:background="@drawable/bg_hero_card"
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp"
-                android:paddingTop="16dp"
+                android:paddingTop="36dp"
                 android:paddingBottom="32dp">
 
                 <!-- Decorative circle accent top-right -->
@@ -59,9 +59,9 @@
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
-                    android:src="@drawable/ic_back"
+                    android:src="@drawable/ic_arrow_back"
                     android:contentDescription="Back to Home"
-                    app:tint="#FFFFFF"
+                    app:tint="@color/text_on_dark_primary"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
 
@@ -95,7 +95,7 @@
                             android:layout_gravity="center"
                             android:src="@drawable/ic_person"
                             android:contentDescription="Profile Avatar"
-                            app:tint="#FFFFFF" />
+                            app:tint="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -105,7 +105,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="bottom|end"
-                        android:background="@drawable/icon_circle_blue"
+                        android:background="@drawable/icon_circle_secondary"
                         android:clickable="true"
                         android:focusable="true">
 
@@ -115,7 +115,7 @@
                             android:layout_gravity="center"
                             android:text="✏"
                             android:textSize="10sp"
-                            android:textColor="#FFFFFF" />
+                            android:textColor="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
@@ -129,7 +129,7 @@
                     android:layout_marginTop="14dp"
                     android:gravity="center"
                     android:text="Dulani Perera"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:background="@null"
@@ -146,7 +146,7 @@
                     android:layout_marginTop="4dp"
                     android:gravity="center"
                     android:text="dulani@university.lk"
-                    android:textColor="#BCE0FF"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileName"
                     app:layout_constraintStart_toStartOf="parent"
@@ -160,7 +160,7 @@
                     android:layout_marginTop="3dp"
                     android:gravity="center"
                     android:text="Loading..."
-                    android:textColor="#BCE0FF"
+                    android:textColor="@color/text_on_dark_secondary"
                     android:textSize="12sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileEmail"
                     app:layout_constraintStart_toStartOf="parent"
@@ -185,7 +185,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -198,7 +198,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="3"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -207,7 +207,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Goals"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -219,7 +219,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -231,7 +231,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs.1.2L"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="17sp"
                             android:textStyle="bold" />
 
@@ -240,7 +240,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Saved"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -251,7 +251,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -263,7 +263,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="85"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="18sp"
                             android:textStyle="bold" />
 
@@ -272,7 +272,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Score"
-                            android:textColor="#BCE0FF"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
                     </LinearLayout>
@@ -289,7 +289,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="20dp"
-                android:background="#F8FAFC">
+                android:background="@color/forest_800">
 
 
                 <!-- My Achievements Menu Row -->
@@ -300,10 +300,11 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -324,7 +325,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="My Achievements"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -332,7 +333,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -345,10 +346,11 @@
                     android:layout_marginBottom="12dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -369,7 +371,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Financial Reports"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -377,7 +379,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -390,10 +392,11 @@
                     android:layout_marginBottom="24dp"
                     android:clickable="true"
                     android:focusable="true"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="16dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -414,7 +417,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Account Settings"
-                            android:textColor="#1F2937"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
 
@@ -422,7 +425,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="›"
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="24sp" />
                     </LinearLayout>
                 </com.google.android.material.card.MaterialCardView>
@@ -436,10 +439,10 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFF5F5"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="#FCA5A5"
+                    app:strokeColor="@color/forest_600"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -455,14 +458,14 @@
                             android:layout_marginEnd="10dp"
                             android:src="@drawable/ic_power"
                             android:contentDescription="Sign Out"
-                            app:tint="#EF4444" />
+                            app:tint="@color/danger_text" />
 
                         <TextView
                             android:id="@+id/txtSignOut"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Sign Out"
-                            android:textColor="#EF4444"
+                            android:textColor="@color/danger_text"
                             android:textSize="15sp"
                             android:textStyle="bold" />
 
@@ -483,7 +486,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Smart Finance v1.0.0"
-                        android:textColor="#9CA3AF"
+                        android:textColor="@color/text_on_dark_muted"
                         android:textSize="12sp"
                         android:gravity="center" />
 
@@ -492,8 +495,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Final Year Project • 2026"
-                        android:textColor="#D1D5DB"
+                        android:text="Second Year Project • 2026"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"
                         android:gravity="center" />
 

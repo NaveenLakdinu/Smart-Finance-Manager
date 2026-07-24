@@ -70,9 +70,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColorHint="#527196"
+            android:textColorHint="@color/text_on_dark_muted"
             app:hintTextColor="@color/hero_accent"
-            app:boxStrokeColor="#1A3050"
+            app:boxStrokeColor="@color/forest_700"
             app:boxStrokeWidth="1dp">
 
             <AutoCompleteTextView
@@ -90,9 +90,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColorHint="#527196"
+            android:textColorHint="@color/text_on_dark_muted"
             app:hintTextColor="@color/hero_accent"
-            app:boxStrokeColor="#1A3050"
+            app:boxStrokeColor="@color/forest_700"
             app:boxStrokeWidth="1dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
@@ -109,9 +109,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="12dp"
-            android:textColorHint="#527196"
+            android:textColorHint="@color/text_on_dark_muted"
             app:hintTextColor="@color/hero_accent"
-            app:boxStrokeColor="#1A3050"
+            app:boxStrokeColor="@color/forest_700"
             app:boxStrokeWidth="1dp"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
             <com.google.android.material.textfield.TextInputEditText
@@ -139,9 +139,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColorHint="#527196"
+            android:textColorHint="@color/text_on_dark_muted"
             app:hintTextColor="@color/hero_accent"
-            app:boxStrokeColor="#1A3050"
+            app:boxStrokeColor="@color/forest_700"
             app:boxStrokeWidth="1dp">
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/etPaymentDueDate"
@@ -177,7 +177,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.4"
-                android:textColorHint="#527196"
+                android:textColorHint="@color/text_on_dark_muted"
                 app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -197,7 +197,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="0.6"
-                android:textColorHint="#527196"
+                android:textColorHint="@color/text_on_dark_muted"
                 app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -218,7 +218,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
-                android:textColorHint="#527196"
+                android:textColorHint="@color/text_on_dark_muted"
                 app:hintTextColor="@color/hero_accent"
                 style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
                 <com.google.android.material.textfield.TextInputEditText
@@ -237,7 +237,9 @@
             android:layout_marginTop="32dp"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -302,7 +304,7 @@
             android:layout_marginTop="28dp"
             app:backgroundTint="@color/hero_accent"
             android:text="GENERATE &amp; SAVE INVOICE"
-            android:textColor="#071A33"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="15sp"
             android:textStyle="bold"
             app:cornerRadius="16dp" />

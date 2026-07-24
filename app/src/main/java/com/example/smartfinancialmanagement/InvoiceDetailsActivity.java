@@ -2,6 +2,7 @@ package com.example.smartfinancialmanagement;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -9,6 +10,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,12 +22,14 @@ import java.util.Locale;
 
 public class InvoiceDetailsActivity extends AppCompatActivity {
 
+    private static final String TAG = "InvoiceDetailsActivity";
     private TextView txtInvoiceStatusBadge, txtDetInvoiceNum, txtDetClientName, txtDetClientBRN;
     private TextView txtDetItemName, txtDetQty, txtDetPrice, txtDetTotal;
     private ImageView btnBack;
     private MaterialButton btnMarkPaid, btnDeleteInvoice;
 
     private FirebaseFirestore db;
+    private String currentUserId; // 💡 Added for isolated data scope tracking
     private String clientName, selectedBusiness, status, dueDate;
     private double grandTotal;
 
@@ -37,6 +42,17 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_invoice_detail);
 
         db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        // 💡 Initialize and secure user session check context
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            currentUserId = user.getUid();
+        } else {
+            Toast.makeText(this, "User session not active", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         initializeViews();
         getIntentData();
@@ -93,7 +109,7 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
         txtInvoiceStatusBadge.setText(status.toUpperCase());
 
         if (status.equalsIgnoreCase("paid")) {
-            txtInvoiceStatusBadge.setTextColor(Color.parseColor("#071A33"));
+            txtInvoiceStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
             txtInvoiceStatusBadge.setBackgroundColor(Color.parseColor("#4ADE80"));
 
             btnMarkPaid.setText("MARK AS UNPAID");
@@ -110,7 +126,7 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
 
             btnMarkPaid.setText("MARK AS PAID & RECONCILE");
             btnMarkPaid.setBackgroundColor(Color.parseColor("#4ADE80"));
-            btnMarkPaid.setTextColor(Color.parseColor("#071A33"));
+            btnMarkPaid.setTextColor(Color.parseColor("#FFFFFF"));
         }
     }
 
@@ -121,6 +137,8 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
     }
 
     private void toggleInvoicePaidStatus() {
+        if (currentUserId == null) return;
+
         String newStatus;
         if (status.equalsIgnoreCase("paid")) {
             newStatus = determinePendingOrOverdue(dueDate);
@@ -128,7 +146,9 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
             newStatus = "paid";
         }
 
+        // 💡 Server-Side Filter: Restrict the operational query specifically matching this active userId baseline
         db.collection("invoices")
+                .whereEqualTo("userId", currentUserId)
                 .whereEqualTo("clientName", clientName)
                 .whereEqualTo("grandTotal", grandTotal)
                 .whereEqualTo("paymentDueDate", dueDate)
@@ -138,7 +158,6 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                         DocumentSnapshot document = queryDocumentSnapshots.getDocuments().get(0);
                         String docId = document.getId();
 
-                        // 💡 Firestore එකෙන් email reminder අවසරය කියවා ගැනීම
                         boolean isEmailReminderEnabled = false;
                         if (document.contains("emailReminderEnabled")) {
                             Boolean enabled = document.getBoolean("emailReminderEnabled");
@@ -146,7 +165,6 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                         }
                         final boolean finalIsEmailEnabled = isEmailReminderEnabled;
 
-                        // 💡 Firestore එකෙන් businessEmail එක කියවා ගැනීම
                         String emailFromDb = "";
                         if (document.contains("businessEmail")) {
                             emailFromDb = document.getString("businessEmail");
@@ -161,24 +179,24 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                                     configureStatusUI();
                                     Toast.makeText(this, "Invoice registry updated to " + newStatus, Toast.LENGTH_SHORT).show();
 
-                                    // 💡 FIX: පරාමිතීන් 6 ම නිවැරදිව ලබා දී ඇත
                                     if (status.equalsIgnoreCase("paid")) {
-                                        // ඉන්වොයිසිය PAID වුවහොත් පවතින Alarm එක අවලංගු කරයි
                                         InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
                                     } else {
-                                        // නැවත UNPAID කළහොත් අලුතින් Alarm එකක් දමයි (සියලුම පරාමිතීන් 6 ම ලබා දී ඇත)
                                         InvoiceReminderScheduler.scheduleInvoiceReminder(
                                                 InvoiceDetailsActivity.this,
                                                 clientName,
                                                 dueDate,
                                                 finalIsEmailEnabled,
-                                                finalBusinessEmail, // 5 වෙනි පරාමිතිය (String)
-                                                grandTotal          // 6 වෙනි පරාමිතිය (double)
+                                                finalBusinessEmail,
+                                                grandTotal
                                         );
                                     }
                                 });
+                    } else {
+                        Toast.makeText(this, "Invoice document reference not found", Toast.LENGTH_SHORT).show();
                     }
-                });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error matching matching document parameters: " + e.getMessage()));
     }
 
     private String determinePendingOrOverdue(String dateStr) {
@@ -193,7 +211,11 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
     }
 
     private void deleteInvoiceRecord() {
+        if (currentUserId == null) return;
+
+        // 💡 Server-Side Filter: Add userId parameter protection check to prevent out-of-bounds entity purges
         db.collection("invoices")
+                .whereEqualTo("userId", currentUserId)
                 .whereEqualTo("clientName", clientName)
                 .whereEqualTo("grandTotal", grandTotal)
                 .whereEqualTo("paymentDueDate", dueDate)
@@ -204,16 +226,14 @@ public class InvoiceDetailsActivity extends AppCompatActivity {
                         db.collection("invoices").document(docId)
                                 .delete()
                                 .addOnSuccessListener(aVoid -> {
-
-                                    // 💡 ReminderScheduler Class එක භාවිතා කර Alarm එක අවලංගු කිරීම
                                     InvoiceReminderScheduler.cancelInvoiceReminder(InvoiceDetailsActivity.this, clientName, dueDate);
-
                                     Toast.makeText(this, "Invoice deleted successfully!", Toast.LENGTH_SHORT).show();
                                     finish();
                                 });
                     } else {
                         Toast.makeText(this, "Document reference matching parameters not found", Toast.LENGTH_SHORT).show();
                     }
-                });
+                })
+                .addOnFailureListener(e -> Toast.makeText(this, "Deletion Failure: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 }

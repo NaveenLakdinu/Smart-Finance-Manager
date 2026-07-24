@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.widget.Toast;
 import android.os.Bundle;
+import android.view.animation.OvershootInterpolator;
 import android.view.View;
 import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
@@ -54,6 +55,8 @@ public class StudentDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         loadUserData();
         recalculateTotalIncome();
         loadAvatarImage();
@@ -190,6 +193,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, LoginFormActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
             });
         }
@@ -233,6 +237,13 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
         setupSecurityButton();
         setupSavingsWidget();
+        setupRoleUpgradeCard();
+
+        // Notification button
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        }
 
         loadAchievementData();
         loadCurrentBalance();
@@ -305,10 +316,12 @@ public class StudentDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -333,6 +346,31 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
             }
         }
+    }
+
+    private void setupRoleUpgradeCard() {
+        View cardRoleUpgrade = findViewById(R.id.cardRoleUpgrade);
+        if (cardRoleUpgrade == null) return;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).get()
+            .addOnSuccessListener(doc -> {
+                String role = doc.getString("role");
+                if ("Student".equals(role)) {
+                    cardRoleUpgrade.setVisibility(View.VISIBLE);
+                }
+            });
+
+        cardRoleUpgrade.setOnClickListener(v -> {
+            startActivity(new Intent(this, RoleUpgradeActivity.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+    }
+
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
     }
 
     private void loadSavingsFromFirestore(TextView txtValue) {
@@ -595,6 +633,23 @@ public class StudentDashboardActivity extends AppCompatActivity {
         TextView txtBudgetLeftValue = findViewById(R.id.txtBudgetLeftValue);
         if (txtBudgetLeftValue != null) {
             txtBudgetLeftValue.setText(CurrencyHelper.formatMoney(this, budgetLeft));
+        }
+    }
+
+    private void animateCards(View... cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                cards[i].setAlpha(0f);
+                cards[i].setTranslationY(40f);
+                final int delay = i * 100;
+                cards[i].animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
+            }
         }
     }
 }

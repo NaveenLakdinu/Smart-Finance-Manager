@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout 
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
+    
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -55,7 +55,7 @@
                         android:layout_height="20dp"
                         android:layout_gravity="center"
                         android:contentDescription="Back"
-                        android:src="@drawable/ic_back" />
+                        android:src="@drawable/ic_arrow_back" />
 
                 </FrameLayout>
 
@@ -77,7 +77,7 @@
                         android:layout_height="wrap_content"
                         android:text="Loading..."
                         tools:text="Good Morning, Dulani 👋"
-                        android:textColor="#D8E4FF"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="13sp" />
 
                     <TextView
@@ -86,7 +86,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Student Budget Planner"
-                        android:textColor="#FFFFFF"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
@@ -98,8 +98,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
+<<<<<<< HEAD
                     android:text="Plan your budget wisely"
                     android:textColor="#BCE0FF"
+=======
+                    android:text="Plan your semester budget wisely"
+                    android:textColor="@color/text_on_dark_secondary"
+>>>>>>> origin/boseth-branch
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layoutHeaderTitles" />
@@ -123,10 +128,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="16dp"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="24dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -146,14 +152,14 @@
                                 android:id="@+id/layoutIncomeIcon"
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/icon_circle_blue">
+                                android:background="@drawable/icon_circle_secondary">
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_gravity="center"
                                     android:text="$"
-                                    android:textColor="#1E60FF"
+                                    android:textColor="@color/forest_300"
                                     android:textSize="18sp"
                                     android:textStyle="bold" />
 
@@ -163,9 +169,14 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
+<<<<<<< HEAD
                                 android:layout_weight="1"
                                 android:text="Income Sources"
                                 android:textColor="#111827"
+=======
+                                android:text="Income Details"
+                                android:textColor="@color/text_on_dark_primary"
+>>>>>>> origin/boseth-branch
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -186,6 +197,7 @@
 
                         </LinearLayout>
 
+<<<<<<< HEAD
                         <!-- Dynamic income list (populated at runtime) -->
                         <LinearLayout
                             android:id="@+id/containerIncomeItems"
@@ -193,27 +205,107 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:orientation="vertical" />
+=======
+                        <!-- Input Field: Monthly Allowance -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Monthly Allowance (Rs.)"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+
+                        <EditText
+                            android:id="@+id/editMonthlyAllowance"
+                            android:layout_width="match_parent"
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="15000"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="15sp" />
+
+                        <!-- Input Field: Scholarship Amount -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Scholarship Amount (Rs.)"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+>>>>>>> origin/boseth-branch
 
                         <!-- Empty state label -->
                         <TextView
                             android:id="@+id/txtNoIncomes"
                             android:layout_width="match_parent"
+<<<<<<< HEAD
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
                             android:gravity="center"
                             android:padding="16dp"
                             android:text="No income sources yet.\nAdd one below to get started."
                             android:textColor="#9CA3AF"
+=======
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="5000"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="15sp" />
+
+                        <!-- Input Field: Part-Time Income -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="14dp"
+                            android:layout_marginBottom="6dp"
+                            android:text="Part-Time Income (Rs.)"
+                            android:textColor="@color/text_on_dark_muted"
+>>>>>>> origin/boseth-branch
                             android:textSize="13sp"
                             android:visibility="gone" />
 
                         <!-- Divider -->
                         <View
                             android:layout_width="match_parent"
+<<<<<<< HEAD
                             android:layout_height="1dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginBottom="14dp"
                             android:background="#E5E7EB" />
+=======
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_budget_input"
+                            android:backgroundTint="@null"
+                            android:inputType="numberDecimal"
+                            android:paddingStart="16dp"
+                            android:paddingEnd="16dp"
+                            android:text="8000"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="15sp" />
+
+                        <!-- Segmented Duration Options -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="18dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="Semester Duration (Months)"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="13sp"
+                            android:textStyle="bold" />
+>>>>>>> origin/boseth-branch
 
                         <!-- Add Income Row -->
                         <LinearLayout
@@ -225,6 +317,7 @@
                             <EditText
                                 android:id="@+id/editNewIncomeName"
                                 android:layout_width="0dp"
+<<<<<<< HEAD
                                 android:layout_height="48dp"
                                 android:layout_weight="2"
                                 android:background="@drawable/bg_budget_input"
@@ -236,6 +329,18 @@
                                 android:textColor="#111827"
                                 android:textColorHint="#9CA3AF"
                                 android:textSize="13sp" />
+=======
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="3M"
+                                android:textColor="@color/text_on_dark_muted"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+>>>>>>> origin/boseth-branch
 
                             <Space
                                 android:layout_width="8dp"
@@ -244,6 +349,7 @@
                             <EditText
                                 android:id="@+id/editNewIncomeAmount"
                                 android:layout_width="0dp"
+<<<<<<< HEAD
                                 android:layout_height="48dp"
                                 android:layout_weight="1.4"
                                 android:background="@drawable/bg_budget_input"
@@ -255,11 +361,24 @@
                                 android:textColor="#111827"
                                 android:textColorHint="#9CA3AF"
                                 android:textSize="13sp" />
+=======
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="4M"
+                                android:textColor="@color/text_on_dark_muted"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+>>>>>>> origin/boseth-branch
 
                             <Space
                                 android:layout_width="8dp"
                                 android:layout_height="1dp" />
 
+<<<<<<< HEAD
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnAddIncome"
                                 android:layout_width="wrap_content"
@@ -276,6 +395,41 @@
                                 app:backgroundTint="#1E60FF"
                                 app:cornerRadius="12dp"
                                 app:strokeWidth="0dp" />
+=======
+                            <!-- Option 6M (Selected) -->
+                            <TextView
+                                android:id="@+id/btnDuration6M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_active"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="6M"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+
+                            <Space
+                                android:layout_width="8dp"
+                                android:layout_height="1dp" />
+
+                            <!-- Option 12M -->
+                            <TextView
+                                android:id="@+id/btnDuration12M"
+                                android:layout_width="0dp"
+                                android:layout_height="44dp"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_segment_inactive"
+                                android:clickable="true"
+                                android:focusable="true"
+                                android:gravity="center"
+                                android:text="12M"
+                                android:textColor="@color/text_on_dark_muted"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+>>>>>>> origin/boseth-branch
 
                         </LinearLayout>
 
@@ -481,12 +635,12 @@
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:text="Calculate Budget"
-                            android:textColor="#FFFFFF"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="15sp"
                             android:textStyle="bold"
-                            app:backgroundTint="#1E60FF"
-                            app:cornerRadius="27dp"
-                            app:strokeWidth="0dp" />
+                            app:backgroundTint="@color/forest_300"
+                            app:cornerRadius="14dp"
+                            app:strokeWidth="1dp" />
 
                     </LinearLayout>
 
@@ -507,10 +661,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="24dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -535,7 +690,7 @@
                                         android:layout_gravity="center"
                                         android:contentDescription="Budget Summary"
                                         android:src="@drawable/ic_report"
-                                        app:tint="#10B981" />
+                                        app:tint="@color/forest_300" />
 
                                 </FrameLayout>
 
@@ -544,7 +699,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="Budget Summary"
-                                    android:textColor="#111827"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -554,7 +709,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
-                                app:cardBackgroundColor="#448BFF"
+                                app:cardBackgroundColor="@color/forest_300"
                                 app:cardCornerRadius="16dp"
                                 app:cardElevation="0dp">
 
@@ -567,8 +722,13 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
+<<<<<<< HEAD
                                         android:text="Total Income"
                                         android:textColor="#E0E7FF"
+=======
+                                        android:text="Total Semester Income"
+                                        android:textColor="@color/text_on_dark_secondary"
+>>>>>>> origin/boseth-branch
                                         android:textSize="13sp" />
 
                                     <TextView
@@ -577,7 +737,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="Rs. 168,000"
-                                        android:textColor="#FFFFFF"
+                                        android:textColor="@color/text_on_dark_primary"
                                         android:textSize="28sp"
                                         android:textStyle="bold" />
 
@@ -596,7 +756,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:background="@drawable/tag_blue"
+                                    android:background="@drawable/tag_secondary"
                                     android:gravity="center"
                                     android:orientation="vertical"
                                     android:paddingTop="16dp"
@@ -607,7 +767,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Rs.933"
-                                        android:textColor="#1E60FF"
+                                        android:textColor="@color/forest_300"
                                         android:textSize="14sp"
                                         android:textStyle="bold" />
 
@@ -616,7 +776,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="2dp"
                                         android:text="Daily Limit"
-                                        android:textColor="#6B7280"
+                                        android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
                                 </LinearLayout>
 
@@ -640,7 +800,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Rs.7,000"
-                                        android:textColor="#10B981"
+                                        android:textColor="@color/forest_300"
                                         android:textSize="14sp"
                                         android:textStyle="bold" />
 
@@ -649,7 +809,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="2dp"
                                         android:text="Weekly Limit"
-                                        android:textColor="#6B7280"
+                                        android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
                                 </LinearLayout>
 
@@ -662,7 +822,7 @@
                                     android:layout_width="0dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
-                                    android:background="@drawable/tag_purple"
+                                    android:background="@drawable/tag_tertiary"
                                     android:gravity="center"
                                     android:orientation="vertical"
                                     android:paddingTop="16dp"
@@ -673,7 +833,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="Rs.28,000"
-                                        android:textColor="#8B5CF6"
+                                        android:textColor="@color/forest_300"
                                         android:textSize="14sp"
                                         android:textStyle="bold" />
 
@@ -682,7 +842,7 @@
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="2dp"
                                         android:text="Monthly"
-                                        android:textColor="#6B7280"
+                                        android:textColor="@color/text_on_dark_muted"
                                         android:textSize="11sp" />
                                 </LinearLayout>
 
@@ -698,10 +858,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="24dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -718,7 +879,7 @@
                                 <FrameLayout
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
-                                    android:background="@drawable/icon_role_purple">
+                                    android:background="@drawable/icon_role_tertiary">
 
                                     <ImageView
                                         android:layout_width="20dp"
@@ -726,7 +887,7 @@
                                         android:layout_gravity="center"
                                         android:contentDescription="Financial Health Score"
                                         android:src="@drawable/ic_savings_wave"
-                                        app:tint="#8B5CF6" />
+                                        app:tint="@color/forest_300" />
 
                                 </FrameLayout>
 
@@ -735,7 +896,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="Financial Health Score"
-                                    android:textColor="#111827"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -754,9 +915,9 @@
                                     android:layout_height="match_parent"
                                     android:max="100"
                                     android:progress="62"
-                                    app:indicatorColor="#F59E0B"
+                                    app:indicatorColor="@color/pill_warning_text"
                                     app:indicatorSize="160dp"
-                                    app:trackColor="#E5E7EB"
+                                    app:trackColor="@color/forest_600"
                                     app:trackCornerRadius="5dp"
                                     app:trackThickness="10dp" />
 
@@ -772,7 +933,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="62"
-                                        android:textColor="#F59E0B"
+                                        android:textColor="@color/pill_warning_text"
                                         android:textSize="32sp"
                                         android:textStyle="bold" />
 
@@ -780,7 +941,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:text="/ 100"
-                                        android:textColor="#9CA3AF"
+                                        android:textColor="@color/text_on_dark_muted"
                                         android:textSize="14sp" />
                                 </LinearLayout>
                             </FrameLayout>
@@ -797,7 +958,7 @@
                                 android:paddingEnd="16dp"
                                 android:paddingBottom="8dp"
                                 android:text="Good Financial Health"
-                                android:textColor="#F59E0B"
+                                android:textColor="@color/pill_warning_text"
                                 android:textSize="13sp"
                                 android:textStyle="bold" />
 
@@ -811,10 +972,11 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="16dp"
-                        app:cardBackgroundColor="#FFFFFF"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="24dp"
-                        app:cardElevation="2dp"
-                        app:strokeWidth="0dp">
+                        app:cardElevation="0dp"
+                        app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -839,7 +1001,7 @@
                                         android:layout_gravity="center"
                                         android:contentDescription="Quick Insights"
                                         android:src="@drawable/ic_lighting"
-                                        app:tint="#F59E0B" />
+                                        app:tint="@color/pill_warning_text" />
 
                                 </FrameLayout>
 
@@ -848,7 +1010,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:text="Quick Insights"
-                                    android:textColor="#111827"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="16sp"
                                     android:textStyle="bold" />
 
@@ -859,7 +1021,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="20dp"
-                                android:background="@drawable/tag_blue"
+                                android:background="@drawable/tag_secondary"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="16dp">
@@ -867,17 +1029,18 @@
                                 <com.google.android.material.card.MaterialCardView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardBackgroundColor="@color/forest_700"
                                     app:cardCornerRadius="12dp"
                                     app:cardElevation="0dp"
-                                    app:strokeWidth="0dp">
+                                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                                     <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:text="1"
-                                        android:textColor="#FFFFFF"
+                                        android:textColor="@color/text_on_dark_primary"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
                                 </com.google.android.material.card.MaterialCardView>
@@ -889,7 +1052,7 @@
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
                                     android:text="You can safely spend Rs.933/day."
-                                    android:textColor="#374151"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -898,7 +1061,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:background="@drawable/tag_blue"
+                                android:background="@drawable/tag_secondary"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="16dp">
@@ -906,17 +1069,18 @@
                                 <com.google.android.material.card.MaterialCardView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardBackgroundColor="@color/forest_700"
                                     app:cardCornerRadius="12dp"
                                     app:cardElevation="0dp"
-                                    app:strokeWidth="0dp">
+                                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                                     <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:text="2"
-                                        android:textColor="#FFFFFF"
+                                        android:textColor="@color/text_on_dark_primary"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
                                 </com.google.android.material.card.MaterialCardView>
@@ -927,8 +1091,13 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
+<<<<<<< HEAD
                                     android:text="Current budget can last the entire period."
                                     android:textColor="#374151"
+=======
+                                    android:text="Current budget can last the entire 6-month semester."
+                                    android:textColor="@color/text_on_dark_primary"
+>>>>>>> origin/boseth-branch
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -937,7 +1106,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="12dp"
-                                android:background="@drawable/tag_blue"
+                                android:background="@drawable/tag_secondary"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="16dp">
@@ -945,17 +1114,18 @@
                                 <com.google.android.material.card.MaterialCardView
                                     android:layout_width="24dp"
                                     android:layout_height="24dp"
-                                    app:cardBackgroundColor="#1E60FF"
+                                    app:cardBackgroundColor="@color/forest_700"
                                     app:cardCornerRadius="12dp"
                                     app:cardElevation="0dp"
-                                    app:strokeWidth="0dp">
+                                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                                     <TextView
                                         android:layout_width="match_parent"
                                         android:layout_height="match_parent"
                                         android:gravity="center"
                                         android:text="3"
-                                        android:textColor="#FFFFFF"
+                                        android:textColor="@color/text_on_dark_primary"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
                                 </com.google.android.material.card.MaterialCardView>
@@ -967,7 +1137,7 @@
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
                                     android:text="Consider saving Rs.4,200 (15%) monthly."
-                                    android:textColor="#374151"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -982,10 +1152,11 @@
                     android:id="@+id/cardSemesterSummary"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="#FFFFFF"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="20dp"
-                    app:cardElevation="2dp"
-                    app:strokeWidth="0dp">
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -997,7 +1168,7 @@
                         <FrameLayout
                             android:layout_width="40dp"
                             android:layout_height="40dp"
-                            android:background="@drawable/icon_circle_blue">
+                            android:background="@drawable/icon_circle_secondary">
 
                             <ImageView
                                 android:layout_width="20dp"
@@ -1005,7 +1176,7 @@
                                 android:layout_gravity="center"
                                 android:contentDescription="Calendar"
                                 android:src="@drawable/ic_calendar"
-                                app:tint="#1E60FF" />
+                                app:tint="@color/forest_300" />
 
                         </FrameLayout>
 
@@ -1020,8 +1191,13 @@
                                 android:id="@+id/txtSemesterDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+<<<<<<< HEAD
                                 tools:text="Period: Jun 2026 – Dec 2026"
                                 android:textColor="#111827"
+=======
+                                tools:text="Semester: Jun 2026 – Dec 2026"
+                                android:textColor="@color/text_on_dark_primary"
+>>>>>>> origin/boseth-branch
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -1031,7 +1207,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 tools:text="6 months remaining"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_muted"
                                 android:textSize="12sp" />
 
                         </LinearLayout>

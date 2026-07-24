@@ -150,8 +150,8 @@ public class OnboardingActivity extends AppCompatActivity {
     // ━━━━━━━━━━━━━━━━━━━━━━━━━━
     private void goToStep(int step) {
         currentStep = step;
-        viewFlipper.setInAnimation(this, android.R.anim.slide_in_left);
-        viewFlipper.setOutAnimation(this, android.R.anim.slide_out_right);
+        viewFlipper.setInAnimation(this, R.anim.flip_in);
+        viewFlipper.setOutAnimation(this, R.anim.flip_out);
         viewFlipper.setDisplayedChild(step);
         updateHeader(step);
     }
@@ -164,7 +164,7 @@ public class OnboardingActivity extends AppCompatActivity {
         stepTitle.setText(titles[step]);
         stepSubtitle.setText(subtitles[step]);
 
-        int activeColor   = getResources().getColor(android.R.color.holo_blue_dark);
+        int activeColor   = getResources().getColor(android.R.color.holo_green_dark);
         int inactiveColor = getResources().getColor(android.R.color.darker_gray);
 
         seg1.setBackgroundResource(step >= 0 ? R.drawable.seg_active : R.drawable.seg_inactive);
@@ -452,6 +452,7 @@ public class OnboardingActivity extends AppCompatActivity {
             goToStep(currentStep - 1);
         } else {
             super.onBackPressed();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
         }
     }
 }

@@ -45,9 +45,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="24dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -97,9 +99,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="18dp"
-            app:cardElevation="0dp">
+            app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
             <LinearLayout
                 android:layout_width="match_parent"

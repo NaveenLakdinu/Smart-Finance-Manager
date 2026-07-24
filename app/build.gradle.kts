@@ -71,7 +71,7 @@ dependencies {
     implementation("com.google.guava:guava:32.1.3-android")
     
     implementation(libs.recyclerview)
-    
+
     val composeBom = platform(libs.androidx.compose.bom)
     implementation(composeBom)
     androidTestImplementation(composeBom)

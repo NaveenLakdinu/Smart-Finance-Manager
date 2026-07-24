@@ -47,7 +47,7 @@
             android:padding="10dp"
             android:src="@drawable/ic_plus"
             android:contentDescription="@string/cd_add_task"
-            app:tint="#000000" />
+            app:tint="@color/forest_900" />
 
     </LinearLayout>
 
@@ -109,7 +109,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="@color/qa_blue_icon"
+                android:textColor="@color/qa_secondary_icon"
                 android:textSize="20sp"
                 android:textStyle="bold" />
             <TextView
@@ -161,7 +161,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="0"
-                android:textColor="#F87171"
+                android:textColor="@color/danger_text"
                 android:textSize="20sp"
                 android:textStyle="bold" />
             <TextView
@@ -276,7 +276,7 @@
                 android:paddingHorizontal="14dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/filter_all"
-                android:textColor="#000000"
+                android:textColor="@color/forest_900"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -289,7 +289,7 @@
                 android:paddingHorizontal="14dp"
                 android:layout_marginEnd="8dp"
                 android:text="@string/filter_high"
-                android:textColor="@color/qa_blue_icon"
+                android:textColor="@color/qa_secondary_icon"
                 android:textSize="12sp"
                 android:textStyle="bold" />
 
@@ -314,7 +314,7 @@
                 android:gravity="center"
                 android:paddingHorizontal="14dp"
                 android:text="@string/filter_low"
-                android:textColor="@color/qa_purple_icon"
+                android:textColor="@color/qa_tertiary_icon"
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>

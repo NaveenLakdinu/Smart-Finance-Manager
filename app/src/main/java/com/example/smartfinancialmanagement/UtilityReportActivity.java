@@ -163,7 +163,7 @@ public class UtilityReportActivity extends AppCompatActivity {
 
         List<com.github.mikephil.charting.interfaces.datasets.IBarDataSet> dataSets = new ArrayList<>();
         int[] monthColors = {
-                Color.parseColor("#A78BFA"), Color.parseColor("#38BDF8"),
+                Color.parseColor("#9B8BFA"), Color.parseColor("#38BDF8"),
                 Color.parseColor("#F59E0B"), Color.parseColor("#F43F5E"),
                 Color.parseColor("#10B981"), Color.parseColor("#EC4899")
         };
@@ -325,7 +325,7 @@ public class UtilityReportActivity extends AppCompatActivity {
             }
             PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
             int[] pieColors = {
-                    android.graphics.Color.parseColor("#A78BFA"),
+                    android.graphics.Color.parseColor("#9B8BFA"),
                     android.graphics.Color.parseColor("#38BDF8"),
                     android.graphics.Color.parseColor("#F59E0B"),
                     android.graphics.Color.parseColor("#F43F5E"),

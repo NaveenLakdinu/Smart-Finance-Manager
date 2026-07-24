@@ -2,6 +2,7 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.OvershootInterpolator;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -152,12 +153,19 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
+        // Notification button
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        }
+
         if (btnTopLogout != null) {
             btnTopLogout.setOnClickListener(v -> {
                 mAuth.signOut();
                 Intent intent = new Intent(this, LoginFormActivity.class);
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                 finish();
             });
         }
@@ -294,12 +302,35 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         if (txtCurrentSavingsValue != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
         }
         setupUserDetails();
+    }
+
+    private void animateCards(View... cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                cards[i].setAlpha(0f);
+                cards[i].setTranslationY(40f);
+                final int delay = i * 100;
+                cards[i].animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
+            }
+        }
     }
 }

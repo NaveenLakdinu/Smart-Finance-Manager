@@ -75,8 +75,8 @@
                     android:layout_height="wrap_content"
                     android:text="By Selected Month"
                     android:textColor="@color/text_on_dark_primary"
-                    android:layout_marginTop="8dp"
-                    android:buttonTint="@color/qa_blue_icon"/>
+                    android:checked="true"
+                    android:buttonTint="@color/qa_secondary_icon"/>
 
                 <RadioButton
                     android:id="@+id/rbCustomDate"
@@ -85,7 +85,7 @@
                     android:text="Custom Date Range"
                     android:textColor="@color/text_on_dark_primary"
                     android:layout_marginTop="8dp"
-                    android:buttonTint="@color/qa_blue_icon"/>
+                    android:buttonTint="@color/qa_secondary_icon"/>
             </RadioGroup>
 
             <!-- Month Selection -->
@@ -215,7 +215,7 @@
         android:text="Generate Report"
         android:textColor="@color/white"
         android:textSize="16sp"
-        app:backgroundTint="@color/button_blue"
+        app:backgroundTint="@color/button_secondary"
         app:cornerRadius="12dp" />
 
 </LinearLayout>

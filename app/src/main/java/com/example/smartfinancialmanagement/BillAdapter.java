@@ -16,10 +16,10 @@ import java.util.List;
 public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder> {
 
     private Context context;
-    private List<UtilityBillActivity.BillWithId> billList;
+    private List<UtilityBill> billList; // FIX: Using clean unified object model collection
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public BillAdapter(Context context, List<UtilityBillActivity.BillWithId> billList) {
+    public BillAdapter(Context context, List<UtilityBill> billList) {
         this.context = context;
         this.billList = billList;
     }
@@ -33,46 +33,50 @@ public class BillAdapter extends RecyclerView.Adapter<BillAdapter.BillViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull BillViewHolder holder, int position) {
-        UtilityBillActivity.BillWithId currentBillWrapper = billList.get(position);
-        RegisterBillActivity.BillModel bill = currentBillWrapper.billData;
-        String documentId = currentBillWrapper.id;
+        UtilityBill bill = billList.get(position); // FIX: Safe extraction mapping directly
+        String documentId = bill.getId();
 
-        // Map basic data
-        holder.txtName.setText(bill.getName());
+        // Map data safely
+        holder.txtName.setText(bill.getBillName()); // FIX: Map getters to match UtilityBill.java properties
         holder.txtAccNo.setText("Acc: " + bill.getAccountNo());
-        holder.txtDate.setText("Due Day: " + bill.getDueDate());
+        holder.txtDate.setText("Due Day: " + bill.getPaymentDate()); // FIX: Use getPaymentDate()
 
         // Dynamic category icon assignment
-        switch (bill.getCategory()) {
-            case "Electricity":
-                holder.imgIcon.setImageResource(android.R.drawable.ic_menu_compass);
-                break;
-            case "Water":
-                holder.imgIcon.setImageResource(android.R.drawable.ic_menu_slideshow);
-                break;
-            case "Telephone":
-            case "Internet":
-                holder.imgIcon.setImageResource(android.R.drawable.ic_menu_call);
-                break;
-            default:
-                holder.imgIcon.setImageResource(android.R.drawable.ic_menu_agenda);
-                break;
+        if (bill.getCategory() != null) {
+            switch (bill.getCategory()) {
+                case "Electricity":
+                    holder.imgIcon.setImageResource(android.R.drawable.ic_menu_compass);
+                    break;
+                case "Water":
+                    holder.imgIcon.setImageResource(android.R.drawable.ic_menu_slideshow);
+                    break;
+                case "Telephone":
+                case "Internet":
+                    holder.imgIcon.setImageResource(android.R.drawable.ic_menu_call);
+                    break;
+                default:
+                    holder.imgIcon.setImageResource(android.R.drawable.ic_menu_agenda);
+                    break;
+            }
         }
 
         // Row click setup to open the Update Form
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(context, UpdateBillActivity.class);
             intent.putExtra("BILL_ID", documentId);
-            intent.putExtra("BILL_NAME", bill.getName());
+            intent.putExtra("BILL_NAME", bill.getBillName());
             intent.putExtra("BILL_ACC", bill.getAccountNo());
             intent.putExtra("BILL_CAT", bill.getCategory());
-            intent.putExtra("BILL_DATE", bill.getDueDate());
+            intent.putExtra("BILL_DATE", bill.getPaymentDate());
             context.startActivity(intent);
         });
 
         // Delete button execution block
         holder.btnDelete.setOnClickListener(v -> {
-            db.collection("bills").document(documentId)
+            if (documentId == null) return;
+
+            // FIX: Target directory node shifted to the active "utilityBill" collection path
+            db.collection("utilityBill").document(documentId)
                     .delete()
                     .addOnSuccessListener(aVoid -> Toast.makeText(context, "Bill Deleted", Toast.LENGTH_SHORT).show())
                     .addOnFailureListener(e -> Toast.makeText(context, "Error deleting item", Toast.LENGTH_SHORT).show());

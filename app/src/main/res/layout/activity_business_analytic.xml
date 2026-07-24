@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:fitsSystemWindows="true"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
     android:fillViewport="true"
+    android:fitsSystemWindows="true"
     android:scrollbars="none">
 
     <LinearLayout
@@ -15,6 +15,7 @@
         android:padding="20dp"
         android:paddingBottom="48dp">
 
+        <!-- Header Bar -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -27,12 +28,12 @@
                 android:layout_width="42dp"
                 android:layout_height="42dp"
                 android:background="@drawable/bg_notification"
-                android:src="@drawable/ic_arrow_back"
-                android:scaleType="centerInside"
-                app:tint="@color/text_on_dark_primary"
                 android:clickable="true"
+                android:contentDescription="Back"
                 android:focusable="true"
-                android:contentDescription="Back" />
+                android:scaleType="centerInside"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_on_dark_primary" />
 
             <TextView
                 android:layout_width="0dp"
@@ -45,15 +46,16 @@
                 android:textStyle="bold" />
         </LinearLayout>
 
+        <!-- Filter 1: Workspace Profile -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
+            android:letterSpacing="0.06"
             android:text="Filter by Workspace Profile"
             android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp"
-            android:textStyle="bold"
-            android:letterSpacing="0.06"/>
+            android:textStyle="bold" />
 
         <Spinner
             android:id="@+id/spinnerBusinessFilter"
@@ -62,13 +64,34 @@
             android:layout_marginTop="6dp"
             android:backgroundTint="@color/text_on_dark_primary" />
 
+        <!-- Filter 2: Time / Month Selector -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:letterSpacing="0.06"
+            android:text="Filter by Time Period"
+            android:textColor="@color/text_on_dark_secondary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+
+        <Spinner
+            android:id="@+id/spinnerMonthFilter"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginTop="6dp"
+            android:backgroundTint="@color/text_on_dark_primary" />
+
+        <!-- Net Profit Hero Card -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="140dp"
             android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="28dp"
             app:strokeWidth="0dp"
-            app:cardBackgroundColor="@android:color/transparent">
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -122,6 +145,7 @@
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 
+        <!-- Total Revenue & Total Expense Row -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -131,87 +155,102 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="90dp"
-                android:layout_weight="1"
                 android:layout_marginEnd="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="18dp"
                 app:strokeWidth="0dp"
-                app:cardBackgroundColor="#1A3050">
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
+
                 <LinearLayout
-                    android:layout_width="match_parent"
                     android:id="@+id/layoutRevenueCard"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="12dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TOTAL REVENUE"
                         android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="11sp"/>
+                        android:textSize="11sp" />
+
                     <TextView
                         android:id="@+id/txtRevenueDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:text="Rs. 0.00"
                         android:textColor="@color/pill_positive_text"
-                        android:textStyle="bold"
                         android:textSize="15sp"
-                        android:layout_marginTop="6dp"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="0dp"
                 android:layout_height="90dp"
-                android:layout_weight="1"
                 android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="18dp"
                 app:strokeWidth="0dp"
-                app:cardBackgroundColor="#1A3050">
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
+
                 <LinearLayout
+                    android:id="@+id/layoutExpenseCard"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/layoutExpenseCard"
-                    android:orientation="vertical"
                     android:gravity="center"
+                    android:orientation="vertical"
                     android:padding="12dp">
+
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="TOTAL EXPENSES"
                         android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="11sp"/>
+                        android:textSize="11sp" />
+
                     <TextView
                         android:id="@+id/txtExpenseDisplay"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
                         android:text="Rs. 0.00"
                         android:textColor="@color/danger_text"
-                        android:textStyle="bold"
                         android:textSize="15sp"
-                        android:layout_marginTop="6dp"/>
+                        android:textStyle="bold" />
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
+        <!-- Generate PDF Action Button -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnGeneratePDF"
             android:layout_width="match_parent"
             android:layout_height="56dp"
             android:layout_marginTop="20dp"
-            app:backgroundTint="@color/hero_accent"
             android:text="GENERATE PDF ANALYTICS REPORT"
             android:textColor="@color/text_on_dark_primary"
             android:textStyle="bold"
+            app:backgroundTint="@color/hero_accent"
             app:cornerRadius="16dp" />
 
+        <!-- Interactive Bar Chart Card View -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="280dp"
             android:layout_marginTop="20dp"
             app:cardCornerRadius="20dp"
-            app:strokeWidth="0dp">
+            app:strokeWidth="0dp"
+        app:cardBackgroundColor="@color/forest_700"
+        app:strokeColor="@color/forest_600"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -233,7 +272,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="12dp"
-                    android:background="#122544"/>
+                    android:background="@color/forest_700" />
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>
 

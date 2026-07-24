@@ -10,9 +10,10 @@ public class InvoiceModel {
     private double subtotal;
     private double grandTotal;
     private String paymentDueDate;
-    private boolean emailReminderEnabled; // 💡 Activity වලට ගැළපෙන ලෙස 'sendReminder' වෙනුවට මෙය ආදේශ කරන ලදී
-    private String status;              // For filtering: "pending", "paid", or "due"
-    private String businessEmail;       // To store the selected business workspace email
+    private boolean emailReminderEnabled;
+    private String status;
+    private String businessEmail;
+    private String userId; // 💡 Added for secure dashboard server-side filtering
 
     // Empty constructor required for Firebase Firestore data parsing
     public InvoiceModel() {}
@@ -20,7 +21,7 @@ public class InvoiceModel {
     // Main constructor used during invoice generation
     public InvoiceModel(String selectedBusiness, String clientName, String clientBRN, String itemName,
                         int quantity, double unitPrice, double subtotal, double grandTotal,
-                        String paymentDueDate, boolean emailReminderEnabled, String status) {
+                        String paymentDueDate, boolean emailReminderEnabled, String status, String userId) { // 💡 Added userId here
         this.selectedBusiness = selectedBusiness;
         this.clientName = clientName;
         this.clientBRN = clientBRN;
@@ -32,6 +33,7 @@ public class InvoiceModel {
         this.paymentDueDate = paymentDueDate;
         this.emailReminderEnabled = emailReminderEnabled;
         this.status = status;
+        this.userId = userId;
     }
 
     // Getters and Setters
@@ -62,7 +64,6 @@ public class InvoiceModel {
     public String getPaymentDueDate() { return paymentDueDate; }
     public void setPaymentDueDate(String paymentDueDate) { this.paymentDueDate = paymentDueDate; }
 
-    // 💡 Activity Classes වල භාවිතා වන Getter සහ Setter ක්‍රම නිවැරදි කිරීම
     public boolean isEmailReminderEnabled() { return emailReminderEnabled; }
     public void setEmailReminderEnabled(boolean emailReminderEnabled) { this.emailReminderEnabled = emailReminderEnabled; }
 
@@ -71,4 +72,8 @@ public class InvoiceModel {
 
     public String getBusinessEmail() { return businessEmail; }
     public void setBusinessEmail(String businessEmail) { this.businessEmail = businessEmail; }
+
+    // 💡 Getter and Setter for userId
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 }

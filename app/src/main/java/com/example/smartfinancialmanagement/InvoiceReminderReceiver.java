@@ -9,15 +9,16 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 
 public class InvoiceReminderReceiver extends BroadcastReceiver {
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        if (intent == null) return;
+
         String clientName = intent.getStringExtra("clientName");
         String dueDate = intent.getStringExtra("dueDate");
 
-        // 💡 පරිශීලකයා දුන් අවසරය කියවා ගැනීම (Default එක false වේ)
         boolean isEmailReminderEnabled = intent.getBooleanExtra("isEmailReminderEnabled", false);
 
-        // 💡 ඊමේල් එක යැවීමට අවශ්‍ය වන businessEmail සහ grandTotal යන දත්ත ද Intent එකෙන් කියවා ගන්න
         String businessEmail = intent.getStringExtra("businessEmail");
         double grandTotal = intent.getDoubleExtra("grandTotal", 0.0);
 
@@ -25,22 +26,31 @@ public class InvoiceReminderReceiver extends BroadcastReceiver {
         String channelId = "scheduled_invoice_reminders";
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel(channelId, "Invoice Reminders", NotificationManager.IMPORTANCE_HIGH);
-            manager.createNotificationChannel(channel);
+            NotificationChannel channel = new NotificationChannel(
+                    channelId,
+                    "Invoice Reminders",
+                    NotificationManager.IMPORTANCE_HIGH
+            );
+            if (manager != null) {
+                manager.createNotificationChannel(channel);
+            }
         }
 
-        // 1. දුරකථනයට සාමාන්‍ය Notification එක හැමවිටම යයි
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(android.R.drawable.ic_dialog_info)
                 .setContentTitle("Upcoming Invoice Due Tomorrow")
-                .setContentText("Invoice for " + clientName + " is due on " + dueDate)
+                .setContentText("Invoice for " + (clientName != null ? clientName : "Client") + " is due on " + (dueDate != null ? dueDate : "scheduled date"))
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setAutoCancel(true);
 
-        manager.notify((int) System.currentTimeMillis(), builder.build());
+        if (manager != null) {
+            // Using unique request codes by truncation to safe bit scopes to avoid structural collisions
+            manager.notify((int) (System.currentTimeMillis() & 0xfffffff), builder.build());
+        }
 
-        // 2. 💡 පරිශීලකයා ඇක්සෙප්ට් කර ඇත්නම් සහ ඊමේල් ලිපිනයක් පවතී නම් පසුබිමෙන් ඊමේල් එක යවයි!
-        if (isEmailReminderEnabled && businessEmail != null && !businessEmail.isEmpty()) {
-            // ✉️ අප සාදාගත් EmailSender Backend එක ක්‍රියාත්මක කිරීම
+
+        if (isEmailReminderEnabled && businessEmail != null && !businessEmail.trim().isEmpty()) {
+
             InvoiceEmailSender.sendInvoiceEmail(businessEmail, clientName, dueDate, grandTotal);
         }
     }

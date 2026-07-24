@@ -24,7 +24,7 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
     @NonNull
     @Override
     public InvoiceViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_invoice, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_business_invoice, parent, false);
         return new InvoiceViewHolder(view);
     }
 
@@ -42,17 +42,16 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
 
         // Update card style statuses dynamically
         if (status.equals("paid")) {
-            holder.txtStatusBadge.setTextColor(Color.parseColor("#071A33"));
-            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#00D4AA"));
+            holder.txtStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
+            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#8EB69B"));
         } else if (status.equals("due")) {
             holder.txtStatusBadge.setTextColor(Color.parseColor("#FFFFFF"));
-            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#FF5555")); // 🚨 කල් ඉකුත් වූ ඒවා රතු පාටින්
+            holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#FF5555"));
         } else {
             holder.txtStatusBadge.setTextColor(Color.parseColor("#F0F6FF"));
             holder.txtStatusBadge.setBackgroundColor(Color.parseColor("#1A3050"));
         }
 
-        // 💡 Click Listener එක හරහා InvoiceDetailsActivity වෙත සුරක්ෂිතව දත්ත රැගෙන යාම
         holder.itemView.setOnClickListener(v -> {
             Intent intent = new Intent(v.getContext(), InvoiceDetailsActivity.class);
 
@@ -65,7 +64,7 @@ public class InvoiceAdapter extends RecyclerView.Adapter<InvoiceAdapter.InvoiceV
             intent.putExtra("unitPrice", invoice.getUnitPrice());
             intent.putExtra("grandTotal", invoice.getGrandTotal());
 
-            // 💡 FIX: InvoiceDetailsActivity හි getIntent().getStringExtra("paymentDueDate") සමඟ නිවැරදිව ගැළපේ
+            // 💡 MATCHED: Maps directly to InvoiceDetailsActivity's explicit getIntent flags
             intent.putExtra("paymentDueDate", invoice.getPaymentDueDate());
             intent.putExtra("status", invoice.getStatus());
 

@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-
+<!-- Primary CTA button — forest green with pressed state -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Pressed state — darker navy -->
+    <!-- Pressed state — deeper forest green -->
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
-            <corners android:radius="27dp" />
-            <gradient
-                android:type="linear"
-                android:angle="0"
-                android:startColor="#122A58"
-                android:endColor="#1A3870" />
+            <corners android:radius="12dp" />
+            <solid android:color="@color/forest_600" />
         </shape>
     </item>
 
+    <!-- Disabled state -->
+    <item android:state_enabled="false">
+        <shape android:shape="rectangle">
+            <corners android:radius="12dp" />
+            <solid android:color="@color/forest_700" />
+        </shape>
+    </item>
 
+    <!-- Default state -->
     <item>
         <shape android:shape="rectangle">
-            <corners android:radius="27dp" />
-            <gradient
-                android:type="linear"
-                android:angle="0"
-                android:startColor="#1E3D7A"
-                android:endColor="#2B5BA8" />
+            <corners android:radius="12dp" />
+            <solid android:color="@color/forest_300" />
         </shape>
     </item>
 

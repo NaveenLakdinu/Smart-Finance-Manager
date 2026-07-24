@@ -114,7 +114,7 @@ public class ExpenseClaimHistoryActivity extends AppCompatActivity {
             currentTab = selected.getText().toString().trim();
             resetTabs();
             selected.setBackgroundResource(R.drawable.bg_tab_active);
-            selected.setTextColor(ContextCompat.getColor(this, R.color.qa_purple_icon));
+            selected.setTextColor(ContextCompat.getColor(this, R.color.qa_tertiary_icon));
             applyFilter();
         };
         tabAll.setOnClickListener(listener);

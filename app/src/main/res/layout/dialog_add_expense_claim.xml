@@ -1,103 +1,134 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/glass_card_bg"
+    android:background="@color/forest_700"
     android:padding="20dp">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Log New Expense Claim"
+        android:textColor="@color/text_on_dark_primary"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Claim Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Claim Title"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"/>
+        android:textSize="12sp" />
 
     <EditText
         android:id="@+id/etClaimTitle"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
+        android:background="@drawable/bg_input_dark"
         android:hint="e.g. Travel Reimbursement"
-        android:textColorHint="#4A607A"
-        android:textColor="@color/text_on_dark_primary"
         android:inputType="text"
-        android:background="@android:color/transparent"/>
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="@color/text_on_dark_primary"
+        android:textColorHint="@color/text_on_dark_muted"
+        android:textSize="14sp" />
 
+    <!-- Category -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Category"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <Spinner
         android:id="@+id/spinnerCategory"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
-        android:backgroundTint="@color/text_on_dark_primary" />
+        android:background="@drawable/bg_input_dark"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp" />
 
+    <!-- Amount -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Amount (LKR)"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/etClaimAmount"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
+        android:background="@drawable/bg_input_dark"
         android:hint="0.00"
-        android:textColorHint="#4A607A"
-        android:textColor="@color/text_on_dark_primary"
         android:inputType="numberDecimal"
-        android:background="@android:color/transparent"/>
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="@color/text_on_dark_primary"
+        android:textColorHint="@color/text_on_dark_muted"
+        android:textSize="14sp" />
 
+    <!-- Date -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Expense Date"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <TextView
         android:id="@+id/tvExpenseDate"
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="50dp"
         android:layout_marginTop="6dp"
-        android:background="@drawable/bg_glass_card"
+        android:background="@drawable/bg_input_dark"
+        android:drawableEnd="@drawable/ic_calendar"
+        android:drawableTint="@color/text_on_dark_muted"
         android:gravity="center_vertical"
-        android:paddingHorizontal="12dp"
-        android:text="Tap to select date"
-        android:textColor="@color/text_on_dark_muted"
+        android:hint="Tap to select date"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="@color/text_on_dark_primary"
+        android:textColorHint="@color/text_on_dark_muted"
         android:textSize="14sp"
         android:clickable="true"
         android:focusable="true" />
 
+    <!-- Description -->
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Description"
         android:textColor="@color/text_on_dark_secondary"
-        android:textStyle="bold"
-        android:layout_marginTop="12dp"/>
+        android:textSize="12sp"
+        android:layout_marginTop="16dp" />
 
     <EditText
         android:id="@+id/etClaimDescription"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:layout_marginTop="6dp"
-        android:hint="Describe the expense"
-        android:textColorHint="#4A607A"
-        android:textColor="@color/text_on_dark_primary"
+        android:background="@drawable/bg_input_dark"
+        android:hint="Describe the expense..."
         android:inputType="textMultiLine"
         android:gravity="top"
-        android:background="@android:color/transparent"/>
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:paddingTop="12dp"
+        android:textColor="@color/text_on_dark_primary"
+        android:textColorHint="@color/text_on_dark_muted"
+        android:textSize="14sp" />
 
 </LinearLayout>

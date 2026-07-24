@@ -59,10 +59,13 @@
 
         <!-- Estimated Payment Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="@color/forest_700"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            app:cardElevation="14dp"
+            app:cardElevation="0dp"
             app:cardCornerRadius="28dp">
             
             <LinearLayout
@@ -86,7 +89,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="Rs 0.00"
-                    android:textColor="@color/hero_accent"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="36sp"
                     android:textStyle="bold" />
 
@@ -103,12 +106,14 @@
 
         <!-- Form Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp"
-            app:cardBackgroundColor="@color/glass_card_bg">
+            app:cardBackgroundColor="@color/forest_700">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -136,7 +141,7 @@
                         android:id="@+id/etLoanName"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@null"
+                        android:background="@drawable/bg_input_dark"
                         android:hint="e.g. Personal Loan"
                         android:textColorHint="@color/text_on_dark_muted"
                         android:textColor="@color/text_on_dark_primary"
@@ -164,7 +169,7 @@
                         android:id="@+id/etPrincipalAmount"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:background="@null"
+                        android:background="@drawable/bg_input_dark"
                         android:hint="0.00"
                         android:textColorHint="@color/text_on_dark_muted"
                         android:textColor="@color/text_on_dark_primary"
@@ -201,7 +206,7 @@
                                 android:id="@+id/etInterestRate"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@null"
+                                android:background="@drawable/bg_input_dark"
                                 android:hint="5.0"
                                 android:textColorHint="@color/text_on_dark_muted"
                                 android:textColor="@color/text_on_dark_primary"
@@ -234,7 +239,7 @@
                                 android:id="@+id/etDuration"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:background="@null"
+                                android:background="@drawable/bg_input_dark"
                                 android:hint="12"
                                 android:textColorHint="@color/text_on_dark_muted"
                                 android:textColor="@color/text_on_dark_primary"

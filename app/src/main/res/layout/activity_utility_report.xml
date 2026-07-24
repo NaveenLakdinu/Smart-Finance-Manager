@@ -76,7 +76,7 @@
                     android:letterSpacing="0.15" />
 
                 <TextView
-                    android:id="@+id/txtTotalExpenses"
+                    android:id="@+id/txtTotalAmount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
@@ -91,7 +91,7 @@
                     android:orientation="horizontal"
                     android:layout_marginTop="6dp">
                     <View android:layout_width="32dp" android:layout_height="3dp" android:background="@color/hero_accent" />
-                    <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
+                    <View android:layout_width="8dp" android:layout_height="3dp" android:background="@color/forest_300" android:layout_marginStart="4dp" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -116,7 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TRACKED"
-                    android:textColor="@color/pill_positive_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="10sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -176,11 +176,13 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="360dp"
             android:layout_marginTop="14dp"
             android:layout_marginBottom="16dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp">
 
@@ -205,10 +207,10 @@
             android:layout_height="54dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="16dp"
-            android:background="@drawable/bg_capsule_white"
+            android:background="@drawable/bg_btn_primary_green"
             android:text="Generate PDF Report"
             android:textAllCaps="false"
-            android:textColor="@color/text_on_dark_primary"
+            android:textColor="@color/btn_primary_text"
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="@color/pill_positive_text"

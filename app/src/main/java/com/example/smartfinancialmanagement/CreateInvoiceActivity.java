@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
@@ -24,6 +25,8 @@ import androidx.core.content.ContextCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.material.button.MaterialButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -37,6 +40,7 @@ import java.util.Locale;
 
 public class CreateInvoiceActivity extends AppCompatActivity {
 
+    private static final String TAG = "CreateInvoiceActivity";
     private AutoCompleteTextView spinnerBusinessDropdown;
     private EditText etClientName, etClientBRN, etItemName, etQty, etPrice, etPaymentDueDate;
     private TextView txtSubtotal, txtGrandTotal;
@@ -44,6 +48,7 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     private MaterialButton btnGenerateInvoice;
 
     private FirebaseFirestore db;
+    private String currentUserId;
     private List<String> businessNamesList = new ArrayList<>();
     private String chosenBusinessName = "";
 
@@ -57,6 +62,16 @@ public class CreateInvoiceActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_invoice);
 
         db = FirebaseFirestore.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            currentUserId = user.getUid();
+        } else {
+            Toast.makeText(this, "User session not active", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         initializeViews();
         loadBusinessesFromFirestore();
@@ -105,7 +120,10 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     }
 
     private void loadBusinessesFromFirestore() {
+        if (currentUserId == null) return;
+
         db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     businessNamesList.clear();
@@ -120,7 +138,8 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     spinnerBusinessDropdown.setAdapter(adapter);
                     spinnerBusinessDropdown.setOnItemClickListener((parent, view, position, id) ->
                             chosenBusinessName = parent.getItemAtPosition(position).toString());
-                });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error fetching businesses: " + e.getMessage()));
     }
 
     private void setupCalculationListeners() {
@@ -184,9 +203,11 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     }
 
     private void saveInvoiceToDatabase(boolean isEmailReminderEnabled) {
+        if (currentUserId == null) return;
         btnGenerateInvoice.setEnabled(false);
 
         db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
                 .whereEqualTo("businessName", chosenBusinessName)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -206,9 +227,10 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     double finalPrice = Double.parseDouble(etPrice.getText().toString().trim());
                     String dueDate = etPaymentDueDate.getText().toString().trim();
 
+                    // 💡 FIXED: currentUserId passed directly here to match the 12-argument constructor signature perfectly
                     InvoiceModel invoice = new InvoiceModel(
                             chosenBusinessName, client, brn, item, finalQty, finalPrice,
-                            calculatedSubtotal, calculatedGrandTotal, dueDate, isEmailReminderEnabled, "pending"
+                            calculatedSubtotal, calculatedGrandTotal, dueDate, isEmailReminderEnabled, "pending", currentUserId
                     );
 
                     invoice.setBusinessEmail(targetBusinessEmail);
@@ -217,8 +239,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                             .add(invoice)
                             .addOnSuccessListener(documentReference -> {
                                 Toast.makeText(CreateInvoiceActivity.this, "Invoice generated and stored successfully!", Toast.LENGTH_SHORT).show();
-
-                                // 💡 STEP C: පරිශීලකයා ලබාදුන් ඊමේල් තේරීම (true/false) ද සමඟින් Notification එක Schedule කිරීම
                                 scheduleOneDayPriorNotification(client, dueDate, isEmailReminderEnabled);
                                 finish();
                             })
@@ -233,7 +253,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                 });
     }
 
-    // 💡 යාවත්කාලීන කරන ලද සහ දෝෂ රහිත (Error-Free) Notification Scheduling ක්‍රමය
     private void scheduleOneDayPriorNotification(String clientName, String dueDateString, boolean isEmailEnabled) {
         try {
             Date dueDate = dateFormat.parse(dueDateString);
@@ -241,9 +260,8 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(dueDate);
 
-                // නිවැරදිව දිනකට පෙර (1 day before) සැකසීම
                 calendar.add(Calendar.DAY_OF_YEAR, -1);
-                calendar.set(Calendar.HOUR_OF_DAY, 9);  // උදේ 9:00 ට
+                calendar.set(Calendar.HOUR_OF_DAY, 9);
                 calendar.set(Calendar.MINUTE, 0);
                 calendar.set(Calendar.SECOND, 0);
 
@@ -253,8 +271,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     Intent intent = new Intent(this, InvoiceReminderReceiver.class);
                     intent.putExtra("clientName", clientName);
                     intent.putExtra("dueDate", dueDateString);
-
-                    // 💡 පරිශීලකයාගේ ඊමේල් අවසර තීරණය BroadcastReceiver එක වෙත යැවීම
                     intent.putExtra("isEmailReminderEnabled", isEmailEnabled);
 
                     int uniqueRequestId = Math.abs((clientName + dueDateString).hashCode());
@@ -268,7 +284,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
                     if (alarmManager != null) {
-                        // Android 12 (API 31) සහ ඊට ඉහළ සඳහා Exact Alarm පරීක්ෂාව
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                             if (alarmManager.canScheduleExactAlarms()) {
                                 try {

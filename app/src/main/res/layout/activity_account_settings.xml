@@ -23,7 +23,7 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/ic_back"
+            android:src="@drawable/ic_arrow_back"
             android:contentDescription="Back"
             app:tint="@color/text_on_dark_primary" />
 
@@ -52,9 +52,11 @@
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -66,7 +68,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Profile Information"
-                        android:textColor="#071A33"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
@@ -76,7 +78,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Full Name"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -86,7 +88,9 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:hint="Enter your full name"
                         android:inputType="textPersonName"
                         android:layout_marginBottom="16dp" />
 
@@ -95,7 +99,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Age"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -105,7 +109,9 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:hint="Enter your age"
                         android:inputType="number"
                         android:layout_marginBottom="16dp" />
 
@@ -114,7 +120,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Mobile Number"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -124,7 +130,9 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:hint="Enter mobile number"
                         android:inputType="phone"
                         android:layout_marginBottom="16dp" />
 
@@ -133,7 +141,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="University"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -143,7 +151,8 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
                         android:hint="e.g. University of Colombo"
                         android:inputType="text"
                         android:layout_marginBottom="16dp" />
@@ -153,7 +162,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Course"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -163,7 +172,8 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
                         android:hint="e.g. BSc Computer Science"
                         android:inputType="text"
                         android:layout_marginBottom="16dp" />
@@ -173,7 +183,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Student ID"
-                        android:textColor="#666666"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp" />
                     
@@ -183,7 +193,8 @@
                         android:layout_height="50dp"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
-                        android:textColor="#1F2937"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textColorHint="@color/text_on_dark_muted"
                         android:hint="e.g. STU12345"
                         android:inputType="text"
                         android:layout_marginBottom="32dp" />
@@ -191,21 +202,23 @@
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
-                        android:background="#E5E7EB"
+                        android:background="@color/divider_dark"
                         android:layout_marginBottom="24dp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="App Preferences"
-                        android:textColor="#071A33"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         android:layout_marginBottom="16dp"/>
+
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Preferred Currency"
-                        android:textColor="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp"/>
 
@@ -229,7 +242,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Update Password"
-                        android:textColor="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_secondary"
                         android:textSize="14sp"
                         android:layout_marginBottom="8dp"/>
 
@@ -238,6 +251,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:hint="New Password (optional)"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
                         android:inputType="textPassword"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"
@@ -248,6 +263,8 @@
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
                         android:hint="Confirm Password"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
                         android:inputType="textPassword"
                         android:background="@drawable/bg_input"
                         android:paddingHorizontal="16dp"

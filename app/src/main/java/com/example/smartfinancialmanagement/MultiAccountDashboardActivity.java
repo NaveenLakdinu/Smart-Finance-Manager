@@ -2,6 +2,7 @@ package com.example.smartfinancialmanagement;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.animation.OvershootInterpolator;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,20 @@ import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.button.MaterialButton;
 
 import java.util.Calendar;
+
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
+
+import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 public class MultiAccountDashboardActivity extends AppCompatActivity {
 
@@ -62,11 +77,18 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             finish();
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(notifBtn -> showNotificationPanelDialog());
+        }
         });
         setupSecurityButton();
         setupSavingsWidget();
     }
+
+
 
     private void initViews() {
         txtProfileLetter = findViewById(R.id.txtProfileLetter);
@@ -113,10 +135,12 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             intent.putExtra("BALANCES", balances);
             intent.putExtra("CURRENT_ACCOUNT_INDEX", currentAccountIndex);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         cardStatements.setOnClickListener(v -> {
             Intent intent = new Intent(MultiAccountDashboardActivity.this, TransferHistoryActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         cardCards.setOnClickListener(v -> Toast.makeText(this, "Card Management - Coming Soon", Toast.LENGTH_SHORT).show());
         cardAddAccount.setOnClickListener(v -> showAddAccountDialog());
@@ -124,18 +148,22 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         cardLoanManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, LoanFormActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         cardSubscriptionManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, SubscriptionManagerActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         cardSavingManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, SavingManagerActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
         cardUtilityManager.setOnClickListener(v -> {
             Intent intent = new Intent(this, UtilityManagerActivity.class);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
     }
 
@@ -376,6 +404,8 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         loadAccountsFromFirestore();
         TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
         if (txtCurrentSavingsValue != null) {
@@ -401,10 +431,12 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -416,4 +448,26 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             });
         }
     }
+
+    private void animateCards(View... cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                cards[i].setAlpha(0f);
+                cards[i].setTranslationY(40f);
+                final int delay = i * 100;
+                cards[i].animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
+            }
+        }
+    }
+
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
+    }
 }
+

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.animation.OvershootInterpolator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -25,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,15 +68,13 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         initializeViews();
         setupUserIdentityProfile();
         checkNotificationPermission();
-
-        // 🛑 loadBusinessWorkspaces(); එක මෙතැනින් ඉවත් කර ඇත.
     }
 
-    // 💡 100% FIX: වෙනත් ක්‍රියාකාරකමක (Activity) සිට නැවත Dashboard එකට එන හැම වෙලාවකම
-    // Firebase එකෙන් අලුත්ම දත්ත ඇදලා අරන් තිරය auto-refresh කරන්නේ මෙන්න මේ කොටසින්.
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
@@ -86,7 +88,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         btnTopLogout = findViewById(R.id.btnTopLogout);
         recyclerBusinessFilters = findViewById(R.id.recyclerBusinessFilters);
 
-        // initializeViews() ඇතුළතට මෙය එකතු කරන්න:
         ImageView btnManageBusinesses = findViewById(R.id.btnManageBusinesses);
         btnManageBusinesses.setOnClickListener(v -> {
             startActivity(new Intent(this, ManageBusinessActivity.class));
@@ -112,6 +113,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             finish();
         });
     }
@@ -138,9 +140,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
     private void loadBusinessWorkspaces() {
         FirebaseUser user = mAuth.getCurrentUser();
-        if (user == null || user.getEmail() == null) return;
-
-        String currentLogInUserEmail = user.getEmail().toLowerCase(Locale.ROOT).trim();
+        // 💡 Use UID instead of Email
+        if (user == null) return;
+        String currentUserId = user.getUid();
 
         businessNamesList.clear();
         businessIdsList.clear();
@@ -149,6 +151,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         businessIdsList.add("ALL WORKSPACES");
 
         db.collection("businesses")
+                .whereEqualTo("userId", currentUserId)
                 .get()
                 .addOnSuccessListener(snapshots -> {
                     for (DocumentSnapshot doc : snapshots.getDocuments()) {
@@ -156,45 +159,31 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                             String name = doc.getString("businessName");
                             String id = doc.getId();
 
-                            String ownerEmailField = doc.getString("ownerEmail");
-                            String businessEmailField = doc.getString("businessEmail");
-
                             if (name != null && !name.trim().isEmpty()) {
                                 name = name.trim();
-
-                                String finalOwnerEmail = (ownerEmailField != null) ? ownerEmailField.toLowerCase(Locale.ROOT).trim() : "";
-                                String finalBusinessEmail = (businessEmailField != null) ? businessEmailField.toLowerCase(Locale.ROOT).trim() : "";
-
-                                boolean isMyBusiness = false;
-
-                                if (!finalOwnerEmail.isEmpty() && finalOwnerEmail.equals(currentLogInUserEmail)) {
-                                    isMyBusiness = true;
-                                }
-                                else if (!finalBusinessEmail.isEmpty() && finalBusinessEmail.equals(currentLogInUserEmail)) {
-                                    isMyBusiness = true;
-                                }
-
-                                if (isMyBusiness) {
-                                    if (!businessIdsList.contains(id)) {
-                                        businessNamesList.add(name);
-                                        businessIdsList.add(id);
-                                    }
+                                if (!businessIdsList.contains(id)) {
+                                    businessNamesList.add(name);
+                                    businessIdsList.add(id);
                                 }
                             }
                         }
                     }
 
-                    Log.d(TAG, "Total businesses fetched and shown: " + (businessNamesList.size() - 1));
-                    calculateInvoiceMetricsPipeline(currentLogInUserEmail);
+                    Log.d(TAG, "Total isolated businesses fetched: " + (businessNamesList.size() - 1));
+                    // Pass the UID to the next data segment pipeline
+                    calculateInvoiceMetricsPipeline(currentUserId);
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Businesses load failure: " + e.getMessage());
-                    calculateInvoiceMetricsPipeline(currentLogInUserEmail);
+                    Log.e(TAG, "Businesses cloud fetch failure: " + e.getMessage());
+                    calculateInvoiceMetricsPipeline(currentUserId);
                 });
     }
 
-    private void calculateInvoiceMetricsPipeline(String ownerEmail) {
-        db.collection("invoices").get()
+    private void calculateInvoiceMetricsPipeline(String currentUserId) {
+        // 💡 Server-Side Filter: Only fetch invoices belonging to this specific user
+        db.collection("invoices")
+                .whereEqualTo("userId", currentUserId)
+                .get()
                 .addOnSuccessListener(snapshots -> {
                     cachedInvoices.clear();
 
@@ -209,7 +198,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     setupFilterRecyclerView();
                 })
                 .addOnFailureListener(e -> {
-                    Toast.makeText(this, "Invoices Pipeline Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(this, "Invoices Cloud Pipeline Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                     setupFilterRecyclerView();
                 });
     }
@@ -225,9 +214,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             if (status != null && (status.equalsIgnoreCase("pending") || status.equalsIgnoreCase("unpaid"))) {
 
                 if (selectedBusinessScope.equals("ALL WORKSPACES")) {
-                    if (bizNameInInvoice != null && (businessNamesList.contains(bizNameInInvoice) || businessIdsList.contains(bizNameInInvoice))) {
-                        pendingTotal += amount;
-                    }
+                    // Since both pipelines are filtered to this user on the server,
+                    // we can safely accumulate without heavy loops
+                    pendingTotal += amount;
                 } else {
                     int selectedIndex = businessNamesList.indexOf(selectedBusinessScope);
                     if (selectedIndex != -1) {
@@ -281,11 +270,11 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 holder.textView.setText(filterName);
 
                 if (filterName.equalsIgnoreCase(selectedBusinessScope)) {
-                    holder.cardView.setCardBackgroundColor(Color.parseColor("#00D4AA"));
-                    holder.textView.setTextColor(Color.parseColor("#071A33"));
+                    holder.cardView.setCardBackgroundColor(Color.parseColor("#8EB69B"));
+                    holder.textView.setTextColor(Color.parseColor("#0B2B26"));
                 } else {
-                    holder.cardView.setCardBackgroundColor(Color.parseColor("#1E293B"));
-                    holder.textView.setTextColor(Color.parseColor("#7A9CC0"));
+                    holder.cardView.setCardBackgroundColor(Color.parseColor("#0B2B26"));
+                    holder.textView.setTextColor(Color.parseColor("#B0A8FF"));
                 }
 
                 holder.itemView.setOnClickListener(v -> {
@@ -322,10 +311,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -339,33 +330,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        View panelView = LayoutInflater.from(this).inflate(R.layout.dialog_notifications, null);
-        LinearLayout container = panelView.findViewById(R.id.layoutNotificationsContainer);
-        Button btnClose = panelView.findViewById(R.id.btnDismissNotifications);
-
-        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog).setView(panelView).create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        String[] samples = {
-                "⚠️ Stock alert: Inventory limits dropping inside main workspace.",
-                "📈 Monthly statement compiled for review inside Business Analytics.",
-                "🧾 New B2B client invoice log processed successfully."
-        };
-
-        container.removeAllViews();
-        for (String msg : samples) {
-            TextView row = new TextView(this);
-            row.setText(msg);
-            row.setTextColor(Color.parseColor("#F0F6FF"));
-            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
-            row.setPadding(0, 16, 0, 16);
-            container.addView(row);
-        }
-
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        NotificationPanelHelper.show(this);
     }
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {
@@ -375,6 +340,23 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             super(v);
             cardView = v;
             textView = tv;
+        }
+    }
+
+    private void animateCards(View... cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                cards[i].setAlpha(0f);
+                cards[i].setTranslationY(40f);
+                final int delay = i * 100;
+                cards[i].animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
+            }
         }
     }
 }
