@@ -26,6 +26,20 @@ import java.util.Locale;
 import androidx.appcompat.app.AlertDialog;
 import android.widget.EditText;
 
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
+
+import android.graphics.Color;
+import android.util.TypedValue;
+import android.view.LayoutInflater;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+
 public class DashboardActivity extends AppCompatActivity {
 
     private TextView txtProfileLetter, txtGreeting, txtUserEmail;
@@ -50,7 +64,13 @@ public class DashboardActivity extends AppCompatActivity {
         setupUserDetails();
         setupFunctionCards();
         loadUserSubscriptions();
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(notifBtn -> showNotificationPanelDialog());
+        }
     }
+
+
 
     private void initViews() {
         txtProfileLetter = findViewById(R.id.txtProfileLetter);
@@ -308,6 +328,8 @@ public class DashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
         if (txtCurrentSavingsValue != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
@@ -331,4 +353,9 @@ public class DashboardActivity extends AppCompatActivity {
             }
         }
     }
+
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
+    }
 }
+

@@ -88,7 +88,7 @@
 
                 </LinearLayout>
 
-                <!-- Actions (Security + Logout) -->
+                <!-- Actions (Notification + Security + Logout) -->
                 <LinearLayout
                     android:id="@+id/layoutHeaderActions"
                     android:layout_width="wrap_content"
@@ -97,6 +97,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/btnNotifications"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_notification"
+                        android:gravity="center"
+                        android:text="🔔"
+                        android:textSize="20sp" />
 
                     <FrameLayout
                         android:id="@+id/btnSecurity"

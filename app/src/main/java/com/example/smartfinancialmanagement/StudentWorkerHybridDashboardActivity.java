@@ -153,6 +153,12 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
     }
 
     private void setupClickListeners() {
+        // Notification button
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        }
+
         if (btnTopLogout != null) {
             btnTopLogout.setOnClickListener(v -> {
                 mAuth.signOut();
@@ -296,9 +302,15 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         if (txtCurrentSavingsValue != null) {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
         }

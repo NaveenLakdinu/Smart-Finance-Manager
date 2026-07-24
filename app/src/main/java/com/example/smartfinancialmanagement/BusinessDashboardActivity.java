@@ -26,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +73,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
@@ -325,33 +330,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        View panelView = LayoutInflater.from(this).inflate(R.layout.dialog_notifications, null);
-        LinearLayout container = panelView.findViewById(R.id.layoutNotificationsContainer);
-        Button btnClose = panelView.findViewById(R.id.btnDismissNotifications);
-
-        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog).setView(panelView).create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        String[] samples = {
-                "⚠️ Stock alert: Inventory limits dropping inside main workspace.",
-                "📈 Monthly statement compiled for review inside Business Analytics.",
-                "🧾 New B2B client invoice log processed successfully."
-        };
-
-        container.removeAllViews();
-        for (String msg : samples) {
-            TextView row = new TextView(this);
-            row.setText(msg);
-            row.setTextColor(Color.parseColor("#FFFFFF"));
-            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
-            row.setPadding(0, 16, 0, 16);
-            container.addView(row);
-        }
-
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        NotificationPanelHelper.show(this);
     }
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {

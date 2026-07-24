@@ -41,6 +41,8 @@ public class StudentDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         loadUserData();
         recalculateTotalIncome();
         
@@ -102,6 +104,13 @@ public class StudentDashboardActivity extends AppCompatActivity {
 
         setupSecurityButton();
         setupSavingsWidget();
+        setupRoleUpgradeCard();
+
+        // Notification button
+        View btnNotifications = findViewById(R.id.btnNotifications);
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        }
 
         loadAchievementData();
         loadCurrentBalance();
@@ -191,6 +200,31 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
             }
         }
+    }
+
+    private void setupRoleUpgradeCard() {
+        View cardRoleUpgrade = findViewById(R.id.cardRoleUpgrade);
+        if (cardRoleUpgrade == null) return;
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).get()
+            .addOnSuccessListener(doc -> {
+                String role = doc.getString("role");
+                if ("Student".equals(role)) {
+                    cardRoleUpgrade.setVisibility(View.VISIBLE);
+                }
+            });
+
+        cardRoleUpgrade.setOnClickListener(v -> {
+            startActivity(new Intent(this, RoleUpgradeActivity.class));
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+        });
+    }
+
+    private void showNotificationPanelDialog() {
+        NotificationPanelHelper.show(this);
     }
 
     private void loadSavingsFromFirestore(TextView txtValue) {
