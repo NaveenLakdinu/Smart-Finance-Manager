@@ -250,7 +250,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
-                String name = doc.getString("serviceName");
+                String name = doc.getString("name"); // Fixed from serviceName
                 Double amount = doc.getDouble("amount");
                 if (name != null && amount != null) {
                     entries.add(new PieEntry(amount.floatValue(), name));
@@ -258,10 +258,19 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             if (!entries.isEmpty()) {
                 PieDataSet dataSet = new PieDataSet(entries, "Subscriptions");
-                dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                dataSet.setColors(ColorTemplate.COLORFUL_COLORS); // Attractive colors
                 dataSet.setValueTextColor(android.graphics.Color.WHITE);
                 dataSet.setValueTextSize(12f);
                 chartSubscriptions.setData(new PieData(dataSet));
+                
+                chartSubscriptions.setDrawHoleEnabled(true);
+                chartSubscriptions.setHoleColor(android.graphics.Color.parseColor("#1B2A4A"));
+                chartSubscriptions.setTransparentCircleRadius(0f);
+                chartSubscriptions.setHoleRadius(60f);
+                chartSubscriptions.setDrawCenterText(true);
+                chartSubscriptions.setCenterText("Active");
+                chartSubscriptions.setCenterTextSize(16f);
+                chartSubscriptions.setCenterTextColor(android.graphics.Color.WHITE);
             } else {
                 chartSubscriptions.clear();
             }
@@ -278,22 +287,28 @@ public class FinancialReportsActivity extends AppCompatActivity {
         });
 
         // 3. Fetch Utility Bills
-        db.collection("users").document(uid).collection("utility_bills").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        db.collection("utilityBill").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<BarEntry> entries = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
             float i = 0f;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double amount = doc.getDouble("amount");
+                String name = doc.getString("billName");
                 if (amount != null) {
                     entries.add(new BarEntry(i++, amount.floatValue()));
+                    labels.add(name != null ? name : "Bill");
                 }
             }
             if (!entries.isEmpty()) {
                 BarDataSet dataSet = new BarDataSet(entries, "Utility Bills");
-                dataSet.setColors(new int[]{ androidx.core.content.ContextCompat.getColor(FinancialReportsActivity.this, R.color.forest_300) });
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
                 dataSet.setValueTextColor(android.graphics.Color.WHITE);
                 dataSet.setValueTextSize(10f);
                 chartUtilityBills.setData(new BarData(dataSet));
+                
+                chartUtilityBills.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels));
+                chartUtilityBills.getXAxis().setGranularity(1f);
             } else {
                 chartUtilityBills.clear();
             }
