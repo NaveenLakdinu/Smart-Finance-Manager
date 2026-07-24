@@ -67,7 +67,7 @@
                     android:text="All Savings Data"
                     android:textColor="@color/text_on_dark_primary"
                     android:checked="true"
-                    android:buttonTint="@color/qa_blue_icon"/>
+                    android:buttonTint="@color/qa_secondary_icon"/>
 
                 <RadioButton
                     android:id="@+id/rbSelectedMonth"

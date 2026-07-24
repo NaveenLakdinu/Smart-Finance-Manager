@@ -136,11 +136,7 @@
 
                 <!-- Notification -->
                 <com.google.android.material.card.MaterialCardView
-<<<<<<< HEAD
                     android:id="@+id/cardNotification"
-=======
-                    android:id="@+id/btnNotifications"
->>>>>>> origin/boseth-branch
                     android:layout_width="36dp"
                     android:layout_height="36dp"
                     android:layout_marginStart="8dp"
@@ -150,7 +146,6 @@
                     app:cardCornerRadius="18dp"
                     app:strokeWidth="0dp">
 
-<<<<<<< HEAD
                     <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent">
@@ -178,13 +173,6 @@
                             android:textStyle="bold"
                             android:visibility="gone" />
                     </FrameLayout>
-=======
-                    <ImageView
-                        android:layout_width="18dp"
-                        android:layout_height="18dp"
-                        android:layout_gravity="center"
-                        android:src="@drawable/ic_notification"
-                        app:tint="@color/forest_300" />
                 </com.google.android.material.card.MaterialCardView>
 
                 <!-- Lock Button -->
@@ -205,7 +193,6 @@
                         android:layout_gravity="center"
                         android:src="@drawable/ic_lock"
                         app:tint="@color/forest_300" />
->>>>>>> origin/boseth-branch
                 </com.google.android.material.card.MaterialCardView>
 
             </LinearLayout>
@@ -946,13 +933,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="20dp"
                 android:gravity="center"
-<<<<<<< HEAD
                 tools:text="Student Financial Dashboard • 2025"
                 android:textColor="#6B7280"
-=======
-                android:text="Student Financial Dashboard • 2025"
-                android:textColor="@color/text_on_dark_muted"
->>>>>>> origin/boseth-branch
                 android:textSize="12sp" />
 
         </LinearLayout>

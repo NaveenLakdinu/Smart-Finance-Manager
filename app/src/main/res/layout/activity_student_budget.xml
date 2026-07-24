@@ -98,13 +98,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="18dp"
-<<<<<<< HEAD
-                    android:text="Plan your budget wisely"
-                    android:textColor="#BCE0FF"
-=======
                     android:text="Plan your semester budget wisely"
                     android:textColor="@color/text_on_dark_secondary"
->>>>>>> origin/boseth-branch
                     android:textSize="13sp"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/layoutHeaderTitles" />
@@ -169,14 +164,9 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="12dp"
-<<<<<<< HEAD
                                 android:layout_weight="1"
                                 android:text="Income Sources"
                                 android:textColor="#111827"
-=======
-                                android:text="Income Details"
-                                android:textColor="@color/text_on_dark_primary"
->>>>>>> origin/boseth-branch
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -197,7 +187,6 @@
 
                         </LinearLayout>
 
-<<<<<<< HEAD
                         <!-- Dynamic income list (populated at runtime) -->
                         <LinearLayout
                             android:id="@+id/containerIncomeItems"
@@ -205,107 +194,27 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="16dp"
                             android:orientation="vertical" />
-=======
-                        <!-- Input Field: Monthly Allowance -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Monthly Allowance (Rs.)"
-                            android:textColor="@color/text_on_dark_muted"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
-
-                        <EditText
-                            android:id="@+id/editMonthlyAllowance"
-                            android:layout_width="match_parent"
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="15000"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp" />
-
-                        <!-- Input Field: Scholarship Amount -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Scholarship Amount (Rs.)"
-                            android:textColor="@color/text_on_dark_muted"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
->>>>>>> origin/boseth-branch
 
                         <!-- Empty state label -->
                         <TextView
                             android:id="@+id/txtNoIncomes"
                             android:layout_width="match_parent"
-<<<<<<< HEAD
                             android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
                             android:gravity="center"
                             android:padding="16dp"
                             android:text="No income sources yet.\nAdd one below to get started."
                             android:textColor="#9CA3AF"
-=======
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="5000"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp" />
-
-                        <!-- Input Field: Part-Time Income -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="14dp"
-                            android:layout_marginBottom="6dp"
-                            android:text="Part-Time Income (Rs.)"
-                            android:textColor="@color/text_on_dark_muted"
->>>>>>> origin/boseth-branch
                             android:textSize="13sp"
                             android:visibility="gone" />
 
                         <!-- Divider -->
                         <View
                             android:layout_width="match_parent"
-<<<<<<< HEAD
                             android:layout_height="1dp"
                             android:layout_marginTop="16dp"
                             android:layout_marginBottom="14dp"
                             android:background="#E5E7EB" />
-=======
-                            android:layout_height="52dp"
-                            android:background="@drawable/bg_budget_input"
-                            android:backgroundTint="@null"
-                            android:inputType="numberDecimal"
-                            android:paddingStart="16dp"
-                            android:paddingEnd="16dp"
-                            android:text="8000"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="15sp" />
-
-                        <!-- Segmented Duration Options -->
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="18dp"
-                            android:layout_marginBottom="8dp"
-                            android:text="Semester Duration (Months)"
-                            android:textColor="@color/text_on_dark_muted"
-                            android:textSize="13sp"
-                            android:textStyle="bold" />
->>>>>>> origin/boseth-branch
 
                         <!-- Add Income Row -->
                         <LinearLayout
@@ -317,7 +226,6 @@
                             <EditText
                                 android:id="@+id/editNewIncomeName"
                                 android:layout_width="0dp"
-<<<<<<< HEAD
                                 android:layout_height="48dp"
                                 android:layout_weight="2"
                                 android:background="@drawable/bg_budget_input"
@@ -329,18 +237,6 @@
                                 android:textColor="#111827"
                                 android:textColorHint="#9CA3AF"
                                 android:textSize="13sp" />
-=======
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="3M"
-                                android:textColor="@color/text_on_dark_muted"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
->>>>>>> origin/boseth-branch
 
                             <Space
                                 android:layout_width="8dp"
@@ -349,7 +245,6 @@
                             <EditText
                                 android:id="@+id/editNewIncomeAmount"
                                 android:layout_width="0dp"
-<<<<<<< HEAD
                                 android:layout_height="48dp"
                                 android:layout_weight="1.4"
                                 android:background="@drawable/bg_budget_input"
@@ -361,24 +256,11 @@
                                 android:textColor="#111827"
                                 android:textColorHint="#9CA3AF"
                                 android:textSize="13sp" />
-=======
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="4M"
-                                android:textColor="@color/text_on_dark_muted"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
->>>>>>> origin/boseth-branch
 
                             <Space
                                 android:layout_width="8dp"
                                 android:layout_height="1dp" />
 
-<<<<<<< HEAD
                             <com.google.android.material.button.MaterialButton
                                 android:id="@+id/btnAddIncome"
                                 android:layout_width="wrap_content"
@@ -395,41 +277,6 @@
                                 app:backgroundTint="#1E60FF"
                                 app:cornerRadius="12dp"
                                 app:strokeWidth="0dp" />
-=======
-                            <!-- Option 6M (Selected) -->
-                            <TextView
-                                android:id="@+id/btnDuration6M"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_active"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="6M"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <Space
-                                android:layout_width="8dp"
-                                android:layout_height="1dp" />
-
-                            <!-- Option 12M -->
-                            <TextView
-                                android:id="@+id/btnDuration12M"
-                                android:layout_width="0dp"
-                                android:layout_height="44dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/bg_segment_inactive"
-                                android:clickable="true"
-                                android:focusable="true"
-                                android:gravity="center"
-                                android:text="12M"
-                                android:textColor="@color/text_on_dark_muted"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
->>>>>>> origin/boseth-branch
 
                         </LinearLayout>
 
@@ -722,13 +569,8 @@
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-<<<<<<< HEAD
                                         android:text="Total Income"
                                         android:textColor="#E0E7FF"
-=======
-                                        android:text="Total Semester Income"
-                                        android:textColor="@color/text_on_dark_secondary"
->>>>>>> origin/boseth-branch
                                         android:textSize="13sp" />
 
                                     <TextView
@@ -1091,13 +933,8 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
-<<<<<<< HEAD
                                     android:text="Current budget can last the entire period."
                                     android:textColor="#374151"
-=======
-                                    android:text="Current budget can last the entire 6-month semester."
-                                    android:textColor="@color/text_on_dark_primary"
->>>>>>> origin/boseth-branch
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -1191,13 +1028,8 @@
                                 android:id="@+id/txtSemesterDate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-<<<<<<< HEAD
                                 tools:text="Period: Jun 2026 – Dec 2026"
                                 android:textColor="#111827"
-=======
-                                tools:text="Semester: Jun 2026 – Dec 2026"
-                                android:textColor="@color/text_on_dark_primary"
->>>>>>> origin/boseth-branch
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
