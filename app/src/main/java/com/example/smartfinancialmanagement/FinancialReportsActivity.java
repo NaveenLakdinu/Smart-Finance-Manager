@@ -122,6 +122,9 @@ public class FinancialReportsActivity extends AppCompatActivity {
         if (btnDownloadPdfReport != null) {
             btnDownloadPdfReport.setOnClickListener(v -> generatePdfReport());
         }
+
+        // Fetch and display data immediately on start
+        fetchAndDisplayData();
     }
 
     private void setupSpinners() {
