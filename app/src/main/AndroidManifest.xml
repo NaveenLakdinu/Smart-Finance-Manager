@@ -271,6 +271,9 @@
         <activity
             android:name=".SavingsPassportActivity"
             android:exported="false" />
+        <activity
+            android:name=".NotificationListActivity"
+            android:exported="false" />
 
         <!-- Transfer activities -->
         <activity
@@ -313,6 +316,7 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
 
     </application>
 

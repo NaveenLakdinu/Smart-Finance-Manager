@@ -61,6 +61,15 @@
                 android:layout_marginBottom="16dp">
 
                 <RadioButton
+                    android:id="@+id/rbAllTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="All Savings Data"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:checked="true"
+                    android:buttonTint="@color/qa_secondary_icon"/>
+
+                <RadioButton
                     android:id="@+id/rbSelectedMonth"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -85,7 +94,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:layout_marginBottom="24dp">
 
                 <TextView

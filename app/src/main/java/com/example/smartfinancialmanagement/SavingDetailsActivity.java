@@ -233,6 +233,20 @@ public class SavingDetailsActivity extends AppCompatActivity {
             // Reached 100% for the first time (or after a reset)
             celebrationFired = true;
             triggerCelebration(savingModel.getSavingTitle());
+            
+            // Create a success notification
+            String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+            if (userId != null) {
+                NotificationRepository notificationRepo = new NotificationRepository();
+                NotificationModel notif = new NotificationModel(
+                    null, userId, "achievement_unlocked", "Goal Reached! 🏆", 
+                    "You reached your goal for " + savingModel.getSavingTitle() + "!", 
+                    "success", "SavingsPassport", savingModel.getSavingId(), false, 
+                    System.currentTimeMillis(), "SavingsPassportActivity"
+                );
+                notificationRepo.checkAndCreateDuplicateSafe(notif);
+            }
         } else if (!isCompleted) {
             // Dropped back below 100% — allow celebration to fire again if re-completed
             celebrationFired = false;

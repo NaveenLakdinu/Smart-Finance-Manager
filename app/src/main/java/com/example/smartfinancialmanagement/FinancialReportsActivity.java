@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +49,16 @@ public class FinancialReportsActivity extends AppCompatActivity {
     private PieChart chartLoans, chartSubscriptions;
     private BarChart chartUtilityBills;
     private HorizontalBarChart chartSavings;
+
+    private TextView txtReportBalance, txtReportIncome, txtReportSavings, txtReportLoans, txtReportSubscriptions, txtReportUtilities;
+
+    private double mTotalIncome = 0;
+    private double mTotalSavings = 0;
+    private double mTotalLoans = 0;
+    private double mTotalSubscriptions = 0;
+    private double mTotalUtilities = 0;
+    private double mDirectIncome = 0;
+    private double mBudgetIncome = 0;
     
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -89,6 +99,13 @@ public class FinancialReportsActivity extends AppCompatActivity {
         chartSubscriptions = findViewById(R.id.chartSubscriptions);
         chartUtilityBills = findViewById(R.id.chartUtilityBills);
         chartSavings = findViewById(R.id.chartSavings);
+
+        txtReportBalance = findViewById(R.id.txtReportBalance);
+        txtReportIncome = findViewById(R.id.txtReportIncome);
+        txtReportSavings = findViewById(R.id.txtReportSavings);
+        txtReportLoans = findViewById(R.id.txtReportLoans);
+        txtReportSubscriptions = findViewById(R.id.txtReportSubscriptions);
+        txtReportUtilities = findViewById(R.id.txtReportUtilities);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -148,10 +165,51 @@ public class FinancialReportsActivity extends AppCompatActivity {
         int selectedMonth = spinnerMonth.getSelectedItemPosition();
         int selectedYear = isYearly ? Integer.parseInt(spinnerMonth.getSelectedItem().toString()) : Calendar.getInstance().get(Calendar.YEAR);
 
+        // Reset totals
+        mTotalIncome = 0;
+        mTotalSavings = 0;
+        mTotalLoans = 0;
+        mTotalSubscriptions = 0;
+        mTotalUtilities = 0;
+        mDirectIncome = 0;
+        mBudgetIncome = 0;
+        updateSummaryUI();
+
+        // Fetch Direct Incomes
+        db.collection("users").document(uid).collection("incomes").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mDirectIncome += amount;
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Budget Incomes
+        db.collection("users").document(uid).collection("budgetPlans").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            BudgetModel latestBudget = null;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                BudgetModel budget = doc.toObject(BudgetModel.class);
+                if (latestBudget == null) {
+                    latestBudget = budget;
+                } else if (budget.getCreatedAt() != null && latestBudget.getCreatedAt() != null) {
+                    if (budget.getCreatedAt().after(latestBudget.getCreatedAt())) {
+                        latestBudget = budget;
+                    }
+                }
+            }
+            if (latestBudget != null) {
+                mBudgetIncome = latestBudget.getSemesterIncome();
+            }
+            recalculateTotalIncome();
+        });
+
         // 1. Fetch Loans
         db.collection("users").document(uid).collection("loans").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 String name = doc.getString("loanName");
                 Double amount = doc.getDouble("principalAmount");
                 if (name != null && amount != null) {
@@ -167,12 +225,21 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             chartLoans.getDescription().setEnabled(false);
             chartLoans.invalidate();
+
+            mTotalLoans = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("principalAmount");
+                if (amount != null) mTotalLoans += amount;
+            }
+            updateSummaryUI();
         });
 
         // 2. Fetch Subscriptions
         db.collection("users").document(uid).collection("subscriptions").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 String name = doc.getString("serviceName");
                 Double amount = doc.getDouble("amount");
                 if (name != null && amount != null) {
@@ -188,6 +255,14 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             chartSubscriptions.getDescription().setEnabled(false);
             chartSubscriptions.invalidate();
+
+            mTotalSubscriptions = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mTotalSubscriptions += amount;
+            }
+            updateSummaryUI();
         });
 
         // 3. Fetch Utility Bills
@@ -210,6 +285,14 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             chartUtilityBills.getDescription().setEnabled(false);
             chartUtilityBills.invalidate();
+
+            mTotalUtilities = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mTotalUtilities += amount;
+            }
+            updateSummaryUI();
         });
 
         // 4. Fetch Savings
@@ -217,6 +300,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
             List<BarEntry> entries = new ArrayList<>();
             float i = 0f;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double target = doc.getDouble("targetAmount");
                 Double current = doc.getDouble("currentAmount");
                 if (target != null && current != null) {
@@ -234,18 +318,54 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             chartSavings.getDescription().setEnabled(false);
             chartSavings.invalidate();
+
+            mTotalSavings = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double current = doc.getDouble("currentAmount");
+                if (current != null) mTotalSavings += current;
+            }
+            updateSummaryUI();
         });
     }
 
+    private void recalculateTotalIncome() {
+        mTotalIncome = mDirectIncome > 0 ? mDirectIncome : mBudgetIncome;
+        updateSummaryUI();
+    }
+
+    private void updateSummaryUI() {
+        if (txtReportIncome != null) txtReportIncome.setText(CurrencyHelper.formatMoney(this, mTotalIncome));
+        if (txtReportSavings != null) txtReportSavings.setText(CurrencyHelper.formatMoney(this, mTotalSavings));
+        if (txtReportLoans != null) txtReportLoans.setText(CurrencyHelper.formatMoney(this, mTotalLoans));
+        if (txtReportSubscriptions != null) txtReportSubscriptions.setText(CurrencyHelper.formatMoney(this, mTotalSubscriptions));
+        if (txtReportUtilities != null) txtReportUtilities.setText(CurrencyHelper.formatMoney(this, mTotalUtilities));
+
+        double currentBalance = mTotalIncome - mTotalSavings - mTotalLoans - mTotalSubscriptions - mTotalUtilities;
+        if (txtReportBalance != null) txtReportBalance.setText(CurrencyHelper.formatMoney(this, currentBalance));
+    }
+
     private boolean matchesDateFilter(QueryDocumentSnapshot doc, boolean isYearly, int selectedMonth, int selectedYear) {
-        Long createdAt = doc.getLong("createdAt");
-        if (createdAt == null) {
-            createdAt = doc.getLong("timestamp"); // fallback
+        Object createdAtObj = doc.get("createdAt");
+        if (createdAtObj == null) {
+            createdAtObj = doc.get("timestamp"); // fallback
         }
-        if (createdAt == null) return true; // Include if no date field is found just to be safe
+        
+        if (createdAtObj == null) return true; // Include if no date field is found just to be safe
+
+        long timeInMillis = 0;
+        if (createdAtObj instanceof Number) {
+            timeInMillis = ((Number) createdAtObj).longValue();
+        } else if (createdAtObj instanceof com.google.firebase.Timestamp) {
+            timeInMillis = ((com.google.firebase.Timestamp) createdAtObj).toDate().getTime();
+        } else if (createdAtObj instanceof java.util.Date) {
+            timeInMillis = ((java.util.Date) createdAtObj).getTime();
+        } else {
+            return true; // Unknown type, just include it
+        }
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(createdAt);
+        cal.setTimeInMillis(timeInMillis);
         int docYear = cal.get(Calendar.YEAR);
         int docMonth = cal.get(Calendar.MONTH);
 

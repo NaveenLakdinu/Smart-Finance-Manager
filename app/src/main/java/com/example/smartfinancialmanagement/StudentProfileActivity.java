@@ -69,7 +69,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                 inputStream.close();
                 
                 Uri internalUri = Uri.fromFile(file);
-                imgProfileAvatar.setImageURI(internalUri);
+                updateAvatarImage(internalUri);
                 saveAvatarUri(internalUri.toString());
             }
         } catch (Exception e) {
@@ -163,7 +163,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
         String uriStr = prefs.getString(KEY_AVATAR_URI, null);
         if (uriStr != null) {
-            imgProfileAvatar.setImageURI(Uri.parse(uriStr));
+            updateAvatarImage(Uri.parse(uriStr));
         }
     }
 
@@ -235,5 +235,20 @@ public class StudentProfileActivity extends AppCompatActivity {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
+    }
+
+    private void updateAvatarImage(Uri uri) {
+        imgProfileAvatar.setImageURI(uri);
+        imgProfileAvatar.setImageTintList(null);
+        android.view.ViewGroup.LayoutParams params = imgProfileAvatar.getLayoutParams();
+        params.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+        params.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
+        imgProfileAvatar.setLayoutParams(params);
+        imgProfileAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
+        
+        android.view.View parent = (android.view.View) imgProfileAvatar.getParent();
+        if (parent != null) {
+            parent.setClipToOutline(true);
+        }
     }
 }
