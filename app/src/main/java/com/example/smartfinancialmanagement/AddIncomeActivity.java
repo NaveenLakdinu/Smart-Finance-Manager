@@ -4,7 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +27,7 @@ public class AddIncomeActivity extends AppCompatActivity {
     private EditText etIncomeAmount, etIncomeSource;
     private TextView tvIncomeDate;
     private MaterialButton btnSaveIncome;
-    private FrameLayout btnBackIncome;
+    private ImageView btnBackIncome;
     private TextView tvTotalIncomeValue;
     private LinearLayout containerIncomes;
 
