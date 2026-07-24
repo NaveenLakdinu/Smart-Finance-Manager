@@ -199,7 +199,7 @@ public class AddIncomeActivity extends AppCompatActivity {
                         // Bottom row: Date
                         TextView tvDate = new TextView(this);
                         tvDate.setText(income.getDate());
-                        tvDate.setTextColor(Color.parseColor("#9CA3AF")); // Gray
+                        tvDate.setTextColor(Color.parseColor("#E5E7EB")); // Light Gray for better visibility
                         tvDate.setTextSize(14f);
                         
                         LinearLayout.LayoutParams dateParams = new LinearLayout.LayoutParams(

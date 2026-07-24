@@ -257,6 +257,154 @@
                             android:textStyle="bold"
                             android:layout_marginBottom="12dp" />
 
+                        <!-- Financial Summary -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:background="@drawable/bg_input_feild"
+                            android:padding="16dp"
+                            android:layout_marginBottom="16dp">
+
+                            <!-- Balance -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Current Balance"
+                                    android:textStyle="bold"
+                                    android:textColor="#374151" />
+                                <TextView
+                                    android:id="@+id/txtReportBalance"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textStyle="bold"
+                                    android:textColor="#374151" />
+                            </LinearLayout>
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:background="#E5E7EB"
+                                android:layout_marginTop="8dp"
+                                android:layout_marginBottom="8dp" />
+
+                            <!-- Income -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Income"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/txtReportIncome"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Savings -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Savings"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/txtReportSavings"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Loans -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Loans"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/txtReportLoans"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Subscriptions -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:layout_marginBottom="4dp">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Subscriptions"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/txtReportSubscriptions"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                            <!-- Utilities -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+                                <TextView
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Total Utility Bills"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                                <TextView
+                                    android:id="@+id/txtReportUtilities"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="LKR 0.00"
+                                    android:textColor="#6B7280"
+                                    android:textSize="13sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
                         <!-- 1. Loans Chart -->
                         <TextView
                             android:layout_width="wrap_content"
