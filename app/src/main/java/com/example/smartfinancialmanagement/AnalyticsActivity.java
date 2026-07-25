@@ -79,6 +79,9 @@ public class AnalyticsActivity extends AppCompatActivity {
     private double currentMonthProfit = 0.0;
     private double profitPercentage = 0.0;
 
+    private boolean isInitialMonthSelection = true;
+    private boolean isInitialBusinessSelection = true;
+
     private SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
     private SimpleDateFormat monthDisplayFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
 
@@ -91,6 +94,15 @@ public class AnalyticsActivity extends AppCompatActivity {
         initializeViews();
         setupMonthSpinner();
         setupFilterSpinner();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Automatically refreshes whenever user lands back on this screen
+        if (selectedMonthToken != null && !selectedMonthToken.isEmpty()) {
+            fetchMonthlyAnalytics();
+        }
     }
 
     private void initializeViews() {
@@ -119,14 +131,12 @@ public class AnalyticsActivity extends AppCompatActivity {
         });
     }
 
-    // 💡 NEW: POPULATE DYNAMIC MONTH OPTIONS (Current Month + Past 12 Months)
     private void setupMonthSpinner() {
         monthOptionsList.clear();
         monthTokensList.clear();
 
         Calendar cal = Calendar.getInstance();
 
-        // Add current month & previous 12 months dynamically
         for (int i = 0; i < 12; i++) {
             if (i == 0) {
                 monthOptionsList.add("Current Month (" + monthDisplayFormat.format(cal.getTime()) + ")");
@@ -137,10 +147,10 @@ public class AnalyticsActivity extends AppCompatActivity {
             }
 
             monthTokensList.add(yearMonthFormat.format(cal.getTime()));
-            cal.add(Calendar.MONTH, -1); // Step back 1 month
+            cal.add(Calendar.MONTH, -1);
         }
 
-        selectedMonthToken = monthTokensList.get(0); // Default to current month
+        selectedMonthToken = monthTokensList.get(0);
 
         ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthOptionsList);
         spinnerMonthFilter.setAdapter(monthAdapter);
@@ -148,6 +158,10 @@ public class AnalyticsActivity extends AppCompatActivity {
         spinnerMonthFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (isInitialMonthSelection) {
+                    isInitialMonthSelection = false;
+                    return; // Skip execution on initial spinner set up; onResume handles initial load
+                }
                 selectedMonthToken = monthTokensList.get(position);
                 fetchMonthlyAnalytics();
             }
@@ -186,6 +200,10 @@ public class AnalyticsActivity extends AppCompatActivity {
                     spinnerBusinessFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                         @Override
                         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                            if (isInitialBusinessSelection) {
+                                isInitialBusinessSelection = false;
+                                return;
+                            }
                             selectedBusinessFilter = filterOptionsList.get(position);
                             fetchMonthlyAnalytics();
                         }
@@ -205,7 +223,6 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         if (currentUserId.isEmpty()) return;
 
-        // 1. Fetch Revenues filtered by userId and selected Month Token ("yyyy-MM")
         db.collection("revenues")
                 .whereEqualTo("userId", currentUserId)
                 .get()
@@ -216,7 +233,6 @@ public class AnalyticsActivity extends AppCompatActivity {
                         String bName = doc.getString("selectedBusiness");
                         Double amount = doc.getDouble("amount");
 
-                        // Match selected Month Token (e.g. "2026-07")
                         if (amount != null && dateStr != null && dateStr.startsWith(selectedMonthToken)) {
                             if (selectedBusinessFilter.equals("All Businesses") || selectedBusinessFilter.equals(bName)) {
                                 currentMonthRevenue += amount;
@@ -224,7 +240,6 @@ public class AnalyticsActivity extends AppCompatActivity {
                         }
                     }
 
-                    // 2. Fetch Expenses filtered by userId and selected Month Token ("yyyy-MM")
                     db.collection("expenses")
                             .whereEqualTo("userId", currentUserId)
                             .get()
@@ -261,11 +276,11 @@ public class AnalyticsActivity extends AppCompatActivity {
         txtProfitDisplay.setText(String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit));
 
         if (currentMonthProfit >= 0) {
-            txtProfitDisplay.setTextColor(Color.parseColor("#8EB69B"));    // forest_300 sage green
+            txtProfitDisplay.setTextColor(Color.parseColor("#8EB69B"));
             txtPercentageDisplay.setText(String.format(Locale.getDefault(), "+%.1f%% Profit Margin", profitPercentage));
-            txtPercentageDisplay.setTextColor(Color.parseColor("#DAF1DE")); // forest_100 mint
+            txtPercentageDisplay.setTextColor(Color.parseColor("#DAF1DE"));
         } else {
-            txtProfitDisplay.setTextColor(Color.parseColor("#FF8FA3"));    // danger_text red-pink
+            txtProfitDisplay.setTextColor(Color.parseColor("#FF8FA3"));
             txtPercentageDisplay.setText(String.format(Locale.getDefault(), "%.1f%% Net Loss", profitPercentage));
             txtPercentageDisplay.setTextColor(Color.parseColor("#FF8FA3"));
         }
@@ -282,9 +297,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Analytics");
 
         int[] colors = new int[]{
-                Color.parseColor("#8EB69B"),  // Revenue — sage green (forest_300)
-                Color.parseColor("#FF8FA3"),  // Expenses — soft red (danger_text)
-                Color.parseColor("#DAF1DE")   // Profit — mint highlight (forest_100)
+                Color.parseColor("#8EB69B"),
+                Color.parseColor("#FF8FA3"),
+                Color.parseColor("#DAF1DE")
         };
         dataSet.setColors(colors);
         dataSet.setValueTextColor(Color.WHITE);
@@ -315,13 +330,13 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         barChartAnalytic.setExtraBottomOffset(15f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.parseColor("#8EB69B"));    // forest_300 axis labels
+        xAxis.setTextColor(Color.parseColor("#8EB69B"));
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
 
-        barChartAnalytic.setBackgroundColor(Color.parseColor("#0B2B26")); // forest_800
-        barChartAnalytic.getAxisLeft().setTextColor(Color.parseColor("#DAF1DE")); // forest_100
-        barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#235347"));  // forest_600
+        barChartAnalytic.setBackgroundColor(Color.parseColor("#0B2B26"));
+        barChartAnalytic.getAxisLeft().setTextColor(Color.parseColor("#DAF1DE"));
+        barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#235347"));
         barChartAnalytic.getAxisRight().setEnabled(false);
         barChartAnalytic.getDescription().setEnabled(false);
         barChartAnalytic.getLegend().setEnabled(false);
@@ -390,8 +405,11 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(new Paragraph("Visual Analytics Workspace Chart Summary:", boldFont));
 
-            // Bar Chart Dark Render
-            Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
+            // Safely retrieve width/height to avoid zero-dimension bitmap crashes
+            int chartWidth = barChartAnalytic.getWidth() > 0 ? barChartAnalytic.getWidth() : 800;
+            int chartHeight = barChartAnalytic.getHeight() > 0 ? barChartAnalytic.getHeight() : 500;
+
+            Bitmap bitmap = Bitmap.createBitmap(chartWidth, chartHeight, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
             canvas.drawColor(Color.parseColor("#FFFFFF"));
             barChartAnalytic.draw(canvas);
@@ -407,7 +425,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
             document.add(chartImage);
 
-            // Pie Chart Dark Render
+            // Render Pie Chart
             PieChart pieChart = new PieChart(this);
             pieChart.setDrawEntryLabels(true);
             pieChart.setEntryLabelTextSize(11f);
@@ -420,7 +438,7 @@ public class AnalyticsActivity extends AppCompatActivity {
             pieChart.getLegend().setTextSize(10f);
             pieChart.getLegend().setTextColor(android.graphics.Color.WHITE);
 
-            java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
+            List<PieEntry> pieEntries = new ArrayList<>();
             if (currentMonthRevenue > 0) pieEntries.add(new PieEntry((float) currentMonthRevenue, "Revenue"));
             if (currentMonthExpense > 0) pieEntries.add(new PieEntry((float) currentMonthExpense, "Expenses"));
             if (currentMonthProfit != 0) pieEntries.add(new PieEntry((float) Math.abs(currentMonthProfit), currentMonthProfit >= 0 ? "Net Profit" : "Net Loss"));
@@ -440,8 +458,8 @@ public class AnalyticsActivity extends AppCompatActivity {
                 pieChart.setData(pieData);
 
                 pieChart.measure(
-                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
-                        android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
+                        View.MeasureSpec.makeMeasureSpec(500, View.MeasureSpec.EXACTLY),
+                        View.MeasureSpec.makeMeasureSpec(500, View.MeasureSpec.EXACTLY));
                 pieChart.layout(0, 0, 500, 500);
 
                 Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
