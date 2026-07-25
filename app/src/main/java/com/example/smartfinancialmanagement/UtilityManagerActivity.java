@@ -15,10 +15,9 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import com.google.firebase.auth.FirebaseAuth;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -116,6 +115,9 @@ public class UtilityManagerActivity extends AppCompatActivity {
                     for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                         UtilityBill bill = doc.toObject(UtilityBill.class);
                         if (bill != null && bill.getPaymentDate() != null) {
+                            // FIX 1: Attach the Firestore Document ID directly to the model instance
+                            bill.setId(doc.getId());
+
                             Date nextDue = calculateNextDueDate(bill.getPaymentDate());
                             if (nextDue != null) {
                                 calculatedBills.add(new CalculatedBill(bill, nextDue));
@@ -124,7 +126,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
                     }
 
                     if (!calculatedBills.isEmpty()) {
-                        // FIX: Sort the bills in memory by their true upcoming rolled-forward date
+                        // Sort the bills in memory by their true upcoming rolled-forward date
                         Collections.sort(calculatedBills);
 
                         // 1. POPULATE HERO CARD WITH THE TRUE CLOSEST UPCOMING BILL
@@ -132,11 +134,10 @@ public class UtilityManagerActivity extends AppCompatActivity {
                         UtilityBill closestBill = closestCalculated.bill;
 
                         if (txtHeroBillName != null) {
-                            txtHeroBillName.setText(closestBill.getBillName()); // FIX: Use getBillName()
+                            txtHeroBillName.setText(closestBill.getBillName());
                         }
 
                         if (txtHeroBillDueDate != null) {
-                            // Format to only "dd MMMM" (e.g. "18 July")
                             SimpleDateFormat heroFormatter = new SimpleDateFormat("dd MMMM", Locale.getDefault());
                             txtHeroBillDueDate.setText("Due on: " + heroFormatter.format(closestCalculated.nextDueDate));
                         }
@@ -170,7 +171,7 @@ public class UtilityManagerActivity extends AppCompatActivity {
                             }
 
                             if (imgIcon != null) {
-                                switch (currentBill.getCategory()) {
+                                switch (currentBill.getCategory() != null ? currentBill.getCategory() : "") {
                                     case "Electricity":
                                         imgIcon.setImageResource(android.R.drawable.ic_menu_compass);
                                         break;
@@ -183,10 +184,17 @@ public class UtilityManagerActivity extends AppCompatActivity {
                                 }
                             }
 
-                            // FIX: Make recent bill layout row clickable to open details/view list
+                            // FIX 2: Pass the Document ID and parameters to UpdateBillActivity on click
                             rowCard.setOnClickListener(v -> {
-                                Intent intent = new Intent(UtilityManagerActivity.this, UpdateBillActivity.class);
-                                startActivity(intent);
+                                if (currentBill.getId() != null) {
+                                    Intent intent = new Intent(UtilityManagerActivity.this, UpdateBillActivity.class);
+                                    // Passes keys compatible with both "BILL_ID" and "DOCUMENT_ID"
+                                    intent.putExtra("BILL_ID", currentBill.getId());
+                                    intent.putExtra("DOCUMENT_ID", currentBill.getId());
+                                    startActivity(intent);
+                                } else {
+                                    Toast.makeText(UtilityManagerActivity.this, "Error: Missing Bill Document ID", Toast.LENGTH_SHORT).show();
+                                }
                             });
 
                             layoutRecentBills.addView(rowCard);

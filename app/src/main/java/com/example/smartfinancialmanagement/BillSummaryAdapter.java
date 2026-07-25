@@ -10,10 +10,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
 
 public class BillSummaryAdapter extends RecyclerView.Adapter<BillSummaryAdapter.ViewHolder> {
-    private List<BillReportItem> items;
 
-    public BillSummaryAdapter(List<BillReportItem> items) {
+    // Interface to communicate item deletions back to the Activity
+    public interface OnItemRemovedListener {
+        void onItemRemoved();
+    }
+
+    private List<BillReportItem> items;
+    private OnItemRemovedListener listener;
+
+    public BillSummaryAdapter(List<BillReportItem> items, OnItemRemovedListener listener) {
         this.items = items;
+        this.listener = listener;
     }
 
     @NonNull
@@ -32,12 +40,16 @@ public class BillSummaryAdapter extends RecyclerView.Adapter<BillSummaryAdapter.
 
         // Remove button click functionality
         holder.btnRemove.setOnClickListener(v -> {
-            // Get the current fresh position of the item in case the list updated
-            int currentPos = holder.getAdapterPosition();
+            int currentPos = holder.getBindingAdapterPosition();
             if (currentPos != RecyclerView.NO_POSITION) {
                 items.remove(currentPos);
                 notifyItemRemoved(currentPos);
                 notifyItemRangeChanged(currentPos, items.size());
+
+                // Notify ReportSummaryActivity to update button state
+                if (listener != null) {
+                    listener.onItemRemoved();
+                }
             }
         });
     }
