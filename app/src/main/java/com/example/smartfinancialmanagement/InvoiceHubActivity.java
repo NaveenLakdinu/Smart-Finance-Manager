@@ -156,14 +156,14 @@ public class InvoiceHubActivity extends AppCompatActivity {
         txtFilterDue.setTextColor(Color.parseColor("#F0F6FF"));
 
         if (selectedFilter.equals("pending")) {
-            txtFilterPending.setBackgroundColor(Color.parseColor("#00D4AA"));
-            txtFilterPending.setTextColor(Color.parseColor("#071A33"));
+            txtFilterPending.setBackgroundColor(Color.parseColor("#8EB69B"));
+            txtFilterPending.setTextColor(Color.parseColor("#FFFFFF"));
         } else if (selectedFilter.equals("paid")) {
-            txtFilterPaid.setBackgroundColor(Color.parseColor("#00D4AA"));
-            txtFilterPaid.setTextColor(Color.parseColor("#071A33"));
+            txtFilterPaid.setBackgroundColor(Color.parseColor("#8EB69B"));
+            txtFilterPaid.setTextColor(Color.parseColor("#FFFFFF"));
         } else if (selectedFilter.equals("due")) {
-            txtFilterDue.setBackgroundColor(Color.parseColor("#00D4AA"));
-            txtFilterDue.setTextColor(Color.parseColor("#071A33"));
+            txtFilterDue.setBackgroundColor(Color.parseColor("#8EB69B"));
+            txtFilterDue.setTextColor(Color.parseColor("#FFFFFF"));
         }
 
         applyFilterAndPopulateList();

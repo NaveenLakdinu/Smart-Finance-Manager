@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp" xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cardBillItem"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@android:color/transparent"
+    app:cardBackgroundColor="@color/forest_700"
     app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_glass_card"
+        android:background="@drawable/bg_dashboard"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="16dp">
@@ -74,7 +76,7 @@
                 android:layout_marginTop="12dp"
                 android:padding="8dp"
                 android:src="@android:drawable/ic_menu_delete"
-                app:tint="#F87171"
+                app:tint="@color/danger_text"
                 android:background="?android:attr/selectableItemBackgroundBorderless"
                 android:clickable="true"
                 android:focusable="true"/>

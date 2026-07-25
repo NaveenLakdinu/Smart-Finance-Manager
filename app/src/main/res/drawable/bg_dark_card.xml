@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Dark card background — forest green -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#071A33" />
+    <solid android:color="@color/forest_700" />
     <corners android:radius="24dp" />
 </shape>

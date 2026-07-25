@@ -113,6 +113,7 @@ public class LoginFormActivity extends AppCompatActivity {
         signUpLink.setOnClickListener(v -> {
             Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
             startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
 
         passwordToggle.setOnClickListener(v -> {
@@ -360,6 +361,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
@@ -368,6 +370,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
@@ -376,6 +379,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
@@ -385,6 +389,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
@@ -393,6 +398,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 
@@ -401,6 +407,7 @@ public class LoginFormActivity extends AppCompatActivity {
         intent.putExtra("CURRENT_USER_ROLE", role);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(intent);
+                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         finish();
     }
 

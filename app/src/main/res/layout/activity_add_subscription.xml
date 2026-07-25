@@ -42,10 +42,12 @@
 
         <!-- Form Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="20dp"
             app:cardElevation="0dp">
 
@@ -133,26 +135,34 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:padding="8dp"
                     android:orientation="horizontal">
 
                     <RadioButton
                         android:id="@+id/radioMonthly"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:layout_weight="1"
                         android:checked="true"
                         android:text="Monthly"
                         android:textColor="@color/text_on_dark_primary"
-                        android:buttonTint="@color/hero_accent" />
+                        android:textSize="14sp"
+                        android:buttonTint="@color/hero_accent"
+                        android:background="@drawable/bg_radio_selector"
+                        android:gravity="center" />
 
                     <RadioButton
                         android:id="@+id/radioYearly"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="44dp"
                         android:layout_weight="1"
                         android:text="Yearly"
                         android:textColor="@color/text_on_dark_primary"
-                        android:buttonTint="@color/hero_accent" />
+                        android:textSize="14sp"
+                        android:buttonTint="@color/hero_accent"
+                        android:background="@drawable/bg_radio_selector"
+                        android:gravity="center" />
                 </RadioGroup>
 
                 <!-- Logo Type -->
@@ -185,7 +195,7 @@
             android:backgroundTint="@color/hero_accent"
             android:text="Save Subscription"
             android:textAllCaps="false"
-            android:textColor="#0A1628"
+            android:textColor="#FFFFFF"
             android:textSize="15sp"
             app:cornerRadius="14dp" />
 

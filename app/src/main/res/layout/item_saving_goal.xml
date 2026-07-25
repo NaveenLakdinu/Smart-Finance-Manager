@@ -13,7 +13,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_goal_card"
+        android:background="@drawable/bg_dashboard"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -29,7 +29,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:text="Goal Name" />
@@ -40,7 +40,7 @@
                 android:layout_height="28dp"
                 android:gravity="center"
                 android:text="✎"
-                android:textColor="@color/goal_blue"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="14sp"
                 android:layout_marginEnd="6dp"/>
 
@@ -50,7 +50,7 @@
                 android:layout_height="28dp"
                 android:gravity="center"
                 android:text="🗑"
-                android:textColor="@color/goal_coral"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="14sp"/>
         </LinearLayout>
 
@@ -67,7 +67,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Target "
-                android:textColor="@color/goal_text_mute"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"/>
             <TextView
                 android:id="@+id/tvTarget"
@@ -75,7 +75,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Rs 0.00"
-                android:textColor="@color/goal_text_mute"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"/>
 
             <!-- Current: prefix in grey, value in mint -->
@@ -83,14 +83,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Current "
-                android:textColor="@color/goal_text_mute"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"/>
             <TextView
                 android:id="@+id/tvCurrent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Rs 0.00"
-                android:textColor="@color/goal_mint"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"
                 android:textStyle="bold"/>
         </LinearLayout>

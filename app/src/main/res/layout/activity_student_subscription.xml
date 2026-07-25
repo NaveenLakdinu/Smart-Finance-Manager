@@ -16,7 +16,7 @@
             android:id="@+id/headerBackground"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:background="#1C5CFA"
+            android:background="@color/forest_300"
             app:layout_constraintBottom_toBottomOf="@id/monthlySubsCard"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="-32dp"/>
@@ -41,7 +41,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="4dp"
             android:text="Manage your financial commitments"
-            android:textColor="#E0E8FF"
+            android:textColor="@color/text_on_dark_secondary"
             android:textSize="14sp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/titleText" />
@@ -54,7 +54,7 @@
             android:layout_marginStart="24dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="8dp"
-            app:cardBackgroundColor="#5787F6"
+            app:cardBackgroundColor="@color/forest_300"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toStartOf="@+id/monthlySubsCard"
@@ -71,7 +71,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Total Debt"
-                    android:textColor="#E8F0FE"
+                    android:textColor="@color/forest_700"
                     android:textSize="12sp" />
 
                 <TextView
@@ -93,7 +93,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginTop="24dp"
             android:layout_marginEnd="24dp"
-            app:cardBackgroundColor="#5787F6"
+            app:cardBackgroundColor="@color/forest_300"
             app:cardCornerRadius="16dp"
             app:cardElevation="0dp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -110,7 +110,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Monthly Subs"
-                    android:textColor="#E8F0FE"
+                    android:textColor="@color/forest_700"
                     android:textSize="12sp" />
 
                 <TextView
@@ -157,7 +157,7 @@
                         android:layout_width="16dp"
                         android:layout_height="16dp"
                         android:src="@drawable/ic_house"
-                        app:tint="#757575"/>
+                        app:tint="@color/text_on_dark_muted"/>
                         
                     <TextView
                         android:layout_width="wrap_content"
@@ -175,7 +175,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="4dp"
-                app:cardBackgroundColor="#1A6AF6"
+                app:cardBackgroundColor="@color/forest_300"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
                 app:cardUseCompatPadding="true">
@@ -233,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="3"
-                    android:textColor="#1C5CFA"
+                    android:textColor="@color/forest_300"
                     android:textSize="24sp"
                     android:textStyle="bold" />
             </LinearLayout>
@@ -362,8 +362,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:thumbTint="#1A6AF6"
-                        android:trackTint="#BBDEFB"
+                        android:thumbTint="@color/forest_300"
+                        android:trackTint="@color/text_on_dark_secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/priceNetflix" />
@@ -445,8 +445,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:thumbTint="#1A6AF6"
-                        android:trackTint="#BBDEFB"
+                        android:thumbTint="@color/forest_300"
+                        android:trackTint="@color/text_on_dark_secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/priceSpotify" />
@@ -528,8 +528,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="true"
-                        android:thumbTint="#1A6AF6"
-                        android:trackTint="#BBDEFB"
+                        android:thumbTint="@color/forest_300"
+                        android:trackTint="@color/text_on_dark_secondary"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/priceMs" />
@@ -611,8 +611,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:checked="false"
-                        android:thumbTint="#E0E0E0"
-                        android:trackTint="#F5F5F5"
+                        android:thumbTint="@color/forest_300"
+                        android:trackTint="@color/forest_600"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/priceIcloud" />
@@ -629,7 +629,7 @@
                 android:gravity="center"
                 android:paddingVertical="16dp"
                 android:text="+ Add Subscription"
-                android:textColor="#1C5CFA"
+                android:textColor="@color/forest_300"
                 android:textSize="16sp"
                 android:textStyle="bold" />
 

@@ -54,13 +54,14 @@
             android:id="@+id/cardSourceAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="12dp"
-            app:strokeColor="@color/glass_card_border"
+            app:strokeColor="@color/forest_600"
             app:strokeWidth="1dp"
             android:layout_marginBottom="16dp"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -130,13 +131,14 @@
             android:id="@+id/cardDestAccount"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="12dp"
-            app:strokeColor="@color/glass_card_border"
+            app:strokeColor="@color/forest_600"
             app:strokeWidth="1dp"
             android:layout_marginBottom="24dp"
             android:clickable="true"
-            android:focusable="true">
+            android:focusable="true"
+        app:cardElevation="0dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -240,7 +242,7 @@
             android:textColor="@color/text_on_dark_primary"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:backgroundTint="#4CAF50"
+            android:backgroundTint="@color/forest_300"
             android:layout_marginBottom="16dp" />
 
     </LinearLayout>

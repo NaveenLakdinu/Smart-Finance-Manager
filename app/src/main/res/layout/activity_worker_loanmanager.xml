@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/dash_bg_deep"
-    tools:background="#0A1628">
+    tools:background="@color/surface_primary">
 
     <ScrollView
         android:fitsSystemWindows="true"
@@ -94,10 +94,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                app:cardBackgroundColor="@color/qa_purple_bg"
+                app:cardBackgroundColor="@color/qa_tertiary_bg"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/qa_purple_icon"
+                app:strokeColor="@color/qa_tertiary_icon"
                 app:strokeWidth="1dp"
                 android:clickable="true"
                 android:focusable="true"
@@ -135,7 +135,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="AI DEBT OPTIMIZER"
-                                android:textColor="@color/qa_purple_icon"
+                                android:textColor="@color/qa_tertiary_icon"
                                 android:textSize="10sp"
                                 android:textStyle="bold"
                                 android:letterSpacing="0.12" />
@@ -191,7 +191,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="35%"
-                                android:textColor="@color/qa_purple_icon"
+                                android:textColor="@color/qa_tertiary_icon"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -207,7 +207,7 @@
                                 android:id="@+id/progressAiFill"
                                 android:layout_width="0dp"
                                 android:layout_height="match_parent"
-                                android:background="@color/qa_purple_icon" />
+                                android:background="@color/qa_tertiary_icon" />
 
                         </FrameLayout>
 
@@ -325,7 +325,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="82%"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="34sp"
                             android:textStyle="bold" />
 
@@ -335,7 +335,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
                             android:text="Very Good"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -343,13 +343,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:background="@color/qa_blue_bg"
+                            android:background="@color/qa_secondary_bg"
                             android:paddingStart="8dp"
                             android:paddingEnd="8dp"
                             android:paddingTop="3dp"
                             android:paddingBottom="3dp"
                             android:text="DTI ratio: 32%"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="9sp"
                             android:textStyle="bold" />
 
@@ -434,13 +434,13 @@
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="42"
-                            android:background="@color/qa_blue_icon" />
+                            android:background="@color/qa_secondary_icon" />
 
                         <View
                             android:layout_width="0dp"
                             android:layout_height="match_parent"
                             android:layout_weight="23"
-                            android:background="@color/qa_purple_icon" />
+                            android:background="@color/qa_tertiary_icon" />
 
                     </LinearLayout>
 
@@ -484,7 +484,7 @@
                             <View
                                 android:layout_width="8dp"
                                 android:layout_height="8dp"
-                                android:background="@color/qa_blue_icon" />
+                                android:background="@color/qa_secondary_icon" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -506,7 +506,7 @@
                             <View
                                 android:layout_width="8dp"
                                 android:layout_height="8dp"
-                                android:background="@color/qa_purple_icon" />
+                                android:background="@color/qa_tertiary_icon" />
 
                             <TextView
                                 android:layout_width="wrap_content"
@@ -720,7 +720,7 @@
                         <TextView
                             android:layout_width="44dp"
                             android:layout_height="44dp"
-                            android:background="@drawable/bg_function_icon_blue"
+                            android:background="@drawable/bg_function_icon_secondary"
                             android:gravity="center"
                             android:text="🚀"
                             android:textSize="22sp" />
@@ -739,7 +739,7 @@
                             android:layout_width="20dp"
                             android:layout_height="2dp"
                             android:layout_marginTop="6dp"
-                            android:background="@color/qa_blue_icon" />
+                            android:background="@color/qa_secondary_icon" />
 
                     </LinearLayout>
 
@@ -797,7 +797,7 @@
                             android:layout_width="20dp"
                             android:layout_height="2dp"
                             android:layout_marginTop="6dp"
-                            android:background="@color/qa_purple_icon" />
+                            android:background="@color/qa_tertiary_icon" />
 
                     </LinearLayout>
 
@@ -968,10 +968,10 @@
                         android:layout_width="155dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        app:cardBackgroundColor="@color/qa_blue_bg"
+                        app:cardBackgroundColor="@color/qa_secondary_bg"
                         app:cardCornerRadius="18dp"
                         app:cardElevation="0dp"
-                        app:strokeColor="@color/qa_blue_icon"
+                        app:strokeColor="@color/qa_secondary_icon"
                         app:strokeWidth="1dp"
                         android:clickable="true"
                         android:focusable="true"
@@ -997,7 +997,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:text="Early Payoff"
-                                android:textColor="@color/qa_blue_icon"
+                                android:textColor="@color/qa_secondary_icon"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
                                 android:gravity="center" />
@@ -1030,10 +1030,10 @@
                         android:layout_width="155dp"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="12dp"
-                        app:cardBackgroundColor="@color/qa_purple_bg"
+                        app:cardBackgroundColor="@color/qa_tertiary_bg"
                         app:cardCornerRadius="18dp"
                         app:cardElevation="0dp"
-                        app:strokeColor="@color/qa_purple_icon"
+                        app:strokeColor="@color/qa_tertiary_icon"
                         app:strokeWidth="1dp"
                         android:clickable="true"
                         android:focusable="true"
@@ -1059,7 +1059,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="10dp"
                                 android:text="Refinance"
-                                android:textColor="@color/qa_purple_icon"
+                                android:textColor="@color/qa_tertiary_icon"
                                 android:textSize="13sp"
                                 android:textStyle="bold"
                                 android:gravity="center" />

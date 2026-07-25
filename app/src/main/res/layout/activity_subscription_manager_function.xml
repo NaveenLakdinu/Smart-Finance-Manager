@@ -44,10 +44,12 @@
 
         <!-- Hero Card: Monthly Subscriptions -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -80,7 +82,7 @@
                     android:layout_width="40dp"
                     android:layout_height="3dp"
                     android:layout_marginTop="16dp"
-                    android:background="@color/qa_purple_icon" />
+                    android:background="@color/qa_tertiary_icon" />
 
             </LinearLayout>
 
@@ -104,6 +106,8 @@
 
             <!-- Add Subscription -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnAddSubscription"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -112,7 +116,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -124,7 +128,7 @@
                     <TextView
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:background="@drawable/bg_function_icon_blue"
+                        android:background="@drawable/bg_function_icon_secondary"
                         android:gravity="center"
                         android:text="➕"
                         android:textSize="20sp" />
@@ -141,6 +145,8 @@
 
             <!-- View Subscriptions -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnViewSubscriptions"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -149,7 +155,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -178,6 +184,8 @@
 
             <!-- Subscription Report -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnSubscriptionReport"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -186,7 +194,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -237,7 +245,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See all →"
-                android:textColor="@color/qa_blue_icon"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
         </LinearLayout>
 

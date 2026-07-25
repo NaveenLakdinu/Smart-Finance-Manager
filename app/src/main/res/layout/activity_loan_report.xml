@@ -58,10 +58,13 @@
 
         <!-- Summary Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
+        app:cardBackgroundColor="@color/forest_700"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="28dp"
-            app:cardElevation="14dp"
+            app:cardElevation="0dp"
             app:cardCornerRadius="28dp">
             
             <LinearLayout
@@ -73,9 +76,11 @@
                 android:padding="32dp">
 
                 <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                     android:layout_width="56dp"
                     android:layout_height="56dp"
-                    app:cardBackgroundColor="@color/qa_amber_bg"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="18dp"
                     app:cardElevation="0dp">
                     <ImageView
@@ -123,11 +128,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="12dp"
-            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp"
-            app:strokeColor="@color/hero_accent"
-            app:strokeWidth="1.5dp">
+            app:strokeColor="@color/forest_600"
+            app:strokeWidth="1dp">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -179,11 +184,13 @@
 
         <!-- CSV Option -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:id="@+id/optionCsv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="32dp"
-            app:cardBackgroundColor="@color/glass_card_bg"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="22dp"
             app:cardElevation="0dp">
 

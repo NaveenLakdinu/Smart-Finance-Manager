@@ -4,7 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/goal_bg">
+    android:background="@drawable/bg_dashboard">
 
 <ScrollView
     android:layout_width="match_parent"
@@ -34,7 +34,7 @@
                 android:background="@drawable/bg_goal_card"
                 android:gravity="center"
                 android:text="←"
-                android:textColor="@color/goal_text_mute"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"/>
 
             <View android:layout_width="14dp" android:layout_height="1dp"/>
@@ -48,14 +48,14 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="SAVINGS GOAL"
-                    android:textColor="@color/goal_text_dim"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.12"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Goal Details"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -88,7 +88,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Goal Name"
-                        android:textColor="@color/goal_text"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="22sp"
                         android:textStyle="bold"/>
                     <TextView
@@ -96,7 +96,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="Started -- — due --"
-                        android:textColor="@color/goal_text_mute"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="12.5sp"
                         android:layout_marginTop="3dp"/>
                 </LinearLayout>
@@ -110,7 +110,7 @@
                     android:paddingHorizontal="11dp"
                     android:paddingVertical="5dp"
                     android:text="● Active"
-                    android:textColor="@color/goal_mint"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:textStyle="bold"
                     android:background="@drawable/bg_pill"/>
@@ -151,14 +151,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Current saved"
-                            android:textColor="@color/goal_text_mute"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="12.5sp"/>
                         <TextView
                             android:id="@+id/tvCurrentSaved"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs 0.00"
-                            android:textColor="@color/goal_mint"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="15sp"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -180,14 +180,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Target amount"
-                            android:textColor="@color/goal_text_mute"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="12.5sp"/>
                         <TextView
                             android:id="@+id/tvTargetAmount"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Rs 0.00"
-                            android:textColor="@color/goal_text"
+                            android:textColor="@color/text_on_dark_primary"
                             android:textSize="15sp"
                             android:textStyle="bold"/>
                     </LinearLayout>
@@ -230,7 +230,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="REMAINING"
-                    android:textColor="@color/goal_text_dim"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.08"/>
                 <View android:layout_width="1dp" android:layout_height="6dp"/>
@@ -239,7 +239,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rs 0.00"
-                    android:textColor="@color/goal_coral"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -256,7 +256,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="MONTHLY NEED"
-                    android:textColor="@color/goal_text_dim"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.08"/>
                 <View android:layout_width="1dp" android:layout_height="6dp"/>
@@ -265,7 +265,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Rs 0.00"
-                    android:textColor="@color/goal_gold"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="18sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -290,7 +290,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="START DATE"
-                    android:textColor="@color/goal_text_dim"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.08"/>
                 <TextView
@@ -298,7 +298,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="--"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13.5sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -312,7 +312,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="TARGET DATE"
-                    android:textColor="@color/goal_text_dim"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.08"/>
                 <TextView
@@ -320,7 +320,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="--"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13.5sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -347,7 +347,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Savings log"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"/>
                 <TextView
@@ -358,7 +358,7 @@
                     android:paddingHorizontal="14dp"
                     android:paddingVertical="8dp"
                     android:text="＋ Add savings"
-                    android:textColor="#FF04241B"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="12.5sp"
                     android:textStyle="bold"/>
             </LinearLayout>
@@ -378,7 +378,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="AMOUNT SAVED"
-                    android:textColor="@color/goal_text_mute"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.06"/>
 
@@ -387,11 +387,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_goal_card"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="e.g. 40.00"
                     android:inputType="numberDecimal"
                     android:padding="10dp"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textColorHint="@color/goal_text_dim"
                     android:textSize="14sp"/>
 
@@ -402,7 +402,7 @@
                     android:visibility="gone"
                     android:layout_marginTop="4dp"
                     android:text="Warning: This entry exceeds your target amount!"
-                    android:textColor="@color/goal_gold"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11.5sp"/>
 
                 <View android:layout_width="match_parent" android:layout_height="10dp"/>
@@ -411,7 +411,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="NOTE (OPTIONAL)"
-                    android:textColor="@color/goal_text_mute"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="11sp"
                     android:letterSpacing="0.06"/>
 
@@ -420,11 +420,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_goal_card"
+                    android:background="@drawable/bg_input_dark"
                     android:hint="e.g. Tuition allowance leftover"
                     android:padding="10dp"
                     android:singleLine="true"
-                    android:textColor="@color/goal_text"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textColorHint="@color/goal_text_dim"
                     android:textSize="14sp"/>
 
@@ -444,7 +444,7 @@
                         android:background="@drawable/bg_goal_card"
                         android:gravity="center"
                         android:text="Cancel"
-                        android:textColor="@color/goal_text_mute"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="13sp"
                         android:textStyle="bold"/>
                     <TextView
@@ -456,7 +456,7 @@
                         android:background="@drawable/bg_btn_mint"
                         android:gravity="center"
                         android:text="Save entry"
-                        android:textColor="#FF04241B"
+                        android:textColor="@color/text_on_dark_primary"
                         android:textSize="13sp"
                         android:textStyle="bold"/>
                 </LinearLayout>
@@ -471,7 +471,7 @@
                 android:visibility="visible"
                 android:gravity="center"
                 android:text="No savings recorded yet — add your first one above."
-                android:textColor="@color/goal_text_dim"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"
                 android:paddingVertical="20dp"/>
 
@@ -500,7 +500,7 @@
                 android:background="@drawable/bg_btn_delete"
                 android:gravity="center"
                 android:text="Delete goal"
-                android:textColor="@color/goal_coral"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13.5sp"
                 android:textStyle="bold"/>
             <TextView
@@ -512,7 +512,7 @@
                 android:background="@drawable/bg_btn_surface"
                 android:gravity="center"
                 android:text="Edit goal"
-                android:textColor="@color/goal_text"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13.5sp"
                 android:textStyle="bold"/>
         </LinearLayout>
@@ -562,7 +562,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:text="Goal Achieved!"
-            android:textColor="@color/goal_mint"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="22sp"
             android:textStyle="bold"/>
 
@@ -573,7 +573,7 @@
             android:layout_marginTop="4dp"
             android:gravity="center"
             android:text=""
-            android:textColor="@color/goal_text"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="15sp"/>
 
         <TextView
@@ -581,7 +581,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="14dp"
             android:text="You crushed it! Keep saving! 🚀"
-            android:textColor="@color/goal_text_mute"
+            android:textColor="@color/text_on_dark_primary"
             android:textSize="12.5sp"
             android:gravity="center"
             android:lineSpacingExtra="3dp"/>

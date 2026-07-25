@@ -5,8 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
     android:fillViewport="true"
-    android:scrollbars="none"
-    android:fitsSystemWindows="true">
+    android:scrollbars="none">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,179 +13,163 @@
         android:orientation="vertical"
         android:padding="20dp">
 
-        <!-- Top Bar -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:layout_marginTop="20dp">
+            android:orientation="horizontal">
 
-            <FrameLayout
+            <ImageView
                 android:id="@+id/btnBackIncome"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:background="@drawable/bg_notification"
-                android:clickable="true"
-                android:focusable="true">
-                <ImageView
-                    android:layout_width="22dp"
-                    android:layout_height="22dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/ic_back"
-                    app:tint="#FFFFFF" />
-            </FrameLayout>
+                android:padding="10dp"
+                android:src="@drawable/ic_arrow_back"
+                app:tint="@color/text_on_dark_primary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
                 android:text="Add Income"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="20sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Illustration / Header -->
+        <!-- Total Income Display -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="24dp"
             android:gravity="center"
             android:orientation="vertical">
 
-            <FrameLayout
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:background="@drawable/bg_profile_circle">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="💰"
-                    android:textSize="40sp" />
-            </FrameLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 android:text="Record New Income"
-                android:textColor="#FFFFFF"
-                android:textSize="20sp"
+                android:textColor="@color/text_on_dark_primary"
+                android:textSize="18sp"
                 android:textStyle="bold" />
-                
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
-                android:text="Keep track of your earnings"
-                android:textColor="#9CA3AF"
-                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tvTotalIncomeValue"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="8dp"
                 android:text="Total: Rs 0.00"
-                android:textColor="#10B981"
-                android:textSize="18sp"
+                android:textColor="@color/forest_300"
+                android:textSize="16sp"
                 android:textStyle="bold" />
         </LinearLayout>
 
-        <!-- Form Container -->
-        <LinearLayout
+        <!-- Form Card -->
+        <com.google.android.material.card.MaterialCardView
+            app:strokeColor="@color/forest_600"
+            app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:background="@drawable/form_card_bg"
-            android:orientation="vertical"
-            android:padding="20dp">
+            android:layout_marginTop="24dp"
+            app:cardBackgroundColor="@color/forest_700"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp">
 
-            <!-- Amount -->
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Amount (LKR)"
-                android:textColor="#4B5563"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                android:background="@drawable/bg_glass_card"
+                android:orientation="vertical"
+                android:padding="20dp">
 
-            <EditText
-                android:id="@+id/etIncomeAmount"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input"
-                android:hint="e.g. 5000"
-                android:inputType="numberDecimal"
-                android:paddingHorizontal="16dp"
-                android:textColor="#1F2937"
-                android:textColorHint="#9CA3AF" />
+                <!-- Amount -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Amount (LKR)"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="12sp" />
 
-            <!-- Source -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Income Source"
-                android:textColor="#4B5563"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/etIncomeAmount"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:hint="e.g. 5000"
+                    android:inputType="numberDecimal"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
 
-            <EditText
-                android:id="@+id/etIncomeSource"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input"
-                android:hint="e.g. Salary, Freelance"
-                android:inputType="textCapWords"
-                android:paddingHorizontal="16dp"
-                android:textColor="#1F2937"
-                android:textColorHint="#9CA3AF" />
+                <!-- Source -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Income Source"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="12sp" />
 
-            <!-- Date -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:text="Date"
-                android:textColor="#4B5563"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                <EditText
+                    android:id="@+id/etIncomeSource"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:hint="e.g. Salary, Freelance"
+                    android:inputType="textCapWords"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
 
-            <TextView
-                android:id="@+id/tvIncomeDate"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_input"
-                android:drawableEnd="@drawable/ic_calendar"
-                android:drawableTint="#9CA3AF"
-                android:gravity="center_vertical"
-                android:hint="Select Date"
-                android:paddingHorizontal="16dp"
-                android:textColor="#1F2937"
-                android:textColorHint="#9CA3AF" />
-                
-            <!-- Save Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSaveIncome"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_marginTop="32dp"
-                android:backgroundTint="#06B6D4"
-                android:text="Save Income"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:cornerRadius="12dp" />
+                <!-- Date -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Date"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="12sp" />
 
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/tvIncomeDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/bg_input_dark"
+                    android:drawableEnd="@drawable/ic_calendar"
+                    android:drawableTint="@color/text_on_dark_muted"
+                    android:gravity="center_vertical"
+                    android:hint="Select Date"
+                    android:paddingStart="14dp"
+                    android:paddingEnd="14dp"
+                    android:textColor="@color/text_on_dark_primary"
+                    android:textColorHint="@color/text_on_dark_muted"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Save Button -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSaveIncome"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="24dp"
+            android:backgroundTint="@color/hero_accent"
+            android:text="Save Income"
+            android:textAllCaps="false"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            app:cornerRadius="14dp" />
 
         <!-- Recent Incomes Section -->
         <LinearLayout
@@ -199,7 +182,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Recent Incomes"
-                android:textColor="#FFFFFF"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="18sp"
                 android:textStyle="bold" />
 
@@ -213,7 +196,7 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="40dp" />
+            android:layout_height="32dp" />
 
     </LinearLayout>
 </ScrollView>

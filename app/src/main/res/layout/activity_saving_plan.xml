@@ -152,7 +152,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="textCapSentences"
-                        android:background="@null" />
+                        android:background="@drawable/bg_input_dark" />
                 </LinearLayout>
 
                 <!-- ── TARGET AMOUNT ── -->
@@ -192,7 +192,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@null" />
+                        android:background="@drawable/bg_input_dark" />
                 </LinearLayout>
 
                 <!-- ── TARGET DATE ── -->
@@ -272,7 +272,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@null" />
+                        android:background="@drawable/bg_input_dark" />
                 </LinearLayout>
 
                 <!-- ── MONTHLY SAVING AMOUNT ── -->
@@ -312,7 +312,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@null" />
+                        android:background="@drawable/bg_input_dark" />
                 </LinearLayout>
 
                 <!-- ── SAVING FREQUENCY SPINNER ── -->
@@ -352,7 +352,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="📊 Saving Progress Preview"
-                    android:textColor="@color/hero_accent"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     android:layout_marginBottom="10dp" />

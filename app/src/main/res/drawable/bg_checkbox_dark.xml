@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Checkbox — checked / unchecked states -->
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- Checked -->
     <item android:state_checked="true">
-        <shape android:shape="oval">
-            <solid android:color="#264ADE80" />
-            <stroke android:width="2dp" android:color="#4ADE80" />
-            <size android:width="22dp" android:height="22dp" />
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="@color/forest_300" />
         </shape>
     </item>
+
+    <!-- Unchecked -->
     <item>
-        <shape android:shape="oval">
-            <solid android:color="#00000000" />
-            <stroke android:width="2dp" android:color="#33FFFFFF" />
-            <size android:width="22dp" android:height="22dp" />
+        <shape android:shape="rectangle">
+            <corners android:radius="4dp" />
+            <solid android:color="@android:color/transparent" />
+            <stroke android:width="2dp" android:color="@color/forest_600" />
         </shape>
     </item>
+
 </selector>

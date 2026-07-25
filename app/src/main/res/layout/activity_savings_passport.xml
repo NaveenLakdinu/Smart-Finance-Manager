@@ -249,7 +249,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Keep going to unlock Consistent Saver in 5 more months"
-                    android:textColor="#B3FFFFFF"
+                    android:textColor="@color/sp_slate_soft"
                     android:textSize="11.5sp"
                     android:lineSpacingExtra="3dp"/>
 

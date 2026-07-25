@@ -127,7 +127,7 @@ public class LoanReportActivity extends AppCompatActivity {
         // Highlight the selected card with an accent stroke matching our premium dark theme
         int activeColor = ContextCompat.getColor(this, R.color.hero_accent);
         int inactiveColor = ContextCompat.getColor(this, R.color.glass_card_border);
-        int activeBg = Color.parseColor("#223E66"); // Slightly lighter highlighted dark blue
+        int activeBg = Color.parseColor("#163832"); // Slightly lighter highlighted dark blue
         int inactiveBg = ContextCompat.getColor(this, R.color.glass_card_bg);
 
         if (radioPdf.isChecked()) {
@@ -206,8 +206,8 @@ public class LoanReportActivity extends AppCompatActivity {
     }
 
     private static final int[] PIE_COLORS = {
-            Color.parseColor("#00D4AA"),
-            Color.parseColor("#A78BFA"),
+            Color.parseColor("#8EB69B"),
+            Color.parseColor("#9B8BFA"),
             Color.parseColor("#38BDF8"),
             Color.parseColor("#F59E0B"),
             Color.parseColor("#F43F5E"),
@@ -221,8 +221,8 @@ public class LoanReportActivity extends AppCompatActivity {
         pieChart.setDrawEntryLabels(true);
         pieChart.setEntryLabelTextSize(11f);
         pieChart.setEntryLabelColor(Color.WHITE);
-        pieChart.setHoleColor(Color.parseColor("#0A1628"));
-        pieChart.setTransparentCircleColor(Color.parseColor("#0A1628"));
+        pieChart.setHoleColor(Color.parseColor("#051F20"));
+        pieChart.setTransparentCircleColor(Color.parseColor("#051F20"));
         pieChart.setCenterText("Loan\nDistribution");
         pieChart.setCenterTextSize(14f);
         pieChart.setCenterTextColor(Color.parseColor("#F0F6FF"));
@@ -259,7 +259,7 @@ public class LoanReportActivity extends AppCompatActivity {
 
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas c = new Canvas(bitmap);
-        c.drawColor(Color.parseColor("#0A1628"));
+        c.drawColor(Color.parseColor("#051F20"));
         pieChart.draw(c);
         return bitmap;
     }

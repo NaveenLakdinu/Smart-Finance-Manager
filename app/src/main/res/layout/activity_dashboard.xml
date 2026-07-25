@@ -104,7 +104,6 @@
 
             </FrameLayout>
 
-            <!-- Creative Circle Logout Button -->
             <FrameLayout
                 android:id="@+id/btnTopLogout"
                 android:layout_width="48dp"
@@ -213,8 +212,8 @@
                         android:orientation="horizontal"
                         android:layout_marginTop="4dp">
                         <View android:layout_width="32dp" android:layout_height="3dp" android:background="@color/hero_accent" />
-                        <View android:layout_width="8dp" android:layout_height="3dp" android:background="#0891B2" android:layout_marginStart="4dp" />
-                        <View android:layout_width="4dp" android:layout_height="3dp" android:background="#1E3A6E" android:layout_marginStart="4dp" />
+                        <View android:layout_width="8dp" android:layout_height="3dp" android:background="@color/forest_600" android:layout_marginStart="4dp" />
+                        <View android:layout_width="4dp" android:layout_height="3dp" android:background="@color/forest_800" android:layout_marginStart="4dp" />
                     </LinearLayout>
 
                 </LinearLayout>
@@ -396,7 +395,7 @@
                     <LinearLayout
                         android:layout_width="52dp"
                         android:layout_height="52dp"
-                        android:background="@drawable/bg_function_icon_blue"
+                        android:background="@drawable/bg_function_icon_secondary"
                         android:gravity="center">
                         <TextView
                             android:layout_width="wrap_content"
@@ -419,7 +418,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="@color/qa_blue_icon" />
+                        android:background="@color/qa_secondary_icon" />
 
                 </LinearLayout>
 
@@ -474,7 +473,7 @@
                         android:layout_width="24dp"
                         android:layout_height="2dp"
                         android:layout_marginTop="7dp"
-                        android:background="@color/qa_purple_icon" />
+                        android:background="@color/qa_tertiary_icon" />
 
                 </LinearLayout>
 

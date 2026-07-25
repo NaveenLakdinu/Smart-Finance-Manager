@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- ============================================================ -->
+    <!-- FOREST GREEN PALETTE — 6-stop base scale                     -->
+    <!-- ============================================================ -->
+    <color name="forest_900">#051F20</color>   <!-- deepest bg, status bar     -->
+    <color name="forest_800">#0B2B26</color>   <!-- surface bg, nav bar        -->
+    <color name="forest_700">#163832</color>   <!-- card surface               -->
+    <color name="forest_600">#235347</color>   <!-- elevated card, strokes     -->
+    <color name="forest_300">#8EB69B</color>   <!-- primary accent, CTAs       -->
+    <color name="forest_100">#DAF1DE</color>   <!-- highlight text, success    -->
+
+    <!-- ============================================================ -->
+    <!-- LEGACY — kept for backward compat, now alias to forest green -->
+    <!-- ============================================================ -->
+
     <!-- Backgrounds -->
     <color name="background_light">#F0F4F8</color>
     <color name="nav_background">#D8DFE8</color>
@@ -7,180 +21,172 @@
     <color name="black">#040000</color>
 
     <!-- Text -->
-    <color name="text_nav">#6B7C93</color>
-    <color name="text_secondary">#5A6470</color>
-    <color name="btn_signup_text">#2D4A7A</color>
+    <color name="text_nav">#6B9E7A</color>
+    <color name="text_secondary">#5A8A6A</color>
+    <color name="btn_signup_text">@color/forest_900</color>
 
     <!-- Buttons -->
-    <color name="btn_login_dark">#1E3A6E</color>
-    <color name="btn_login_dark_pressed">#16305D</color>
-    <color name="btn_signup_bg">#C8D8EF</color>
-    <color name="btn_signup_bg_pressed">#B0C6E0</color>
+    <color name="btn_login_dark">@color/forest_700</color>
+    <color name="btn_login_dark_pressed">@color/forest_600</color>
+    <color name="btn_signup_bg">@color/forest_300</color>
+    <color name="btn_signup_bg_pressed">@color/forest_600</color>
 
     <!-- Additional colors -->
-    <color name="dark_background">#1A1A2E</color>
-    <color name="button_blue">#1E3A6E</color>
-    <color name="button_light_blue">#C8D8EF</color>
-    <color name="text_gray">#B0B0B0</color>
-    <color name="brand_dark_blue">#1E3A6E</color>
-    <color name="brand_green">#4CAF50</color>
+    <color name="dark_background">@color/forest_900</color>
+    <color name="button_secondary">@color/forest_600</color>
+    <color name="button_light_secondary">@color/forest_300</color>
+    <color name="text_gray">#8EB69B</color>
+    <color name="brand_dark_secondary">@color/forest_700</color>
+    <color name="brand_green">@color/forest_300</color>
 
     <!-- Loan related colors -->
-    <color name="loan_bg_dark">#0F172A</color>
-    <color name="loan_header_dark">#1E293B</color>
-    <color name="loan_card_dark">#334155</color>
+    <color name="loan_bg_dark">@color/forest_800</color>
+    <color name="loan_header_dark">@color/forest_700</color>
+    <color name="loan_card_dark">@color/forest_700</color>
 
     <!-- Quick Actions Colors -->
-    <color name="action_blue_bg">#DBEAFE</color>
-    <color name="action_blue_icon">#2563EB</color>
-    <color name="action_green_bg">#DCFCE7</color>
-    <color name="action_green_icon">#16A34A</color>
-    <color name="action_yellow_bg">#FEF9C3</color>
-    <color name="action_yellow_icon">#CA8A04</color>
+    <color name="action_secondary_bg">@color/forest_800</color>
+    <color name="action_secondary_icon">@color/forest_300</color>
+    <color name="action_green_bg">#0F2E1A</color>
+    <color name="action_green_icon">@color/forest_300</color>
+    <color name="action_yellow_bg">#3A2E10</color>
+    <color name="action_yellow_icon">#F0C040</color>
 
     <!-- Status Colors -->
-    <color name="loan_status_green_bg">#DCFCE7</color>
-    <color name="loan_status_green_text">#16A34A</color>
+    <color name="loan_status_green_bg">#0F2E1A</color>
+    <color name="loan_status_green_text">@color/forest_100</color>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- NEW PREMIUM DASHBOARD DESIGN TOKENS       -->
-    <!-- ══════════════════════════════════════════ -->
+    <!-- ============================================================ -->
+    <!-- DASHBOARD DESIGN TOKENS — Forest Green                       -->
+    <!-- ============================================================ -->
+    <color name="dash_bg_deep">@color/forest_900</color>
+    <color name="dash_bg_mid">@color/forest_800</color>
+    <color name="dash_bg_light">@color/forest_700</color>
 
-    <!-- Deep Navy Background -->
-    <color name="dash_bg_deep">#0A1628</color>
-    <color name="dash_bg_mid">#0D1F3C</color>
-    <color name="dash_bg_light">#112244</color>
+    <color name="hero_start">@color/forest_700</color>
+    <color name="hero_end">@color/forest_900</color>
+    <color name="hero_accent">@color/forest_300</color>
+    <color name="hero_accent_dim">@color/forest_600</color>
 
-    <!-- Hero Card accent -->
-    <color name="hero_start">#0F3460</color>
-    <color name="hero_end">#16213E</color>
-    <color name="hero_accent">#00D4AA</color>
-    <color name="hero_accent_dim">#0891B2</color>
+    <color name="glass_card_bg">@color/forest_700</color>
+    <color name="glass_card_border">@color/forest_600</color>
 
-    <!-- Glass Card -->
-    <color name="glass_card_bg">#1A2F50</color>
-    <color name="glass_card_border">#2A4A70</color>
+    <!-- Quick Action icon backgrounds (forest-tinted) -->
+    <color name="qa_secondary_bg">@color/forest_800</color>
+    <color name="qa_secondary_icon">@color/forest_300</color>
+    <color name="qa_teal_bg">@color/forest_800</color>
+    <color name="qa_teal_icon">@color/forest_300</color>
+    <color name="qa_tertiary_bg">@color/forest_800</color>
+    <color name="qa_tertiary_icon">@color/forest_300</color>
+    <color name="qa_amber_bg">@color/forest_800</color>
+    <color name="qa_amber_icon">#FFD866</color>
+    <color name="qa_rose_bg">@color/forest_800</color>
+    <color name="qa_rose_icon">#FF8FA3</color>
+    <color name="qa_green_bg">@color/forest_800</color>
+    <color name="qa_green_icon">@color/forest_100</color>
 
-    <!-- Quick-action icon backgrounds -->
-    <color name="qa_blue_bg">#162D4A</color>
-    <color name="qa_blue_icon">#38BDF8</color>
-    <color name="qa_teal_bg">#0F3330</color>
-    <color name="qa_teal_icon">#2DD4BF</color>
-    <color name="qa_purple_bg">#251840</color>
-    <color name="qa_purple_icon">#A78BFA</color>
-    <color name="qa_amber_bg">#2A1F0A</color>
-    <color name="qa_amber_icon">#FCD34D</color>
-    <color name="qa_rose_bg">#2D1020</color>
-    <color name="qa_rose_icon">#FB7185</color>
-    <color name="qa_green_bg">#0F2D1A</color>
-    <color name="qa_green_icon">#4ADE80</color>
+    <color name="text_on_dark_primary">#FFFFFF</color>
+    <color name="text_on_dark_secondary">@color/forest_300</color>
+    <color name="text_on_dark_muted">#6B9E7A</color>
 
-    <!-- Text on dark -->
-    <color name="text_on_dark_primary">#F0F6FF</color>
-    <color name="text_on_dark_secondary">#7A9CC0</color>
-    <color name="text_on_dark_muted">#4A6A8A</color>
+    <!-- Positive / Success pill -->
+    <color name="pill_positive_bg">#0F2E1A</color>
+    <color name="pill_positive_text">@color/forest_100</color>
 
-    <!-- Stat pills -->
-    <color name="pill_positive_bg">#0F3320</color>
-    <color name="pill_positive_text">#4ADE80</color>
-    <color name="pill_warning_bg">#2A1C08</color>
-    <color name="pill_warning_text">#FCD34D</color>
+    <!-- Warning pill — amber kept intentionally -->
+    <color name="pill_warning_bg">#4A3520</color>
+    <color name="pill_warning_text">#FFD866</color>
 
-    <!-- Danger -->
-    <color name="danger_bg">#2D0F1A</color>
-    <color name="danger_text">#FB7185</color>
-    <color name="danger_border">#4D1A2A</color>
+    <!-- Danger — red kept intentionally -->
+    <color name="danger_bg">#4A1A30</color>
+    <color name="danger_text">#FF8FA3</color>
+    <color name="danger_border">#6B2A48</color>
 
-    <!-- Divider -->
-    <color name="divider_dark">#1A3050</color>
+    <color name="divider_dark">@color/forest_600</color>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- SEMANTIC ALIASES (unified intent-based tokens) -->
-    <!-- ══════════════════════════════════════════ -->
+    <!-- ============================================================ -->
+    <!-- SEMANTIC ALIASES                                             -->
+    <!-- ============================================================ -->
+    <color name="surface_primary">@color/forest_900</color>
+    <color name="surface_card">@color/forest_700</color>
+    <color name="surface_card_border">@color/forest_600</color>
+    <color name="surface_elevated">@color/forest_800</color>
 
-    <!-- Primary surfaces -->
-    <color name="surface_primary">@color/dash_bg_deep</color>
-    <color name="surface_card">@color/glass_card_bg</color>
-    <color name="surface_card_border">@color/glass_card_border</color>
-    <color name="surface_elevated">@color/dash_bg_mid</color>
-
-    <!-- Semantic text -->
     <color name="text_primary">@color/text_on_dark_primary</color>
     <color name="text_secondary_dark">@color/text_on_dark_secondary</color>
     <color name="text_muted">@color/text_on_dark_muted</color>
 
-    <!-- Action buttons -->
-    <color name="btn_primary">@color/hero_accent</color>
-    <color name="btn_primary_pressed">#00B896</color>
-    <color name="btn_primary_text">@color/dash_bg_deep</color>
-    <color name="btn_secondary">@color/glass_card_bg</color>
+    <color name="btn_primary">@color/forest_300</color>
+    <color name="btn_primary_pressed">@color/forest_600</color>
+    <color name="btn_primary_text">@color/forest_900</color>
+    <color name="btn_secondary">@color/forest_700</color>
     <color name="btn_danger">@color/danger_text</color>
     <color name="btn_danger_bg">@color/danger_bg</color>
 
-    <!-- Spinner / dropdown -->
     <color name="spinner_text">@color/text_on_dark_primary</color>
-    <color name="spinner_bg">@color/glass_card_bg</color>
-    <color name="spinner_divider">@color/divider_dark</color>
+    <color name="spinner_bg">@color/forest_700</color>
+    <color name="spinner_divider">@color/forest_600</color>
 
-    <!-- Input fields -->
-    <color name="input_bg">@color/glass_card_bg</color>
-    <color name="input_stroke">@color/glass_card_border</color>
+    <color name="input_bg">@color/forest_800</color>
+    <color name="input_stroke">@color/forest_600</color>
     <color name="input_text">@color/text_on_dark_primary</color>
     <color name="input_hint">@color/text_on_dark_muted</color>
+    <color name="input_focused_stroke">@color/forest_300</color>
+    <color name="input_error_stroke">#FF6B6B</color>
+    <color name="input_disabled_bg">#0D2420</color>
+    <color name="input_disabled_text">#3D5A50</color>
 
-    <!-- Progress bar -->
-    <color name="progress_track">#1A3050</color>
-    <color name="progress_fill">@color/hero_accent</color>
+    <color name="progress_track">@color/forest_700</color>
+    <color name="progress_fill">@color/forest_300</color>
 
-    <!-- Tab / Segmented control -->
-    <color name="tab_active_bg">@color/hero_accent</color>
-    <color name="tab_active_text">@color/dash_bg_deep</color>
-    <color name="tab_inactive_bg">@color/glass_card_bg</color>
-    <color name="tab_inactive_text">@color/text_on_dark_secondary</color>
+    <color name="tab_active_bg">@color/forest_300</color>
+    <color name="tab_active_text">#FFFFFF</color>
+    <color name="tab_inactive_bg">@color/forest_700</color>
+    <color name="tab_inactive_text">@color/text_on_dark_muted</color>
 
-    <!-- Badge / Pill -->
     <color name="badge_success_bg">@color/pill_positive_bg</color>
-    <color name="badge_success_text">@color/pill_positive_text</color>
+    <color name="badge_success_text">@color/forest_100</color>
     <color name="badge_warning_bg">@color/pill_warning_bg</color>
     <color name="badge_warning_text">@color/pill_warning_text</color>
-    <color name="badge_info_bg">#162D4A</color>
-    <color name="badge_info_text">#38BDF8</color>
+    <color name="badge_info_bg">@color/forest_700</color>
+    <color name="badge_info_text">@color/forest_300</color>
 
-    <!-- Dialog -->
-    <color name="dialog_bg">@color/glass_card_bg</color>
+    <color name="dialog_bg">@color/forest_700</color>
     <color name="dialog_scrim">#80000000</color>
 
-    <!-- Status bar -->
-    <color name="status_bar">#070F1E</color>
+    <color name="status_bar">@color/forest_900</color>
 
-    <!-- Bottom Navigation -->
-    <color name="bottom_nav_bg">@color/dash_bg_mid</color>
-    <color name="bottom_nav_active">@color/hero_accent</color>
+    <color name="bottom_nav_bg">@color/forest_800</color>
+    <color name="bottom_nav_active">@color/forest_300</color>
     <color name="bottom_nav_inactive">@color/text_on_dark_muted</color>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- GOAL COLORS  (GoalColors object from Compose) -->
-    <!-- ══════════════════════════════════════════ -->
-    <color name="goal_bg">#090D1A</color>
-    <color name="goal_surface">#131A2E</color>
-    <color name="goal_surface_hi">#1A2340</color>
-    <color name="goal_border">#232D4D</color>
-    <color name="goal_mint">#2FE0AC</color>
-    <color name="goal_mint_dim">#1A8F6F</color>
+    <!-- Skeleton / shimmer -->
+    <color name="skeleton_base">@color/forest_700</color>
+    <color name="skeleton_highlight">@color/forest_600</color>
+
+    <!-- ============================================================ -->
+    <!-- GOAL COLORS — Forest Green remap                             -->
+    <!-- ============================================================ -->
+    <color name="goal_bg">@color/forest_800</color>
+    <color name="goal_surface">@color/forest_800</color>
+    <color name="goal_surface_hi">@color/forest_700</color>
+    <color name="goal_border">@color/forest_600</color>
+    <color name="goal_mint">@color/forest_100</color>
+    <color name="goal_mint_dim">@color/forest_300</color>
     <color name="goal_coral">#FF6B7A</color>
     <color name="goal_gold">#FFC857</color>
-    <color name="goal_blue">#5B8CFF</color>
-    <color name="goal_text">#EEF1FB</color>
-    <color name="goal_text_mute">#8A92B2</color>
-    <color name="goal_text_dim">#5B6389</color>
-    <color name="goal_delete_btn_border">#4DFF6B7A</color>
+    <color name="goal_secondary">@color/forest_300</color>
+    <color name="goal_text">#FFFFFF</color>
+    <color name="goal_text_mute">@color/forest_300</color>
+    <color name="goal_text_dim">#6B9E7A</color>
+    <color name="goal_delete_btn_border">#6B2A48</color>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!-- SAVINGS PASSPORT COLORS (SavingsColors)    -->
-    <!-- ══════════════════════════════════════════ -->
-    <color name="sp_ink">#0B1F3A</color>
-    <color name="sp_ink2">#0F2647</color>
-    <color name="sp_ink3">#16305A</color>
+    <!-- ============================================================ -->
+    <!-- SAVINGS PASSPORT — DO NOT TOUCH (intentionally light-themed) -->
+    <!-- ============================================================ -->
+    <color name="sp_ink">#163832</color>
+    <color name="sp_ink2">#163832</color>
+    <color name="sp_ink3">#235347</color>
     <color name="sp_parchment">#FBF7EE</color>
     <color name="sp_paper">#FFFFFF</color>
     <color name="sp_brass">#C9A227</color>
@@ -197,29 +203,36 @@
     <color name="sp_locked_bg">#F4F2EC</color>
     <color name="sp_bronze">#C97B45</color>
     <color name="sp_silver">#B9BDC4</color>
-    <color name="sp_goal_icon_bg">#E7F0FA</color>
-    <color name="sp_goal_icon_tint">#2C6FA6</color>
+    <color name="sp_goal_icon_bg">#E4F3EC</color>
+    <color name="sp_goal_icon_tint">#163832</color>
     <color name="sp_locked_icon_bg">#E3DFD3</color>
     <color name="sp_locked_icon_text">#9C9885</color>
     <color name="sp_badge_earned_start">#FFFCF3</color>
     <color name="sp_badge_earned_end">#FDF6E1</color>
     <color name="sp_progress_track">#EFEBDF</color>
     <color name="sp_stat_chip_bg">#F7F5EE</color>
-    <color name="sp_ink_button_dark">#2B4B8C</color>
-    <color name="sp_streak_bg_mid">#1C3C70</color>
+    <color name="sp_ink_button_dark">#163832</color>
+    <color name="sp_streak_bg_mid">#235347</color>
 
-    <!-- Expense Claims - Missing Colors -->
-    <color name="bg_dashboard">#0A1628</color>
-    <color name="pill_purple_bg">#251840</color>
-    <color name="pill_purple_border">#3D2660</color>
-    <color name="pill_orange_bg">#2A1C08</color>
-    <color name="pill_orange_text">#FCD34D</color>
-    <color name="pill_red_bg">#2D0F1A</color>
-    <color name="pill_red_text">#FB7185</color>
-    <color name="pill_blue_bg">#162D4A</color>
-    <color name="pill_blue_text">#38BDF8</color>
+    <!-- ============================================================ -->
+    <!-- EXPENSE CLAIMS & MISC                                        -->
+    <!-- ============================================================ -->
+    <color name="bg_dashboard">@color/forest_900</color>
+    <color name="pill_tertiary_bg">@color/forest_800</color>
+    <color name="pill_tertiary_border">@color/forest_600</color>
+    <color name="pill_orange_bg">#4A3520</color>
+    <color name="pill_orange_text">#FFD866</color>
+    <color name="pill_red_bg">#4A1A30</color>
+    <color name="pill_red_text">#FF8FA3</color>
+    <color name="pill_secondary_bg">@color/forest_800</color>
+    <color name="pill_secondary_text">@color/forest_300</color>
 
     <!-- Task Screen Colors -->
-    <color name="qa_yellow">#FACC15</color>
+    <color name="qa_yellow">#FFD866</color>
+
+    <!-- Accent ring / ripple -->
+    <color name="accent_pressed">@color/forest_600</color>
+    <color name="accent_focused_ring">@color/forest_300</color>
+    <color name="ripple_green">#338EB69B</color>
 
 </resources>

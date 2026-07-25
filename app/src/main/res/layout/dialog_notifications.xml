@@ -24,7 +24,7 @@
             android:id="@+id/btnDismissNotifications"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:backgroundTint="#1E293B"
+            android:backgroundTint="@color/forest_800"
             android:text="Close"
             android:textColor="@color/text_on_dark_secondary"
             android:textSize="12sp" />

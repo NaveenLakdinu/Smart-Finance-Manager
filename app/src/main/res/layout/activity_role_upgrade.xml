@@ -142,9 +142,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -157,7 +159,7 @@
                     <TextView
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:background="@drawable/bg_function_icon_blue"
+                        android:background="@drawable/bg_function_icon_secondary"
                         android:gravity="center"
                         android:text="🎓"
                         android:textSize="22sp" />
@@ -196,9 +198,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -250,9 +254,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="16dp"
-                app:cardElevation="0dp">
+                app:cardElevation="0dp"
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -274,7 +280,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="This upgrade is instant and will customize your main dashboard to show both portfolios. You can manage your security PIN lock settings normally."
-                        android:textColor="@color/qa_purple_icon"
+                        android:textColor="@color/qa_tertiary_icon"
                         android:textSize="11sp" />
 
                 </LinearLayout>

@@ -114,11 +114,11 @@
                 android:layout_marginBottom="14dp"
                 android:clickable="true"
                 android:focusable="true"
-                app:cardBackgroundColor="@color/glass_card_bg"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="22dp"
                 app:cardElevation="0dp"
-                app:strokeColor="@color/glass_card_border"
-                app:strokeWidth="1.5dp">
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -136,7 +136,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="52dp"
                             android:layout_height="52dp"
-                            app:cardBackgroundColor="@color/qa_blue_bg"
+                            app:cardBackgroundColor="@color/qa_secondary_bg"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp">
                             <ImageView
@@ -144,7 +144,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_school"
-                                app:tint="@color/qa_blue_icon" />
+                                app:tint="@color/qa_secondary_icon" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
@@ -192,13 +192,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_blue"
+                            android:background="@drawable/tag_secondary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Budget"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -222,13 +222,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_purple"
+                            android:background="@drawable/tag_tertiary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Loans"
-                            android:textColor="@color/qa_purple_icon"
+                            android:textColor="@color/qa_tertiary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -365,13 +365,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_blue"
+                            android:background="@drawable/tag_secondary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Payslips"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -380,13 +380,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_purple"
+                            android:background="@drawable/tag_tertiary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Tasks"
-                            android:textColor="@color/qa_purple_icon"
+                            android:textColor="@color/qa_tertiary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -568,13 +568,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_purple"
+                            android:background="@drawable/tag_tertiary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Analytics"
-                            android:textColor="@color/qa_purple_icon"
+                            android:textColor="@color/qa_tertiary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -582,13 +582,13 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_blue"
+                            android:background="@drawable/tag_secondary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Subscriptions"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -655,7 +655,7 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="52dp"
                             android:layout_height="52dp"
-                            app:cardBackgroundColor="@color/qa_purple_bg"
+                            app:cardBackgroundColor="@color/qa_tertiary_bg"
                             app:cardCornerRadius="16dp"
                             app:cardElevation="0dp">
                             <ImageView
@@ -663,7 +663,7 @@
                                 android:layout_height="26dp"
                                 android:layout_gravity="center"
                                 android:src="@drawable/ic_group"
-                                app:tint="@color/qa_purple_icon" />
+                                app:tint="@color/qa_tertiary_icon" />
                         </com.google.android.material.card.MaterialCardView>
 
                         <LinearLayout
@@ -711,13 +711,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_purple"
+                            android:background="@drawable/tag_tertiary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Multi-Profile"
-                            android:textColor="@color/qa_purple_icon"
+                            android:textColor="@color/qa_tertiary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -726,13 +726,13 @@
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="6dp"
                             android:layout_marginBottom="4dp"
-                            android:background="@drawable/tag_blue"
+                            android:background="@drawable/tag_secondary"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="4dp"
                             android:paddingBottom="4dp"
                             android:text="Transfers"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="12sp"
                             android:textStyle="bold" />
 
@@ -790,15 +790,16 @@
                 android:insetBottom="0dp"
                 android:text="Continue"
                 android:textAllCaps="false"
-                android:textColor="@color/text_on_dark_primary"
+                android:textColor="@color/btn_primary_text"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/hero_accent"
+                android:background="@drawable/bg_btn_primary_green"
+                app:backgroundTint="@null"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/ic_signup_arrow"
                 app:iconGravity="end"
                 app:iconPadding="8dp"
-                app:iconTint="@color/text_on_dark_primary" />
+                app:iconTint="@color/btn_primary_text" />
 
         </LinearLayout>
     </LinearLayout>

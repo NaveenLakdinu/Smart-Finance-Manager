@@ -43,10 +43,12 @@
         </LinearLayout>
 
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -82,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:text=""
-                    android:textColor="@color/qa_purple_icon"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="13sp"
                     android:textStyle="bold" />
 
@@ -112,6 +114,8 @@
 
             <!-- Register New Bill -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnRegisterNewBill"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -120,7 +124,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -132,7 +136,7 @@
                     <TextView
                         android:layout_width="44dp"
                         android:layout_height="44dp"
-                        android:background="@drawable/bg_function_icon_blue"
+                        android:background="@drawable/bg_function_icon_secondary"
                         android:gravity="center"
                         android:text="➕"
                         android:textSize="20sp" />
@@ -149,6 +153,8 @@
 
             <!-- View All Bills -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnViewBill"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -157,7 +163,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -186,6 +192,8 @@
 
             <!-- Generate Report -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:id="@+id/btnGetReport"
                 android:layout_width="0dp"
                 android:layout_height="110dp"
@@ -194,7 +202,7 @@
                 android:clickable="true"
                 android:focusable="true"
                 android:foreground="?attr/selectableItemBackground"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="20dp"
                 app:cardElevation="0dp">
                 <LinearLayout
@@ -245,7 +253,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="See all →"
-                android:textColor="@color/qa_blue_icon"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -258,10 +266,12 @@
 
             <!-- Sample Item 1 -->
             <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="12dp"
-                app:cardBackgroundColor="@android:color/transparent"
+                app:cardBackgroundColor="@color/forest_700"
                 app:cardCornerRadius="18dp"
                 app:cardElevation="0dp">
                 <LinearLayout

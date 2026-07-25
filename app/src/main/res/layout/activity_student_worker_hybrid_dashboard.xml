@@ -38,7 +38,7 @@
                 android:id="@+id/layoutDashboardHeader"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_hero_card"
+                android:background="@drawable/bg_hero_green"
                 android:padding="20dp"
                 android:paddingTop="36dp">
 
@@ -88,7 +88,7 @@
 
                 </LinearLayout>
 
-                <!-- Actions (Security + Logout) -->
+                <!-- Actions (Notification + Security + Logout) -->
                 <LinearLayout
                     android:id="@+id/layoutHeaderActions"
                     android:layout_width="wrap_content"
@@ -97,6 +97,15 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
+
+                    <TextView
+                        android:id="@+id/btnNotifications"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:background="@drawable/bg_notification"
+                        android:gravity="center"
+                        android:text="🔔"
+                        android:textSize="20sp" />
 
                     <FrameLayout
                         android:id="@+id/btnSecurity"
@@ -111,7 +120,7 @@
                             android:layout_height="18dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_lock"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="@color/forest_300" />
 
                     </FrameLayout>
 
@@ -129,7 +138,7 @@
                             android:layout_height="18dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_power"
-                            app:tint="@color/text_on_dark_primary" />
+                            app:tint="@color/forest_300" />
 
                     </FrameLayout>
 
@@ -156,7 +165,7 @@
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_hero_card"
+                        android:background="@drawable/bg_hero_green"
                         android:orientation="vertical"
                         android:padding="20dp">
 
@@ -203,7 +212,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Rs 0.00"
-                                android:textColor="@color/text_on_dark_primary"
+                                android:textColor="@color/forest_100"
                                 android:textSize="32sp"
                                 android:textStyle="bold" />
 
@@ -238,9 +247,9 @@
                     android:layout_marginTop="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/glass_card_bg"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:strokeWidth="1dp"
-                    app:strokeColor="@color/glass_card_border"
+                    app:strokeColor="@color/forest_600"
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground">
@@ -282,7 +291,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Rs 0.00"
-                                android:textColor="@color/text_on_dark_primary"
+                                android:textColor="@color/forest_100"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -292,13 +301,13 @@
                             android:id="@+id/btnUpdateSavings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_green"
+                            android:background="@drawable/bg_btn_primary_green"
                             android:paddingStart="10dp"
                             android:paddingEnd="10dp"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
                             android:text="UPDATE"
-                            android:textColor="@color/pill_positive_text"
+                            android:textColor="@color/btn_primary_text"
                             android:textSize="10sp"
                             android:textStyle="bold" />
 
@@ -318,7 +327,7 @@
                         android:layout_width="4dp"
                         android:layout_height="16dp"
                         android:layout_marginEnd="8dp"
-                        android:background="@color/qa_blue_icon" />
+                        android:background="@color/qa_secondary_icon" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -354,14 +363,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -369,7 +379,7 @@
                             <TextView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_blue"
+                                android:background="@drawable/bg_function_icon_secondary"
                                 android:gravity="center"
                                 android:text="📊"
                                 android:textSize="20sp" />
@@ -398,14 +408,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -449,14 +460,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -493,14 +505,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -508,7 +521,7 @@
                             <TextView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_blue"
+                                android:background="@drawable/bg_function_icon_secondary"
                                 android:gravity="center"
                                 android:text="📅"
                                 android:textSize="20sp" />
@@ -544,14 +557,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -629,14 +643,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -644,7 +659,7 @@
                             <TextView
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_blue"
+                                android:background="@drawable/bg_function_icon_secondary"
                                 android:gravity="center"
                                 android:text="📝"
                                 android:textSize="20sp" />
@@ -673,14 +688,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">
@@ -724,14 +740,15 @@
                         android:clickable="true"
                         android:focusable="true"
                         android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@android:color/transparent"
+                        app:cardBackgroundColor="@color/forest_700"
                         app:cardCornerRadius="20dp"
+                        app:strokeColor="@color/forest_600"
+                        app:strokeWidth="1dp"
                         app:cardElevation="0dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:background="@drawable/bg_glass_card"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:padding="8dp">

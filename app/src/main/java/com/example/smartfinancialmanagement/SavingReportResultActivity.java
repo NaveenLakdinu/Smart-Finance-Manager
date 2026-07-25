@@ -191,7 +191,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
             tvHealthScore.setTextColor(getResources().getColor(R.color.pill_positive_text, null));
         } else if (healthScore >= 60) {
             tvHealthScore.setText("Good");
-            tvHealthScore.setTextColor(getResources().getColor(R.color.qa_blue_icon, null));
+            tvHealthScore.setTextColor(getResources().getColor(R.color.qa_secondary_icon, null));
         } else {
             tvHealthScore.setText("Needs Improvement");
             tvHealthScore.setTextColor(getResources().getColor(R.color.danger_text, null));

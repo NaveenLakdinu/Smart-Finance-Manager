@@ -195,7 +195,7 @@ public class SubscriptionDetailActivity extends AppCompatActivity {
                     logo.setText("S");
                 }
                 logo.setTextColor(Color.parseColor("#FFFFFF"));
-                bg.setColor(Color.parseColor("#071A33"));
+                bg.setColor(Color.parseColor("#FFFFFF"));
                 break;
         }
         logo.setBackground(bg);

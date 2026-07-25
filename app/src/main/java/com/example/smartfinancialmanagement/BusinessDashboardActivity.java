@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.animation.OvershootInterpolator;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -25,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +73,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
@@ -107,6 +113,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             Intent intent = new Intent(this, LoginFormActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             finish();
         });
     }
@@ -263,11 +270,11 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 holder.textView.setText(filterName);
 
                 if (filterName.equalsIgnoreCase(selectedBusinessScope)) {
-                    holder.cardView.setCardBackgroundColor(Color.parseColor("#00D4AA"));
-                    holder.textView.setTextColor(Color.parseColor("#071A33"));
+                    holder.cardView.setCardBackgroundColor(Color.parseColor("#8EB69B"));
+                    holder.textView.setTextColor(Color.parseColor("#0B2B26"));
                 } else {
-                    holder.cardView.setCardBackgroundColor(Color.parseColor("#1E293B"));
-                    holder.textView.setTextColor(Color.parseColor("#7A9CC0"));
+                    holder.cardView.setCardBackgroundColor(Color.parseColor("#0B2B26"));
+                    holder.textView.setTextColor(Color.parseColor("#B0A8FF"));
                 }
 
                 holder.itemView.setOnClickListener(v -> {
@@ -304,10 +311,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -321,33 +330,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        View panelView = LayoutInflater.from(this).inflate(R.layout.dialog_notifications, null);
-        LinearLayout container = panelView.findViewById(R.id.layoutNotificationsContainer);
-        Button btnClose = panelView.findViewById(R.id.btnDismissNotifications);
-
-        AlertDialog dialog = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog).setView(panelView).create();
-        if (dialog.getWindow() != null) {
-            dialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        }
-
-        String[] samples = {
-                "⚠️ Stock alert: Inventory limits dropping inside main workspace.",
-                "📈 Monthly statement compiled for review inside Business Analytics.",
-                "🧾 New B2B client invoice log processed successfully."
-        };
-
-        container.removeAllViews();
-        for (String msg : samples) {
-            TextView row = new TextView(this);
-            row.setText(msg);
-            row.setTextColor(Color.parseColor("#F0F6FF"));
-            row.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13.0f);
-            row.setPadding(0, 16, 0, 16);
-            container.addView(row);
-        }
-
-        btnClose.setOnClickListener(v -> dialog.dismiss());
-        dialog.show();
+        NotificationPanelHelper.show(this);
     }
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {
@@ -357,6 +340,23 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             super(v);
             cardView = v;
             textView = tv;
+        }
+    }
+
+    private void animateCards(View... cards) {
+        for (int i = 0; i < cards.length; i++) {
+            if (cards[i] != null) {
+                cards[i].setAlpha(0f);
+                cards[i].setTranslationY(40f);
+                final int delay = i * 100;
+                cards[i].animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
+            }
         }
     }
 }

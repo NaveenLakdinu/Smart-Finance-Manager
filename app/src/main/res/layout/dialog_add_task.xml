@@ -19,7 +19,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="6dp"
         android:hint="Enter task title"
-        android:textColorHint="#4A607A"
+        android:textColorHint="@color/text_on_dark_muted"
         android:textColor="@color/text_on_dark_primary"
         android:inputType="text"
         android:background="@android:color/transparent"/>
@@ -38,7 +38,7 @@
         android:layout_height="80dp"
         android:layout_marginTop="6dp"
         android:hint="Enter description"
-        android:textColorHint="#4A607A"
+        android:textColorHint="@color/text_on_dark_muted"
         android:textColor="@color/text_on_dark_primary"
         android:inputType="textMultiLine"
         android:gravity="top"

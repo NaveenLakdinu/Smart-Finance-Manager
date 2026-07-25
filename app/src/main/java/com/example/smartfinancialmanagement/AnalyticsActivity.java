@@ -261,13 +261,13 @@ public class AnalyticsActivity extends AppCompatActivity {
         txtProfitDisplay.setText(String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthProfit));
 
         if (currentMonthProfit >= 0) {
-            txtProfitDisplay.setTextColor(Color.parseColor("#00D4AA"));
+            txtProfitDisplay.setTextColor(Color.parseColor("#8EB69B"));    // forest_300 sage green
             txtPercentageDisplay.setText(String.format(Locale.getDefault(), "+%.1f%% Profit Margin", profitPercentage));
-            txtPercentageDisplay.setTextColor(Color.parseColor("#00D4AA"));
+            txtPercentageDisplay.setTextColor(Color.parseColor("#DAF1DE")); // forest_100 mint
         } else {
-            txtProfitDisplay.setTextColor(Color.parseColor("#FF5555"));
+            txtProfitDisplay.setTextColor(Color.parseColor("#FF8FA3"));    // danger_text red-pink
             txtPercentageDisplay.setText(String.format(Locale.getDefault(), "%.1f%% Net Loss", profitPercentage));
-            txtPercentageDisplay.setTextColor(Color.parseColor("#FF5555"));
+            txtPercentageDisplay.setTextColor(Color.parseColor("#FF8FA3"));
         }
 
         updateBarChartDisplay();
@@ -282,9 +282,9 @@ public class AnalyticsActivity extends AppCompatActivity {
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Analytics");
 
         int[] colors = new int[]{
-                Color.parseColor("#4ADE80"),
-                Color.parseColor("#FF5555"),
-                Color.parseColor("#00D4AA")
+                Color.parseColor("#8EB69B"),  // Revenue — sage green (forest_300)
+                Color.parseColor("#FF8FA3"),  // Expenses — soft red (danger_text)
+                Color.parseColor("#DAF1DE")   // Profit — mint highlight (forest_100)
         };
         dataSet.setColors(colors);
         dataSet.setValueTextColor(Color.WHITE);
@@ -315,12 +315,13 @@ public class AnalyticsActivity extends AppCompatActivity {
 
         barChartAnalytic.setExtraBottomOffset(15f);
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setTextColor(Color.parseColor("#7A9CC0"));
+        xAxis.setTextColor(Color.parseColor("#8EB69B"));    // forest_300 axis labels
         xAxis.setDrawGridLines(false);
         xAxis.setGranularity(1f);
 
-        barChartAnalytic.getAxisLeft().setTextColor(Color.WHITE);
-        barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#1A3050"));
+        barChartAnalytic.setBackgroundColor(Color.parseColor("#0B2B26")); // forest_800
+        barChartAnalytic.getAxisLeft().setTextColor(Color.parseColor("#DAF1DE")); // forest_100
+        barChartAnalytic.getAxisLeft().setGridColor(Color.parseColor("#235347"));  // forest_600
         barChartAnalytic.getAxisRight().setEnabled(false);
         barChartAnalytic.getDescription().setEnabled(false);
         barChartAnalytic.getLegend().setEnabled(false);
@@ -392,7 +393,7 @@ public class AnalyticsActivity extends AppCompatActivity {
             // Bar Chart Dark Render
             Bitmap bitmap = Bitmap.createBitmap(barChartAnalytic.getWidth(), barChartAnalytic.getHeight(), Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bitmap);
-            canvas.drawColor(Color.parseColor("#071A33"));
+            canvas.drawColor(Color.parseColor("#FFFFFF"));
             barChartAnalytic.draw(canvas);
 
             ByteArrayOutputStream stream = new ByteArrayOutputStream();
@@ -411,7 +412,7 @@ public class AnalyticsActivity extends AppCompatActivity {
             pieChart.setDrawEntryLabels(true);
             pieChart.setEntryLabelTextSize(11f);
             pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
-            pieChart.setHoleColor(android.graphics.Color.parseColor("#071A33"));
+            pieChart.setHoleColor(android.graphics.Color.parseColor("#FFFFFF"));
             pieChart.setCenterText("Profit\nBreakdown");
             pieChart.setCenterTextColor(android.graphics.Color.WHITE);
             pieChart.setCenterTextSize(13f);
@@ -445,7 +446,7 @@ public class AnalyticsActivity extends AppCompatActivity {
 
                 Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
                 Canvas pieCanvas = new Canvas(pieBitmap);
-                pieCanvas.drawColor(Color.parseColor("#071A33"));
+                pieCanvas.drawColor(Color.parseColor("#FFFFFF"));
                 pieChart.draw(pieCanvas);
 
                 ByteArrayOutputStream pieStream = new ByteArrayOutputStream();

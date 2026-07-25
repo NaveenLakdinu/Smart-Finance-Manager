@@ -42,10 +42,12 @@
 
         <!-- Hero Card -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="24dp"
             app:cardElevation="0dp">
 
@@ -78,7 +80,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:textColor="@color/hero_accent"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="28sp"
                     android:textStyle="bold" />
 
@@ -95,10 +97,12 @@
 
         <!-- Info Cards -->
         <com.google.android.material.card.MaterialCardView
+        app:strokeColor="@color/forest_600"
+        app:strokeWidth="1dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
-            app:cardBackgroundColor="@android:color/transparent"
+            app:cardBackgroundColor="@color/forest_700"
             app:cardCornerRadius="18dp"
             app:cardElevation="0dp">
 
@@ -210,7 +214,7 @@
                 android:backgroundTint="@color/hero_accent"
                 android:text="Mark as Paid"
                 android:textAllCaps="false"
-                android:textColor="#0A1628"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"
                 app:cornerRadius="12dp" />
 
@@ -234,10 +238,10 @@
                 android:layout_height="48dp"
                 android:layout_weight="1"
                 android:layout_marginStart="6dp"
-                android:backgroundTint="#331A1A"
+                android:backgroundTint="@color/danger_bg"
                 android:text="Delete"
                 android:textAllCaps="false"
-                android:textColor="#F44336"
+                android:textColor="@color/text_on_dark_primary"
                 android:textSize="13sp"
                 app:cornerRadius="12dp" />
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Teal rounded pill background for badges -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
-    <solid android:color="#0F3328" />
+    <solid android:color="#2D1A5E" />
     <corners android:radius="100dp" />
 </shape>

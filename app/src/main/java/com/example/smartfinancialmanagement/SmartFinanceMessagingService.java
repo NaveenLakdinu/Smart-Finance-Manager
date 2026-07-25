@@ -40,6 +40,9 @@ public class SmartFinanceMessagingService extends FirebaseMessagingService {
 
         NotificationHelper.createNotificationChannels(this);
         NotificationHelper.showFcmNotification(this, title, body);
+
+        // Flag the notification panel to auto-open when the dashboard resumes
+        NotificationPanelHelper.flagShowOnResume(this);
     }
 
     private void saveTokenToFirestore(String token) {

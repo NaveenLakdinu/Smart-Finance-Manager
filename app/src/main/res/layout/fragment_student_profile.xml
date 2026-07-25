@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F0F4F8"
+    android:background="@color/forest_900"
     tools:context=".StudentProfileFragment">
 
     <!-- ΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉΓòÉ -->
@@ -92,7 +92,7 @@
                         android:layout_width="24dp"
                         android:layout_height="24dp"
                         android:layout_gravity="bottom|end"
-                        android:background="@drawable/icon_circle_blue"
+                        android:background="@drawable/icon_circle_secondary"
                         android:clickable="true"
                         android:focusable="true">
 
@@ -170,7 +170,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -205,7 +205,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:layout_marginEnd="8dp"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -237,7 +237,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:background="#2A5EAA"
+                        android:background="@drawable/bg_stat_chip"
                         android:gravity="center"
                         android:orientation="vertical"
                         android:padding="12dp"
@@ -287,10 +287,11 @@
                     android:id="@+id/cardAchievements"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:cardBackgroundColor="@color/glass_card_bg"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -356,7 +357,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
                                     android:text="Goal Setter"
-                                    android:textColor="#9B1C1C"
+                                    android:textColor="@color/danger_text"
                                     android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
@@ -388,7 +389,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
                                     android:text="50% Saver"
-                                    android:textColor="#92400E"
+                                    android:textColor="@color/pill_warning_text"
                                     android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
@@ -419,7 +420,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="8dp"
                                     android:text="Budget Pro"
-                                    android:textColor="#065F46"
+                                    android:textColor="@color/forest_300"
                                     android:textSize="11sp"
                                     android:textStyle="bold"
                                     android:gravity="center" />
@@ -440,10 +441,11 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    app:cardBackgroundColor="@color/glass_card_bg"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:strokeWidth="0dp">
+                    app:strokeWidth="1dp"
+        app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -476,7 +478,7 @@
                                 <View
                                     android:layout_width="42dp"
                                     android:layout_height="42dp"
-                                    android:background="@drawable/icon_circle_blue" />
+                                    android:background="@drawable/icon_circle_secondary" />
 
                                 <ImageView
                                     android:layout_width="22dp"
@@ -484,7 +486,7 @@
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_person"
                                     android:contentDescription="Account Settings"
-                                    app:tint="@color/qa_blue_icon" />
+                                    app:tint="@color/qa_secondary_icon" />
 
                             </FrameLayout>
 
@@ -564,7 +566,7 @@
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_notification"
                                     android:contentDescription="Notifications"
-                                    app:tint="#EA580C" />
+                                    app:tint="@color/pill_warning_text" />
 
                             </FrameLayout>
 
@@ -642,7 +644,7 @@
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_lock"
                                     android:contentDescription="Privacy and Security"
-                                    app:tint="#16A34A" />
+                                    app:tint="@color/forest_300" />
 
                             </FrameLayout>
 
@@ -712,7 +714,7 @@
                                 <View
                                     android:layout_width="42dp"
                                     android:layout_height="42dp"
-                                    android:background="@drawable/icon_circle_purple" />
+                                    android:background="@drawable/icon_circle_tertiary" />
 
                                 <ImageView
                                     android:layout_width="22dp"
@@ -720,7 +722,7 @@
                                     android:layout_gravity="center"
                                     android:src="@drawable/ic_info"
                                     android:contentDescription="Help and Support"
-                                    app:tint="#7C3AED" />
+                                    app:tint="@color/forest_300" />
 
                             </FrameLayout>
 
@@ -803,10 +805,10 @@
                     android:clickable="true"
                     android:focusable="true"
                     android:foreground="?attr/selectableItemBackground"
-                    app:cardBackgroundColor="#FFF5F5"
+                    app:cardBackgroundColor="@color/forest_700"
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
-                    app:strokeColor="@color/danger_text"
+                    app:strokeColor="@color/forest_600"
                     app:strokeWidth="1dp">
 
                     <LinearLayout
@@ -822,7 +824,7 @@
                             android:layout_marginEnd="10dp"
                             android:src="@drawable/ic_power"
                             android:contentDescription="Sign Out"
-                            app:tint="#EF4444" />
+                            app:tint="@color/danger_text" />
 
                         <TextView
                             android:id="@+id/txtSignOut"

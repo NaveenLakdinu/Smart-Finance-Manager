@@ -193,7 +193,7 @@ public class ExpenseClaimReportActivity extends AppCompatActivity {
         }
 
         PieDataSet ds = new PieDataSet(entries, "");
-        ds.setColors(Color.parseColor("#60A5FA"), Color.parseColor("#FBBF24"), Color.parseColor("#34D399"), Color.parseColor("#A78BFA"));
+        ds.setColors(Color.parseColor("#60A5FA"), Color.parseColor("#FBBF24"), Color.parseColor("#34D399"), Color.parseColor("#9B8BFA"));
         ds.setValueTextSize(12f);
         ds.setValueTextColor(Color.WHITE);
         ds.setValueFormatter(new ValueFormatter() {

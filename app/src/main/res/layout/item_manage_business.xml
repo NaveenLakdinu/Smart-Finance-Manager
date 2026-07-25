@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
     app:cardCornerRadius="12dp"
-    app:cardBackgroundColor="#1E293B"
+    app:cardBackgroundColor="@color/forest_800"
     app:strokeWidth="0dp">
 
     <LinearLayout

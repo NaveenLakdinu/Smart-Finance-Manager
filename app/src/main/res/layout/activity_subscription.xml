@@ -182,7 +182,7 @@
                 <LinearLayout
                     android:layout_width="42dp"
                     android:layout_height="42dp"
-                    android:background="@drawable/icon_circle_blue"
+                    android:background="@drawable/icon_circle_secondary"
                     android:gravity="center"
                     android:layout_marginEnd="14dp">
                     <ImageView
@@ -290,7 +290,7 @@
                 <LinearLayout
                     android:layout_width="42dp"
                     android:layout_height="42dp"
-                    android:background="@drawable/icon_circle_purple"
+                    android:background="@drawable/icon_circle_tertiary"
                     android:gravity="center"
                     android:layout_marginEnd="14dp">
                     <ImageView

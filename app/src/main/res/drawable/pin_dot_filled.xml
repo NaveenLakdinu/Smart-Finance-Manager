@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- pin_dot_filled.xml – filled PIN dot indicator (digit entered) -->
+<!-- PIN dot — filled state — sage green solid -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="oval">
-    <solid android:color="#00D4AA" />
+    <solid android:color="@color/forest_300" />
     <size
         android:width="18dp"
         android:height="18dp" />

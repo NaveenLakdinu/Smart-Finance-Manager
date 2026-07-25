@@ -59,16 +59,16 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
         switch (task.getPriority()) {
             case "High":
-                holder.tvPriority.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.tag_blue));
-                holder.tvPriority.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.qa_blue_icon));
+                holder.tvPriority.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.tag_secondary));
+                holder.tvPriority.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.qa_secondary_icon));
                 break;
             case "Medium":
                 holder.tvPriority.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.tag_green));
                 holder.tvPriority.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.pill_positive_text));
                 break;
             case "Low":
-                holder.tvPriority.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.tag_purple));
-                holder.tvPriority.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.qa_purple_icon));
+                holder.tvPriority.setBackground(ContextCompat.getDrawable(holder.itemView.getContext(), R.drawable.tag_tertiary));
+                holder.tvPriority.setTextColor(ContextCompat.getColor(holder.itemView.getContext(), R.color.qa_tertiary_icon));
                 break;
         }
         holder.tvPriority.setText(task.getPriority());

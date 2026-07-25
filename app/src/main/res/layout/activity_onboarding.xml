@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F1F5F9">
+    android:background="@drawable/bg_dashboard">
 
     <!-- ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
          TOP HEADER — Progress + Skip
@@ -34,7 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Step 1 of 3"
-                android:textColor="#1E40AF"
+                android:textColor="@color/forest_300"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 android:background="@drawable/step_badge_bg"
@@ -53,7 +53,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Skip all"
-                android:textColor="#94A3B8"
+                android:textColor="@color/text_on_dark_muted"
                 android:textSize="13sp" />
         </LinearLayout>
 
@@ -70,21 +70,21 @@
                 android:layout_width="0dp"
                 android:layout_height="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/seg_active"
+                android:background="@drawable/progress_active"
                 android:layout_marginEnd="6dp" />
             <View
                 android:id="@+id/seg2"
                 android:layout_width="0dp"
                 android:layout_height="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/seg_inactive"
+                android:background="@drawable/progress_inactive"
                 android:layout_marginEnd="6dp" />
             <View
                 android:id="@+id/seg3"
                 android:layout_width="0dp"
                 android:layout_height="6dp"
                 android:layout_weight="1"
-                android:background="@drawable/seg_inactive" />
+                android:background="@drawable/progress_inactive" />
         </LinearLayout>
 
         <!-- Title -->
@@ -93,8 +93,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Enter Your Loan Details"
-            android:textColor="#0F172A"
-            android:textSize="22sp"
+            android:textColor="@color/text_on_dark_primary"
+            android:textSize="20sp"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
 
@@ -103,7 +103,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Help us understand your loan so we can track it better."
-            android:textColor="#64748B"
+            android:textColor="@color/text_on_dark_muted"
             android:textSize="13sp"
             android:lineSpacingMultiplier="1.5" />
     </LinearLayout>
@@ -140,7 +140,7 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#FFFFFF">
+                    app:cardBackgroundColor="@color/forest_700">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -159,7 +159,7 @@
                             <LinearLayout
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
-                                android:background="@drawable/ob_icon_blue"
+                                android:background="@drawable/ob_icon_secondary"
                                 android:gravity="center"
                                 android:layout_marginEnd="12dp">
                                 <TextView android:layout_width="wrap_content"
@@ -174,12 +174,12 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Loan Information"
-                                    android:textColor="#111827" android:textSize="15sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="15sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Fill in your loan details below"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -187,7 +187,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Loan Amount"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -201,14 +201,14 @@
                             android:layout_marginBottom="16dp">
                             <TextView android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rs." android:textColor="#9CA3AF"
+                                android:text="Rs." android:textColor="@color/text_on_dark_muted"
                                 android:textSize="14sp" android:layout_marginEnd="6dp" />
                             <EditText android:id="@+id/loanAmount"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Enter total loan amount"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
                         </LinearLayout>
@@ -217,7 +217,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Monthly Installment"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -231,14 +231,14 @@
                             android:layout_marginBottom="16dp">
                             <TextView android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rs." android:textColor="#9CA3AF"
+                                android:text="Rs." android:textColor="@color/text_on_dark_muted"
                                 android:textSize="14sp" android:layout_marginEnd="6dp" />
                             <EditText android:id="@+id/monthlyInstallment"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="Monthly payment amount"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
                         </LinearLayout>
@@ -247,7 +247,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Months Already Paid"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -263,8 +263,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="e.g. 6"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="number"
                                 android:background="@null" />
                         </LinearLayout>
@@ -273,7 +273,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Payment Method"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <Spinner
@@ -297,7 +297,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:background="@drawable/btn_ob_next"
+                    android:backgroundTint="@color/hero_accent"
                     android:insetTop="0dp" android:insetBottom="0dp"
                     android:stateListAnimator="@null"
                     app:backgroundTint="@null"
@@ -309,7 +309,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Skip this step"
-                    android:textColor="#94A3B8"
+                    android:textColor="@color/text_on_dark_muted"
                     android:textSize="13sp"
                     android:paddingTop="4dp" android:paddingBottom="4dp"
                     android:paddingStart="16dp" android:paddingEnd="16dp" />
@@ -340,7 +340,7 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#FFFFFF">
+                    app:cardBackgroundColor="@color/forest_700">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -374,12 +374,12 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Subscription Updates"
-                                    android:textColor="#111827" android:textSize="15sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="15sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Stay informed about your subscriptions"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -411,18 +411,18 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Email Notifications"
-                                    android:textColor="#111827" android:textSize="14sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Receive renewal alerts via email"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
 
                             <CheckBox android:id="@+id/checkEmail"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:buttonTint="#16A34A"
+                                android:buttonTint="@color/forest_300"
                                 android:checked="true" />
                         </LinearLayout>
 
@@ -438,7 +438,7 @@
                             <LinearLayout
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/ob_icon_blue"
+                                android:background="@drawable/ob_icon_secondary"
                                 android:gravity="center"
                                 android:layout_marginEnd="12dp">
                                 <TextView android:layout_width="wrap_content"
@@ -453,18 +453,18 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="SMS Notifications"
-                                    android:textColor="#111827" android:textSize="14sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Get instant alerts via text message"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
 
                             <CheckBox android:id="@+id/checkSms"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:buttonTint="#1D4ED8"
+                                android:buttonTint="@color/forest_300"
                                 android:checked="false" />
                         </LinearLayout>
 
@@ -479,7 +479,7 @@
                             <LinearLayout
                                 android:layout_width="40dp"
                                 android:layout_height="40dp"
-                                android:background="@drawable/ob_icon_purple"
+                                android:background="@drawable/ob_icon_tertiary"
                                 android:gravity="center"
                                 android:layout_marginEnd="12dp">
                                 <TextView android:layout_width="wrap_content"
@@ -494,18 +494,18 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Push Notifications"
-                                    android:textColor="#111827" android:textSize="14sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Real-time alerts on your device"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
 
                             <CheckBox android:id="@+id/checkPush"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:buttonTint="#7C3AED"
+                                android:buttonTint="@color/forest_300"
                                 android:checked="false" />
                         </LinearLayout>
 
@@ -518,10 +518,10 @@
                     android:layout_width="match_parent"
                     android:layout_height="52dp"
                     android:text="Next  →"
-                    android:textColor="#FFFFFF"
+                    android:textColor="@color/text_on_dark_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:background="@drawable/btn_ob_next"
+                    android:backgroundTint="@color/hero_accent"
                     android:insetTop="0dp" android:insetBottom="0dp"
                     android:stateListAnimator="@null"
                     app:backgroundTint="@null"
@@ -533,7 +533,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Skip this step"
-                    android:textColor="#94A3B8"
+                    android:textColor="@color/text_on_dark_muted"
                     android:textSize="13sp"
                     android:paddingTop="4dp" android:paddingBottom="4dp"
                     android:paddingStart="16dp" android:paddingEnd="16dp" />
@@ -564,7 +564,7 @@
                     android:layout_marginBottom="16dp"
                     app:cardCornerRadius="20dp"
                     app:cardElevation="0dp"
-                    app:cardBackgroundColor="#FFFFFF">
+                    app:cardBackgroundColor="@color/forest_700">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -583,7 +583,7 @@
                             <LinearLayout
                                 android:layout_width="44dp"
                                 android:layout_height="44dp"
-                                android:background="@drawable/ob_icon_purple"
+                                android:background="@drawable/ob_icon_tertiary"
                                 android:gravity="center"
                                 android:layout_marginEnd="12dp">
                                 <TextView android:layout_width="wrap_content"
@@ -598,12 +598,12 @@
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Saving Plan"
-                                    android:textColor="#111827" android:textSize="15sp"
+                                    android:textColor="@color/text_on_dark_primary" android:textSize="15sp"
                                     android:textStyle="bold" />
                                 <TextView android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="Set up your savings goal"
-                                    android:textColor="#9CA3AF" android:textSize="12sp" />
+                                    android:textColor="@color/text_on_dark_muted" android:textSize="12sp" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -611,7 +611,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Saving Goal Name"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -626,8 +626,8 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="e.g. New Car, House, Education"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="textCapSentences"
                                 android:background="@null" />
                         </LinearLayout>
@@ -636,7 +636,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Target Amount"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -649,14 +649,14 @@
                             android:layout_marginBottom="16dp">
                             <TextView android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rs." android:textColor="#9CA3AF"
+                                android:text="Rs." android:textColor="@color/text_on_dark_muted"
                                 android:textSize="14sp" android:layout_marginEnd="6dp" />
                             <EditText android:id="@+id/targetAmount"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="0.00"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
                         </LinearLayout>
@@ -665,7 +665,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Target Date"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -683,8 +683,8 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:hint="Select goal deadline"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp" />
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp" />
                             <ImageView android:layout_width="20dp" android:layout_height="20dp"
                                 android:src="@drawable/ic_calendar"
                                 android:contentDescription="calendar" />
@@ -694,7 +694,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Current Savings"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <LinearLayout
@@ -707,14 +707,14 @@
                             android:layout_marginBottom="16dp">
                             <TextView android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Rs." android:textColor="#9CA3AF"
+                                android:text="Rs." android:textColor="@color/text_on_dark_muted"
                                 android:textSize="14sp" android:layout_marginEnd="6dp" />
                             <EditText android:id="@+id/currentSavings"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:hint="10,000.00"
-                                android:textColorHint="#CBD5E1"
-                                android:textColor="#111827" android:textSize="14sp"
+                                android:textColorHint="@color/text_on_dark_secondary"
+                                android:textColor="@color/text_on_dark_primary" android:textSize="14sp"
                                 android:inputType="numberDecimal"
                                 android:background="@null" />
                         </LinearLayout>
@@ -723,7 +723,7 @@
                         <TextView android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Saving Frequency"
-                            android:textColor="#374151" android:textSize="13sp"
+                            android:textColor="@color/text_on_dark_secondary" android:textSize="13sp"
                             android:textStyle="bold" android:layout_marginBottom="6dp" />
 
                         <Spinner
@@ -746,7 +746,7 @@
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:background="@drawable/btn_ob_next"
+                    android:backgroundTint="@color/hero_accent"
                     android:insetTop="0dp" android:insetBottom="0dp"
                     android:stateListAnimator="@null"
                     app:backgroundTint="@null"
@@ -758,7 +758,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:text="Skip &amp; Finish"
-                    android:textColor="#94A3B8"
+                    android:textColor="@color/text_on_dark_muted"
                     android:textSize="13sp"
                     android:paddingTop="4dp" android:paddingBottom="4dp"
                     android:paddingStart="16dp" android:paddingEnd="16dp" />

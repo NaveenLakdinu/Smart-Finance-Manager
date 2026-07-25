@@ -40,7 +40,7 @@ public class ConfettiView extends View {
             Color.parseColor("#2FE0AC"), // mint
             Color.parseColor("#FFC857"), // gold
             Color.parseColor("#FF6B7A"), // coral
-            Color.parseColor("#5B8CFF"), // blue
+            Color.parseColor("#4ade80"), // blue
             Color.parseColor("#FFD700"), // yellow
             Color.parseColor("#FF69B4"), // hot-pink
             Color.parseColor("#7FFF00"), // chartreuse

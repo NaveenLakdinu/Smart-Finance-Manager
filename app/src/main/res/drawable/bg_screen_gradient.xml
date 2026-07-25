@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!-- Forest green gradient — used for screen-level backgrounds -->
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
     <gradient
-        android:startColor="#D2E4F9"
-        android:centerColor="#E9F1F7"
-        android:endColor="#FFFFFF"
+        android:startColor="@color/forest_700"
+        android:centerColor="@color/forest_800"
+        android:endColor="@color/forest_900"
         android:angle="270" />
 </shape>

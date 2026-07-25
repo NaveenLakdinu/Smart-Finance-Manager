@@ -166,7 +166,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
 
         // 💡 Highlight if active selection card
         if (selectedWorkspaceFilter.equalsIgnoreCase(title)) {
-            card.setCardBackgroundColor(Color.parseColor("#00D4AA")); // Theme Accent Highlight
+            card.setCardBackgroundColor(Color.parseColor("#8EB69B")); // Theme Accent Highlight
         } else {
             card.setCardBackgroundColor(Color.parseColor("#1A3050")); // Standard Off dark
         }
@@ -177,14 +177,14 @@ public class ExpenseManagementActivity extends AppCompatActivity {
 
         TextView lblName = new TextView(this);
         lblName.setText(title.toUpperCase());
-        lblName.setTextColor(selectedWorkspaceFilter.equalsIgnoreCase(title) ? Color.parseColor("#071A33") : Color.parseColor("#7A9CC0"));
+        lblName.setTextColor(selectedWorkspaceFilter.equalsIgnoreCase(title) ? Color.parseColor("#FFFFFF") : Color.parseColor("#7A9CC0"));
         lblName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11f);
         lblName.setSingleLine(true);
         lblName.setEllipsize(android.text.TextUtils.TruncateAt.END);
 
         TextView lblValue = new TextView(this);
         lblValue.setText(String.format(Locale.getDefault(), "Rs. %,.0f", value));
-        lblValue.setTextColor(selectedWorkspaceFilter.equalsIgnoreCase(title) ? Color.parseColor("#071A33") : Color.parseColor("#FF5555"));
+        lblValue.setTextColor(selectedWorkspaceFilter.equalsIgnoreCase(title) ? Color.parseColor("#FFFFFF") : Color.parseColor("#FF5555"));
         lblValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f);
         lblValue.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         lblValue.setPadding(0, 8, 0, 0);

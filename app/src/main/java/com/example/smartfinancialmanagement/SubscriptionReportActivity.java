@@ -106,7 +106,7 @@ public class SubscriptionReportActivity extends AppCompatActivity {
         }
 
         BarDataSet dataSet = new BarDataSet(entries, "Monthly Cost (LKR)");
-        dataSet.setColor(Color.parseColor("#00D4AA"));
+        dataSet.setColor(Color.parseColor("#8EB69B"));
         dataSet.setValueTextColor(Color.WHITE);
         dataSet.setValueTextSize(10f);
 
@@ -121,14 +121,14 @@ public class SubscriptionReportActivity extends AppCompatActivity {
 
         barChart.getAxisRight().setEnabled(false);
         barChart.getAxisLeft().setTextColor(Color.WHITE);
-        barChart.getAxisLeft().setGridColor(Color.parseColor("#1A2F50"));
-        barChart.getAxisLeft().setAxisLineColor(Color.parseColor("#1A2F50"));
+        barChart.getAxisLeft().setGridColor(Color.parseColor("#163832"));
+        barChart.getAxisLeft().setAxisLineColor(Color.parseColor("#163832"));
 
         XAxis xAxis = barChart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setTextColor(Color.WHITE);
-        xAxis.setGridColor(Color.parseColor("#1A2F50"));
-        xAxis.setAxisLineColor(Color.parseColor("#1A2F50"));
+        xAxis.setGridColor(Color.parseColor("#163832"));
+        xAxis.setAxisLineColor(Color.parseColor("#163832"));
         xAxis.setValueFormatter(new IndexAxisValueFormatter(labels));
         xAxis.setLabelRotationAngle(-45);
 

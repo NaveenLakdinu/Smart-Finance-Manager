@@ -464,7 +464,7 @@
                             android:layout_height="wrap_content"
                             android:layout_columnWeight="1"
                             android:layout_marginStart="6dp"
-                            android:background="#F3F0FF"
+                            android:background="@color/forest_700"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -513,11 +513,11 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="8dp"
-                                android:background="#E0D4FF"
+                                android:background="@color/forest_700"
                                 android:paddingHorizontal="8dp"
                                 android:paddingVertical="2dp"
                                 android:text="EARNED ✓"
-                                android:textColor="#6D28D9"
+                                android:textColor="@color/forest_300"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -714,8 +714,8 @@
                                 android:layout_height="4dp"
                                 android:layout_marginTop="4dp"
                                 android:progress="50"
-                                android:progressBackgroundTint="#E5E7EB"
-                                android:progressTint="#9CA3AF" />
+                                android:progressBackgroundTint="@color/forest_600"
+                                android:progressTint="@color/text_on_dark_muted" />
                         </LinearLayout>
 
                     </GridLayout>
@@ -781,7 +781,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginEnd="12dp"
-                            android:background="#F0F4FA">
+                            android:background="@color/forest_900">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -828,8 +828,8 @@
                         android:layout_height="6dp"
                         android:layout_marginTop="16dp"
                         android:progress="75"
-                        android:progressBackgroundTint="#F3F4F6"
-                        android:progressTint="#10B981" />
+                        android:progressBackgroundTint="@color/forest_700"
+                        android:progressTint="@color/forest_300" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -894,7 +894,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="@color/qa_blue_bg"
+                            android:background="@color/qa_secondary_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -902,7 +902,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="SAVE/MONTH"
-                                android:textColor="#60A5FA"
+                                android:textColor="@color/forest_300"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -911,7 +911,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.15,000"
-                                android:textColor="@color/qa_blue_icon"
+                                android:textColor="@color/qa_secondary_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -947,7 +947,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginEnd="12dp"
-                            android:background="#F0F4FA">
+                            android:background="@color/forest_900">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -983,7 +983,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="72%"
-                            android:textColor="@color/qa_blue_icon"
+                            android:textColor="@color/qa_secondary_icon"
                             android:textSize="16sp"
                             android:textStyle="bold" />
                     </LinearLayout>
@@ -994,8 +994,8 @@
                         android:layout_height="6dp"
                         android:layout_marginTop="16dp"
                         android:progress="72"
-                        android:progressBackgroundTint="#F3F4F6"
-                        android:progressTint="@color/qa_blue_icon" />
+                        android:progressBackgroundTint="@color/forest_700"
+                        android:progressTint="@color/qa_secondary_icon" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1060,7 +1060,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="@color/qa_blue_bg"
+                            android:background="@color/qa_secondary_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1068,7 +1068,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="SAVE/MONTH"
-                                android:textColor="#60A5FA"
+                                android:textColor="@color/forest_300"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -1077,7 +1077,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.7,000"
-                                android:textColor="@color/qa_blue_icon"
+                                android:textColor="@color/qa_secondary_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1113,7 +1113,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_marginEnd="12dp"
-                            android:background="#F0F4FA">
+                            android:background="@color/forest_900">
 
                             <TextView
                                 android:layout_width="match_parent"
@@ -1160,8 +1160,8 @@
                         android:layout_height="6dp"
                         android:layout_marginTop="16dp"
                         android:progress="24"
-                        android:progressBackgroundTint="#F3F4F6"
-                        android:progressTint="#F59E0B" />
+                        android:progressBackgroundTint="@color/forest_700"
+                        android:progressTint="@color/pill_warning_text" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -1226,7 +1226,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="6dp"
                             android:layout_weight="1"
-                            android:background="@color/qa_blue_bg"
+                            android:background="@color/qa_secondary_bg"
                             android:orientation="vertical"
                             android:padding="12dp">
 
@@ -1234,7 +1234,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="SAVE/MONTH"
-                                android:textColor="#60A5FA"
+                                android:textColor="@color/forest_300"
                                 android:textSize="10sp"
                                 android:textStyle="bold" />
 
@@ -1243,7 +1243,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Rs.7,600"
-                                android:textColor="@color/qa_blue_icon"
+                                android:textColor="@color/qa_secondary_icon"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
@@ -1258,7 +1258,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="16dp"
                 android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="#FF6B6B"
+                app:cardBackgroundColor="@color/danger_bg"
                 app:cardCornerRadius="16dp"
                 app:cardElevation="0dp"
                 app:strokeWidth="0dp">
@@ -1303,7 +1303,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
                             android:text="Keep saving to unlock Consistent Saver in 3 more months"
-                            android:textColor="#FFD1D1"
+                            android:textColor="@color/danger_bg"
                             android:textSize="12sp" />
 
                         <LinearLayout
@@ -1318,41 +1318,41 @@
                                 android:layout_height="4dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_weight="1"
-                                android:background="#FFFFFF" />
+                                android:background="@color/forest_300" />
 
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_weight="1"
-                                android:background="#FFFFFF" />
+                                android:background="@color/forest_300" />
 
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_weight="1"
-                                android:background="#FFFFFF" />
+                                android:background="@color/forest_300" />
 
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_weight="1"
-                                android:background="#40FFFFFF" />
+                                android:background="@color/forest_700" />
 
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
                                 android:layout_marginEnd="4dp"
                                 android:layout_weight="1"
-                                android:background="#40FFFFFF" />
+                                android:background="@color/forest_700" />
 
                             <View
                                 android:layout_width="0dp"
                                 android:layout_height="4dp"
                                 android:layout_weight="1"
-                                android:background="#40FFFFFF" />
+                                android:background="@color/forest_700" />
                         </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
@@ -1380,7 +1380,7 @@
                         android:layout_width="40dp"
                         android:layout_height="40dp"
                         android:layout_marginEnd="12dp"
-                        android:background="#F3F0FF">
+                        android:background="@color/forest_700">
 
                         <TextView
                             android:layout_width="match_parent"

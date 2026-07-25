@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.38"
-        android:background="@drawable/bg_hero_card"
+        android:background="@drawable/bg_hero_green"
         android:gravity="center"
         android:orientation="vertical"
         android:padding="28dp">
@@ -172,7 +172,7 @@
                 android:layout_marginBottom="28dp"
                 android:padding="4dp"
                 android:text="Forgot Password?"
-                android:textColor="@color/hero_accent"
+                android:textColor="@color/forest_100"
                 android:textSize="13sp" />
 
             <!-- ── Login button ────────────────────────────────────────── -->
@@ -185,15 +185,16 @@
                 android:insetBottom="0dp"
                 android:text="Sign In"
                 android:textAllCaps="false"
-                android:textColor="@color/text_on_dark_primary"
+                android:textColor="@color/btn_primary_text"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                app:backgroundTint="@color/hero_accent"
+                android:background="@drawable/bg_btn_primary_green"
+                app:backgroundTint="@null"
                 app:cornerRadius="16dp"
                 app:icon="@drawable/ic_login_arrow"
                 app:iconGravity="end"
                 app:iconPadding="8dp"
-                app:iconTint="@color/text_on_dark_primary" />
+                app:iconTint="@color/btn_primary_text" />
 
             <!-- ── Divider ─────────────────────────────────────────────── -->
             <LinearLayout
@@ -286,7 +287,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sign Up"
-                    android:textColor="@color/hero_accent"
+                    android:textColor="@color/forest_100"
                     android:textSize="14sp"
                     android:textStyle="bold" />
             </LinearLayout>

@@ -58,7 +58,7 @@
         android:layout_height="48dp"
         android:layout_marginTop="6dp"
         android:hint="0.00"
-        android:textColorHint="#4A607A"
+        android:textColorHint="@color/text_on_dark_muted"
         android:textColor="@color/text_on_dark_primary"
         android:inputType="numberDecimal"/>
 
