@@ -2,6 +2,7 @@ package com.example.smartfinancialmanagement;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Patterns;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -62,23 +63,53 @@ public class AddBusinessActivity extends AppCompatActivity {
         String bizPhone = etBusinessPhone.getText().toString().trim();
         String bizEmail = etBusinessEmail.getText().toString().trim();
 
+        // 1. Check Authentication Session
         String currentUserId = "";
         if (FirebaseAuth.getInstance().getCurrentUser() != null) {
-            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid(); // 💡 Get the UID
+            currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
         }
 
         if (TextUtils.isEmpty(currentUserId)) {
             Toast.makeText(this, "Authentication error. Please log in again.", Toast.LENGTH_SHORT).show();
-            btnSaveBusiness.setEnabled(true);
             return;
         }
 
-        if (TextUtils.isEmpty(bizName) || TextUtils.isEmpty(bizCategory) ||
-                TextUtils.isEmpty(bizPhone) || TextUtils.isEmpty(bizEmail)) {
-            Toast.makeText(this, "Please fill all fields", Toast.LENGTH_SHORT).show();
+        // 2. Client-Side Validations with Focus & Error Hints
+        if (TextUtils.isEmpty(bizName)) {
+            etBusinessName.setError("Business Name is required");
+            etBusinessName.requestFocus();
             return;
         }
 
+        if (TextUtils.isEmpty(bizCategory)) {
+            etBusinessCategory.setError("Business Category is required");
+            etBusinessCategory.requestFocus();
+            return;
+        }
+
+        // Phone Validation (Allows international formats like +94... or local digits 9 to 15 digits)
+        if (TextUtils.isEmpty(bizPhone)) {
+            etBusinessPhone.setError("Phone number is required");
+            etBusinessPhone.requestFocus();
+            return;
+        } else if (!bizPhone.matches("^[+]?[0-9]{9,15}$")) {
+            etBusinessPhone.setError("Enter a valid phone number (e.g. +94771234567 or 0771234567)");
+            etBusinessPhone.requestFocus();
+            return;
+        }
+
+        // Email Format Validation
+        if (TextUtils.isEmpty(bizEmail)) {
+            etBusinessEmail.setError("Email address is required");
+            etBusinessEmail.requestFocus();
+            return;
+        } else if (!Patterns.EMAIL_ADDRESS.matcher(bizEmail).matches()) {
+            etBusinessEmail.setError("Enter a valid email address (e.g. contact@workspace.com)");
+            etBusinessEmail.requestFocus();
+            return;
+        }
+
+        // Disable button while processing to prevent duplicate submissions
         btnSaveBusiness.setEnabled(false);
 
         if (isUpdateMode) {
@@ -87,7 +118,7 @@ public class AddBusinessActivity extends AppCompatActivity {
             updateMap.put("businessCategory", bizCategory);
             updateMap.put("businessPhone", bizPhone);
             updateMap.put("businessEmail", bizEmail);
-            updateMap.put("userId", currentUserId); // 💡 Keeping the mapping safe
+            updateMap.put("userId", currentUserId);
 
             db.collection("businesses").document(updateDocId)
                     .update(updateMap)
@@ -101,7 +132,6 @@ public class AddBusinessActivity extends AppCompatActivity {
                     });
 
         } else {
-            // 💡 Pass currentUserId to the updated constructor
             BusinessModel executionModel = new BusinessModel(bizName, bizCategory, bizPhone, bizEmail, currentUserId);
 
             db.collection("businesses")

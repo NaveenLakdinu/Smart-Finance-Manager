@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,13 +24,13 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.itextpdf.text.BaseColor;
 import com.itextpdf.text.Document;
@@ -65,7 +66,6 @@ public class UtilityReportActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_utility_report);
 
-        // 💡 1. savedInstanceState පරීක්ෂාව
         if (savedInstanceState != null) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 receivedReportItems = savedInstanceState.getSerializable("SAVED_REPORT_ITEMS", ArrayList.class);
@@ -74,8 +74,6 @@ public class UtilityReportActivity extends AppCompatActivity {
             }
         }
 
-        // 💡 2. FIX: Intent Keys දෙකම පරික්ෂා කිරීම (FINAL_REPORT_ITEMS සහ STAGED_ITEMS)
-        // ඔබ කුමන Key එකකින් දත්ත එව්වත් වරදින්නේ නැතිව මෙතැනදී දත්ත කියවා ගනී.
         if (receivedReportItems == null || receivedReportItems.isEmpty()) {
             if (getIntent() != null) {
                 String targetKey = null;
@@ -108,7 +106,6 @@ public class UtilityReportActivity extends AppCompatActivity {
 
     private void initViews() {
         backButtonContainer = findViewById(R.id.backButtonContainer);
-        // 💡 පැහැදිලිවම XML එකේ ඇති නිවැරදි ID එක බන්ධනය කිරීම
         txtTotalExpenses = findViewById(R.id.txtTotalAmount);
         recyclerReportItems = findViewById(R.id.recyclerReportItems);
         barChartAnalytic = findViewById(R.id.barChartAnalytic);
@@ -122,13 +119,11 @@ public class UtilityReportActivity extends AppCompatActivity {
             return;
         }
 
-        // 💡 3. මුළු මුදල නිවැරදිව එකතු කිරීමේ ක්‍රියාවලිය
         grandTotal = 0.0;
         for (BillReportItem item : receivedReportItems) {
             grandTotal += item.getAmount();
         }
 
-        // 💡 4. FIX: View එක Null වීම වැළැක්වීමට සෘජුවම අගය ලිවීම සහ Fail-safe එකක් තැබීම
         if (txtTotalExpenses != null) {
             txtTotalExpenses.setText(String.format(Locale.getDefault(), "Rs. %.2f", grandTotal));
         } else {
@@ -143,6 +138,14 @@ public class UtilityReportActivity extends AppCompatActivity {
         recyclerReportItems.setAdapter(adapter);
 
         barChartAnalytic.post(this::renderBeautifulBarChart);
+    }
+
+    /**
+     * Helper method to split multi-word labels (e.g., "Water Bill" -> "Water\nBill")
+     */
+    private String formatMultiLineLabel(String rawText) {
+        if (rawText == null) return "";
+        return rawText.replace(" ", "\n");
     }
 
     private void renderBeautifulBarChart() {
@@ -215,7 +218,10 @@ public class UtilityReportActivity extends AppCompatActivity {
             @Override
             public String getFormattedValue(float value) {
                 int index = (int) value;
-                if (index >= 0 && index < uniqueBillNames.size()) return uniqueBillNames.get(index);
+                if (index >= 0 && index < uniqueBillNames.size()) {
+                    // Line break for label names (e.g., Water Bill -> Water\nBill)
+                    return formatMultiLineLabel(uniqueBillNames.get(index));
+                }
                 return "";
             }
         });
@@ -237,7 +243,7 @@ public class UtilityReportActivity extends AppCompatActivity {
         barChartAnalytic.getAxisRight().setEnabled(false);
         barChartAnalytic.getDescription().setEnabled(false);
         barChartAnalytic.getLegend().setTextColor(Color.WHITE);
-        barChartAnalytic.setExtraBottomOffset(15f);
+        barChartAnalytic.setExtraBottomOffset(25f); // Increased offset for multiline text
         barChartAnalytic.animateY(1000);
         barChartAnalytic.invalidate();
     }
@@ -273,6 +279,7 @@ public class UtilityReportActivity extends AppCompatActivity {
             document.open();
 
             Font titleFont = new Font(Font.FontFamily.HELVETICA, 20, Font.BOLD, BaseColor.BLACK);
+            Font sectionFont = new Font(Font.FontFamily.HELVETICA, 14, Font.BOLD, BaseColor.BLACK);
             Font boldFont = new Font(Font.FontFamily.HELVETICA, 12, Font.BOLD, BaseColor.BLACK);
             Font normalFont = new Font(Font.FontFamily.HELVETICA, 12, Font.NORMAL, BaseColor.BLACK);
 
@@ -295,55 +302,84 @@ public class UtilityReportActivity extends AppCompatActivity {
             addTableCell(table, String.format(Locale.getDefault(), "Rs. %.2f", grandTotal), boldFont, false);
 
             document.add(table);
+            document.add(new Paragraph(" ", normalFont));
+
+            int darkCardBgColor = Color.parseColor("#1E1E2F");
+
+            // ── 1. Bar Chart with Dark Background ──
+            document.add(new Paragraph("Monthly Utility Expense Comparison", sectionFont));
+            document.add(new Paragraph(" ", normalFont));
 
             int w = barChartAnalytic.getWidth() > 0 ? barChartAnalytic.getWidth() : 600;
             int h = barChartAnalytic.getHeight() > 0 ? barChartAnalytic.getHeight() : 400;
-            Bitmap bitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
-            barChartAnalytic.draw(new Canvas(bitmap));
 
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-            Image chartImage = Image.getInstance(stream.toByteArray());
+            Bitmap barBitmap = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+            Canvas barCanvas = new Canvas(barBitmap);
+
+            Paint darkPaint = new Paint();
+            darkPaint.setColor(darkCardBgColor);
+            darkPaint.setStyle(Paint.Style.FILL);
+            barCanvas.drawRect(0, 0, w, h, darkPaint);
+
+            barChartAnalytic.draw(barCanvas);
+
+            ByteArrayOutputStream barStream = new ByteArrayOutputStream();
+            barBitmap.compress(Bitmap.CompressFormat.PNG, 100, barStream);
+            Image chartImage = Image.getInstance(barStream.toByteArray());
             chartImage.scaleToFit(500, 300);
             chartImage.setAlignment(Element.ALIGN_CENTER);
             document.add(chartImage);
 
-            // ── Pie Chart: Bill Amount Distribution ──
+            document.add(new Paragraph(" ", normalFont));
+
+            // ── 2. Pie Chart with Dark Background ──
+            document.add(new Paragraph("Bill Distribution Breakdown", sectionFont));
+            document.add(new Paragraph(" ", normalFont));
+
             PieChart pieChart = new PieChart(this);
             pieChart.setDrawEntryLabels(true);
-            pieChart.setEntryLabelTextSize(10f);
-            pieChart.setEntryLabelColor(android.graphics.Color.WHITE);
-            pieChart.setHoleColor(android.graphics.Color.WHITE);
+            pieChart.setEntryLabelTextSize(11f);
+            pieChart.setEntryLabelColor(Color.WHITE);
+            pieChart.setHoleColor(darkCardBgColor);
             pieChart.setCenterText("Bill\nDistribution");
+            pieChart.setCenterTextColor(Color.WHITE);
             pieChart.setCenterTextSize(12f);
             pieChart.getDescription().setEnabled(false);
+            pieChart.getLegend().setTextColor(Color.WHITE);
             pieChart.getLegend().setTextSize(10f);
 
-            java.util.List<PieEntry> pieEntries = new java.util.ArrayList<>();
+            List<PieEntry> pieEntries = new ArrayList<>();
             for (BillReportItem item : receivedReportItems) {
-                pieEntries.add(new PieEntry((float) item.getAmount(), item.getBillName()));
+                // Line break applied to Pie chart slice labels
+                pieEntries.add(new PieEntry((float) item.getAmount(), formatMultiLineLabel(item.getBillName())));
             }
             PieDataSet pieDataSet = new PieDataSet(pieEntries, "");
             int[] pieColors = {
-                    android.graphics.Color.parseColor("#9B8BFA"),
-                    android.graphics.Color.parseColor("#38BDF8"),
-                    android.graphics.Color.parseColor("#F59E0B"),
-                    android.graphics.Color.parseColor("#F43F5E"),
-                    android.graphics.Color.parseColor("#10B981"),
-                    android.graphics.Color.parseColor("#EC4899")
+                    Color.parseColor("#9B8BFA"),
+                    Color.parseColor("#38BDF8"),
+                    Color.parseColor("#F59E0B"),
+                    Color.parseColor("#F43F5E"),
+                    Color.parseColor("#10B981"),
+                    Color.parseColor("#EC4899")
             };
             pieDataSet.setColors(pieColors);
-            pieDataSet.setValueTextSize(10f);
-            pieDataSet.setSliceSpace(2f);
+            pieDataSet.setValueTextColor(Color.WHITE);
+            pieDataSet.setValueTextSize(11f);
+            pieDataSet.setSliceSpace(3f);
             PieData pieData = new PieData(pieDataSet);
             pieChart.setData(pieData);
 
             pieChart.measure(
-                    android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY),
-                    android.view.View.MeasureSpec.makeMeasureSpec(500, android.view.View.MeasureSpec.EXACTLY));
+                    View.MeasureSpec.makeMeasureSpec(500, View.MeasureSpec.EXACTLY),
+                    View.MeasureSpec.makeMeasureSpec(500, View.MeasureSpec.EXACTLY));
             pieChart.layout(0, 0, 500, 500);
+
             Bitmap pieBitmap = Bitmap.createBitmap(500, 500, Bitmap.Config.ARGB_8888);
-            pieChart.draw(new Canvas(pieBitmap));
+            Canvas pieCanvas = new Canvas(pieBitmap);
+
+            pieCanvas.drawRect(0, 0, 500, 500, darkPaint);
+
+            pieChart.draw(pieCanvas);
 
             ByteArrayOutputStream pieStream = new ByteArrayOutputStream();
             pieBitmap.compress(Bitmap.CompressFormat.PNG, 100, pieStream);

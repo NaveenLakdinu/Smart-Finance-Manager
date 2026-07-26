@@ -30,7 +30,7 @@ public class ManageBusinessActivity extends AppCompatActivity {
     private static final String TAG = "ManageBusinessActivity";
     private RecyclerView recyclerManageBiz;
     private FirebaseFirestore db;
-    private java.lang.String currentUserId;
+    private String currentUserId;
 
     private List<String> bizNames = new ArrayList<>();
     private List<String> bizIds = new ArrayList<>();
@@ -52,17 +52,24 @@ public class ManageBusinessActivity extends AppCompatActivity {
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
             currentUserId = user.getUid();
-            loadMyBusinesses();
         } else {
             Toast.makeText(this, "User session not active", Toast.LENGTH_SHORT).show();
             finish();
         }
     }
 
+    // 💡 Trigger data fetch in onResume so it auto-refreshes whenever user comes back
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (currentUserId != null) {
+            loadMyBusinesses();
+        }
+    }
+
     private void loadMyBusinesses() {
         if (currentUserId == null) return;
 
-        // 💡 Server-Side Filter: Only pull records that match the authenticated user's ID
         db.collection("businesses")
                 .whereEqualTo("userId", currentUserId)
                 .get()
@@ -103,7 +110,6 @@ public class ManageBusinessActivity extends AppCompatActivity {
                 holder.nameTv.setText(name);
                 holder.catTv.setText("Category: " + bizCategories.get(position) + " | Phone: " + bizPhones.get(position));
 
-                // Click handler sends data packages to AddBusinessActivity for updates
                 holder.itemView.setOnClickListener(v -> {
                     Intent intent = new Intent(ManageBusinessActivity.this, AddBusinessActivity.class);
                     intent.putExtra("IS_UPDATE_MODE", true);
@@ -115,7 +121,6 @@ public class ManageBusinessActivity extends AppCompatActivity {
                     startActivity(intent);
                 });
 
-                // Optional fallback structure: Long click lets them interact with inline quick-actions dialog
                 holder.itemView.setOnLongClickListener(v -> {
                     showUpdateDeleteDialog(position);
                     return true;

@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,19 +43,26 @@ public class ExpenseManagementActivity extends AppCompatActivity {
     private LinearLayout layoutBusinessCardsContainer;
     private Button btnOpenAddExpense;
     private RecyclerView recyclerExpenses;
+    private Spinner spinnerMonthFilter;
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
     private List<String> businessList = new ArrayList<>();
 
-    // Split lists to preserve all month logs vs dynamic UI active selections
-    private List<DocumentSnapshot> allMonthExpenseDocs = new ArrayList<>();
+    // Month filter data structures
+    private List<String> monthOptionsList = new ArrayList<>();
+    private List<String> monthTokensList = new ArrayList<>(); // Format: "yyyy-MM" or "ALL_TIME"
+    private String selectedMonthToken = "";                   // Default active month filter
+
+    // Split lists to preserve all raw docs vs dynamically filtered UI list
+    private List<DocumentSnapshot> rawUserExpenseDocs = new ArrayList<>();
     private List<DocumentSnapshot> filteredExpenseDocs = new ArrayList<>();
 
-    private String selectedWorkspaceFilter = "ALL"; // Tracks active card selection
+    private String selectedWorkspaceFilter = "ALL"; // Tracks active card workspace selection
     private Map<String, Double> businessTotalsMap = new HashMap<>();
 
     private SimpleDateFormat yearMonthFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+    private SimpleDateFormat monthDisplayFormat = new SimpleDateFormat("MMMM yyyy", Locale.getDefault());
     private SimpleDateFormat fullDateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     @Override
@@ -66,6 +74,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
 
         initializeViews();
+        setupMonthSpinner();
         loadBusinessProfiles();
     }
 
@@ -74,10 +83,60 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         layoutBusinessCardsContainer = findViewById(R.id.layoutBusinessCardsContainer);
         btnOpenAddExpense = findViewById(R.id.btnOpenAddExpense);
         recyclerExpenses = findViewById(R.id.recyclerExpenses);
+        spinnerMonthFilter = findViewById(R.id.spinnerMonthFilter);
 
         recyclerExpenses.setLayoutManager(new LinearLayoutManager(this));
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
         btnOpenAddExpense.setOnClickListener(v -> showAddExpenseDialog());
+    }
+
+    // 💡 POPULATE DYNAMIC MONTH SPINNER (Current Month + Past 12 Months + All Time Option)
+    private void setupMonthSpinner() {
+        monthOptionsList.clear();
+        monthTokensList.clear();
+
+        // Add "All Time" option first
+        monthOptionsList.add("All Time");
+        monthTokensList.add("ALL_TIME");
+
+        Calendar cal = Calendar.getInstance();
+
+        // Dynamically append current month and past 12 months
+        for (int i = 0; i < 12; i++) {
+            if (i == 0) {
+                monthOptionsList.add("Current Month (" + monthDisplayFormat.format(cal.getTime()) + ")");
+            } else if (i == 1) {
+                monthOptionsList.add("Last Month (" + monthDisplayFormat.format(cal.getTime()) + ")");
+            } else {
+                monthOptionsList.add(monthDisplayFormat.format(cal.getTime()));
+            }
+
+            monthTokensList.add(yearMonthFormat.format(cal.getTime()));
+            cal.add(Calendar.MONTH, -1);
+        }
+
+        // Default to Current Month (Index 1)
+        selectedMonthToken = monthTokensList.get(1);
+
+        ArrayAdapter<String> monthAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, monthOptionsList);
+        if (spinnerMonthFilter != null) {
+            spinnerMonthFilter.setAdapter(monthAdapter);
+            spinnerMonthFilter.setSelection(1); // Select Current Month by default
+
+            spinnerMonthFilter.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    selectedMonthToken = monthTokensList.get(position);
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        processAndApplyFilters();
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
+            });
+        }
     }
 
     private void loadBusinessProfiles() {
@@ -85,7 +144,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         if (user == null) return;
         String currentUserId = user.getUid();
 
-        // 💡 Server-Side Filter: Load only your specific business configurations
+        // Fetch user-specific business workspace profiles
         db.collection("businesses")
                 .whereEqualTo("userId", currentUserId)
                 .get()
@@ -101,56 +160,69 @@ public class ExpenseManagementActivity extends AppCompatActivity {
     }
 
     private void syncDataPipeline(String currentUserId) {
-        // 💡 Server-Side Filter: Only fetch expense documents mapped to this userId
+        // Fetch raw documents securely by userId
         db.collection("expenses")
                 .whereEqualTo("userId", currentUserId)
                 .get()
                 .addOnSuccessListener(snapshots -> {
-                    allMonthExpenseDocs.clear();
-                    businessTotalsMap.clear();
+                    rawUserExpenseDocs.clear();
+                    rawUserExpenseDocs.addAll(snapshots.getDocuments());
 
-                    for (String b : businessList) businessTotalsMap.put(b, 0.0);
-
-                    double currentMonthHeroGrandTotal = 0.0;
-                    String currentMonthToken = yearMonthFormat.format(Calendar.getInstance().getTime());
-
-                    for (DocumentSnapshot doc : snapshots.getDocuments()) {
-                        Double amount = doc.getDouble("amount");
-                        String bName = doc.getString("selectedBusiness");
-                        String dateStr = doc.getString("date");
-
-                        if (amount != null && bName != null) {
-                            if (businessTotalsMap.containsKey(bName)) {
-                                businessTotalsMap.put(bName, businessTotalsMap.get(bName) + amount);
-                            }
-
-                            if (dateStr != null && dateStr.startsWith(currentMonthToken)) {
-                                allMonthExpenseDocs.add(doc);
-                                currentMonthHeroGrandTotal += amount;
-                            }
-                        }
-                    }
-
-                    txtTotalExpenses.setText(String.format(Locale.getDefault(), "Rs. %,.2f", currentMonthHeroGrandTotal));
-
-                    // Build cards layout UI row
-                    populateBusinessRowCards();
-                    // Render list history items based on filter bounds
-                    applyRecyclerFilter();
+                    processAndApplyFilters();
                 });
+    }
+
+    private void processAndApplyFilters() {
+        businessTotalsMap.clear();
+        for (String b : businessList) businessTotalsMap.put(b, 0.0);
+
+        double periodGrandTotal = 0.0;
+        filteredExpenseDocs.clear();
+
+        for (DocumentSnapshot doc : rawUserExpenseDocs) {
+            Double amount = doc.getDouble("amount");
+            String bName = doc.getString("selectedBusiness");
+            String dateStr = doc.getString("date");
+
+            if (amount != null && bName != null) {
+                // Check if document matches the active Month filter
+                boolean matchesMonth = selectedMonthToken.equals("ALL_TIME") ||
+                        (dateStr != null && dateStr.startsWith(selectedMonthToken));
+
+                if (matchesMonth) {
+                    // Accumulate workspace category totals for the selected period
+                    if (businessTotalsMap.containsKey(bName)) {
+                        businessTotalsMap.put(bName, businessTotalsMap.get(bName) + amount);
+                    }
+                    periodGrandTotal += amount;
+
+                    // Check workspace filter card selection
+                    if (selectedWorkspaceFilter.equalsIgnoreCase("ALL") || bName.equalsIgnoreCase(selectedWorkspaceFilter)) {
+                        filteredExpenseDocs.add(doc);
+                    }
+                }
+            }
+        }
+
+        // Update top Total Display for current selected month filter
+        txtTotalExpenses.setText(String.format(Locale.getDefault(), "Rs. %,.2f", periodGrandTotal));
+
+        // Rebuild top Workspace horizontal cards & update RecyclerView history
+        populateBusinessRowCards();
+        setupHistoryRecycler();
     }
 
     private void populateBusinessRowCards() {
         layoutBusinessCardsContainer.removeAllViews();
 
-        // Master "All Workspaces" selection card
+        // Master "All Workspaces" card
         double overallTotal = 0.0;
         for (double val : businessTotalsMap.values()) {
             overallTotal += val;
         }
         createWorkspaceFilterCard("ALL", overallTotal);
 
-        // Individual workspace selection cards
+        // Individual workspace cards
         for (Map.Entry<String, Double> entry : businessTotalsMap.entrySet()) {
             createWorkspaceFilterCard(entry.getKey(), entry.getValue());
         }
@@ -164,11 +236,10 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         card.setRadius(24f);
         card.setStrokeWidth(0);
 
-        // 💡 Highlight if active selection card
         if (selectedWorkspaceFilter.equalsIgnoreCase(title)) {
-            card.setCardBackgroundColor(Color.parseColor("#8EB69B")); // Theme Accent Highlight
+            card.setCardBackgroundColor(Color.parseColor("#8EB69B")); // Active card highlight
         } else {
-            card.setCardBackgroundColor(Color.parseColor("#1A3050")); // Standard Off dark
+            card.setCardBackgroundColor(Color.parseColor("#1A3050")); // Default off-dark
         }
 
         LinearLayout innerLayout = new LinearLayout(this);
@@ -193,27 +264,12 @@ public class ExpenseManagementActivity extends AppCompatActivity {
         innerLayout.addView(lblValue);
         card.addView(innerLayout);
 
-        // 💡 Card Action Handler: Filter the history listing when pressed
         card.setOnClickListener(v -> {
             selectedWorkspaceFilter = title;
-            populateBusinessRowCards(); // Rebuild for UI states swap
-            applyRecyclerFilter();
+            processAndApplyFilters();
         });
 
         layoutBusinessCardsContainer.addView(card);
-    }
-
-    private void applyRecyclerFilter() {
-        filteredExpenseDocs.clear();
-
-        for (DocumentSnapshot doc : allMonthExpenseDocs) {
-            String bName = doc.getString("selectedBusiness");
-            if (selectedWorkspaceFilter.equals("ALL") || (bName != null && bName.equalsIgnoreCase(selectedWorkspaceFilter))) {
-                filteredExpenseDocs.add(doc);
-            }
-        }
-
-        setupHistoryRecycler();
     }
 
     private void showAddExpenseDialog() {
@@ -253,7 +309,7 @@ public class ExpenseManagementActivity extends AppCompatActivity {
             record.put("category", spinCat.getSelectedItem().toString());
             record.put("amount", Double.parseDouble(amtStr));
             record.put("date", fullDateFormat.format(Calendar.getInstance().getTime()));
-            record.put("userId", currentUserId); // 💡 Securely save user UID with the document entry
+            record.put("userId", currentUserId);
 
             db.collection("expenses").add(record).addOnSuccessListener(ref -> {
                 Toast.makeText(this, "Expense logged successfully", Toast.LENGTH_SHORT).show();

@@ -42,7 +42,7 @@ public class UtilityAdapter extends RecyclerView.Adapter<UtilityAdapter.ViewHold
         UtilityBill bill = list.get(position);
 
         holder.txtBillName.setText(bill.getBillName());
-        holder.txtBillDetails.setText(String.format(Locale.US, "Due %s",
+        holder.txtBillDetails.setText(String.format(Locale.US, "Payment Date %s",
                 bill.getPaymentDate(), bill.getStatus()));
 
         // Set Category Icon Emoji
