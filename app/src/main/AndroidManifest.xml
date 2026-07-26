@@ -110,7 +110,7 @@
 
         <activity
             android:name=".StudentDashboardActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity
             android:name=".RoleUpgradeActivity"
@@ -152,7 +152,7 @@
             android:exported="false" />
         <activity
             android:name=".FinancialReportsActivity"
-            android:exported="false" />
+            android:exported="true" />
 
 
         <activity

@@ -85,7 +85,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
                 }
         );
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
+        View btnBack = findViewById(R.id.btnBack);
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
         spinnerReportType = findViewById(R.id.spinnerReportType);
@@ -99,6 +99,11 @@ public class FinancialReportsActivity extends AppCompatActivity {
         chartSubscriptions = findViewById(R.id.chartSubscriptions);
         chartUtilityBills = findViewById(R.id.chartUtilityBills);
         chartSavings = findViewById(R.id.chartSavings);
+
+        stylePieChart(chartLoans);
+        stylePieChart(chartSubscriptions);
+        styleBarChart(chartUtilityBills);
+        styleBarChart(chartSavings);
 
         txtReportBalance = findViewById(R.id.txtReportBalance);
         txtReportIncome = findViewById(R.id.txtReportIncome);
@@ -122,6 +127,9 @@ public class FinancialReportsActivity extends AppCompatActivity {
         if (btnDownloadPdfReport != null) {
             btnDownloadPdfReport.setOnClickListener(v -> generatePdfReport());
         }
+
+        // Fetch and display data immediately on start
+        fetchAndDisplayData();
     }
 
     private void setupSpinners() {
@@ -219,6 +227,8 @@ public class FinancialReportsActivity extends AppCompatActivity {
             if (!entries.isEmpty()) {
                 PieDataSet dataSet = new PieDataSet(entries, "Loans");
                 dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(12f);
                 chartLoans.setData(new PieData(dataSet));
             } else {
                 chartLoans.clear();
@@ -240,7 +250,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
-                String name = doc.getString("serviceName");
+                String name = doc.getString("name"); // Fixed from serviceName
                 Double amount = doc.getDouble("amount");
                 if (name != null && amount != null) {
                     entries.add(new PieEntry(amount.floatValue(), name));
@@ -248,8 +258,19 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             if (!entries.isEmpty()) {
                 PieDataSet dataSet = new PieDataSet(entries, "Subscriptions");
-                dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                dataSet.setColors(ColorTemplate.COLORFUL_COLORS); // Attractive colors
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(12f);
                 chartSubscriptions.setData(new PieData(dataSet));
+                
+                chartSubscriptions.setDrawHoleEnabled(true);
+                chartSubscriptions.setHoleColor(android.graphics.Color.parseColor("#1B2A4A"));
+                chartSubscriptions.setTransparentCircleRadius(0f);
+                chartSubscriptions.setHoleRadius(60f);
+                chartSubscriptions.setDrawCenterText(true);
+                chartSubscriptions.setCenterText("Active");
+                chartSubscriptions.setCenterTextSize(16f);
+                chartSubscriptions.setCenterTextColor(android.graphics.Color.WHITE);
             } else {
                 chartSubscriptions.clear();
             }
@@ -266,20 +287,28 @@ public class FinancialReportsActivity extends AppCompatActivity {
         });
 
         // 3. Fetch Utility Bills
-        db.collection("users").document(uid).collection("utility_bills").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        db.collection("utilityBill").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<BarEntry> entries = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
             float i = 0f;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double amount = doc.getDouble("amount");
+                String name = doc.getString("billName");
                 if (amount != null) {
                     entries.add(new BarEntry(i++, amount.floatValue()));
+                    labels.add(name != null ? name : "Bill");
                 }
             }
             if (!entries.isEmpty()) {
                 BarDataSet dataSet = new BarDataSet(entries, "Utility Bills");
-                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(10f);
                 chartUtilityBills.setData(new BarData(dataSet));
+                
+                chartUtilityBills.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels));
+                chartUtilityBills.getXAxis().setGranularity(1f);
             } else {
                 chartUtilityBills.clear();
             }
@@ -310,8 +339,13 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             if (!entries.isEmpty()) {
                 BarDataSet dataSet = new BarDataSet(entries, "Current vs Remaining");
-                dataSet.setColors(new int[]{ColorTemplate.VORDIPLOM_COLORS[0], ColorTemplate.VORDIPLOM_COLORS[1]});
+                dataSet.setColors(new int[]{
+                        androidx.core.content.ContextCompat.getColor(FinancialReportsActivity.this, R.color.forest_300),
+                        androidx.core.content.ContextCompat.getColor(FinancialReportsActivity.this, R.color.forest_700)
+                });
                 dataSet.setStackLabels(new String[]{"Current", "Remaining"});
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(10f);
                 chartSavings.setData(new BarData(dataSet));
             } else {
                 chartSavings.clear();
@@ -416,5 +450,38 @@ public class FinancialReportsActivity extends AppCompatActivity {
         }
         
         document.close();
+    }
+
+    private void stylePieChart(PieChart chart) {
+        chart.setNoDataText("No chart data available.");
+        chart.setNoDataTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.text_on_dark_muted));
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setTextColor(android.graphics.Color.WHITE);
+        chart.getLegend().setWordWrapEnabled(true);
+        chart.setHoleColor(android.graphics.Color.TRANSPARENT);
+        chart.setEntryLabelColor(android.graphics.Color.WHITE);
+        chart.setUsePercentValues(true);
+        chart.setDrawEntryLabels(false);
+    }
+
+    private void styleBarChart(com.github.mikephil.charting.charts.BarLineChartBase<?> chart) {
+        chart.setNoDataText("No chart data available.");
+        chart.setNoDataTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.text_on_dark_muted));
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setTextColor(android.graphics.Color.WHITE);
+        chart.getLegend().setWordWrapEnabled(true);
+        
+        com.github.mikephil.charting.components.XAxis xAxis = chart.getXAxis();
+        xAxis.setTextColor(android.graphics.Color.WHITE);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM);
+        
+        com.github.mikephil.charting.components.YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(android.graphics.Color.WHITE);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(androidx.core.content.ContextCompat.getColor(this, R.color.forest_600));
+        
+        com.github.mikephil.charting.components.YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
     }
 }
