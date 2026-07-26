@@ -61,7 +61,7 @@
                     android:textSize="13sp" />
 
                 <TextView
-                    android:id="@+id/txtUserEmail"
+                    android:id="@+id/tvStudentName"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"

@@ -166,7 +166,7 @@
                                 android:layout_marginStart="12dp"
                                 android:layout_weight="1"
                                 android:text="Income Sources"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="16sp"
                                 android:textStyle="bold" />
 
@@ -204,7 +204,7 @@
                             android:gravity="center"
                             android:padding="16dp"
                             android:text="No income sources yet.\nAdd one below to get started."
-                            android:textColor="#9CA3AF"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="13sp"
                             android:visibility="gone" />
 
@@ -234,8 +234,8 @@
                                 android:inputType="text"
                                 android:paddingStart="12dp"
                                 android:paddingEnd="12dp"
-                                android:textColor="#111827"
-                                android:textColorHint="#9CA3AF"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textColorHint="@color/text_on_dark_muted"
                                 android:textSize="13sp" />
 
                             <Space
@@ -253,8 +253,8 @@
                                 android:inputType="numberDecimal"
                                 android:paddingStart="12dp"
                                 android:paddingEnd="12dp"
-                                android:textColor="#111827"
-                                android:textColorHint="#9CA3AF"
+                                android:textColor="@color/text_on_dark_primary"
+                                android:textColorHint="@color/text_on_dark_muted"
                                 android:textSize="13sp" />
 
                             <Space
@@ -287,7 +287,7 @@
                             android:layout_marginTop="20dp"
                             android:layout_marginBottom="8dp"
                             android:text="Budget period"
-                            android:textColor="#5A6470"
+                            android:textColor="@color/text_on_dark_secondary"
                             android:textSize="13sp"
                             android:textStyle="bold" />
 
@@ -312,7 +312,7 @@
                                     android:paddingStart="16dp"
                                     android:paddingEnd="16dp"
                                     android:text="1 week"
-                                    android:textColor="#5A6470"
+                                    android:textColor="@color/text_on_dark_secondary"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
 
@@ -331,7 +331,7 @@
                                     android:paddingStart="16dp"
                                     android:paddingEnd="16dp"
                                     android:text="1 month"
-                                    android:textColor="#5A6470"
+                                    android:textColor="@color/text_on_dark_secondary"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
 
@@ -350,7 +350,7 @@
                                     android:paddingStart="16dp"
                                     android:paddingEnd="16dp"
                                     android:text="3 months"
-                                    android:textColor="#5A6470"
+                                    android:textColor="@color/text_on_dark_secondary"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
 
@@ -388,7 +388,7 @@
                                     android:paddingStart="16dp"
                                     android:paddingEnd="16dp"
                                     android:text="Custom range"
-                                    android:textColor="#5A6470"
+                                    android:textColor="@color/text_on_dark_secondary"
                                     android:textSize="13sp"
                                     android:textStyle="bold" />
 
@@ -415,7 +415,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="4dp"
                                     android:text="Start date"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -427,10 +427,10 @@
                                     android:paddingStart="12dp"
                                     android:paddingEnd="12dp"
                                     android:text="mm/dd/yyyy"
-                                    android:textColor="#111827"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="13sp"
                                     app:drawableEndCompat="@drawable/ic_calendar"
-                                    app:drawableTint="#9CA3AF" />
+                                    app:drawableTint="@color/text_on_dark_muted" />
                             </LinearLayout>
 
                             <LinearLayout
@@ -445,7 +445,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginBottom="4dp"
                                     android:text="End date"
-                                    android:textColor="#9CA3AF"
+                                    android:textColor="@color/text_on_dark_muted"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -457,10 +457,10 @@
                                     android:paddingStart="12dp"
                                     android:paddingEnd="12dp"
                                     android:text="mm/dd/yyyy"
-                                    android:textColor="#111827"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="13sp"
                                     app:drawableEndCompat="@drawable/ic_calendar"
-                                    app:drawableTint="#9CA3AF" />
+                                    app:drawableTint="@color/text_on_dark_muted" />
                             </LinearLayout>
                         </LinearLayout>
 
@@ -470,7 +470,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
                             android:text="0 days in this budget period"
-                            android:textColor="#6B7280"
+                            android:textColor="@color/text_on_dark_muted"
                             android:textSize="12sp" />
 
                         <!-- Calculate Budget button -->
@@ -934,7 +934,7 @@
                                     android:layout_marginStart="12dp"
                                     android:layout_weight="1"
                                     android:text="Current budget can last the entire period."
-                                    android:textColor="#374151"
+                                    android:textColor="@color/text_on_dark_primary"
                                     android:textSize="13sp" />
                             </LinearLayout>
 
@@ -1029,7 +1029,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 tools:text="Period: Jun 2026 – Dec 2026"
-                                android:textColor="#111827"
+                                android:textColor="@color/text_on_dark_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 

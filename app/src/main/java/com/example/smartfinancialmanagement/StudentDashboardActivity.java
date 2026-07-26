@@ -18,6 +18,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
 import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -40,6 +41,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
     
     private NotificationRepository notificationRepo;
     private ListenerRegistration unreadCountListener;
+    private TextView txtLoanBadge, txtSubscriptionBadge, txtUtilityBadge, txtSavingBadge;
     
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +63,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         recalculateTotalIncome();
         loadAvatarImage();
         checkUpcomingDeadlines();
+        loadBadgeData();
     }
 
     @Override
@@ -112,18 +115,38 @@ public class StudentDashboardActivity extends AppCompatActivity {
             .get().addOnSuccessListener(queryDocumentSnapshots -> {
                 for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                     String status = doc.getString("status");
-                    if ("Paid".equalsIgnoreCase(status)) continue;
+                    if ("Paid".equalsIgnoreCase(status) || "PAID".equalsIgnoreCase(status)) continue;
                     
                     String paymentDateStr = doc.getString("paymentDate");
                     if (paymentDateStr != null) {
                         try {
                             Date dueDate = sdf.parse(paymentDateStr);
-                            long diffInMillies = dueDate.getTime() - today.getTime();
+                            
+                            // Adjust for monthly recurrence
+                            Calendar todayCal = Calendar.getInstance();
+                            todayCal.setTime(today);
+                            todayCal.set(Calendar.HOUR_OF_DAY, 0);
+                            todayCal.set(Calendar.MINUTE, 0);
+                            todayCal.set(Calendar.SECOND, 0);
+                            todayCal.set(Calendar.MILLISECOND, 0);
+
+                            Calendar billCal = Calendar.getInstance();
+                            billCal.setTime(dueDate);
+                            billCal.set(Calendar.YEAR, todayCal.get(Calendar.YEAR));
+                            billCal.set(Calendar.MONTH, todayCal.get(Calendar.MONTH));
+                            
+                            if (billCal.before(todayCal)) {
+                                billCal.add(Calendar.MONTH, 1);
+                            }
+                            
+                            dueDate = billCal.getTime();
+                            
+                            long diffInMillies = dueDate.getTime() - todayCal.getTimeInMillis();
                             long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
                             
-                            if (diffInDays <= 3) {
-                                String severity = diffInDays < 0 ? "critical" : "info";
-                                String msg = diffInDays < 0 ? "Utility bill overdue: " + doc.getString("billName") : "Utility bill due in " + diffInDays + " days: " + doc.getString("billName");
+                            if (diffInDays >= 0 && diffInDays <= 3) {
+                                String severity = diffInDays == 0 ? "critical" : "info";
+                                String msg = diffInDays == 0 ? "Utility bill due today: " + doc.getString("billName") : "Utility bill due in " + diffInDays + " days: " + doc.getString("billName");
                                 
                                 NotificationModel notif = new NotificationModel(
                                     null, userId, "utility_due", "Utility Bill Due", msg, 
@@ -216,6 +239,10 @@ public class StudentDashboardActivity extends AppCompatActivity {
         View cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         View cardSavingManager = findViewById(R.id.cardSavingManager);
         View cardUtilityManager = findViewById(R.id.cardUtilityManager);
+        txtLoanBadge = findViewById(R.id.txtLoanBadge);
+        txtSubscriptionBadge = findViewById(R.id.txtSubscriptionBadge);
+        txtUtilityBadge = findViewById(R.id.txtUtilityBadge);
+        txtSavingBadge = findViewById(R.id.txtSavingBadge);
 
         if (cardLoanManager != null) {
             cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
@@ -263,35 +290,40 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     private void loadUserData() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
-            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser != null ? currentUser.getUid() : null;
 
         if (userId == null) return;
 
-        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
+                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
+                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                
+                String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
-                    String name = documentSnapshot.getString("name");
-                    if (name != null && !name.isEmpty()) {
-                        TextView tvStudentName = findViewById(R.id.tvStudentName);
-                        TextView tvInitials = findViewById(R.id.tvInitials);
-                        
-                        if (tvStudentName != null) {
-                            tvStudentName.setText(name);
-                        }
-                        
-                        if (tvInitials != null) {
-                            // Extract initials
-                            String[] words = name.trim().split("\\s+");
-                            StringBuilder initials = new StringBuilder();
-                            if (words.length > 0 && !words[0].isEmpty()) {
-                                initials.append(words[0].charAt(0));
-                                if (words.length > 1 && !words[words.length - 1].isEmpty()) {
-                                    initials.append(words[words.length - 1].charAt(0));
-                                }
-                            }
-                            tvInitials.setText(initials.toString().toUpperCase(Locale.getDefault()));
-                        }
+                    displayName = documentSnapshot.getString("name");
+                }
+                
+                if (displayName == null || displayName.trim().isEmpty()) {
+                    if (currentUser.getEmail() != null) {
+                        displayName = currentUser.getEmail();
+                    }
+                }
+                
+                if (displayName != null && !displayName.trim().isEmpty()) {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText(displayName);
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText(displayName.substring(0, 1).toUpperCase());
+                    }
+                } else {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText("User");
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText("U");
                     }
                 }
             });
@@ -356,7 +388,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
+        startActivity(new Intent(this, NotificationListActivity.class));
     }
 
 
@@ -556,6 +588,63 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (txtBudgetLeftValue != null) {
             txtBudgetLeftValue.setText(CurrencyHelper.formatMoney(this, budgetLeft));
         }
+    }
+
+    
+    private void loadBadgeData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(uid).collection("loans").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtLoanBadge != null) {
+                    txtLoanBadge.setText(queryDocumentSnapshots.size() + " Active");
+                }
+            });
+
+        db.collection("users").document(uid).collection("subscriptions").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtSubscriptionBadge != null) {
+                    txtSubscriptionBadge.setText(queryDocumentSnapshots.size() + " Plans");
+                }
+            });
+
+        db.collection("utilityBill").whereEqualTo("userId", uid).get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtUtilityBadge != null) {
+                    int dueCount = 0;
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String status = doc.getString("status");
+                        if (!"Paid".equalsIgnoreCase(status) && !"PAID".equalsIgnoreCase(status)) {
+                            dueCount++;
+                        }
+                    }
+                    txtUtilityBadge.setText(dueCount + " Due");
+                }
+            });
+
+        db.collection("users").document(uid).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (txtSavingBadge != null && documentSnapshot.exists()) {
+                    String currentSavings = documentSnapshot.getString("currentSavings");
+                    if (currentSavings != null && !currentSavings.trim().isEmpty()) {
+                        try {
+                            double amt = Double.parseDouble(currentSavings.trim());
+                            if (amt > 10000) {
+                                txtSavingBadge.setText("Rs " + (int)(amt/1000) + "k");
+                            } else {
+                                txtSavingBadge.setText("Rs " + (int)amt);
+                            }
+                        } catch (NumberFormatException e) {
+                            txtSavingBadge.setText("On Track");
+                        }
+                    } else {
+                        txtSavingBadge.setText("Rs 0");
+                    }
+                }
+            });
     }
 
     private void animateCards(View... cards) {
