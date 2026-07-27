@@ -203,6 +203,53 @@
     <string name="download_description">Saving your June 2026 payslip PDF…</string>
     <string name="download_started">Download started! Check your notifications.</string>
     <string name="download_error">Error: Unable to start download.</string>
+    <!-- Worker Profile & Income -->
+    <string name="worker_profile_avatar">Worker Profile Avatar</string>
+    <string name="worker_stat_salary">Salary</string>
+    <string name="worker_stat_bonus">Bonus</string>
+    <string name="worker_menu_edit_income">Edit Income Details</string>
+    <string name="worker_menu_payslips">My Payslips</string>
+    <string name="worker_menu_account_settings">Account Settings</string>
+    <string name="worker_income_title">Income Details</string>
+    <string name="worker_income_employment_info">Employment Information</string>
+    <string name="worker_income_company">Company Name</string>
+    <string name="worker_income_company_hint">e.g. ABC Corporation</string>
+    <string name="worker_income_designation">Designation</string>
+    <string name="worker_income_designation_hint">e.g. Software Engineer</string>
+    <string name="worker_income_details">Income Details</string>
+    <string name="worker_income_monthly_salary">Monthly Salary (LKR)</string>
+    <string name="worker_income_salary_hint">e.g. 75000</string>
+    <string name="worker_income_bonus">Bonus Amount (LKR)</string>
+    <string name="worker_income_bonus_hint">e.g. 10000</string>
+    <string name="worker_income_overtime">Overtime Rate (LKR/hour)</string>
+    <string name="worker_income_overtime_hint">e.g. 500</string>
+    <string name="worker_income_save">SAVE CHANGES</string>
+    <string name="sign_out">Sign Out</string>
+
+    <!-- Business Profile & Revenue -->
+    <string name="business_profile_avatar">Business Profile Avatar</string>
+    <string name="business_stat_revenue">Revenue</string>
+    <string name="business_stat_expenses">Expenses</string>
+    <string name="business_stat_profit">Profit</string>
+    <string name="business_menu_edit_revenue">Edit Revenue Details</string>
+    <string name="business_menu_invoices">My Invoices</string>
+    <string name="business_income_title">Revenue Details</string>
+    <string name="business_income_biz_info">Business Information</string>
+    <string name="business_income_name">Business Name</string>
+    <string name="business_income_name_hint">e.g. ABC Corporation</string>
+    <string name="business_income_reg">Registration Number</string>
+    <string name="business_income_reg_hint">e.g. BRN-2026-001</string>
+    <string name="business_income_industry">Industry Type</string>
+    <string name="business_income_industry_hint">e.g. Retail, Technology</string>
+    <string name="business_income_revenue_info">Revenue Details</string>
+    <string name="business_income_monthly_revenue">Average Monthly Revenue (LKR)</string>
+    <string name="business_income_revenue_hint">e.g. 500000</string>
+    <string name="business_income_expenses">Business Expenses (LKR)</string>
+    <string name="business_income_expenses_hint">e.g. 200000</string>
+    <string name="business_income_profit_margin">Profit Margin (%)</string>
+    <string name="business_income_profit_hint">e.g. 40.0</string>
+    <string name="business_income_save">SAVE CHANGES</string>
+
     <!-- Expense Claims Strings -->
     <string name="icon_back">←</string>
     <string name="label_worker_portal">Worker Portal</string>

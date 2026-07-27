@@ -183,7 +183,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         if (tvInitials != null) {
-            tvInitials.setOnClickListener(v -> startActivity(new Intent(this, StudentProfileActivity.class)));
+            tvInitials.setOnClickListener(v -> startActivity(new Intent(this, WorkerProfileActivity.class)));
         }
 
         cardWorkTasks.setOnClickListener(v -> {

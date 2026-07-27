@@ -209,6 +209,8 @@ public class RegisterActivity extends AppCompatActivity {
                             userMap.put("mobile", data.mobile);
                             userMap.put("role", userRole); // Saving the correctly synchronized role string
                             userMap.put("timestamp", System.currentTimeMillis());
+                            userMap.put("createdAt", com.google.firebase.firestore.FieldValue.serverTimestamp());
+                            userMap.put("registeredDate", com.google.firebase.firestore.FieldValue.serverTimestamp());
                             userMap.put("status", "Active");
                             userMap.put("fcmToken", "");
 

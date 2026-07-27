@@ -153,6 +153,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             startActivity(new Intent(this, ManageBusinessActivity.class));
         });
 
+        tvInitials.setOnClickListener(v -> startActivity(new Intent(this, BusinessProfileActivity.class)));
+
         recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
         // Click listeners
