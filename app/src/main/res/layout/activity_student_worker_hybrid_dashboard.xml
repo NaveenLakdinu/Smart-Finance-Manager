@@ -7,6 +7,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
@@ -22,7 +23,7 @@
         android:fillViewport="true"
         android:scrollbars="none"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottomNavigationView"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -33,118 +34,167 @@
             android:orientation="vertical"
             android:paddingBottom="32dp">
 
-            <!-- ── Top Header ── -->
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/layoutDashboardHeader"
+                        <!-- Top App Bar -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_hero_green"
-                android:padding="20dp"
-                android:paddingTop="36dp">
+                android:layout_marginBottom="24dp"
+                android:layout_marginTop="20dp"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-                <!-- Profile Circle -->
-                <TextView
-                    android:id="@+id/txtProfileLetter"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/bg_profile_circle"
-                    android:gravity="center"
-                    android:text="H"
-                    android:textColor="@color/text_on_dark_primary"
-                    android:textSize="20sp"
-                    android:textStyle="bold"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent" />
+                <!-- Profile Avatar -->
+                <FrameLayout
+                    android:id="@+id/btnProfileAvatar"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp">
 
-                <!-- Greeting Group -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:id="@+id/cardProfileAvatar"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:cardBackgroundColor="@color/forest_700"
+                        app:cardCornerRadius="24dp"
+                        app:strokeWidth="0dp">
+
+                        <TextView
+                            android:id="@+id/tvInitials"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:gravity="center"
+                            android:text=""
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="18sp"
+                            android:textStyle="bold" />
+
+                        <ImageView
+                            android:id="@+id/imgDashboardAvatar"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone"
+                            android:contentDescription="Profile Photo" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <View
+                        android:layout_width="12dp"
+                        android:layout_height="12dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/icon_circle_green" />
+                </FrameLayout>
+
+                <!-- Name & Role -->
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
-                    android:orientation="vertical"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/txtProfileLetter"
-                    app:layout_constraintEnd_toStartOf="@id/layoutHeaderActions">
+                    android:layout_weight="1"
+                    android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/txtGreeting"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Good Morning, Hybrid Scholar 👋"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="12sp" />
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:layout_width="14dp"
+                            android:layout_height="14dp"
+                            android:src="@drawable/ic_school"
+                            app:tint="@color/forest_300" />
+
+                        <TextView
+                            android:id="@+id/tvRoleTitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="4dp"
+                            android:text="Hybrid Scholar"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <TextView
-                        android:id="@+id/txtUserEmail"
+                        android:id="@+id/tvStudentName"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="2dp"
-                        android:text=""
+                        android:text="Loading..."
                         android:textColor="@color/text_on_dark_primary"
-                        android:textSize="14sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
-
                 </LinearLayout>
 
-                <!-- Actions (Notification + Security + Logout) -->
-                <LinearLayout
-                    android:id="@+id/layoutHeaderActions"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent">
-
-                    <TextView
-                        android:id="@+id/btnNotifications"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_notification"
-                        android:gravity="center"
-                        android:text="🔔"
-                        android:textSize="20sp" />
+                <!-- Top Right Actions -->
+                <!-- Notification -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/cardNotification"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/forest_700"
+                    app:cardCornerRadius="18dp"
+                    app:strokeWidth="0dp">
 
                     <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+                        
+                        <ImageView
+                            android:id="@+id/btnNotifications"
+                            android:layout_width="18dp"
+                            android:layout_height="18dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_notification"
+                            app:tint="#9CA3AF" />
+
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Lock Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/forest_700"
+                    app:cardCornerRadius="18dp"
+                    app:strokeWidth="0dp">
+
+                    <ImageView
                         android:id="@+id/btnSecurity"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/bg_back_circle"
-                        android:clickable="true"
-                        android:focusable="true">
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_lock"
+                        app:tint="@color/forest_300" />
+                </com.google.android.material.card.MaterialCardView>
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_lock"
-                            app:tint="@color/forest_300" />
+                <!-- Logout Button -->
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/forest_700"
+                    app:cardCornerRadius="18dp"
+                    app:strokeWidth="0dp">
 
-                    </FrameLayout>
-
-                    <FrameLayout
+                    <ImageView
                         android:id="@+id/btnTopLogout"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/bg_back_circle"
-                        android:clickable="true"
-                        android:focusable="true">
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_power"
+                        app:tint="@color/forest_300" />
+                </com.google.android.material.card.MaterialCardView>
 
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_gravity="center"
-                            android:src="@drawable/ic_power"
-                            app:tint="@color/forest_300" />
-
-                    </FrameLayout>
-
-                </LinearLayout>
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -239,362 +289,137 @@
 
                 </com.google.android.material.card.MaterialCardView>
 
-                <!-- ── Savings Card Widget ── -->
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cardSavingsWidget"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    app:cardCornerRadius="20dp"
-                    app:cardElevation="0dp"
-                    app:cardBackgroundColor="@color/forest_700"
-                    app:strokeWidth="1dp"
-                    app:strokeColor="@color/forest_600"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackground">
 
+
+                    <!-- Two Capsules Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="20dp"
                         android:orientation="horizontal"
-                        android:padding="16dp"
-                        android:gravity="center_vertical">
+                        android:weightSum="2"
+                        app:layout_constraintTop_toBottomOf="@id/txtCurrentBalanceValue">
 
-                        <TextView
-                            android:layout_width="40dp"
-                            android:layout_height="40dp"
-                            android:background="@drawable/bg_function_icon_green"
-                            android:gravity="center"
-                            android:text="💰"
-                            android:textSize="18sp" />
-
-                        <LinearLayout
+                        <!-- Achievement Capsule -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardDashboardHeaderAchievement"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="6dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/forest_700"
+                            app:cardCornerRadius="20dp"
+                            app:strokeColor="@color/forest_600"
+                            app:strokeWidth="1dp">
 
-                            <TextView
-                                android:layout_width="wrap_content"
+                            <LinearLayout
+                                android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:text="CURRENT SAVINGS"
-                                android:textColor="@color/text_on_dark_secondary"
-                                android:textSize="9sp"
-                                android:letterSpacing="0.1"
-                                android:textStyle="bold" />
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
 
-                            <TextView
-                                android:id="@+id/txtCurrentSavingsValue"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="2dp"
-                                android:text="Rs 0.00"
-                                android:textColor="@color/forest_100"
-                                android:textSize="16sp"
-                                android:textStyle="bold" />
+                                <FrameLayout
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@drawable/icon_circle_orange">
 
-                        </LinearLayout>
+                                    <TextView
+                                        android:id="@+id/txtTrophyIcon"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="🏆"
+                                        android:textSize="14sp" />
+                                </FrameLayout>
 
-                        <TextView
-                            android:id="@+id/btnUpdateSavings"
-                            android:layout_width="wrap_content"
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Achievement"
+                                        android:textColor="@color/text_on_dark_secondary"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtAchievementPts"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="0 pts"
+                                        android:textColor="@color/text_on_dark_primary"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Budget Capsule -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:id="@+id/cardDashboardHeaderBudget"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_btn_primary_green"
-                            android:paddingStart="10dp"
-                            android:paddingEnd="10dp"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:text="UPDATE"
-                            android:textColor="@color/btn_primary_text"
-                            android:textSize="10sp"
-                            android:textStyle="bold" />
+                            android:layout_marginStart="6dp"
+                            android:layout_weight="1"
+                            android:clickable="true"
+                            android:focusable="true"
+                            app:cardBackgroundColor="@color/forest_700"
+                            app:cardCornerRadius="20dp"
+                            app:strokeColor="@color/forest_600"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="12dp">
+
+                                <FrameLayout
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:background="@drawable/icon_circle_orange">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center"
+                                        android:text="👛"
+                                        android:textSize="14sp" />
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="8dp"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Budget Left"
+                                        android:textColor="@color/text_on_dark_secondary"
+                                        android:textSize="10sp" />
+
+                                    <TextView
+                                        android:id="@+id/txtBudgetLeftValue"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        tools:text="Rs 8,000"
+                                        android:textColor="@color/text_on_dark_primary"
+                                        android:textSize="13sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
                     </LinearLayout>
-
-                </com.google.android.material.card.MaterialCardView>
-
-                <!-- ── SECTION 1: Student features ── -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="24dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <View
-                        android:layout_width="4dp"
-                        android:layout_height="16dp"
-                        android:layout_marginEnd="8dp"
-                        android:background="@color/qa_secondary_icon" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="Student Portal"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="16sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="🎓 5 Modules"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="11sp" />
-
-                </LinearLayout>
-
-                <!-- Student Grid Row 1 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- Budget Manager -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardStudentBudget"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/forest_700"
-                        app:cardCornerRadius="20dp"
-                        app:strokeColor="@color/forest_600"
-                        app:strokeWidth="1dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_secondary"
-                                android:gravity="center"
-                                android:text="📊"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Budget Manager"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <Space android:layout_width="12dp" android:layout_height="1dp" />
-
-                    <!-- Loan Compare / Calculator -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardLoanManager"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/forest_700"
-                        app:cardCornerRadius="20dp"
-                        app:strokeColor="@color/forest_600"
-                        app:strokeWidth="1dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_orange"
-                                android:gravity="center"
-                                android:text="💸"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Loan Manager"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-                <!-- Student Grid Row 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- Saving Target -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardSavingManager"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/forest_700"
-                        app:cardCornerRadius="20dp"
-                        app:strokeColor="@color/forest_600"
-                        app:strokeWidth="1dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_green"
-                                android:gravity="center"
-                                android:text="🎯"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Savings Target"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <Space android:layout_width="12dp" android:layout_height="1dp" />
-
-                    <!-- Subscription Manager -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardSubscriptionManager"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/forest_700"
-                        app:cardCornerRadius="20dp"
-                        app:strokeColor="@color/forest_600"
-                        app:strokeWidth="1dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_secondary"
-                                android:gravity="center"
-                                android:text="📅"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Subscriptions"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                </LinearLayout>
-
-                <!-- Student Grid Row 3 (Utilities) -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- Utility Manager -->
-                    <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardUtilityManager"
-                        android:layout_width="0dp"
-                        android:layout_height="100dp"
-                        android:layout_weight="1"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:foreground="?attr/selectableItemBackground"
-                        app:cardBackgroundColor="@color/forest_700"
-                        app:cardCornerRadius="20dp"
-                        app:strokeColor="@color/forest_600"
-                        app:strokeWidth="1dp"
-                        app:cardElevation="0dp">
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:padding="8dp">
-
-                            <TextView
-                                android:layout_width="40dp"
-                                android:layout_height="40dp"
-                                android:background="@drawable/bg_function_icon_orange"
-                                android:gravity="center"
-                                android:text="💡"
-                                android:textSize="20sp" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="6dp"
-                                android:text="Utility Bills"
-                                android:textColor="@color/text_on_dark_primary"
-                                android:textSize="11sp"
-                                android:textStyle="bold" />
-
-                        </LinearLayout>
-
-                    </com.google.android.material.card.MaterialCardView>
-
-                    <Space android:layout_width="12dp" android:layout_height="1dp" android:layout_weight="1" />
-
-                </LinearLayout>
-
                 <!-- ── SECTION 2: Worker features ── -->
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -717,6 +542,22 @@
                                 android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
+                                
+                            <TextView
+                                android:id="@+id/txtExpenseBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:background="@drawable/bg_pill_green"
+                                android:backgroundTint="@color/forest_800"
+                                android:paddingStart="6dp"
+                                android:paddingTop="2dp"
+                                android:paddingEnd="6dp"
+                                android:paddingBottom="2dp"
+                                android:text="1 Pending"
+                                android:textColor="@color/forest_300"
+                                android:textSize="9sp"
+                                android:textStyle="bold" />
 
                         </LinearLayout>
 
@@ -778,27 +619,377 @@
 
                 </LinearLayout>
 
-            </LinearLayout>
+            
+                <!-- ── SECTION 1: Student features ── -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <View
+                        android:layout_width="4dp"
+                        android:layout_height="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@color/qa_secondary_icon" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Student Portal"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="16sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="🎓 4 Modules"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="11sp" />
+
+                </LinearLayout>
+
+            <!-- Loan Management -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardLoanManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardBackgroundColor="@color/forest_600"
+                        app:cardCornerRadius="16dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_school"
+                            app:tint="@color/text_on_dark_primary" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Loan Management"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Track &amp; repay loans"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtLoanBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_pill_green"
+                            android:backgroundTint="@color/forest_800"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="2 Active"
+                            android:textColor="@color/forest_300"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/forest_300" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Subscription Management -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSubscriptionManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardBackgroundColor="@color/forest_600"
+                        app:cardCornerRadius="16dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_compare"
+                            app:tint="@color/text_on_dark_primary" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Subscription Management"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Manage your subscriptions"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtSubscriptionBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_pill_green"
+                            android:backgroundTint="@color/forest_800"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="5 Plans"
+                            android:textColor="@color/forest_300"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/forest_300" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Saving Management -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSavingManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardBackgroundColor="@color/forest_600"
+                        app:cardCornerRadius="16dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_savings_wave"
+                            app:tint="@color/text_on_dark_primary" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saving Management"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Grow your savings"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtSavingBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_pill_green"
+                            android:backgroundTint="@color/forest_800"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="On Track"
+                            android:textColor="@color/forest_300"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/forest_300" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Utility Management -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardUtilityManager"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="112dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="16dp">
+
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="56dp"
+                        android:layout_height="56dp"
+                        app:cardBackgroundColor="@color/forest_600"
+                        app:cardCornerRadius="16dp"
+                        app:strokeWidth="0dp">
+
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_lighting"
+                            app:tint="@color/text_on_dark_primary" />
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="Bills &amp; utilities"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/txtUtilityBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:background="@drawable/bg_pill_green"
+                            android:backgroundTint="@color/forest_800"
+                            android:paddingStart="8dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="8dp"
+                            android:paddingBottom="4dp"
+                            android:text="3 Due"
+                            android:textColor="@color/forest_300"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:rotation="180"
+                        android:src="@drawable/ic_arrow_back"
+                        app:tint="@color/forest_300" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+
+                </LinearLayout>
 
         </LinearLayout>
 
     </ScrollView>
 
-    <!-- ══════════════════════════════════════════ -->
-    <!--   BOTTOM NAVIGATION BAR                    -->
-    <!-- ══════════════════════════════════════════ -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottomNavigationView"
-        android:layout_width="match_parent"
-        android:layout_height="72dp"
-        android:background="@color/bottom_nav_bg"
-        app:itemIconTint="@color/bottom_nav_color"
-        app:itemTextColor="@color/bottom_nav_color"
-        app:menu="@menu/student_budget_bottom_nav_menu"
-        app:labelVisibilityMode="labeled"
-        app:elevation="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

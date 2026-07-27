@@ -87,15 +87,15 @@ public class NotificationPanelHelper {
             return;
         }
 
-        FirebaseFirestore.getInstance().collection("notifications")
-            .whereEqualTo("uid", currentUser.getUid())
-            .whereEqualTo("isUserTargeted", true)
+        FirebaseFirestore.getInstance().collection("users")
+            .document(currentUser.getUid())
+            .collection("notifications")
             .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener(querySnapshot -> {
                 container.removeAllViews();
                 if (querySnapshot.isEmpty()) {
-                    TextView emptyView = createTextView(activity, "No messages from support yet.", "#94A3B8", 13f);
+                    TextView emptyView = createTextView(activity, "No notifications yet.", "#94A3B8", 13f);
                     emptyView.setPadding(0, dp(activity, 24), 0, dp(activity, 24));
                     container.addView(emptyView);
                 } else {
@@ -118,9 +118,15 @@ public class NotificationPanelHelper {
 
     private static View buildNotificationCard(Activity activity, DocumentSnapshot doc) {
         String title = doc.getString("title");
-        String body = doc.getString("body");
+        String body = doc.getString("message");
         Boolean isRead = doc.getBoolean("read");
-        com.google.firebase.Timestamp createdAt = doc.getTimestamp("createdAt");
+        if (isRead == null) isRead = doc.getBoolean("isRead");
+        
+        Long createdAtLong = doc.getLong("createdAt");
+        Date createdDate = null;
+        if (createdAtLong != null) {
+            createdDate = new Date(createdAtLong);
+        }
 
         int dp8 = dp(activity, 8);
         int dp12 = dp(activity, 12);
@@ -145,7 +151,7 @@ public class NotificationPanelHelper {
 
         // Title
         TextView titleView = createTextView(activity,
-                title != null ? title : "Support Message", "#2DD4BF", 13f);
+                title != null ? title : "Notification", "#2DD4BF", 13f);
         titleView.setTypeface(null, Typeface.BOLD);
         titleView.setPadding(0, 0, 0, dp8);
         card.addView(titleView);
@@ -156,8 +162,8 @@ public class NotificationPanelHelper {
         card.addView(bodyView);
 
         // Timestamp
-        if (createdAt != null) {
-            TextView timeView = createTextView(activity, formatRelativeTime(createdAt.toDate()), "#64748B", 11f);
+        if (createdDate != null) {
+            TextView timeView = createTextView(activity, formatRelativeTime(createdDate), "#64748B", 11f);
             timeView.setPadding(0, dp8, 0, 0);
             card.addView(timeView);
         }
@@ -166,6 +172,7 @@ public class NotificationPanelHelper {
         if (unread) {
             card.setOnClickListener(v -> {
                 doc.getReference().update("read", true);
+                doc.getReference().update("isRead", true); // Safety catch for both naming conventions
                 card.setBackgroundColor(Color.parseColor("#1A2535"));
                 // Remove the NEW tag
                 if (card.getChildAt(0) instanceof TextView) {

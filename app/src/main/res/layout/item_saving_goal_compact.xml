@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- item_saving_goal_compact.xml: Compact card for SavingManagerActivity Dashboard -->
-<androidx.cardview.widget.CardView
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="12dp"
-    app:cardBackgroundColor="@color/goal_surface"
-    app:cardCornerRadius="18dp"
+    app:cardBackgroundColor="@color/glass_card_bg"
+    app:strokeColor="@color/glass_card_border"
+    app:strokeWidth="1dp"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/bg_dashboard"
         android:orientation="vertical"
         android:padding="16dp">
 
@@ -70,4 +71,4 @@
         </FrameLayout>
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

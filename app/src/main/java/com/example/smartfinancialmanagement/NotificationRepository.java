@@ -48,28 +48,31 @@ public class NotificationRepository {
                 .addOnFailureListener(e -> Log.e(TAG, "Error creating notification", e));
     }
 
-    /**
-     * Prevents duplicate notifications from being created within a 24-hour window
-     * for the same type and related entity.
-     */
     public void checkAndCreateDuplicateSafe(NotificationModel notification) {
         long twentyFourHoursAgo = System.currentTimeMillis() - (24 * 60 * 60 * 1000);
 
         getNotificationsRef(notification.getStudentId())
                 .whereEqualTo("type", notification.getType())
                 .whereEqualTo("relatedEntityId", notification.getRelatedEntityId())
-                .whereGreaterThan("createdAt", twentyFourHoursAgo)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
-                    if (queryDocumentSnapshots.isEmpty()) {
+                    boolean isDuplicate = false;
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        Long createdAt = doc.getLong("createdAt");
+                        if (createdAt != null && createdAt > twentyFourHoursAgo) {
+                            isDuplicate = true;
+                            break;
+                        }
+                    }
+                    if (!isDuplicate) {
                         createNotification(notification);
                     } else {
                         Log.d(TAG, "Duplicate notification prevented for type: " + notification.getType());
                     }
                 })
                 .addOnFailureListener(e -> {
-                    Log.e(TAG, "Error checking for duplicates", e);
-                    // Create anyway in case of network issues if critical, but safer to just log
+                    Log.e(TAG, "Error checking for duplicates, creating anyway", e);
+                    createNotification(notification);
                 });
     }
 

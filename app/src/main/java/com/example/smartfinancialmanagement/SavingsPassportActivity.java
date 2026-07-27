@@ -182,17 +182,13 @@ public class SavingsPassportActivity extends AppCompatActivity {
         card.findViewById(R.id.tvBadgeEmoji).setBackground(gd);
 
         if (isEarned) {
-            card.setBackgroundColor(Color.parseColor("#FFFCF3"));
             card.findViewById(R.id.layoutStamped).setVisibility(View.VISIBLE);
             card.findViewById(R.id.layoutLocked).setVisibility(View.GONE);
             TextView corner = card.findViewById(R.id.tvCornerBadge);
             corner.setText("✓");
-            android.graphics.drawable.GradientDrawable cornerBg = new android.graphics.drawable.GradientDrawable();
-            cornerBg.setShape(android.graphics.drawable.GradientDrawable.OVAL);
-            cornerBg.setColor(Color.parseColor("#1F8A5F"));
+            android.graphics.drawable.GradientDrawable cornerBg = (android.graphics.drawable.GradientDrawable) getResources().getDrawable(R.drawable.bg_circle_gold, null).mutate();
             corner.setBackground(cornerBg);
         } else {
-            card.setBackgroundColor(Color.parseColor("#F4F2EC"));
             card.findViewById(R.id.layoutStamped).setVisibility(View.GONE);
             card.findViewById(R.id.layoutLocked).setVisibility(View.VISIBLE);
             ((TextView) card.findViewById(R.id.tvBadgeProgressPct)).setText(badge.progressPercent + "%");
@@ -210,7 +206,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
             corner.setTextSize(8);
             android.graphics.drawable.GradientDrawable cornerBg = new android.graphics.drawable.GradientDrawable();
             cornerBg.setShape(android.graphics.drawable.GradientDrawable.OVAL);
-            cornerBg.setColor(Color.parseColor("#E3DFD3"));
+            cornerBg.setColor(Color.parseColor("#4A3AF5"));
             corner.setBackground(cornerBg);
         }
 
@@ -226,7 +222,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
             seg.setLayoutParams(lp);
             android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
             gd.setCornerRadius(dp(4));
-            gd.setColor(i < lit ? Color.parseColor("#E8C766") : Color.parseColor("#2EFFFFFF"));
+            gd.setColor(i < lit ? Color.parseColor("#00D4AA") : Color.parseColor("#2EFFFFFF"));
             seg.setBackground(gd);
             streakSegments.addView(seg);
         }

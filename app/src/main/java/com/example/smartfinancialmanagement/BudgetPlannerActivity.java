@@ -291,7 +291,7 @@ public class BudgetPlannerActivity extends AppCompatActivity {
 
             TextView tvName = new TextView(this);
             tvName.setText(income.getSource());
-            tvName.setTextColor(Color.parseColor("#111827"));
+            tvName.setTextColor(Color.parseColor("#FFFFFF"));
             tvName.setTextSize(14f);
             tvName.setTypeface(null, android.graphics.Typeface.BOLD);
 
@@ -312,7 +312,7 @@ public class BudgetPlannerActivity extends AppCompatActivity {
             TextView tvAmount = new TextView(this);
             String amountStr = "Rs." + formatAmount(income.getAmount());
             tvAmount.setText(amountStr);
-            tvAmount.setTextColor(Color.parseColor("#111827"));
+            tvAmount.setTextColor(Color.parseColor("#FFFFFF"));
             tvAmount.setTextSize(14f);
             tvAmount.setTypeface(null, android.graphics.Typeface.BOLD);
             LinearLayout.LayoutParams amtParams = new LinearLayout.LayoutParams(
