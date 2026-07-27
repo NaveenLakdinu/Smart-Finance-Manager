@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.widget.ArrayAdapter;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,7 +27,8 @@ import java.util.Locale;
 public class SavingAddGoalActivity extends AppCompatActivity {
 
     private EditText etGoalName, etTargetAmount, etCurrentAmount;
-    private TextView tvStartDate, tvTargetDate, tvDuration, tvMonthlyRequirement;
+    private TextView tvStartDate, tvTargetDate, tvDuration, tvMonthlyRequirement, tvRequirementLabel;
+    private Spinner frequencySpinner;
     private ImageView btnBack;
     private MaterialButton btnCancel, btnSave;
     
@@ -55,9 +59,20 @@ public class SavingAddGoalActivity extends AppCompatActivity {
         tvTargetDate = findViewById(R.id.tvTargetDate);
         tvDuration = findViewById(R.id.tvDuration);
         tvMonthlyRequirement = findViewById(R.id.tvMonthlyRequirement);
+        tvRequirementLabel = findViewById(R.id.tvRequirementLabel);
+        frequencySpinner = findViewById(R.id.frequencySpinner);
         btnBack = findViewById(R.id.btnBack);
         btnCancel = findViewById(R.id.btnCancel);
         btnSave = findViewById(R.id.btnSave);
+        
+        setupFrequencySpinner();
+    }
+
+    private void setupFrequencySpinner() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.saving_frequencies, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        frequencySpinner.setAdapter(adapter);
     }
 
     private void setupFirebase() {
@@ -92,6 +107,15 @@ public class SavingAddGoalActivity extends AppCompatActivity {
         etCurrentAmount.addTextChangedListener(calculationWatcher);
         tvStartDate.addTextChangedListener(calculationWatcher);
         tvTargetDate.addTextChangedListener(calculationWatcher);
+
+        frequencySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, android.view.View view, int position, long id) {
+                calculateRequirement();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
 
         btnSave.setOnClickListener(v -> saveGoal());
     }
@@ -140,7 +164,46 @@ public class SavingAddGoalActivity extends AppCompatActivity {
 
                 tvDuration.setText(diffInMonths + " Months");
 
-                double required = (target - current) / diffInMonths;
+                String freq = frequencySpinner.getSelectedItem().toString();
+                double required = 0;
+                
+                switch (freq) {
+                    case "Daily":
+                        long diffInDays = diffInMillis / (1000L * 60 * 60 * 24);
+                        if (diffInDays <= 0) diffInDays = 1;
+                        required = (target - current) / diffInDays;
+                        tvRequirementLabel.setText("Daily Requirement");
+                        break;
+                    case "Weekly":
+                        long diffInWeeks = diffInMillis / (1000L * 60 * 60 * 24 * 7);
+                        if (diffInWeeks <= 0) diffInWeeks = 1;
+                        required = (target - current) / diffInWeeks;
+                        tvRequirementLabel.setText("Weekly Requirement");
+                        break;
+                    case "Bi-Weekly":
+                        long diffInBiWeeks = diffInMillis / (1000L * 60 * 60 * 24 * 14);
+                        if (diffInBiWeeks <= 0) diffInBiWeeks = 1;
+                        required = (target - current) / diffInBiWeeks;
+                        tvRequirementLabel.setText("Bi-Weekly Requirement");
+                        break;
+                    case "Quarterly":
+                        long diffInQuarters = diffInMonths / 3;
+                        if (diffInQuarters <= 0) diffInQuarters = 1;
+                        required = (target - current) / diffInQuarters;
+                        tvRequirementLabel.setText("Quarterly Requirement");
+                        break;
+                    case "Annually":
+                        long diffInYears = diffInMonths / 12;
+                        if (diffInYears <= 0) diffInYears = 1;
+                        required = (target - current) / diffInYears;
+                        tvRequirementLabel.setText("Annual Requirement");
+                        break;
+                    default: // Monthly
+                        required = (target - current) / diffInMonths;
+                        tvRequirementLabel.setText("Monthly Requirement");
+                        break;
+                }
+
                 if (required < 0) required = 0;
 
                 tvMonthlyRequirement.setText(String.format(Locale.getDefault(), "$%.2f", required));
@@ -185,10 +248,43 @@ public class SavingAddGoalActivity extends AppCompatActivity {
             long diffInMillis = endDate.getTime() - startDate.getTime();
             long diffInMonths = diffInMillis / (1000L * 60 * 60 * 24 * 30);
             if (diffInMonths <= 0) diffInMonths = 1;
-            double monthlyRequirement = (target - current) / diffInMonths;
+            
+            String freq = frequencySpinner.getSelectedItem().toString();
+            double required = 0;
+            switch (freq) {
+                case "Daily":
+                    long diffInDays = diffInMillis / (1000L * 60 * 60 * 24);
+                    if (diffInDays <= 0) diffInDays = 1;
+                    required = (target - current) / diffInDays;
+                    break;
+                case "Weekly":
+                    long diffInWeeks = diffInMillis / (1000L * 60 * 60 * 24 * 7);
+                    if (diffInWeeks <= 0) diffInWeeks = 1;
+                    required = (target - current) / diffInWeeks;
+                    break;
+                case "Bi-Weekly":
+                    long diffInBiWeeks = diffInMillis / (1000L * 60 * 60 * 24 * 14);
+                    if (diffInBiWeeks <= 0) diffInBiWeeks = 1;
+                    required = (target - current) / diffInBiWeeks;
+                    break;
+                case "Quarterly":
+                    long diffInQuarters = diffInMonths / 3;
+                    if (diffInQuarters <= 0) diffInQuarters = 1;
+                    required = (target - current) / diffInQuarters;
+                    break;
+                case "Annually":
+                    long diffInYears = diffInMonths / 12;
+                    if (diffInYears <= 0) diffInYears = 1;
+                    required = (target - current) / diffInYears;
+                    break;
+                default:
+                    required = (target - current) / diffInMonths;
+                    break;
+            }
+            if (required < 0) required = 0;
 
-            SavingModel savingModel = new SavingModel(id, name, target, current, monthlyRequirement, 
-                    startStr, endStr, "Active", System.currentTimeMillis());
+            SavingModel savingModel = new SavingModel(id, name, target, current, required, 
+                    startStr, endStr, "Active", System.currentTimeMillis(), freq);
 
             if (id != null) {
                 databaseReference.document(id).set(savingModel).addOnCompleteListener(task -> {

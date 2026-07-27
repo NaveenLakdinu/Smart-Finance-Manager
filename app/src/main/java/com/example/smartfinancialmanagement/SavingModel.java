@@ -10,13 +10,14 @@ public class SavingModel {
     private String targetDate;
     private String status;
     private long createdAt;
+    private String frequency;
 
     public SavingModel() {
         // Default constructor required for calls to DataSnapshot.getValue(SavingModel.class)
     }
 
     public SavingModel(String savingId, String savingTitle, double targetAmount, double currentAmount,
-                       double monthlySavingAmount, String startDate, String targetDate, String status, long createdAt) {
+                       double monthlySavingAmount, String startDate, String targetDate, String status, long createdAt, String frequency) {
         this.savingId = savingId;
         this.savingTitle = savingTitle;
         this.targetAmount = targetAmount;
@@ -26,6 +27,7 @@ public class SavingModel {
         this.targetDate = targetDate;
         this.status = status;
         this.createdAt = createdAt;
+        this.frequency = frequency;
     }
 
     public String getSavingId() { return savingId; }
@@ -54,4 +56,7 @@ public class SavingModel {
 
     public long getCreatedAt() { return createdAt; }
     public void setCreatedAt(long createdAt) { this.createdAt = createdAt; }
+
+    public String getFrequency() { return frequency != null ? frequency : "Monthly"; } // Default to Monthly for backward compatibility
+    public void setFrequency(String frequency) { this.frequency = frequency; }
 }

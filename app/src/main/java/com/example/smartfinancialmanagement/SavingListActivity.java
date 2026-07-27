@@ -173,7 +173,24 @@ public class SavingListActivity extends AppCompatActivity {
                             SavingModel saving = doc.toObject(SavingModel.class);
                             if (saving == null) continue;
 
-                            boolean isCompleted = saving.getCurrentAmount() >= saving.getTargetAmount();
+                            String savingId = saving.getSavingId();
+                            if (savingId == null || savingId.isEmpty()) {
+                                savingId = doc.getId();
+                            }
+
+                            String savingTitle = saving.getSavingTitle();
+                            if (savingTitle == null || savingTitle.isEmpty()) {
+                                savingTitle = doc.getString("goalName");
+                                if (savingTitle == null) savingTitle = "Untitled Goal";
+                            }
+
+                            double currentAmount = saving.getCurrentAmount();
+                            if (currentAmount == 0.0 && doc.contains("currentSavings")) {
+                                Double cs = doc.getDouble("currentSavings");
+                                if (cs != null) currentAmount = cs;
+                            }
+
+                            boolean isCompleted = currentAmount >= saving.getTargetAmount();
                             boolean isPassedDate = false;
                             try {
                                 Date tDate = dateFormat.parse(saving.getTargetDate());
@@ -186,10 +203,10 @@ public class SavingListActivity extends AppCompatActivity {
                             else status = SavingGoalAdapter.GoalStatus.ONGOING;
 
                             allGoals.add(new SavingGoalAdapter.GoalItem(
-                                    saving.getSavingId(),
-                                    saving.getSavingTitle(),
+                                    savingId,
+                                    savingTitle,
                                     saving.getTargetAmount(),
-                                    saving.getCurrentAmount(),
+                                    currentAmount,
                                     status));
                         }
                     }

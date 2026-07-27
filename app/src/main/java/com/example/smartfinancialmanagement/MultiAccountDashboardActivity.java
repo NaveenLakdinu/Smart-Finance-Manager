@@ -100,7 +100,8 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
+                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -147,7 +148,8 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvInitials = findViewById(R.id.tvInitials);
+        tvInitials = findViewById(R.id.txtProfileLetter);
+        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
         txtGreeting = findViewById(R.id.txtGreeting);
         txtCurrentAccountName = findViewById(R.id.txtCurrentAccountName);
         txtAccountBalance = findViewById(R.id.txtAccountBalance);
@@ -225,9 +227,9 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     private void setupUserDetails() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        txtGreeting.setText(getGreetingText());
+        if (txtGreeting != null) txtGreeting.setText(getGreetingText());
 
-        if (user != null && user.getEmail() != null) {
+        if (user != null && user.getEmail() != null && tvInitials != null) {
             tvInitials.setText(String.valueOf(user.getEmail().charAt(0)).toUpperCase());
         }
     }

@@ -93,7 +93,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
+                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -140,7 +141,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void initializeViews() {
-        tvInitials = findViewById(R.id.tvInitials);
+        tvInitials = findViewById(R.id.txtProfileLetter);
+        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
         tvStudentName = findViewById(R.id.tvStudentName);
         txtTotalCount = findViewById(R.id.txtTotalCount);
         txtSubMessage = findViewById(R.id.txtSubMessage);
@@ -190,11 +192,11 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && currentUser.getEmail() != null) {
             String email = currentUser.getEmail();
-            tvStudentName.setText(email);
-            tvInitials.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
+            if (tvStudentName != null) tvStudentName.setText(email);
+            if (tvInitials != null) tvInitials.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
         } else {
-            tvStudentName.setText("guest.workspace@email.com");
-            tvInitials.setText("G");
+            if (tvStudentName != null) tvStudentName.setText("guest.workspace@email.com");
+            if (tvInitials != null) tvInitials.setText("G");
         }
     }
 

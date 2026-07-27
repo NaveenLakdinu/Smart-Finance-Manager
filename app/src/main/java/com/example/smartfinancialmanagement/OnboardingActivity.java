@@ -358,15 +358,24 @@ public class OnboardingActivity extends AppCompatActivity {
         boolean hasSaving = prefs.getBoolean("has_saving", false);
         if (hasSaving) {
             DocumentReference savingRef = userRef.collection("savings").document();
-            Map<String, Object> savingData = new HashMap<>();
-            savingData.put("goalName", prefs.getString("saving_goal_name", ""));
-            savingData.put("targetAmount", safeParseDouble(prefs.getString("saving_target_amount", "0")));
-            savingData.put("currentSavings", safeParseDouble(prefs.getString("current_savings", "0")));
-            savingData.put("targetDate", prefs.getString("saving_target_date", ""));
-            savingData.put("frequency", prefs.getString("saving_frequency", ""));
-            savingData.put("status", "Active");
-            savingData.put("createdAt", System.currentTimeMillis());
-            batch.set(savingRef, savingData);
+            String savingId = savingRef.getId();
+            
+            java.text.SimpleDateFormat sdf = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
+            String startDate = sdf.format(new java.util.Date());
+            
+            SavingModel savingModel = new SavingModel(
+                    savingId,
+                    prefs.getString("saving_goal_name", ""),
+                    safeParseDouble(prefs.getString("saving_target_amount", "0")),
+                    safeParseDouble(prefs.getString("current_savings", "0")),
+                    0.0, // monthlySavingAmount not collected in onboarding
+                    startDate,
+                    prefs.getString("saving_target_date", ""),
+                    "Active",
+                    System.currentTimeMillis(),
+                    prefs.getString("saving_frequency", "Monthly")
+            );
+            batch.set(savingRef, savingModel);
         }
 
         // 3. Update user document with subscription preferences

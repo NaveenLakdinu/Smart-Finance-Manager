@@ -417,9 +417,9 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 TextView txtSavingBadge = findViewById(R.id.txtSavingBadge);
                 if (txtSavingBadge != null) {
                     if (activeGoals > 0) {
-                        txtSavingBadge.setText("On Track");
+                        txtSavingBadge.setText(activeGoals + " Active");
                     } else {
-                        txtSavingBadge.setText("No Goals");
+                        txtSavingBadge.setText("0 Active");
                     }
                 }
                 
@@ -625,26 +625,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 }
             });
 
-        db.collection("users").document(uid).get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (txtSavingBadge != null && documentSnapshot.exists()) {
-                    String currentSavings = documentSnapshot.getString("currentSavings");
-                    if (currentSavings != null && !currentSavings.trim().isEmpty()) {
-                        try {
-                            double amt = Double.parseDouble(currentSavings.trim());
-                            if (amt > 10000) {
-                                txtSavingBadge.setText("Rs " + (int)(amt/1000) + "k");
-                            } else {
-                                txtSavingBadge.setText("Rs " + (int)amt);
-                            }
-                        } catch (NumberFormatException e) {
-                            txtSavingBadge.setText("On Track");
-                        }
-                    } else {
-                        txtSavingBadge.setText("Rs 0");
-                    }
-                }
-            });
     }
 
     private void animateCards(View... cards) {
