@@ -52,7 +52,7 @@
     <string name="hint_reg_number">BR Number / Tax ID</string>
 
     <!-- OAuth Configuration -->
-    <string name="default_web_client_id" translatable="false">YOUR_GOOGLE_WEB_CLIENT_ID_HERE</string>
+    <string name="default_web_client_id" translatable="false">748858256335-4jt74bmr6o8jsc2pq5ckg0g19ke55ltj.apps.googleusercontent.com</string>
     <string name="facebook_app_id" translatable="false">YOUR_FACEBOOK_APP_ID_HERE</string>
     <string name="fb_login_protocol_scheme" translatable="false">fbYOUR_FACEBOOK_APP_ID_HERE</string>
 
