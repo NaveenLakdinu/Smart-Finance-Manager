@@ -90,6 +90,7 @@ public class SavingPlanActivity extends AppCompatActivity {
         data.targetDate = targetDateText.getText().toString().trim();
         data.currentSavings = currentSavingsInput.getText().toString().trim();
         data.monthlySavingAmount = monthlyAmountInput.getText().toString().trim();
+        data.savingFrequency = frequencySpinner.getSelectedItem().toString();
 
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user != null) {
@@ -100,6 +101,7 @@ public class SavingPlanActivity extends AppCompatActivity {
             update.put("savingTargetDate", data.targetDate);
             update.put("currentSavings", data.currentSavings);
             update.put("monthlySavingAmount", data.monthlySavingAmount);
+            update.put("savingFrequency", data.savingFrequency);
 
             FirebaseFirestore.getInstance().collection("users").document(user.getUid())
                     .update(update)
@@ -124,6 +126,14 @@ public class SavingPlanActivity extends AppCompatActivity {
                                 targetDateText.setText(documentSnapshot.getString("savingTargetDate"));
                                 currentSavingsInput.setText(documentSnapshot.getString("currentSavings"));
                                 monthlyAmountInput.setText(documentSnapshot.getString("monthlySavingAmount"));
+                                
+                                String frequency = documentSnapshot.getString("savingFrequency");
+                                if (frequency != null) {
+                                    ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) frequencySpinner.getAdapter();
+                                    int position = adapter.getPosition(frequency);
+                                    if (position >= 0) frequencySpinner.setSelection(position);
+                                }
+                                
                                 updateProgressBar();
                             }
                         }
@@ -136,6 +146,13 @@ public class SavingPlanActivity extends AppCompatActivity {
                 targetDateText.setText(data.targetDate);
                 currentSavingsInput.setText(data.currentSavings);
                 monthlyAmountInput.setText(data.monthlySavingAmount);
+                
+                if (data.savingFrequency != null) {
+                    ArrayAdapter<CharSequence> adapter = (ArrayAdapter<CharSequence>) frequencySpinner.getAdapter();
+                    int position = adapter.getPosition(data.savingFrequency);
+                    if (position >= 0) frequencySpinner.setSelection(position);
+                }
+                
                 updateProgressBar();
             }
         }

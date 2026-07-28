@@ -30,6 +30,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private int currentPayday = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,13 +141,22 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                         } else {
                             txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
                         }
+                        
+                        Long paydayLong = documentSnapshot.getLong("payday");
+                        if (paydayLong != null) {
+                            currentPayday = paydayLong.intValue();
+                        } else {
+                            currentPayday = 0;
+                        }
                     } else {
                         txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                        currentPayday = 0;
                     }
                     txtPayrollStatus.setText(getNextPaydayText());
                 })
                 .addOnFailureListener(e -> {
                     txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                    currentPayday = 0;
                     txtPayrollStatus.setText(getNextPaydayText());
                 });
     }
@@ -155,8 +165,31 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int daysUntilPayday = daysInMonth - dayOfMonth;
-        if (daysUntilPayday <= 0) return "Payday is today!";
+        
+        int targetPayday = currentPayday;
+        if (targetPayday <= 0 || targetPayday > 31) {
+             targetPayday = daysInMonth;
+        } else if (targetPayday > daysInMonth) {
+             targetPayday = daysInMonth;
+        }
+
+        int daysUntilPayday;
+        if (dayOfMonth <= targetPayday) {
+             daysUntilPayday = targetPayday - dayOfMonth;
+        } else {
+             Calendar nextMonth = Calendar.getInstance();
+             nextMonth.add(Calendar.MONTH, 1);
+             int nextMonthDays = nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
+             int nextTarget = currentPayday;
+             if (nextTarget <= 0 || nextTarget > 31) {
+                  nextTarget = nextMonthDays;
+             } else if (nextTarget > nextMonthDays) {
+                  nextTarget = nextMonthDays;
+             }
+             daysUntilPayday = (daysInMonth - dayOfMonth) + nextTarget;
+        }
+        
+        if (daysUntilPayday == 0) return "Payday is today!";
         if (daysUntilPayday == 1) return "Next payday: tomorrow";
         return String.format(Locale.US, "Next payday in %d days", daysUntilPayday);
     }
@@ -252,6 +285,11 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
             cardPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
         }
 
+        View cardWorkerEarnings = findViewById(R.id.cardWorkerEarnings);
+        if (cardWorkerEarnings != null) {
+            cardWorkerEarnings.setOnClickListener(v -> showUpdateSalaryDialog());
+        }
+
         setupSavingsWidget();
     }
 
@@ -330,6 +368,63 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         builder.show();
     }
 
+    private void showUpdateSalaryDialog() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update Salary & Payday");
+
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        layout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        final EditText inputSalary = new EditText(this);
+        inputSalary.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        inputSalary.setHint("Monthly Salary (" + CurrencyHelper.getCurrencySymbol(this) + ")");
+        layout.addView(inputSalary);
+
+        final EditText inputPayday = new EditText(this);
+        inputPayday.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        inputPayday.setHint("Payday (1-31)");
+        layout.addView(inputPayday);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String salaryStr = inputSalary.getText().toString().trim();
+            String paydayStr = inputPayday.getText().toString().trim();
+            
+            double salary = 0;
+            int payday = 0;
+            
+            try {
+                if (!salaryStr.isEmpty()) salary = Double.parseDouble(salaryStr);
+                if (!paydayStr.isEmpty()) payday = Integer.parseInt(paydayStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            java.util.Map<String, Object> updates = new java.util.HashMap<>();
+            updates.put("monthlySalary", salary);
+            updates.put("payday", payday);
+
+            db.collection("users").document(user.getUid())
+                    .collection("worker_profile").document("profile_data")
+                    .set(updates, com.google.firebase.firestore.SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        loadSalaryFromFirestore(user.getUid());
+                        Toast.makeText(this, "Profile updated!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
     private void showNotificationPanelDialog() {
         NotificationPanelHelper.show(this);
     }
@@ -357,9 +452,23 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                 if (error != null || snapshot == null) return;
 
                 double totalSavings = 0;
+                int activeGoals = 0;
                 for (com.google.firebase.firestore.QueryDocumentSnapshot doc : snapshot) {
                     Double amount = doc.getDouble("currentAmount");
                     if (amount != null) totalSavings += amount;
+                    String status = doc.getString("status");
+                    if (!"COMPLETED".equalsIgnoreCase(status)) {
+                        activeGoals++;
+                    }
+                }
+
+                TextView txtSavingBadge = findViewById(R.id.txtSavingBadge);
+                if (txtSavingBadge != null) {
+                    if (activeGoals > 0) {
+                        txtSavingBadge.setText(activeGoals + " Active");
+                    } else {
+                        txtSavingBadge.setText("0 Active");
+                    }
                 }
 
                 String level = "Starter";

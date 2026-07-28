@@ -311,7 +311,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         startDate,
                                         targetDate,
                                         "Active",
-                                        System.currentTimeMillis()
+                                        System.currentTimeMillis(),
+                                        data.savingFrequency != null && !data.savingFrequency.isEmpty() ? data.savingFrequency : "Monthly"
                                 );
                                 
                                 batch.set(savingRef, savingModel);
