@@ -194,7 +194,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
         ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
         TextView tvInitials = findViewById(R.id.tvInitials);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            } catch (SecurityException e) {
+                getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(View.GONE);
         } else {

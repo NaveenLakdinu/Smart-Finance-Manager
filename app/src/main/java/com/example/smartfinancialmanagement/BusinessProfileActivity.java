@@ -243,7 +243,11 @@ public class BusinessProfileActivity extends AppCompatActivity {
     }
 
     private void updateAvatarImage(Uri uri) {
-        imgProfileAvatar.setImageURI(uri);
+        try {
+            imgProfileAvatar.setImageURI(uri);
+        } catch (SecurityException e) {
+            getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+        }
         imgProfileAvatar.setImageTintList(null);
         android.view.ViewGroup.LayoutParams params = imgProfileAvatar.getLayoutParams();
         params.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT;

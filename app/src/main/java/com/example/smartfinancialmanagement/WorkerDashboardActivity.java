@@ -77,7 +77,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -112,9 +112,13 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
         android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
-        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            } catch (Exception e) {
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {
@@ -124,7 +128,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     }
 
     private void initViews() {
-        tvInitials = findViewById(R.id.tvInitials);
+        tvInitials = findViewById(R.id.txtProfileLetter);
         txtGreeting = findViewById(R.id.txtGreeting);
         tvStudentName = findViewById(R.id.tvStudentName);
         txtEarnings = findViewById(R.id.txtEarnings);
