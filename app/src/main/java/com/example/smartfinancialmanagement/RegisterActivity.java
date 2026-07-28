@@ -130,7 +130,7 @@ public class RegisterActivity extends AppCompatActivity {
         UserRegistrationData data = UserRegistrationData.getInstance();
         data.fullName = etFullName.getText().toString().trim();
         data.age = etAge.getText().toString().trim();
-        data.email = etEmail.getText().toString().trim();
+        data.email = etEmail.getText().toString().trim().toLowerCase();
         data.mobile = etMobile.getText().toString().trim();
         data.password = etPassword.getText().toString();
     }
@@ -162,7 +162,7 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        String email = etEmail.getText().toString().trim();
+        String email = etEmail.getText().toString().trim().toLowerCase();
         String password = etPassword.getText().toString().trim();
 
         // 1. UI Loading State
@@ -317,6 +317,22 @@ public class RegisterActivity extends AppCompatActivity {
                                 
                                 batch.set(savingRef, savingModel);
                             }
+                            
+                            // 5. Generate Welcome Notification locally (Fallback for Free Spark Plan)
+                            DocumentReference welcomeNotifRef = db.collection("users").document(uid).collection("notifications").document();
+                            NotificationModel welcomeNotif = new NotificationModel();
+                            welcomeNotif.setId(welcomeNotifRef.getId());
+                            welcomeNotif.setStudentId(uid);
+                            welcomeNotif.setType("user");
+                            welcomeNotif.setTitle("Welcome to FinGuard!");
+                            welcomeNotif.setMessage("Your account has been created successfully. Welcome aboard!");
+                            welcomeNotif.setSeverity("info");
+                            welcomeNotif.setSourceModule("System");
+                            welcomeNotif.setCreatedAt(System.currentTimeMillis());
+                            welcomeNotif.setRead(false);
+                            
+                            batch.set(welcomeNotifRef, welcomeNotif);
+
 
                             System.out.println("Committing atomic write batch for UID: " + uid);
 

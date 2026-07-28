@@ -6,12 +6,13 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.ListenerRegistration;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.WriteBatch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class NotificationRepository {
 
@@ -44,7 +45,7 @@ public class NotificationRepository {
         }
         
         newDoc.set(notification)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Notification created successfully"))
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Notification created successfully: " + newDoc.getId()))
                 .addOnFailureListener(e -> Log.e(TAG, "Error creating notification", e));
     }
 
@@ -58,8 +59,13 @@ public class NotificationRepository {
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     boolean isDuplicate = false;
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        Long createdAt = doc.getLong("createdAt");
-                        if (createdAt != null && createdAt > twentyFourHoursAgo) {
+                        // Safe number parsing — createdAt could be Long or Double
+                        Object createdAtObj = doc.get("createdAt");
+                        long createdAt = 0L;
+                        if (createdAtObj instanceof Number) {
+                            createdAt = ((Number) createdAtObj).longValue();
+                        }
+                        if (createdAt > twentyFourHoursAgo) {
                             isDuplicate = true;
                             break;
                         }
@@ -77,25 +83,40 @@ public class NotificationRepository {
     }
 
     public ListenerRegistration listenForNotifications(String studentId, NotificationListCallback callback) {
+        Log.d(TAG, "listenForNotifications: Starting listener for userId=" + studentId
+                + " path=users/" + studentId + "/notifications");
+
         return getNotificationsRef(studentId)
                 .addSnapshotListener((value, error) -> {
                     if (error != null) {
-                        Log.e(TAG, "Listen failed.", error);
+                        Log.e(TAG, "Listen FAILED for userId=" + studentId, error);
                         callback.onError(error);
                         return;
                     }
 
                     List<NotificationModel> notifications = new ArrayList<>();
                     if (value != null) {
+                        Log.d(TAG, "Snapshot received: " + value.size() + " documents for userId=" + studentId);
+
                         for (QueryDocumentSnapshot doc : value) {
-                            NotificationModel notification = doc.toObject(NotificationModel.class);
-                            notifications.add(notification);
+                            try {
+                                NotificationModel notification = doc.toObject(NotificationModel.class);
+                                notification.setId(doc.getId()); // ensure ID is set
+                                notifications.add(notification);
+                                Log.d(TAG, "Parsed notification OK: id=" + doc.getId()
+                                        + " title=" + notification.getTitle());
+                            } catch (Exception e) {
+                                Log.e(TAG, "Error parsing notification doc: " + doc.getId(), e);
+                            }
                         }
+                    } else {
+                        Log.w(TAG, "Snapshot value is null for userId=" + studentId);
                     }
                     
                     // Sort client-side descending by createdAt
                     java.util.Collections.sort(notifications, (a, b) -> Long.compare(b.getCreatedAt(), a.getCreatedAt()));
                     
+                    Log.d(TAG, "Delivering " + notifications.size() + " notifications to callback");
                     callback.onNotificationsLoaded(notifications);
                 });
     }
@@ -111,8 +132,13 @@ public class NotificationRepository {
                     if (value != null) {
                         int unreadCount = 0;
                         for (QueryDocumentSnapshot doc : value) {
-                            Boolean isRead = doc.getBoolean("isRead");
-                            if (isRead != null && !isRead) {
+                            // Check BOTH "read" and "isRead" field names
+                            Boolean readVal = doc.getBoolean("read");
+                            if (readVal == null) {
+                                readVal = doc.getBoolean("isRead");
+                            }
+                            // If neither field exists, treat as unread
+                            if (readVal == null || !readVal) {
                                 unreadCount++;
                             }
                         }
@@ -122,25 +148,45 @@ public class NotificationRepository {
     }
 
     public void markAsRead(String studentId, String notificationId) {
+        // Update BOTH "read" and "isRead" to handle all naming conventions
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("read", true);
+        updates.put("isRead", true);
+        
         getNotificationsRef(studentId).document(notificationId)
-                .update("isRead", true)
-                .addOnSuccessListener(aVoid -> Log.d(TAG, "Notification marked as read"))
+                .update(updates)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Notification marked as read: " + notificationId))
                 .addOnFailureListener(e -> Log.e(TAG, "Error marking notification as read", e));
     }
 
     public void markAllAsRead(String studentId) {
+        // Fetch ALL notifications, check read status client-side for both field names
         getNotificationsRef(studentId)
-                .whereEqualTo("isRead", false)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     WriteBatch batch = db.batch();
+                    int count = 0;
                     for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        batch.update(doc.getReference(), "isRead", true);
+                        Boolean readVal = doc.getBoolean("read");
+                        if (readVal == null) {
+                            readVal = doc.getBoolean("isRead");
+                        }
+                        if (readVal == null || !readVal) {
+                            Map<String, Object> updates = new HashMap<>();
+                            updates.put("read", true);
+                            updates.put("isRead", true);
+                            batch.update(doc.getReference(), updates);
+                            count++;
+                        }
                     }
-                    batch.commit()
-                            .addOnSuccessListener(aVoid -> Log.d(TAG, "All notifications marked as read"))
-                            .addOnFailureListener(e -> Log.e(TAG, "Error committing batch mark-as-read", e));
+                    if (count > 0) {
+                        batch.commit()
+                                .addOnSuccessListener(aVoid -> Log.d(TAG, "All notifications marked as read"))
+                                .addOnFailureListener(e -> Log.e(TAG, "Error committing batch mark-as-read", e));
+                    } else {
+                        Log.d(TAG, "No unread notifications to mark as read");
+                    }
                 })
-                .addOnFailureListener(e -> Log.e(TAG, "Error fetching unread notifications to mark as read", e));
+                .addOnFailureListener(e -> Log.e(TAG, "Error fetching notifications to mark as read", e));
     }
 }
