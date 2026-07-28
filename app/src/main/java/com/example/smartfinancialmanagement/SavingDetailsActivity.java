@@ -76,7 +76,7 @@ public class SavingDetailsActivity extends AppCompatActivity {
     private View     progressDetail;
     private TextView tvGoalTitle, tvGoalDates, tvStatusBadge;
     private TextView tvCurrentSaved, tvTargetAmount;
-    private TextView tvRemaining, tvMonthlyNeed;
+    private TextView tvRemaining, tvMonthlyNeed, tvRequirementLabel;
     private TextView tvStartDate, tvTargetDate;
     private LinearLayout layoutAddForm, containerLog;
     private TextView tvEmptyLog, tvWarning;
@@ -111,6 +111,7 @@ public class SavingDetailsActivity extends AppCompatActivity {
         tvTargetAmount        = findViewById(R.id.tvTargetAmount);
         tvRemaining           = findViewById(R.id.tvRemaining);
         tvMonthlyNeed         = findViewById(R.id.tvMonthlyNeed);
+        tvRequirementLabel    = findViewById(R.id.tvRequirementLabel);
         tvStartDate           = findViewById(R.id.tvStartDate);
         tvTargetDate          = findViewById(R.id.tvTargetDate);
         layoutAddForm         = findViewById(R.id.layoutAddForm);
@@ -190,6 +191,23 @@ public class SavingDetailsActivity extends AppCompatActivity {
     private void updateUI() {
         if (savingModel == null) return;
 
+        if (tvRequirementLabel != null) {
+            String freq = savingModel.getFrequency() != null ? savingModel.getFrequency() : "Monthly";
+            if ("Daily".equals(freq)) {
+                tvRequirementLabel.setText("DAILY NEED");
+            } else if ("Weekly".equals(freq)) {
+                tvRequirementLabel.setText("WEEKLY NEED");
+            } else if ("Bi-Weekly".equals(freq)) {
+                tvRequirementLabel.setText("BI-WEEKLY NEED");
+            } else if ("Quarterly".equals(freq)) {
+                tvRequirementLabel.setText("QUARTERLY NEED");
+            } else if ("Annually".equals(freq)) {
+                tvRequirementLabel.setText("ANNUAL NEED");
+            } else {
+                tvRequirementLabel.setText("MONTHLY NEED");
+            }
+        }
+
         double current   = savingModel.getCurrentAmount();
         double target    = savingModel.getTargetAmount();
         double monthly   = savingModel.getMonthlySavingAmount();
@@ -233,6 +251,20 @@ public class SavingDetailsActivity extends AppCompatActivity {
             // Reached 100% for the first time (or after a reset)
             celebrationFired = true;
             triggerCelebration(savingModel.getSavingTitle());
+            
+            // Create a success notification
+            String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+                FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+            if (userId != null) {
+                NotificationRepository notificationRepo = new NotificationRepository();
+                NotificationModel notif = new NotificationModel(
+                    null, userId, "achievement_unlocked", "Goal Reached! 🏆", 
+                    "You reached your goal for " + savingModel.getSavingTitle() + "!", 
+                    "success", "SavingsPassport", savingModel.getSavingId(), false, 
+                    System.currentTimeMillis(), "SavingsPassportActivity"
+                );
+                notificationRepo.checkAndCreateDuplicateSafe(notif);
+            }
         } else if (!isCompleted) {
             // Dropped back below 100% — allow celebration to fire again if re-completed
             celebrationFired = false;

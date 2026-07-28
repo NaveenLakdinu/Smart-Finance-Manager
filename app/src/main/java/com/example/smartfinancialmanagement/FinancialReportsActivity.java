@@ -12,8 +12,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
@@ -49,6 +49,16 @@ public class FinancialReportsActivity extends AppCompatActivity {
     private PieChart chartLoans, chartSubscriptions;
     private BarChart chartUtilityBills;
     private HorizontalBarChart chartSavings;
+
+    private TextView txtReportBalance, txtReportIncome, txtReportSavings, txtReportLoans, txtReportSubscriptions, txtReportUtilities;
+
+    private double mTotalIncome = 0;
+    private double mTotalSavings = 0;
+    private double mTotalLoans = 0;
+    private double mTotalSubscriptions = 0;
+    private double mTotalUtilities = 0;
+    private double mDirectIncome = 0;
+    private double mBudgetIncome = 0;
     
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -75,7 +85,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
                 }
         );
 
-        ImageButton btnBack = findViewById(R.id.btnBack);
+        View btnBack = findViewById(R.id.btnBack);
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
         spinnerReportType = findViewById(R.id.spinnerReportType);
@@ -89,6 +99,18 @@ public class FinancialReportsActivity extends AppCompatActivity {
         chartSubscriptions = findViewById(R.id.chartSubscriptions);
         chartUtilityBills = findViewById(R.id.chartUtilityBills);
         chartSavings = findViewById(R.id.chartSavings);
+
+        stylePieChart(chartLoans);
+        stylePieChart(chartSubscriptions);
+        styleBarChart(chartUtilityBills);
+        styleBarChart(chartSavings);
+
+        txtReportBalance = findViewById(R.id.txtReportBalance);
+        txtReportIncome = findViewById(R.id.txtReportIncome);
+        txtReportSavings = findViewById(R.id.txtReportSavings);
+        txtReportLoans = findViewById(R.id.txtReportLoans);
+        txtReportSubscriptions = findViewById(R.id.txtReportSubscriptions);
+        txtReportUtilities = findViewById(R.id.txtReportUtilities);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -105,6 +127,9 @@ public class FinancialReportsActivity extends AppCompatActivity {
         if (btnDownloadPdfReport != null) {
             btnDownloadPdfReport.setOnClickListener(v -> generatePdfReport());
         }
+
+        // Fetch and display data immediately on start
+        fetchAndDisplayData();
     }
 
     private void setupSpinners() {
@@ -148,10 +173,51 @@ public class FinancialReportsActivity extends AppCompatActivity {
         int selectedMonth = spinnerMonth.getSelectedItemPosition();
         int selectedYear = isYearly ? Integer.parseInt(spinnerMonth.getSelectedItem().toString()) : Calendar.getInstance().get(Calendar.YEAR);
 
+        // Reset totals
+        mTotalIncome = 0;
+        mTotalSavings = 0;
+        mTotalLoans = 0;
+        mTotalSubscriptions = 0;
+        mTotalUtilities = 0;
+        mDirectIncome = 0;
+        mBudgetIncome = 0;
+        updateSummaryUI();
+
+        // Fetch Direct Incomes
+        db.collection("users").document(uid).collection("incomes").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mDirectIncome += amount;
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Budget Incomes
+        db.collection("users").document(uid).collection("budgetPlans").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            BudgetModel latestBudget = null;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                BudgetModel budget = doc.toObject(BudgetModel.class);
+                if (latestBudget == null) {
+                    latestBudget = budget;
+                } else if (budget.getCreatedAt() != null && latestBudget.getCreatedAt() != null) {
+                    if (budget.getCreatedAt().after(latestBudget.getCreatedAt())) {
+                        latestBudget = budget;
+                    }
+                }
+            }
+            if (latestBudget != null) {
+                mBudgetIncome = latestBudget.getSemesterIncome();
+            }
+            recalculateTotalIncome();
+        });
+
         // 1. Fetch Loans
         db.collection("users").document(uid).collection("loans").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 String name = doc.getString("loanName");
                 Double amount = doc.getDouble("principalAmount");
                 if (name != null && amount != null) {
@@ -161,19 +227,30 @@ public class FinancialReportsActivity extends AppCompatActivity {
             if (!entries.isEmpty()) {
                 PieDataSet dataSet = new PieDataSet(entries, "Loans");
                 dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(12f);
                 chartLoans.setData(new PieData(dataSet));
             } else {
                 chartLoans.clear();
             }
             chartLoans.getDescription().setEnabled(false);
             chartLoans.invalidate();
+
+            mTotalLoans = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("principalAmount");
+                if (amount != null) mTotalLoans += amount;
+            }
+            updateSummaryUI();
         });
 
         // 2. Fetch Subscriptions
         db.collection("users").document(uid).collection("subscriptions").get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<PieEntry> entries = new ArrayList<>();
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                String name = doc.getString("serviceName");
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                String name = doc.getString("name"); // Fixed from serviceName
                 Double amount = doc.getDouble("amount");
                 if (name != null && amount != null) {
                     entries.add(new PieEntry(amount.floatValue(), name));
@@ -181,35 +258,70 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             if (!entries.isEmpty()) {
                 PieDataSet dataSet = new PieDataSet(entries, "Subscriptions");
-                dataSet.setColors(ColorTemplate.PASTEL_COLORS);
+                dataSet.setColors(ColorTemplate.COLORFUL_COLORS); // Attractive colors
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(12f);
                 chartSubscriptions.setData(new PieData(dataSet));
+                
+                chartSubscriptions.setDrawHoleEnabled(true);
+                chartSubscriptions.setHoleColor(android.graphics.Color.parseColor("#1B2A4A"));
+                chartSubscriptions.setTransparentCircleRadius(0f);
+                chartSubscriptions.setHoleRadius(60f);
+                chartSubscriptions.setDrawCenterText(true);
+                chartSubscriptions.setCenterText("Active");
+                chartSubscriptions.setCenterTextSize(16f);
+                chartSubscriptions.setCenterTextColor(android.graphics.Color.WHITE);
             } else {
                 chartSubscriptions.clear();
             }
             chartSubscriptions.getDescription().setEnabled(false);
             chartSubscriptions.invalidate();
+
+            mTotalSubscriptions = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mTotalSubscriptions += amount;
+            }
+            updateSummaryUI();
         });
 
         // 3. Fetch Utility Bills
-        db.collection("users").document(uid).collection("utility_bills").get().addOnSuccessListener(queryDocumentSnapshots -> {
+        db.collection("utilityBill").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<BarEntry> entries = new ArrayList<>();
+            List<String> labels = new ArrayList<>();
             float i = 0f;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double amount = doc.getDouble("amount");
+                String name = doc.getString("billName");
                 if (amount != null) {
                     entries.add(new BarEntry(i++, amount.floatValue()));
+                    labels.add(name != null ? name : "Bill");
                 }
             }
             if (!entries.isEmpty()) {
                 BarDataSet dataSet = new BarDataSet(entries, "Utility Bills");
-                dataSet.setColors(ColorTemplate.COLORFUL_COLORS);
+                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(10f);
                 chartUtilityBills.setData(new BarData(dataSet));
+                
+                chartUtilityBills.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels));
+                chartUtilityBills.getXAxis().setGranularity(1f);
             } else {
                 chartUtilityBills.clear();
             }
             chartUtilityBills.getDescription().setEnabled(false);
             chartUtilityBills.invalidate();
+
+            mTotalUtilities = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("amount");
+                if (amount != null) mTotalUtilities += amount;
+            }
+            updateSummaryUI();
         });
 
         // 4. Fetch Savings
@@ -217,6 +329,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
             List<BarEntry> entries = new ArrayList<>();
             float i = 0f;
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double target = doc.getDouble("targetAmount");
                 Double current = doc.getDouble("currentAmount");
                 if (target != null && current != null) {
@@ -226,26 +339,67 @@ public class FinancialReportsActivity extends AppCompatActivity {
             }
             if (!entries.isEmpty()) {
                 BarDataSet dataSet = new BarDataSet(entries, "Current vs Remaining");
-                dataSet.setColors(new int[]{ColorTemplate.VORDIPLOM_COLORS[0], ColorTemplate.VORDIPLOM_COLORS[1]});
+                dataSet.setColors(new int[]{
+                        androidx.core.content.ContextCompat.getColor(FinancialReportsActivity.this, R.color.forest_300),
+                        androidx.core.content.ContextCompat.getColor(FinancialReportsActivity.this, R.color.forest_700)
+                });
                 dataSet.setStackLabels(new String[]{"Current", "Remaining"});
+                dataSet.setValueTextColor(android.graphics.Color.WHITE);
+                dataSet.setValueTextSize(10f);
                 chartSavings.setData(new BarData(dataSet));
             } else {
                 chartSavings.clear();
             }
             chartSavings.getDescription().setEnabled(false);
             chartSavings.invalidate();
+
+            mTotalSavings = 0;
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double current = doc.getDouble("currentAmount");
+                if (current != null) mTotalSavings += current;
+            }
+            updateSummaryUI();
         });
     }
 
+    private void recalculateTotalIncome() {
+        mTotalIncome = mDirectIncome > 0 ? mDirectIncome : mBudgetIncome;
+        updateSummaryUI();
+    }
+
+    private void updateSummaryUI() {
+        if (txtReportIncome != null) txtReportIncome.setText(CurrencyHelper.formatMoney(this, mTotalIncome));
+        if (txtReportSavings != null) txtReportSavings.setText(CurrencyHelper.formatMoney(this, mTotalSavings));
+        if (txtReportLoans != null) txtReportLoans.setText(CurrencyHelper.formatMoney(this, mTotalLoans));
+        if (txtReportSubscriptions != null) txtReportSubscriptions.setText(CurrencyHelper.formatMoney(this, mTotalSubscriptions));
+        if (txtReportUtilities != null) txtReportUtilities.setText(CurrencyHelper.formatMoney(this, mTotalUtilities));
+
+        double currentBalance = mTotalIncome - mTotalSavings - mTotalLoans - mTotalSubscriptions - mTotalUtilities;
+        if (txtReportBalance != null) txtReportBalance.setText(CurrencyHelper.formatMoney(this, currentBalance));
+    }
+
     private boolean matchesDateFilter(QueryDocumentSnapshot doc, boolean isYearly, int selectedMonth, int selectedYear) {
-        Long createdAt = doc.getLong("createdAt");
-        if (createdAt == null) {
-            createdAt = doc.getLong("timestamp"); // fallback
+        Object createdAtObj = doc.get("createdAt");
+        if (createdAtObj == null) {
+            createdAtObj = doc.get("timestamp"); // fallback
         }
-        if (createdAt == null) return true; // Include if no date field is found just to be safe
+        
+        if (createdAtObj == null) return true; // Include if no date field is found just to be safe
+
+        long timeInMillis = 0;
+        if (createdAtObj instanceof Number) {
+            timeInMillis = ((Number) createdAtObj).longValue();
+        } else if (createdAtObj instanceof com.google.firebase.Timestamp) {
+            timeInMillis = ((com.google.firebase.Timestamp) createdAtObj).toDate().getTime();
+        } else if (createdAtObj instanceof java.util.Date) {
+            timeInMillis = ((java.util.Date) createdAtObj).getTime();
+        } else {
+            return true; // Unknown type, just include it
+        }
 
         Calendar cal = Calendar.getInstance();
-        cal.setTimeInMillis(createdAt);
+        cal.setTimeInMillis(timeInMillis);
         int docYear = cal.get(Calendar.YEAR);
         int docMonth = cal.get(Calendar.MONTH);
 
@@ -296,5 +450,38 @@ public class FinancialReportsActivity extends AppCompatActivity {
         }
         
         document.close();
+    }
+
+    private void stylePieChart(PieChart chart) {
+        chart.setNoDataText("No chart data available.");
+        chart.setNoDataTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.text_on_dark_muted));
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setTextColor(android.graphics.Color.WHITE);
+        chart.getLegend().setWordWrapEnabled(true);
+        chart.setHoleColor(android.graphics.Color.TRANSPARENT);
+        chart.setEntryLabelColor(android.graphics.Color.WHITE);
+        chart.setUsePercentValues(true);
+        chart.setDrawEntryLabels(false);
+    }
+
+    private void styleBarChart(com.github.mikephil.charting.charts.BarLineChartBase<?> chart) {
+        chart.setNoDataText("No chart data available.");
+        chart.setNoDataTextColor(androidx.core.content.ContextCompat.getColor(this, R.color.text_on_dark_muted));
+        chart.getDescription().setEnabled(false);
+        chart.getLegend().setTextColor(android.graphics.Color.WHITE);
+        chart.getLegend().setWordWrapEnabled(true);
+        
+        com.github.mikephil.charting.components.XAxis xAxis = chart.getXAxis();
+        xAxis.setTextColor(android.graphics.Color.WHITE);
+        xAxis.setDrawGridLines(false);
+        xAxis.setPosition(com.github.mikephil.charting.components.XAxis.XAxisPosition.BOTTOM);
+        
+        com.github.mikephil.charting.components.YAxis leftAxis = chart.getAxisLeft();
+        leftAxis.setTextColor(android.graphics.Color.WHITE);
+        leftAxis.setDrawGridLines(true);
+        leftAxis.setGridColor(androidx.core.content.ContextCompat.getColor(this, R.color.forest_600));
+        
+        com.github.mikephil.charting.components.YAxis rightAxis = chart.getAxisRight();
+        rightAxis.setEnabled(false);
     }
 }

@@ -19,7 +19,7 @@ public class SavingGenerateReportActivity extends AppCompatActivity {
 
     private ImageView btnBack;
     private RadioGroup rgReportType;
-    private RadioButton rbSelectedMonth, rbCustomDate;
+    private RadioButton rbAllTime, rbSelectedMonth, rbCustomDate;
     private LinearLayout layoutMonthSelection, layoutCustomDate;
     private TextView tvSelectedMonth, tvStartDate, tvEndDate;
     private MaterialButton btnGenerate;
@@ -36,6 +36,7 @@ public class SavingGenerateReportActivity extends AppCompatActivity {
     private void initViews() {
         btnBack = findViewById(R.id.btnBack);
         rgReportType = findViewById(R.id.rgReportType);
+        rbAllTime = findViewById(R.id.rbAllTime);
         rbSelectedMonth = findViewById(R.id.rbSelectedMonth);
         rbCustomDate = findViewById(R.id.rbCustomDate);
         layoutMonthSelection = findViewById(R.id.layoutMonthSelection);
@@ -50,7 +51,10 @@ public class SavingGenerateReportActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> finish());
 
         rgReportType.setOnCheckedChangeListener((group, checkedId) -> {
-            if (checkedId == R.id.rbSelectedMonth) {
+            if (checkedId == R.id.rbAllTime) {
+                layoutMonthSelection.setVisibility(View.GONE);
+                layoutCustomDate.setVisibility(View.GONE);
+            } else if (checkedId == R.id.rbSelectedMonth) {
                 layoutMonthSelection.setVisibility(View.VISIBLE);
                 layoutCustomDate.setVisibility(View.GONE);
             } else if (checkedId == R.id.rbCustomDate) {
@@ -65,7 +69,9 @@ public class SavingGenerateReportActivity extends AppCompatActivity {
 
         btnGenerate.setOnClickListener(v -> {
             Intent intent = new Intent(this, SavingReportResultActivity.class);
-            if (rbSelectedMonth.isChecked()) {
+            if (rbAllTime.isChecked()) {
+                intent.putExtra("REPORT_TYPE", "ALL");
+            } else if (rbSelectedMonth.isChecked()) {
                 String monthYear = tvSelectedMonth.getText().toString();
                 if (monthYear.equals("MM/YYYY") || monthYear.isEmpty()) {
                     Toast.makeText(this, "Please select a month", Toast.LENGTH_SHORT).show();

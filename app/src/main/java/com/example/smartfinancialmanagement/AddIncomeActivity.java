@@ -4,7 +4,7 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.EditText;
-import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +27,7 @@ public class AddIncomeActivity extends AppCompatActivity {
     private EditText etIncomeAmount, etIncomeSource;
     private TextView tvIncomeDate;
     private MaterialButton btnSaveIncome;
-    private FrameLayout btnBackIncome;
+    private ImageView btnBackIncome;
     private TextView tvTotalIncomeValue;
     private LinearLayout containerIncomes;
 
@@ -199,7 +199,7 @@ public class AddIncomeActivity extends AppCompatActivity {
                         // Bottom row: Date
                         TextView tvDate = new TextView(this);
                         tvDate.setText(income.getDate());
-                        tvDate.setTextColor(Color.parseColor("#9CA3AF")); // Gray
+                        tvDate.setTextColor(Color.parseColor("#E5E7EB")); // Light Gray for better visibility
                         tvDate.setTextSize(14f);
                         
                         LinearLayout.LayoutParams dateParams = new LinearLayout.LayoutParams(

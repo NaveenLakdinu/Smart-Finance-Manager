@@ -1,11 +1,15 @@
 package com.example.smartfinancialmanagement;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.widget.Toast;
 import android.os.Bundle;
 import android.view.animation.OvershootInterpolator;
 import android.view.View;
+import android.widget.ImageView;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -14,9 +18,16 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Calendar;
 import android.widget.TextView;
 import java.text.NumberFormat;
 import java.util.Locale;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.text.ParseException;
+import java.util.concurrent.TimeUnit;
+import com.google.firebase.firestore.ListenerRegistration;
+import android.widget.FrameLayout;
 
 public class StudentDashboardActivity extends AppCompatActivity {
     
@@ -28,14 +39,19 @@ public class StudentDashboardActivity extends AppCompatActivity {
     private double mTotalUtilityBills = 0;
     private double mTotalSubscriptions = 0;
     
+    private NotificationRepository notificationRepo;
+    private ListenerRegistration unreadCountListener;
+    private TextView txtLoanBadge, txtSubscriptionBadge, txtUtilityBadge, txtSavingBadge;
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
 
-
-
+        notificationRepo = new NotificationRepository();
+        
         initViews();
+        setupNotificationBell();
     }
 
     @Override
@@ -45,10 +61,145 @@ public class StudentDashboardActivity extends AppCompatActivity {
         NotificationPanelHelper.checkAndShowOnResume(this);
         loadUserData();
         recalculateTotalIncome();
+        loadAvatarImage();
+        checkUpcomingDeadlines();
+        loadBadgeData();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (unreadCountListener != null) {
+            unreadCountListener.remove();
+            unreadCountListener = null;
+        }
+    }
+
+    private void setupNotificationBell() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        if (userId == null) return;
         
-        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
-        if (txtCurrentSavingsValue != null) {
-            loadSavingsFromFirestore(txtCurrentSavingsValue);
+        // Find the notification card and set click listener
+        View cardNotification = findViewById(R.id.cardNotification); // Needs ID in XML
+        if (cardNotification != null) {
+            cardNotification.setOnClickListener(v -> {
+                startActivity(new Intent(this, NotificationListActivity.class));
+            });
+        }
+        
+        // Listen for unread count
+        unreadCountListener = notificationRepo.listenForUnreadCount(userId, count -> {
+            TextView txtUnreadBadge = findViewById(R.id.txtUnreadBadge); // Needs ID in XML
+            if (txtUnreadBadge != null) {
+                if (count > 0) {
+                    txtUnreadBadge.setVisibility(View.VISIBLE);
+                    txtUnreadBadge.setText(String.valueOf(count > 99 ? "99+" : count));
+                } else {
+                    txtUnreadBadge.setVisibility(View.GONE);
+                }
+            }
+        });
+    }
+
+    private void checkUpcomingDeadlines() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        if (userId == null) return;
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+        Date today = new Date();
+
+        // 1. Check Utilities
+        FirebaseFirestore.getInstance().collection("utilityBill").whereEqualTo("userId", userId)
+            .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String status = doc.getString("status");
+                    if ("Paid".equalsIgnoreCase(status) || "PAID".equalsIgnoreCase(status)) continue;
+                    
+                    String paymentDateStr = doc.getString("paymentDate");
+                    if (paymentDateStr != null) {
+                        try {
+                            Date dueDate = sdf.parse(paymentDateStr);
+                            
+                            // Adjust for monthly recurrence
+                            Calendar todayCal = Calendar.getInstance();
+                            todayCal.setTime(today);
+                            todayCal.set(Calendar.HOUR_OF_DAY, 0);
+                            todayCal.set(Calendar.MINUTE, 0);
+                            todayCal.set(Calendar.SECOND, 0);
+                            todayCal.set(Calendar.MILLISECOND, 0);
+
+                            Calendar billCal = Calendar.getInstance();
+                            billCal.setTime(dueDate);
+                            billCal.set(Calendar.YEAR, todayCal.get(Calendar.YEAR));
+                            billCal.set(Calendar.MONTH, todayCal.get(Calendar.MONTH));
+                            
+                            if (billCal.before(todayCal)) {
+                                billCal.add(Calendar.MONTH, 1);
+                            }
+                            
+                            dueDate = billCal.getTime();
+                            
+                            long diffInMillies = dueDate.getTime() - todayCal.getTimeInMillis();
+                            long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                            
+                            if (diffInDays >= 0 && diffInDays <= 3) {
+                                String severity = diffInDays == 0 ? "critical" : "info";
+                                String msg = diffInDays == 0 ? "Utility bill due today: " + doc.getString("billName") : "Utility bill due in " + diffInDays + " days: " + doc.getString("billName");
+                                
+                                NotificationModel notif = new NotificationModel(
+                                    null, userId, "utility_due", "Utility Bill Due", msg, 
+                                    severity, "UtilityManager", doc.getId(), false, System.currentTimeMillis(), "UtilityManagerActivity"
+                                );
+                                notificationRepo.checkAndCreateDuplicateSafe(notif);
+                            }
+                        } catch (ParseException e) {
+                            // ignore parsing error for this item
+                        }
+                    }
+                }
+            });
+
+        // 2. Check Subscriptions
+        FirebaseFirestore.getInstance().collection("users").document(userId).collection("subscriptions")
+            .get().addOnSuccessListener(queryDocumentSnapshots -> {
+                for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                    String renewDateStr = doc.getString("renewDate");
+                    if (renewDateStr != null) {
+                        try {
+                            Date renewDate = sdf.parse(renewDateStr);
+                            long diffInMillies = renewDate.getTime() - today.getTime();
+                            long diffInDays = TimeUnit.DAYS.convert(diffInMillies, TimeUnit.MILLISECONDS);
+                            
+                            if (diffInDays >= 0 && diffInDays <= 3) {
+                                NotificationModel notif = new NotificationModel(
+                                    null, userId, "subscription_due", "Subscription Renewing", 
+                                    doc.getString("name") + " renews in " + diffInDays + " days.", 
+                                    "info", "SubscriptionManager", doc.getId(), false, System.currentTimeMillis(), "SubscriptionManagerActivity"
+                                );
+                                notificationRepo.checkAndCreateDuplicateSafe(notif);
+                            }
+                        } catch (ParseException e) {
+                            // ignore parsing error
+                        }
+                    }
+                }
+            });
+    }
+
+    private void loadAvatarImage() {
+        SharedPreferences prefs = getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE);
+        String uriStr = prefs.getString("avatar_uri", null);
+        ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        TextView tvInitials = findViewById(R.id.tvInitials);
+        if (uriStr != null && imgDashboardAvatar != null) {
+            imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            imgDashboardAvatar.setVisibility(View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(View.GONE);
+        } else {
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(View.VISIBLE);
         }
     }
 
@@ -88,6 +239,10 @@ public class StudentDashboardActivity extends AppCompatActivity {
         View cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         View cardSavingManager = findViewById(R.id.cardSavingManager);
         View cardUtilityManager = findViewById(R.id.cardUtilityManager);
+        txtLoanBadge = findViewById(R.id.txtLoanBadge);
+        txtSubscriptionBadge = findViewById(R.id.txtSubscriptionBadge);
+        txtUtilityBadge = findViewById(R.id.txtUtilityBadge);
+        txtSavingBadge = findViewById(R.id.txtSavingBadge);
 
         if (cardLoanManager != null) {
             cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
@@ -103,7 +258,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
         }
 
         setupSecurityButton();
-        setupSavingsWidget();
         setupRoleUpgradeCard();
 
         // Notification button
@@ -115,38 +269,61 @@ public class StudentDashboardActivity extends AppCompatActivity {
         loadAchievementData();
         loadCurrentBalance();
         loadUserData();
+
+        // Hide balance trend until historical data calculation is implemented
+        View txtBalanceTrend = findViewById(R.id.txtBalanceTrend);
+        if (txtBalanceTrend != null) {
+            txtBalanceTrend.setVisibility(View.GONE);
+        }
+        
+        View btnAddIncome = findViewById(R.id.btnAddIncome);
+        if (btnAddIncome != null) {
+            btnAddIncome.setOnClickListener(v -> startActivity(new Intent(this, AddIncomeActivity.class)));
+        }
+
+        // Set dynamic footer year
+        TextView txtDashboardFooter = findViewById(R.id.txtDashboardFooter);
+        if (txtDashboardFooter != null) {
+            int currentYear = java.util.Calendar.getInstance().get(java.util.Calendar.YEAR);
+            txtDashboardFooter.setText("Student Financial Dashboard • " + currentYear);
+        }
     }
 
     private void loadUserData() {
-        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
-            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser != null ? currentUser.getUid() : null;
 
         if (userId == null) return;
 
-        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
+                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
+                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                
+                String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
-                    String name = documentSnapshot.getString("name");
-                    if (name != null && !name.isEmpty()) {
-                        TextView tvStudentName = findViewById(R.id.tvStudentName);
-                        TextView tvInitials = findViewById(R.id.tvInitials);
-                        
-                        if (tvStudentName != null) {
-                            tvStudentName.setText(name);
-                        }
-                        
-                        if (tvInitials != null) {
-                            // Extract initials
-                            String[] words = name.trim().split("\\s+");
-                            StringBuilder initials = new StringBuilder();
-                            if (words.length > 0 && !words[0].isEmpty()) {
-                                initials.append(words[0].charAt(0));
-                                if (words.length > 1 && !words[words.length - 1].isEmpty()) {
-                                    initials.append(words[words.length - 1].charAt(0));
-                                }
-                            }
-                            tvInitials.setText(initials.toString().toUpperCase(Locale.getDefault()));
-                        }
+                    displayName = documentSnapshot.getString("name");
+                }
+                
+                if (displayName == null || displayName.trim().isEmpty()) {
+                    if (currentUser.getEmail() != null) {
+                        displayName = currentUser.getEmail();
+                    }
+                }
+                
+                if (displayName != null && !displayName.trim().isEmpty()) {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText(displayName);
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText(displayName.substring(0, 1).toUpperCase());
+                    }
+                } else {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText("User");
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText("U");
                     }
                 }
             });
@@ -188,19 +365,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void setupSavingsWidget() {
-        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
-        View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
-        View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
-
-        if (txtCurrentSavingsValue != null && btnUpdateSavings != null) {
-            loadSavingsFromFirestore(txtCurrentSavingsValue);
-            btnUpdateSavings.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
-            if (cardSavingsWidget != null) {
-                cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
-            }
-        }
-    }
 
     private void setupRoleUpgradeCard() {
         View cardRoleUpgrade = findViewById(R.id.cardRoleUpgrade);
@@ -224,79 +388,17 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
+        startActivity(new Intent(this, NotificationListActivity.class));
     }
 
-    private void loadSavingsFromFirestore(TextView txtValue) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String currentSavings = documentSnapshot.getString("currentSavings");
-                        if (currentSavings != null && !currentSavings.trim().isEmpty()) {
-                            try {
-                                double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
-                            } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
-                            }
-                        } else {
-                            txtValue.setText("LKR 0.00");
-                        }
-                    }
-                });
-    }
-
-    private void showUpdateSavingsDialog(TextView txtValue) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Update Current Savings");
-
-        final android.widget.EditText input = new android.widget.EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Enter amount (LKR)");
-
-        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
-        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
-        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = paddingPx;
-        params.rightMargin = paddingPx;
-        input.setLayoutParams(params);
-        container.addView(input);
-        builder.setView(container);
-
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String val = input.getText().toString().trim();
-            if (!val.isEmpty()) {
-                try {
-                    double amt = Double.parseDouble(val);
-                    FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                            .update("currentSavings", String.valueOf(amt))
-                            .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
-                                Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
-    }
 
 
 
     private void loadAchievementData() {
         String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
-            FirebaseAuth.getInstance().getCurrentUser().getUid() : "test_user";
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) return;
 
         FirebaseFirestore.getInstance().collection("users").document(userId).collection("savings")
             .addSnapshotListener((snapshot, error) -> {
@@ -315,9 +417,9 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 TextView txtSavingBadge = findViewById(R.id.txtSavingBadge);
                 if (txtSavingBadge != null) {
                     if (activeGoals > 0) {
-                        txtSavingBadge.setText("On Track");
+                        txtSavingBadge.setText(activeGoals + " Active");
                     } else {
-                        txtSavingBadge.setText("No Goals");
+                        txtSavingBadge.setText("0 Active");
                     }
                 }
                 
@@ -420,7 +522,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
             });
 
         // Listen to utility bills
-        FirebaseFirestore.getInstance().collection("users").document(userId).collection("utility_bills")
+        FirebaseFirestore.getInstance().collection("utilityBill").whereEqualTo("userId", userId)
             .addSnapshotListener((snapshot, error) -> {
                 if (error != null || snapshot == null) return;
                 mTotalUtilityBills = 0;
@@ -430,7 +532,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
                     if (amount != null) mTotalUtilityBills += amount;
                     
                     String status = doc.getString("status");
-                    if (!"PAID".equalsIgnoreCase(status)) {
+                    if (!"PAID".equalsIgnoreCase(status) && !"Paid".equalsIgnoreCase(status)) {
                         dueCount++;
                     }
                 }
@@ -486,6 +588,43 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (txtBudgetLeftValue != null) {
             txtBudgetLeftValue.setText(CurrencyHelper.formatMoney(this, budgetLeft));
         }
+    }
+
+    
+    private void loadBadgeData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(uid).collection("loans").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtLoanBadge != null) {
+                    txtLoanBadge.setText(queryDocumentSnapshots.size() + " Active");
+                }
+            });
+
+        db.collection("users").document(uid).collection("subscriptions").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtSubscriptionBadge != null) {
+                    txtSubscriptionBadge.setText(queryDocumentSnapshots.size() + " Plans");
+                }
+            });
+
+        db.collection("utilityBill").whereEqualTo("userId", uid).get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                if (txtUtilityBadge != null) {
+                    int dueCount = 0;
+                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String status = doc.getString("status");
+                        if (!"Paid".equalsIgnoreCase(status) && !"PAID".equalsIgnoreCase(status)) {
+                            dueCount++;
+                        }
+                    }
+                    txtUtilityBadge.setText(dueCount + " Due");
+                }
+            });
+
     }
 
     private void animateCards(View... cards) {

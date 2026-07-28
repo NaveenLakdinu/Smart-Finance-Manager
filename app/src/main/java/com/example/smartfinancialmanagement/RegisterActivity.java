@@ -209,6 +209,8 @@ public class RegisterActivity extends AppCompatActivity {
                             userMap.put("mobile", data.mobile);
                             userMap.put("role", userRole); // Saving the correctly synchronized role string
                             userMap.put("timestamp", System.currentTimeMillis());
+                            userMap.put("status", "Active");
+                            userMap.put("fcmToken", "");
 
                             // Loan Details Summary
                             userMap.put("hasLoan", data.hasLoan);
@@ -307,7 +309,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         startDate,
                                         targetDate,
                                         "Active",
-                                        System.currentTimeMillis()
+                                        System.currentTimeMillis(),
+                                        data.savingFrequency != null && !data.savingFrequency.isEmpty() ? data.savingFrequency : "Monthly"
                                 );
                                 
                                 batch.set(savingRef, savingModel);

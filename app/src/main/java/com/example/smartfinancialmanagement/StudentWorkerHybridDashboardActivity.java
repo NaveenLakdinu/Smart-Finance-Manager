@@ -22,14 +22,15 @@ import java.util.Locale;
 
 public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
 
-    private TextView txtProfileLetter, txtGreeting, txtUserEmail;
+    private TextView tvInitials, tvStudentName;
     private TextView txtEarnings, txtPayrollStatus, txtCurrentSavingsValue;
     private View btnUpdateSavings, cardSavingsWidget, btnSecurity, btnTopLogout;
-    private View cardStudentBudget, cardLoanManager, cardSavingManager, cardSubscriptionManager, cardUtilityManager;
+    private View cardDashboardHeaderAchievement, cardDashboardHeaderBudget, cardLoanManager, cardSavingManager, cardSubscriptionManager, cardUtilityManager;
     private View cardWorkTasks, cardExpenseClaims, cardPayslips;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    private int currentPayday = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,15 +41,16 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         db = FirebaseFirestore.getInstance();
 
         initViews();
-        setupBottomNavigation();
         setupUserDetails();
+        loadUserData();
+        loadAvatarImage();
+        loadAchievementBadge();
         setupClickListeners();
     }
 
     private void initViews() {
-        txtProfileLetter = findViewById(R.id.txtProfileLetter);
-        txtGreeting = findViewById(R.id.txtGreeting);
-        txtUserEmail = findViewById(R.id.txtUserEmail);
+        tvInitials = findViewById(R.id.tvInitials);
+        tvStudentName = findViewById(R.id.tvStudentName);
         txtEarnings = findViewById(R.id.txtEarnings);
         txtPayrollStatus = findViewById(R.id.txtPayrollStatus);
         txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
@@ -58,7 +60,8 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         btnSecurity = findViewById(R.id.btnSecurity);
         btnTopLogout = findViewById(R.id.btnTopLogout);
 
-        cardStudentBudget = findViewById(R.id.cardStudentBudget);
+        cardDashboardHeaderAchievement = findViewById(R.id.cardDashboardHeaderAchievement);
+        cardDashboardHeaderBudget = findViewById(R.id.cardDashboardHeaderBudget);
         cardLoanManager = findViewById(R.id.cardLoanManager);
         cardSavingManager = findViewById(R.id.cardSavingManager);
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
@@ -68,44 +71,57 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         cardPayslips = findViewById(R.id.cardPayslips);
     }
 
-    private void setupBottomNavigation() {
-        BottomNavigationView bottomNav = findViewById(R.id.bottomNavigationView);
-        if (bottomNav == null) return;
-        bottomNav.setOnItemSelectedListener(item -> {
-            int itemId = item.getItemId();
-            if (itemId == R.id.nav_dashboard) {
-                return true;
-            } else if (itemId == R.id.nav_budget) {
-                startActivity(new Intent(this, StudentBudgetActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_savings) {
-                startActivity(new Intent(this, StudentSavingActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            } else if (itemId == R.id.nav_profile) {
-                startActivity(new Intent(this, StudentProfileActivity.class));
-                overridePendingTransition(0, 0);
-                return true;
-            }
-            return false;
-        });
-    }
-
     private void setupUserDetails() {
         FirebaseUser user = mAuth.getCurrentUser();
-        txtGreeting.setText(getGreetingText());
 
         if (user != null) {
             String email = user.getEmail();
             if (email != null && !email.isEmpty()) {
-                txtUserEmail.setText(email);
-                txtProfileLetter.setText(String.valueOf(email.charAt(0)).toUpperCase());
             }
             loadSalaryFromFirestore(user.getUid());
         } else {
-            txtEarnings.setText("Rs 0.00");
+            txtEarnings.setText(CurrencyHelper.formatMoney(this, 0));
             txtPayrollStatus.setText(getNextPaydayText());
+        }
+    }
+
+    
+    private void loadUserData() {
+        String userId = FirebaseAuth.getInstance().getCurrentUser() != null ? 
+            FirebaseAuth.getInstance().getCurrentUser().getUid() : null;
+
+        if (userId == null) return;
+
+        FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    TextView tvStudentName = findViewById(R.id.tvStudentName);
+                    if (tvStudentName != null) {
+                        tvStudentName.setText(documentSnapshot.getString("name"));
+                    }
+                    TextView tvInitials = findViewById(R.id.tvInitials);
+                    if (tvInitials != null) {
+                        String name = documentSnapshot.getString("name");
+                        if (name != null && !name.trim().isEmpty()) {
+                            tvInitials.setText(name.substring(0, 1).toUpperCase());
+                        }
+                    }
+                }
+            });
+    }
+
+    private void loadAvatarImage() {
+        android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
+        String uriStr = prefs.getString("avatar_uri", null);
+        android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        TextView tvInitials = findViewById(R.id.tvInitials);
+        if (uriStr != null && imgDashboardAvatar != null) {
+            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
+        } else {
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(android.view.View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.VISIBLE);
         }
     }
 
@@ -117,17 +133,26 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     if (documentSnapshot.exists()) {
                         Double salary = documentSnapshot.getDouble("monthlySalary");
                         if (salary != null && salary > 0) {
-                            txtEarnings.setText(String.format(Locale.US, "Rs %.2f", salary));
+                            txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, salary));
                         } else {
-                            txtEarnings.setText("Rs 0.00");
+                            txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                        }
+                        
+                        Long paydayLong = documentSnapshot.getLong("payday");
+                        if (paydayLong != null) {
+                            currentPayday = paydayLong.intValue();
+                        } else {
+                            currentPayday = 0;
                         }
                     } else {
-                        txtEarnings.setText("Rs 0.00");
+                        txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                        currentPayday = 0;
                     }
                     txtPayrollStatus.setText(getNextPaydayText());
                 })
                 .addOnFailureListener(e -> {
-                    txtEarnings.setText("Rs 0.00");
+                    txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                    currentPayday = 0;
                     txtPayrollStatus.setText(getNextPaydayText());
                 });
     }
@@ -136,8 +161,31 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        int daysUntilPayday = daysInMonth - dayOfMonth;
-        if (daysUntilPayday <= 0) return "Payday is today!";
+        
+        int targetPayday = currentPayday;
+        if (targetPayday <= 0 || targetPayday > 31) {
+             targetPayday = daysInMonth;
+        } else if (targetPayday > daysInMonth) {
+             targetPayday = daysInMonth;
+        }
+
+        int daysUntilPayday;
+        if (dayOfMonth <= targetPayday) {
+             daysUntilPayday = targetPayday - dayOfMonth;
+        } else {
+             Calendar nextMonth = Calendar.getInstance();
+             nextMonth.add(Calendar.MONTH, 1);
+             int nextMonthDays = nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
+             int nextTarget = currentPayday;
+             if (nextTarget <= 0 || nextTarget > 31) {
+                  nextTarget = nextMonthDays;
+             } else if (nextTarget > nextMonthDays) {
+                  nextTarget = nextMonthDays;
+             }
+             daysUntilPayday = (daysInMonth - dayOfMonth) + nextTarget;
+        }
+        
+        if (daysUntilPayday == 0) return "Payday is today!";
         if (daysUntilPayday == 1) return "Next payday: tomorrow";
         return String.format(Locale.US, "Next payday in %d days", daysUntilPayday);
     }
@@ -155,6 +203,11 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
     private void setupClickListeners() {
         // Notification button
         View btnNotifications = findViewById(R.id.btnNotifications);
+        View btnProfileAvatar = findViewById(R.id.btnProfileAvatar);
+        if (btnProfileAvatar != null) {
+            btnProfileAvatar.setOnClickListener(v -> startActivity(new Intent(this, StudentProfileActivity.class)));
+        }
+
         if (btnNotifications != null) {
             btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
         }
@@ -199,8 +252,12 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
             });
         }
 
-        if (cardStudentBudget != null) {
-            cardStudentBudget.setOnClickListener(v -> startActivity(new Intent(this, StudentBudgetActivity.class)));
+
+        if (cardDashboardHeaderAchievement != null) {
+            cardDashboardHeaderAchievement.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
+        }
+        if (cardDashboardHeaderBudget != null) {
+            cardDashboardHeaderBudget.setOnClickListener(v -> startActivity(new Intent(this, BudgetPlannerActivity.class)));
         }
         if (cardLoanManager != null) {
             cardLoanManager.setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
@@ -222,6 +279,11 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         }
         if (cardPayslips != null) {
             cardPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+        }
+
+        View cardWorkerEarnings = findViewById(R.id.cardWorkerEarnings);
+        if (cardWorkerEarnings != null) {
+            cardWorkerEarnings.setOnClickListener(v -> showUpdateSalaryDialog());
         }
 
         setupSavingsWidget();
@@ -248,12 +310,12 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                         if (currentSavings != null && !currentSavings.trim().isEmpty()) {
                             try {
                                 double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
+                                txtValue.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("Rs " + currentSavings);
+                                txtValue.setText(CurrencyHelper.getCurrencySymbol(StudentWorkerHybridDashboardActivity.this) + " " + currentSavings);
                             }
                         } else {
-                            txtValue.setText("Rs 0.00");
+                            txtValue.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
                         }
                     }
                 });
@@ -268,7 +330,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
 
         final EditText input = new EditText(this);
         input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Enter amount (LKR)");
+        input.setHint("Enter amount (" + CurrencyHelper.getCurrencySymbol(this) + ")");
 
         int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
         android.widget.FrameLayout container = new android.widget.FrameLayout(this);
@@ -288,7 +350,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     db.collection("users").document(user.getUid())
                             .update("currentSavings", String.valueOf(amt))
                             .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "Rs %.2f", amt));
+                                txtValue.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, amt));
                                 Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -296,6 +358,63 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
                     Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
                 }
             }
+        });
+
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
+    }
+
+    private void showUpdateSalaryDialog() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Update Salary & Payday");
+
+        android.widget.LinearLayout layout = new android.widget.LinearLayout(this);
+        layout.setOrientation(android.widget.LinearLayout.VERTICAL);
+        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
+        layout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
+
+        final EditText inputSalary = new EditText(this);
+        inputSalary.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
+        inputSalary.setHint("Monthly Salary (" + CurrencyHelper.getCurrencySymbol(this) + ")");
+        layout.addView(inputSalary);
+
+        final EditText inputPayday = new EditText(this);
+        inputPayday.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        inputPayday.setHint("Payday (1-31)");
+        layout.addView(inputPayday);
+
+        builder.setView(layout);
+
+        builder.setPositiveButton("Save", (dialog, which) -> {
+            String salaryStr = inputSalary.getText().toString().trim();
+            String paydayStr = inputPayday.getText().toString().trim();
+            
+            double salary = 0;
+            int payday = 0;
+            
+            try {
+                if (!salaryStr.isEmpty()) salary = Double.parseDouble(salaryStr);
+                if (!paydayStr.isEmpty()) payday = Integer.parseInt(paydayStr);
+            } catch (NumberFormatException e) {
+                Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            java.util.Map<String, Object> updates = new java.util.HashMap<>();
+            updates.put("monthlySalary", salary);
+            updates.put("payday", payday);
+
+            db.collection("users").document(user.getUid())
+                    .collection("worker_profile").document("profile_data")
+                    .set(updates, com.google.firebase.firestore.SetOptions.merge())
+                    .addOnSuccessListener(aVoid -> {
+                        loadSalaryFromFirestore(user.getUid());
+                        Toast.makeText(this, "Profile updated!", Toast.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
         });
 
         builder.setNegativeButton("Cancel", null);
@@ -315,6 +434,59 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
             loadSavingsFromFirestore(txtCurrentSavingsValue);
         }
         setupUserDetails();
+        loadUserData();
+        loadAvatarImage();
+        loadAchievementBadge();
+    }
+
+    private void loadAchievementBadge() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        db.collection("users").document(user.getUid()).collection("savings")
+            .addSnapshotListener((snapshot, error) -> {
+                if (error != null || snapshot == null) return;
+
+                double totalSavings = 0;
+                int activeGoals = 0;
+                for (com.google.firebase.firestore.QueryDocumentSnapshot doc : snapshot) {
+                    Double amount = doc.getDouble("currentAmount");
+                    if (amount != null) totalSavings += amount;
+                    String status = doc.getString("status");
+                    if (!"COMPLETED".equalsIgnoreCase(status)) {
+                        activeGoals++;
+                    }
+                }
+
+                TextView txtSavingBadge = findViewById(R.id.txtSavingBadge);
+                if (txtSavingBadge != null) {
+                    if (activeGoals > 0) {
+                        txtSavingBadge.setText(activeGoals + " Active");
+                    } else {
+                        txtSavingBadge.setText("0 Active");
+                    }
+                }
+
+                String level = "Starter";
+                if (totalSavings >= 50000) level = "Gold Saver";
+                else if (totalSavings >= 25000) level = "Silver Saver";
+                else if (totalSavings >= 5000) level = "Bronze Saver";
+
+                TextView txtAchievementPts = findViewById(R.id.txtAchievementPts);
+                if (txtAchievementPts != null) {
+                    txtAchievementPts.setText(level);
+                }
+
+                TextView txtTrophyIcon = findViewById(R.id.txtTrophyIcon);
+                if (txtTrophyIcon != null) {
+                    switch (level) {
+                        case "Gold Saver": txtTrophyIcon.setText("🥇"); break;
+                        case "Silver Saver": txtTrophyIcon.setText("🥈"); break;
+                        case "Bronze Saver": txtTrophyIcon.setText("🥉"); break;
+                        default: txtTrophyIcon.setText("🏆"); break;
+                    }
+                }
+            });
     }
 
     private void animateCards(View... cards) {

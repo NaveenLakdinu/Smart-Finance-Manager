@@ -94,10 +94,27 @@ public class SavingManagerActivity extends AppCompatActivity {
                             SavingModel saving = doc.toObject(SavingModel.class);
                             if (saving == null) continue;
 
-                            totalTarget += saving.getTargetAmount();
-                            totalCurrent += saving.getCurrentAmount();
+                            String savingId = saving.getSavingId();
+                            if (savingId == null || savingId.isEmpty()) {
+                                savingId = doc.getId();
+                            }
 
-                            boolean isCompleted = saving.getCurrentAmount() >= saving.getTargetAmount();
+                            String savingTitle = saving.getSavingTitle();
+                            if (savingTitle == null || savingTitle.isEmpty()) {
+                                savingTitle = doc.getString("goalName");
+                                if (savingTitle == null) savingTitle = "Untitled Goal";
+                            }
+
+                            double currentAmount = saving.getCurrentAmount();
+                            if (currentAmount == 0.0 && doc.contains("currentSavings")) {
+                                Double cs = doc.getDouble("currentSavings");
+                                if (cs != null) currentAmount = cs;
+                            }
+
+                            totalTarget += saving.getTargetAmount();
+                            totalCurrent += currentAmount;
+
+                            boolean isCompleted = currentAmount >= saving.getTargetAmount();
                             boolean isPassedDate = false;
                             try {
                                 Date tDate = dateFormat.parse(saving.getTargetDate());
@@ -110,10 +127,10 @@ public class SavingManagerActivity extends AppCompatActivity {
                             else status = SavingGoalAdapter.GoalStatus.ONGOING;
 
                             goalsList.add(new SavingGoalAdapter.GoalItem(
-                                    saving.getSavingId(),
-                                    saving.getSavingTitle(),
+                                    savingId,
+                                    savingTitle,
                                     saving.getTargetAmount(),
-                                    saving.getCurrentAmount(),
+                                    currentAmount,
                                     status));
                         }
                     }

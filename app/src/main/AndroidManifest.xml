@@ -110,7 +110,7 @@
 
         <activity
             android:name=".StudentDashboardActivity"
-            android:exported="false" />
+            android:exported="true" />
 
         <activity
             android:name=".RoleUpgradeActivity"
@@ -152,7 +152,7 @@
             android:exported="false" />
         <activity
             android:name=".FinancialReportsActivity"
-            android:exported="false" />
+            android:exported="true" />
 
 
         <activity
@@ -271,6 +271,9 @@
         <activity
             android:name=".SavingsPassportActivity"
             android:exported="false" />
+        <activity
+            android:name=".NotificationListActivity"
+            android:exported="false" />
 
         <!-- Transfer activities -->
         <activity
@@ -313,6 +316,7 @@
                 <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
             </intent-filter>
         </receiver>
+
 
     </application>
 

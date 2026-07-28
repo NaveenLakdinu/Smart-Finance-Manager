@@ -43,7 +43,7 @@ import androidx.core.content.ContextCompat;
 public class BusinessDashboardActivity extends AppCompatActivity {
 
     private static final String TAG = "BusinessDashboard";
-    private TextView txtProfileLetter, txtUserEmail, txtTotalCount, txtSubMessage, btnNotifications;
+    private TextView tvInitials, tvStudentName, txtTotalCount, txtSubMessage, btnNotifications;
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private RecyclerView recyclerBusinessFilters;
     private View btnTopLogout;
@@ -73,15 +73,77 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        loadUserData();
+        loadAvatarImage();
+        loadUserData();
+        loadAvatarImage();
 
         NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
 
+    
+    private void loadUserData() {
+        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        String userId = currentUser != null ? currentUser.getUid() : null;
+
+        if (userId == null) return;
+
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
+                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
+                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
+                
+                String displayName = null;
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    displayName = documentSnapshot.getString("name");
+                }
+                
+                if (displayName == null || displayName.trim().isEmpty()) {
+                    if (currentUser.getEmail() != null) {
+                        displayName = currentUser.getEmail();
+                    }
+                }
+                
+                if (displayName != null && !displayName.trim().isEmpty()) {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText(displayName);
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText(displayName.substring(0, 1).toUpperCase());
+                    }
+                } else {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText("User");
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText("U");
+                    }
+                }
+            });
+    }
+
+    private void loadAvatarImage() {
+        android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
+        String uriStr = prefs.getString("avatar_uri", null);
+        android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        if (uriStr != null && imgDashboardAvatar != null) {
+            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
+        } else {
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(android.view.View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.VISIBLE);
+        }
+    }
+
     private void initializeViews() {
-        txtProfileLetter = findViewById(R.id.txtProfileLetter);
-        txtUserEmail = findViewById(R.id.txtUserEmail);
+        tvInitials = findViewById(R.id.txtProfileLetter);
+        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
+        tvStudentName = findViewById(R.id.tvStudentName);
         txtTotalCount = findViewById(R.id.txtTotalCount);
         txtSubMessage = findViewById(R.id.txtSubMessage);
         btnNotifications = findViewById(R.id.btnNotifications);
@@ -130,11 +192,11 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && currentUser.getEmail() != null) {
             String email = currentUser.getEmail();
-            txtUserEmail.setText(email);
-            txtProfileLetter.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
+            if (tvStudentName != null) tvStudentName.setText(email);
+            if (tvInitials != null) tvInitials.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
         } else {
-            txtUserEmail.setText("guest.workspace@email.com");
-            txtProfileLetter.setText("G");
+            if (tvStudentName != null) tvStudentName.setText("guest.workspace@email.com");
+            if (tvInitials != null) tvInitials.setText("G");
         }
     }
 
@@ -330,7 +392,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
+        startActivity(new Intent(this, NotificationListActivity.class));
     }
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {

@@ -16,7 +16,7 @@ public class UserRegistrationData {
 
     // --- Saving Details ---
     public boolean hasSavingPlan = false;
-    public String goalName, targetAmount, targetDate, currentSavings, monthlySavingAmount;
+    public String goalName, targetAmount, targetDate, currentSavings, monthlySavingAmount, savingFrequency;
 
     // --- Terms & Updates ---
     public boolean isTermsAccepted = false;
