@@ -249,14 +249,37 @@ public class ExpenseClaimListActivity extends AppCompatActivity {
     }
 
     private void showClaimDetailDialog(ExpenseClaim claim) {
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(claim.getTitle())
                 .setMessage(String.format(Locale.US,
                         "Category: %s\nAmount: Rs %,.2f\nDate: %s\nStatus: %s\n\n%s",
                         claim.getCategoryLabel(), claim.getAmount(),
                         claim.getExpenseDate(), claim.getStatusLabel(),
-                        claim.getDescription() != null ? claim.getDescription() : ""))
-                .setPositiveButton("OK", null)
-                .show();
+                        claim.getDescription() != null ? claim.getDescription() : ""));
+
+        if ("PENDING".equalsIgnoreCase(claim.getStatus())) {
+            builder.setPositiveButton("Approve", (dialog, which) -> updateClaimStatus(claim, "APPROVED"))
+                   .setNegativeButton("Reject", (dialog, which) -> updateClaimStatus(claim, "REJECTED"))
+                   .setNeutralButton("Cancel", null);
+        } else {
+            builder.setPositiveButton("OK", null);
+        }
+        
+        builder.show();
+    }
+
+    private void updateClaimStatus(ExpenseClaim claim, String newStatus) {
+        if (uid == null || claim.getClaimId() == null || db == null) return;
+
+        db.collection("users").document(uid)
+                .collection("expense_claims").document(claim.getClaimId())
+                .update("status", newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Claim " + newStatus.toLowerCase(Locale.US), Toast.LENGTH_SHORT).show();
+                    loadClaimsFromFirestore();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to update claim: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 }
