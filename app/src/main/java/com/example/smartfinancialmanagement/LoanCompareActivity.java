@@ -368,7 +368,7 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                String monthlySavingStr = documentSnapshot.getString("monthlySavingAmount");
+                String monthlySavingStr = documentSnapshot.getString("currentSavings");
                 if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
                     try {
                         userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
@@ -620,6 +620,10 @@ public class LoanCompareActivity extends AppCompatActivity {
         EditText etInterest = cardView.findViewById(R.id.etInterest);
         EditText etDuration = cardView.findViewById(R.id.etDuration);
         TextView txtResult = cardView.findViewById(R.id.txtComparisonResult);
+        TextView txtEmiResult = cardView.findViewById(R.id.txtEmiResult);
+        TextView txtInterestResult = cardView.findViewById(R.id.txtInterestResult);
+        TextView txtTotalResult = cardView.findViewById(R.id.txtTotalResult);
+        android.widget.RadioGroup rgInterestType = cardView.findViewById(R.id.rgCardInterestType);
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -627,7 +631,7 @@ public class LoanCompareActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calculateCardEMI(etPrincipal, etInterest, etDuration, txtResult);
+                calculateCardEMI(etPrincipal, etInterest, etDuration, txtEmiResult, txtInterestResult, txtTotalResult, txtResult, rgInterestType);
             }
 
             @Override
@@ -637,9 +641,12 @@ public class LoanCompareActivity extends AppCompatActivity {
         etPrincipal.addTextChangedListener(watcher);
         etInterest.addTextChangedListener(watcher);
         etDuration.addTextChangedListener(watcher);
+        rgInterestType.setOnCheckedChangeListener((group, checkedId) -> {
+            calculateCardEMI(etPrincipal, etInterest, etDuration, txtEmiResult, txtInterestResult, txtTotalResult, txtResult, rgInterestType);
+        });
     }
 
-    private void calculateCardEMI(EditText etP, EditText etI, EditText etD, TextView txtRes) {
+    private void calculateCardEMI(EditText etP, EditText etI, EditText etD, TextView txtEmi, TextView txtInt, TextView txtTot, TextView txtRes, android.widget.RadioGroup rgGroup) {
         try {
             String pStr = etP.getText().toString();
             String iStr = etI.getText().toString();
@@ -649,22 +656,48 @@ public class LoanCompareActivity extends AppCompatActivity {
                 double p = Double.parseDouble(pStr);
                 double annualRate = Double.parseDouble(iStr);
                 int n = Integer.parseInt(dStr);
+                
+                boolean isFlat = rgGroup != null && rgGroup.getCheckedRadioButtonId() == R.id.rbCardFlat;
 
-                double r = annualRate / (12 * 100);
                 double emi;
-                if (r == 0) {
-                    emi = p / n;
+                double totalInterest;
+                double total;
+
+                if (isFlat) {
+                    double r = annualRate / 100.0;
+                    totalInterest = p * r * (n / 12.0);
+                    total = p + totalInterest;
+                    emi = total / n;
                 } else {
-                    emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                    double r = annualRate / (12 * 100.0);
+                    if (r == 0) {
+                        emi = p / n;
+                        total = p;
+                        totalInterest = 0;
+                    } else {
+                        emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                        total = emi * n;
+                        totalInterest = total - p;
+                    }
                 }
 
-                double total = emi * n;
-                txtRes.setText(String.format(Locale.US, "EMI: Rs %.2f | Total: Rs %.2f", emi, total));
+                txtEmi.setText(String.format(Locale.US, "Rs %.2f", emi));
+                txtInt.setText(String.format(Locale.US, "Rs %.2f", totalInterest));
+                txtTot.setText(String.format(Locale.US, "Rs %.2f", total));
+                
+                // For compatibility with extractComparisonData
+                txtRes.setText(String.format(Locale.US, "EMI: LKR %.2f | Total: LKR %.2f", emi, total));
             } else {
-                txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
+                txtEmi.setText("Rs 0.00");
+                txtInt.setText("Rs 0.00");
+                txtTot.setText("Rs 0.00");
+                txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
             }
         } catch (Exception e) {
-            txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
+            txtEmi.setText("Rs 0.00");
+            txtInt.setText("Rs 0.00");
+            txtTot.setText("Rs 0.00");
+            txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
         }
     }
 }

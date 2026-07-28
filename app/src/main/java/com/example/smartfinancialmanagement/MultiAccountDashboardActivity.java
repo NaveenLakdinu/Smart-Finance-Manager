@@ -101,7 +101,6 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
                 android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
-                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -136,9 +135,13 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
         android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
-        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            } catch (Exception e) {
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {
@@ -149,7 +152,11 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     private void initViews() {
         tvInitials = findViewById(R.id.txtProfileLetter);
-        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
+        if (tvInitials != null) {
+            tvInitials.setOnClickListener(v -> {
+                startActivity(new android.content.Intent(this, AccountSettingsActivity.class));
+            });
+        }
         txtGreeting = findViewById(R.id.txtGreeting);
         txtCurrentAccountName = findViewById(R.id.txtCurrentAccountName);
         txtAccountBalance = findViewById(R.id.txtAccountBalance);
@@ -227,9 +234,9 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
 
     private void setupUserDetails() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (txtGreeting != null) txtGreeting.setText(getGreetingText());
+        txtGreeting.setText(getGreetingText());
 
-        if (user != null && user.getEmail() != null && tvInitials != null) {
+        if (user != null && user.getEmail() != null) {
             tvInitials.setText(String.valueOf(user.getEmail().charAt(0)).toUpperCase());
         }
     }

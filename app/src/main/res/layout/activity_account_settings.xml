@@ -136,68 +136,105 @@
                         android:inputType="phone"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- University -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="University"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditUniversity"
+                    <LinearLayout
+                        android:id="@+id/llStudentInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. University of Colombo"
-                        android:inputType="text"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <!-- Course -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Course"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditCourse"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. BSc Computer Science"
-                        android:inputType="text"
-                        android:layout_marginBottom="16dp" />
+                        <!-- University -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="University"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditUniversity"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@drawable/bg_input"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. University of Colombo"
+                            android:inputType="text"
+                            android:layout_marginBottom="16dp" />
 
-                    <!-- Student ID -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Student ID"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditStudentId"
+                        <!-- Course -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Course"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditCourse"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@drawable/bg_input"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. BSc Computer Science"
+                            android:inputType="text"
+                            android:layout_marginBottom="16dp" />
+
+                        <!-- Student ID -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Student ID"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditStudentId"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@drawable/bg_input"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. STU12345"
+                            android:inputType="text"
+                            android:layout_marginBottom="32dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llWorkerInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. STU12345"
-                        android:inputType="text"
-                        android:layout_marginBottom="32dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- Monthly Income -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly Income"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditMonthlyIncome"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@drawable/bg_input"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. 5000"
+                            android:inputType="numberDecimal"
+                            android:layout_marginBottom="32dp" />
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"

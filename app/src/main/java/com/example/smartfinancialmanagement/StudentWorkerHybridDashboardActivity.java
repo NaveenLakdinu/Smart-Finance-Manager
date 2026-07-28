@@ -116,7 +116,11 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
         TextView tvInitials = findViewById(R.id.tvInitials);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            } catch (SecurityException e) {
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {

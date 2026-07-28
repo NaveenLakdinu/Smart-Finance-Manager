@@ -49,7 +49,6 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     private TextView txtViewAllTasks;
     private List<Task> pendingTasks = new ArrayList<>();
     private TaskAdapter pendingTaskAdapter;
-    private int currentPayday = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +78,6 @@ public class WorkerDashboardActivity extends AppCompatActivity {
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
                 android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
-                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -114,9 +112,13 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
         android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
-        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            } catch (Exception e) {
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {
@@ -127,7 +129,6 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private void initViews() {
         tvInitials = findViewById(R.id.txtProfileLetter);
-        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
         txtGreeting = findViewById(R.id.txtGreeting);
         tvStudentName = findViewById(R.id.tvStudentName);
         txtEarnings = findViewById(R.id.txtEarnings);
@@ -149,7 +150,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     private void setupUserDetails() {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        if (txtGreeting != null) txtGreeting.setText(getGreetingText());
+        txtGreeting.setText(getGreetingText());
 
         if (user != null) {
             loadSalaryFromFirestore(user.getUid());
@@ -163,31 +164,9 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         Calendar cal = Calendar.getInstance();
         int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
         int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
-        
-        int targetPayday = currentPayday;
-        if (targetPayday <= 0 || targetPayday > 31) {
-             targetPayday = daysInMonth;
-        } else if (targetPayday > daysInMonth) {
-             targetPayday = daysInMonth;
-        }
+        int daysUntilPayday = daysInMonth - dayOfMonth;
 
-        int daysUntilPayday;
-        if (dayOfMonth <= targetPayday) {
-             daysUntilPayday = targetPayday - dayOfMonth;
-        } else {
-             Calendar nextMonth = Calendar.getInstance();
-             nextMonth.add(Calendar.MONTH, 1);
-             int nextMonthDays = nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-             int nextTarget = currentPayday;
-             if (nextTarget <= 0 || nextTarget > 31) {
-                  nextTarget = nextMonthDays;
-             } else if (nextTarget > nextMonthDays) {
-                  nextTarget = nextMonthDays;
-             }
-             daysUntilPayday = (daysInMonth - dayOfMonth) + nextTarget;
-        }
-
-        if (daysUntilPayday == 0) {
+        if (daysUntilPayday <= 0) {
             txtPayrollStatus.setText("Payday is today!");
         } else if (daysUntilPayday == 1) {
             txtPayrollStatus.setText("Next payday: tomorrow");
@@ -208,7 +187,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private void setupClickListeners() {
         if (tvInitials != null) {
-            tvInitials.setOnClickListener(v -> startActivity(new Intent(this, StudentProfileActivity.class)));
+            tvInitials.setOnClickListener(v -> startActivity(new Intent(this, WorkerProfileActivity.class)));
         }
 
         cardWorkTasks.setOnClickListener(v -> {
@@ -250,11 +229,6 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
         setupSecurityButton();
         setupSavingsWidget();
-        
-        View cardWorkerEarnings = findViewById(R.id.cardWorkerEarnings);
-        if (cardWorkerEarnings != null) {
-            cardWorkerEarnings.setOnClickListener(v -> showUpdateSalaryDialog());
-        }
     }
 
     private void setupSecurityButton() {
@@ -407,81 +381,11 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                         } else {
                             txtEarnings.setText("LKR 0.00");
                         }
-                        
-                        Long paydayLong = documentSnapshot.getLong("payday");
-                        if (paydayLong != null) {
-                            currentPayday = paydayLong.intValue();
-                        } else {
-                            currentPayday = 0;
-                        }
                     } else {
                         txtEarnings.setText("LKR 0.00");
-                        currentPayday = 0;
                     }
-                    updatePayrollStatus();
                 })
-                .addOnFailureListener(e -> {
-                    txtEarnings.setText("LKR 0.00");
-                    currentPayday = 0;
-                    updatePayrollStatus();
-                });
-    }
-
-    private void showUpdateSalaryDialog() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Update Salary & Payday");
-
-        LinearLayout layout = new LinearLayout(this);
-        layout.setOrientation(LinearLayout.VERTICAL);
-        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
-        layout.setPadding(paddingPx, paddingPx, paddingPx, paddingPx);
-
-        final EditText inputSalary = new EditText(this);
-        inputSalary.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        inputSalary.setHint("Monthly Salary (LKR)");
-        layout.addView(inputSalary);
-
-        final EditText inputPayday = new EditText(this);
-        inputPayday.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-        inputPayday.setHint("Payday (1-31)");
-        layout.addView(inputPayday);
-
-        builder.setView(layout);
-
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String salaryStr = inputSalary.getText().toString().trim();
-            String paydayStr = inputPayday.getText().toString().trim();
-            
-            double salary = 0;
-            int payday = 0;
-            
-            try {
-                if (!salaryStr.isEmpty()) salary = Double.parseDouble(salaryStr);
-                if (!paydayStr.isEmpty()) payday = Integer.parseInt(paydayStr);
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            java.util.Map<String, Object> updates = new java.util.HashMap<>();
-            updates.put("monthlySalary", salary);
-            updates.put("payday", payday);
-
-            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                    .collection("worker_profile").document("profile_data")
-                    .set(updates, com.google.firebase.firestore.SetOptions.merge())
-                    .addOnSuccessListener(aVoid -> {
-                        loadSalaryFromFirestore(user.getUid());
-                        Toast.makeText(this, "Profile updated!", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-        });
-
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
+                .addOnFailureListener(e -> txtEarnings.setText("LKR 0.00"));
     }
 
     private void showUpdateSavingsDialog(TextView txtValue) {

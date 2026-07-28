@@ -93,8 +93,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
                 android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
-                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
+                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
                 
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -129,9 +128,13 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
         android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
-        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        TextView tvInitials = findViewById(R.id.txtProfileLetter);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
+            } catch (Exception e) {
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {
@@ -142,7 +145,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
     private void initializeViews() {
         tvInitials = findViewById(R.id.txtProfileLetter);
-        if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
         tvStudentName = findViewById(R.id.tvStudentName);
         txtTotalCount = findViewById(R.id.txtTotalCount);
         txtSubMessage = findViewById(R.id.txtSubMessage);
@@ -154,6 +156,10 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         btnManageBusinesses.setOnClickListener(v -> {
             startActivity(new Intent(this, ManageBusinessActivity.class));
         });
+
+        if (tvInitials != null) {
+            tvInitials.setOnClickListener(v -> startActivity(new Intent(this, BusinessProfileActivity.class)));
+        }
 
         recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
 
@@ -192,11 +198,11 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null && currentUser.getEmail() != null) {
             String email = currentUser.getEmail();
-            if (tvStudentName != null) tvStudentName.setText(email);
-            if (tvInitials != null) tvInitials.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
+            tvStudentName.setText(email);
+            tvInitials.setText(email.substring(0, 1).toUpperCase(Locale.ROOT));
         } else {
-            if (tvStudentName != null) tvStudentName.setText("guest.workspace@email.com");
-            if (tvInitials != null) tvInitials.setText("G");
+            tvStudentName.setText("guest.workspace@email.com");
+            tvInitials.setText("G");
         }
     }
 

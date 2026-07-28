@@ -7,14 +7,11 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,17 +20,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class StudentProfileActivity extends AppCompatActivity {
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
+
+public class BusinessProfileActivity extends AppCompatActivity {
 
     private EditText etProfileName;
-    private TextView txtProfileEmail, txtStatGoalsValue, txtStatSavedValue, txtStatScoreValue;
+    private TextView txtProfileEmail, txtProfileBusiness, txtStatRevenueValue, txtStatExpensesValue, txtStatProfitValue;
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
-    
-    private MaterialCardView menuAchievements, menuFinancialReports, menuAccountSettings, cardSignOut;
+
+    private MaterialCardView menuEditRevenue, menuInvoices, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -67,7 +70,7 @@ public class StudentProfileActivity extends AppCompatActivity {
                 }
                 outputStream.close();
                 inputStream.close();
-                
+
                 Uri internalUri = Uri.fromFile(file);
                 updateAvatarImage(internalUri);
                 saveAvatarUri(internalUri.toString());
@@ -81,7 +84,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_student_profile);
+        setContentView(R.layout.activity_business_profile);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -96,20 +99,19 @@ public class StudentProfileActivity extends AppCompatActivity {
     private void initViews() {
         etProfileName = findViewById(R.id.txtProfileName);
         txtProfileEmail = findViewById(R.id.txtProfileEmail);
+        txtProfileBusiness = findViewById(R.id.txtProfileBusiness);
         imgProfileAvatar = findViewById(R.id.imgProfileAvatar);
         btnEditAvatar = findViewById(R.id.btnEditAvatar);
-        
-        txtStatGoalsValue = findViewById(R.id.txtStatGoalsValue);
-        txtStatSavedValue = findViewById(R.id.txtStatSavedValue);
-        txtStatScoreValue = findViewById(R.id.txtStatScoreValue);
-        
 
-        menuAchievements = findViewById(R.id.menuAchievements);
-        menuFinancialReports = findViewById(R.id.menuFinancialReports);
+        txtStatRevenueValue = findViewById(R.id.txtStatRevenueValue);
+        txtStatExpensesValue = findViewById(R.id.txtStatExpensesValue);
+        txtStatProfitValue = findViewById(R.id.txtStatProfitValue);
+
+        menuEditRevenue = findViewById(R.id.menuEditRevenue);
+        menuInvoices = findViewById(R.id.menuInvoices);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
-        
-        // Disable inline editing of name as it is now managed elsewhere or read-only
+
         if (etProfileName != null) {
             etProfileName.setFocusable(false);
             etProfileName.setClickable(false);
@@ -127,8 +129,7 @@ public class StudentProfileActivity extends AppCompatActivity {
     private void loadUserData() {
         if (user != null) {
             txtProfileEmail.setText(user.getEmail());
-            
-            // Load Name from Firestore
+
             db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -136,30 +137,29 @@ public class StudentProfileActivity extends AppCompatActivity {
                     }
                 });
 
-            // Load University and Course from Firestore
-            db.collection("users").document(user.getUid()).collection("student_profile").document("profile_data").get()
+            db.collection("users").document(user.getUid())
+                .collection("business_profile").document("profile_data").get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String uni = documentSnapshot.getString("university");
-                        String course = documentSnapshot.getString("course");
-                        
-                        TextView txtUni = findViewById(R.id.txtProfileUniversity);
-                        if (txtUni != null) {
-                            if (uni != null && !uni.isEmpty()) {
-                                if (course != null && !course.isEmpty()) {
-                                    txtUni.setText(uni + " • " + course);
+                        String bizName = documentSnapshot.getString("businessName");
+                        String industry = documentSnapshot.getString("industryType");
+
+                        TextView txtBiz = findViewById(R.id.txtProfileBusiness);
+                        if (txtBiz != null) {
+                            if (bizName != null && !bizName.isEmpty()) {
+                                if (industry != null && !industry.isEmpty()) {
+                                    txtBiz.setText(bizName + " - " + industry);
                                 } else {
-                                    txtUni.setText(uni);
+                                    txtBiz.setText(bizName);
                                 }
                             } else {
-                                txtUni.setText("University not set");
+                                txtBiz.setText("Business not set");
                             }
                         }
                     }
                 });
         }
 
-        // Load local avatar
         SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
         String uriStr = prefs.getString(KEY_AVATAR_URI, null);
         if (uriStr != null) {
@@ -175,47 +175,52 @@ public class StudentProfileActivity extends AppCompatActivity {
     private void loadStats() {
         if (user == null) return;
 
-        // Load Savings Stats
-        db.collection("users").document(user.getUid()).collection("savings")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    double totalSaved = 0;
-                    int activeGoals = 0;
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        SavingModel saving = doc.toObject(SavingModel.class);
-                        totalSaved += saving.getCurrentAmount();
-                        if (!"COMPLETED".equals(saving.getStatus())) {
-                            activeGoals++;
-                        }
+        db.collection("users").document(user.getUid())
+            .collection("business_profile").document("profile_data").get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    Double revenue = documentSnapshot.getDouble("averageMonthlyRevenue");
+                    Double expenses = documentSnapshot.getDouble("businessExpenses");
+                    Double profitMargin = documentSnapshot.getDouble("profitMargin");
+
+                    if (revenue != null && revenue > 0) {
+                        txtStatRevenueValue.setText(String.format(Locale.US, "LKR %,.0f", revenue));
+                    } else {
+                        txtStatRevenueValue.setText("LKR 0");
                     }
-                    txtStatGoalsValue.setText(String.valueOf(activeGoals));
-                    txtStatSavedValue.setText(CurrencyHelper.formatMoney(this, totalSaved));
-                    
-                    // Simple points system: 1 point per 1000 saved
-                    int points = (int) (totalSaved / 1000);
-                    txtStatScoreValue.setText(String.valueOf(points) + " Pts");
-                });
+
+                    if (expenses != null && expenses > 0) {
+                        txtStatExpensesValue.setText(String.format(Locale.US, "LKR %,.0f", expenses));
+                    } else {
+                        txtStatExpensesValue.setText("LKR 0");
+                    }
+
+                    if (profitMargin != null) {
+                        txtStatProfitValue.setText(String.format(Locale.US, "%.1f%%", profitMargin));
+                    } else {
+                        txtStatProfitValue.setText("0%");
+                    }
+                }
+            });
     }
 
     private void setupListeners() {
-        android.widget.ImageButton btnBackToHome = findViewById(R.id.btnBackToHome);
+        ImageButton btnBackToHome = findViewById(R.id.btnBackToHome);
         if (btnBackToHome != null) {
             btnBackToHome.setOnClickListener(v -> finish());
         }
 
         if (btnEditAvatar != null) btnEditAvatar.setOnClickListener(v -> pickImage());
         if (imgProfileAvatar != null) imgProfileAvatar.setOnClickListener(v -> pickImage());
-        
 
-        
-        if (menuAchievements != null) {
-            menuAchievements.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
+        if (menuEditRevenue != null) {
+            menuEditRevenue.setOnClickListener(v -> startActivity(new Intent(this, BusinessIncomeActivity.class)));
         }
-        
-        if (menuFinancialReports != null) {
-            menuFinancialReports.setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
+
+        if (menuInvoices != null) {
+            menuInvoices.setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
         }
-        
+
         if (menuAccountSettings != null) {
             menuAccountSettings.setOnClickListener(v -> startActivity(new Intent(this, AccountSettingsActivity.class)));
         }
@@ -249,7 +254,7 @@ public class StudentProfileActivity extends AppCompatActivity {
         params.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
         imgProfileAvatar.setLayoutParams(params);
         imgProfileAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        
+
         android.view.View parent = (android.view.View) imgProfileAvatar.getParent();
         if (parent != null) {
             parent.setClipToOutline(true);
