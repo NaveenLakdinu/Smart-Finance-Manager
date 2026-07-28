@@ -17,6 +17,8 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:background="@color/forest_300"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="@id/monthlySubsCard"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="-32dp"/>
@@ -133,6 +135,8 @@
             android:layout_marginTop="24dp"
             android:orientation="horizontal"
             android:weightSum="2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/monthlySubsCard">
 
             <!-- Tab: Loan Management -->
@@ -286,6 +290,8 @@
             android:layout_marginTop="8dp"
             android:orientation="vertical"
             android:paddingHorizontal="24dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@id/activeSubsCard">
 
             <!-- Netflix Item -->
