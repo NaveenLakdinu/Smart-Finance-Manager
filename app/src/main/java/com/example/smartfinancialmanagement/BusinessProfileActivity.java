@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.view.View;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,11 +22,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Locale;
 
 public class BusinessProfileActivity extends AppCompatActivity {
@@ -36,7 +39,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
 
-    private MaterialCardView menuEditRevenue, menuInvoices, menuAccountSettings, cardSignOut;
+    private MaterialCardView menuAddBusiness, menuInvoices, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -107,7 +110,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
         txtStatExpensesValue = findViewById(R.id.txtStatExpensesValue);
         txtStatProfitValue = findViewById(R.id.txtStatProfitValue);
 
-        menuEditRevenue = findViewById(R.id.menuEditRevenue);
+        menuAddBusiness = findViewById(R.id.menuAddBusiness);
         menuInvoices = findViewById(R.id.menuInvoices);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
@@ -130,34 +133,44 @@ public class BusinessProfileActivity extends AppCompatActivity {
         if (user != null) {
             txtProfileEmail.setText(user.getEmail());
 
+            // Fetch User Profile Name
             db.collection("users").document(user.getUid()).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
-                        etProfileName.setText(documentSnapshot.getString("name"));
-                    }
-                });
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                            etProfileName.setText(documentSnapshot.getString("name"));
+                        }
+                    });
 
-            db.collection("users").document(user.getUid())
-                .collection("business_profile").document("profile_data").get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String bizName = documentSnapshot.getString("businessName");
-                        String industry = documentSnapshot.getString("industryType");
-
+            // Fetch ALL Businesses for this user
+            db.collection("businesses")
+                    .whereEqualTo("userId", user.getUid())
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
                         TextView txtBiz = findViewById(R.id.txtProfileBusiness);
                         if (txtBiz != null) {
-                            if (bizName != null && !bizName.isEmpty()) {
-                                if (industry != null && !industry.isEmpty()) {
-                                    txtBiz.setText(bizName + " - " + industry);
-                                } else {
-                                    txtBiz.setText(bizName);
+                            if (!queryDocumentSnapshots.isEmpty()) {
+                                StringBuilder bizBuilder = new StringBuilder();
+                                for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
+                                    String bizName = doc.getString("businessName");
+                                    String category = doc.getString("businessCategory");
+
+                                    if (bizName != null && !bizName.isEmpty()) {
+                                        if (bizBuilder.length() > 0) {
+                                            bizBuilder.append(", ");
+                                        }
+                                        if (category != null && !category.isEmpty()) {
+                                            bizBuilder.append(bizName).append(" (").append(category).append(")");
+                                        } else {
+                                            bizBuilder.append(bizName);
+                                        }
+                                    }
                                 }
+                                txtBiz.setText(bizBuilder.length() > 0 ? bizBuilder.toString() : "Business not set");
                             } else {
                                 txtBiz.setText("Business not set");
                             }
                         }
-                    }
-                });
+                    });
         }
 
         SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
@@ -172,36 +185,67 @@ public class BusinessProfileActivity extends AppCompatActivity {
         prefs.edit().putString(KEY_AVATAR_URI, uriStr).apply();
     }
 
+    // Fetch CURRENT MONTH stats only & Apply Currency Preference
     private void loadStats() {
         if (user == null) return;
 
-        db.collection("users").document(user.getUid())
-            .collection("business_profile").document("profile_data").get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    Double revenue = documentSnapshot.getDouble("averageMonthlyRevenue");
-                    Double expenses = documentSnapshot.getDouble("businessExpenses");
-                    Double profitMargin = documentSnapshot.getDouble("profitMargin");
+        // Clean single-assignment initialization to keep currencySymbol effectively final
+        String rawSymbol = CurrencyHelper.getCurrencySymbol(this);
+        final String currencySymbol = (rawSymbol != null && !rawSymbol.trim().isEmpty()) ? rawSymbol : "LKR";
 
-                    if (revenue != null && revenue > 0) {
-                        txtStatRevenueValue.setText(String.format(Locale.US, "LKR %,.0f", revenue));
-                    } else {
-                        txtStatRevenueValue.setText("LKR 0");
+        // Current month token format "yyyy-MM" (e.g. "2026-03")
+        SimpleDateFormat monthFormat = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+        final String currentMonthToken = monthFormat.format(Calendar.getInstance().getTime());
+
+        // Step 1: Query current month revenues
+        db.collection("revenues")
+                .whereEqualTo("userId", user.getUid())
+                .get()
+                .addOnSuccessListener(revenueSnapshots -> {
+                    double totalRevenue = 0.0;
+                    for (QueryDocumentSnapshot doc : revenueSnapshots) {
+                        Double amount = doc.getDouble("amount");
+                        String dateStr = doc.getString("date");
+
+                        // Filter strictly for current month
+                        if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                            totalRevenue += amount;
+                        }
                     }
 
-                    if (expenses != null && expenses > 0) {
-                        txtStatExpensesValue.setText(String.format(Locale.US, "LKR %,.0f", expenses));
-                    } else {
-                        txtStatExpensesValue.setText("LKR 0");
-                    }
+                    final double finalRevenue = totalRevenue;
 
-                    if (profitMargin != null) {
-                        txtStatProfitValue.setText(String.format(Locale.US, "%.1f%%", profitMargin));
-                    } else {
-                        txtStatProfitValue.setText("0%");
-                    }
-                }
-            });
+                    // Step 2: Query current month expenses
+                    db.collection("expenses")
+                            .whereEqualTo("userId", user.getUid())
+                            .get()
+                            .addOnSuccessListener(expenseSnapshots -> {
+                                double totalExpenses = 0.0;
+                                for (QueryDocumentSnapshot doc : expenseSnapshots) {
+                                    Double amount = doc.getDouble("amount");
+                                    String dateStr = doc.getString("date");
+
+                                    // Filter strictly for current month
+                                    if (amount != null && dateStr != null && dateStr.startsWith(currentMonthToken)) {
+                                        totalExpenses += amount;
+                                    }
+                                }
+
+                                // Apply dynamic currency symbol from CurrencyHelper
+                                txtStatRevenueValue.setText(String.format(Locale.US, "%s %,.0f", currencySymbol, finalRevenue));
+                                txtStatExpensesValue.setText(String.format(Locale.US, "%s %,.0f", currencySymbol, totalExpenses));
+
+                                // Calculate Net Profit & Profit Margin (Current Month)
+                                double netProfit = finalRevenue - totalExpenses;
+                                double profitMarginPercent = 0.0;
+
+                                if (finalRevenue > 0) {
+                                    profitMarginPercent = (netProfit / finalRevenue) * 100;
+                                }
+
+                                txtStatProfitValue.setText(String.format(Locale.US, "%.1f%%", profitMarginPercent));
+                            });
+                });
     }
 
     private void setupListeners() {
@@ -213,8 +257,8 @@ public class BusinessProfileActivity extends AppCompatActivity {
         if (btnEditAvatar != null) btnEditAvatar.setOnClickListener(v -> pickImage());
         if (imgProfileAvatar != null) imgProfileAvatar.setOnClickListener(v -> pickImage());
 
-        if (menuEditRevenue != null) {
-            menuEditRevenue.setOnClickListener(v -> startActivity(new Intent(this, BusinessIncomeActivity.class)));
+        if (menuAddBusiness != null) {
+            menuAddBusiness.setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
         }
 
         if (menuInvoices != null) {
@@ -246,7 +290,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
         try {
             imgProfileAvatar.setImageURI(uri);
         } catch (SecurityException e) {
-            getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
         }
         imgProfileAvatar.setImageTintList(null);
         android.view.ViewGroup.LayoutParams params = imgProfileAvatar.getLayoutParams();
@@ -255,7 +299,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
         imgProfileAvatar.setLayoutParams(params);
         imgProfileAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
 
-        android.view.View parent = (android.view.View) imgProfileAvatar.getParent();
+        View parent = (View) imgProfileAvatar.getParent();
         if (parent != null) {
             parent.setClipToOutline(true);
         }
