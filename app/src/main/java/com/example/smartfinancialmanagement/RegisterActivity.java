@@ -31,6 +31,11 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
+    
+    // OAuth fields
+    private boolean isOAuthSignIn = false;
+    private android.widget.LinearLayout passwordContainer;
+    private android.widget.TextView tvPasswordLabel, tvPasswordHint;
 
     // Variable to store the passed user role from UserRoleActivity
     private String userRole;
@@ -74,6 +79,34 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile = findViewById(R.id.etMobile);
         etPassword = findViewById(R.id.etPassword);
         passwordToggle = findViewById(R.id.passwordToggle);
+        
+        passwordContainer = findViewById(R.id.passwordContainer);
+        tvPasswordLabel = findViewById(R.id.tvPasswordLabel);
+        tvPasswordHint = findViewById(R.id.tvPasswordHint);
+
+        isOAuthSignIn = getIntent().getBooleanExtra("isOAuthSignIn", false);
+
+        if (isOAuthSignIn) {
+            // Hide password fields
+            if (passwordContainer != null) passwordContainer.setVisibility(android.view.View.GONE);
+            if (tvPasswordLabel != null) tvPasswordLabel.setVisibility(android.view.View.GONE);
+            if (tvPasswordHint != null) tvPasswordHint.setVisibility(android.view.View.GONE);
+
+            // Pre-fill user data from Firebase Auth
+            com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
+            if (user != null) {
+                UserRegistrationData data = UserRegistrationData.getInstance();
+                if (user.getDisplayName() != null) {
+                    etFullName.setText(user.getDisplayName());
+                    data.fullName = user.getDisplayName();
+                }
+                if (user.getEmail() != null) {
+                    etEmail.setText(user.getEmail());
+                    data.email = user.getEmail();
+                    etEmail.setEnabled(false); // Make it read-only
+                }
+            }
+        }
 
         etFullName.addTextChangedListener(new android.text.TextWatcher() {
             @Override
@@ -180,15 +213,37 @@ public class RegisterActivity extends AppCompatActivity {
         };
         timeoutHandler.postDelayed(timeoutRunnable, 20000);
 
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        System.out.println("✅ Firebase Auth successful");
-                        
-                        try {
-                            String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
-                            
-                            if (uid == null) {
+        if (isOAuthSignIn) {
+            saveUserToFirestore(timeoutHandler, timeoutRunnable, data);
+        } else {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(task -> {
+                        if (task.isSuccessful()) {
+                            System.out.println("✅ Firebase Auth successful");
+                            saveUserToFirestore(timeoutHandler, timeoutRunnable, data);
+                        } else {
+                            timeoutHandler.removeCallbacks(timeoutRunnable);
+                            setLoadingState(false);
+
+                            Exception e = task.getException();
+                            String errorMessage = e != null ? e.getMessage() : "Unknown error";
+
+                            if (errorMessage != null && errorMessage.contains("already in use")) {
+                                errorMessage = "This email is already registered. Please Login instead.";
+                            }
+
+                            System.err.println("❌ Auth Error: " + errorMessage);
+                            Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+    }
+
+    private void saveUserToFirestore(android.os.Handler timeoutHandler, Runnable timeoutRunnable, UserRegistrationData data) {
+        try {
+            String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
+            
+            if (uid == null) {
                                 throw new Exception("Failed to retrieve user ID after successful auth");
                             }
 
@@ -363,22 +418,6 @@ public class RegisterActivity extends AppCompatActivity {
                             
                             Toast.makeText(this, "Internal Error: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         }
-                        
-                    } else {
-                        timeoutHandler.removeCallbacks(timeoutRunnable);
-                        setLoadingState(false);
-
-                        Exception e = task.getException();
-                        String errorMessage = e != null ? e.getMessage() : "Unknown error";
-
-                        if (errorMessage != null && errorMessage.contains("already in use")) {
-                            errorMessage = "This email is already registered. Please Login instead.";
-                        }
-
-                        System.err.println("❌ Auth Error: " + errorMessage);
-                        Toast.makeText(this, "Registration Failed: " + errorMessage, Toast.LENGTH_LONG).show();
-                    }
-                });
     }
 
     private void setLoadingState(boolean isLoading) {
@@ -455,16 +494,18 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
-        if (password.isEmpty()) {
-            etPassword.setError("Password is required");
-            etPassword.requestFocus();
-            return false;
-        }
+        if (!isOAuthSignIn) {
+            if (password.isEmpty()) {
+                etPassword.setError("Password is required");
+                etPassword.requestFocus();
+                return false;
+            }
 
-        if (password.length() < 6) {
-            etPassword.setError("Password must be at least 6 characters");
-            etPassword.requestFocus();
-            return false;
+            if (password.length() < 6) {
+                etPassword.setError("Password must be at least 6 characters");
+                etPassword.requestFocus();
+                return false;
+            }
         }
 
         if (!termsCheckbox.isChecked()) {

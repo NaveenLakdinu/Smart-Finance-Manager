@@ -12,7 +12,20 @@
           "package_name": "com.example.smartfinancialmanagement"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "748858256335-06tabu01qc71ijvqnp7ffvdq6haqfdaf.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.smartfinancialmanagement",
+            "certificate_hash": "099ccd4f117341942a1ac00c35b3af72787f7480"
+          }
+        },
+        {
+          "client_id": "748858256335-4jt74bmr6o8jsc2pq5ckg0g19ke55ltj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyAKhVOYg55VaVLjzDM2N6_1SG6nwiVGCy8"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748858256335-4jt74bmr6o8jsc2pq5ckg0g19ke55ltj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
