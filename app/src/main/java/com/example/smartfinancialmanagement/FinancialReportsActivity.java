@@ -177,11 +177,34 @@ public class FinancialReportsActivity extends AppCompatActivity {
         mBudgetIncome = 0;
         updateSummaryUI();
 
-        // Fetch Direct Incomes
+        // Fetch Direct Incomes (Students/Default)
         db.collection("users").document(uid).collection("incomes").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double amount = doc.getDouble("amount");
+                if (amount != null) mDirectIncome += amount;
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Invoices (Business Owners)
+        db.collection("invoices").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                String status = doc.getString("status");
+                if (status != null && status.equalsIgnoreCase("paid")) {
+                    Double amount = doc.getDouble("grandTotal");
+                    if (amount != null) mDirectIncome += amount;
+                }
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Payslips (Workers)
+        db.collection("users").document(uid).collection("payslips").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("netPay");
                 if (amount != null) mDirectIncome += amount;
             }
             recalculateTotalIncome();
