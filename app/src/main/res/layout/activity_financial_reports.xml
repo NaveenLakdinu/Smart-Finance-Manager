@@ -347,27 +347,6 @@
                                 android:textSize="13sp" />
                         </LinearLayout>
 
-                        <!-- Utilities -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Total Utility Bills"
-                                android:textColor="@color/text_on_dark_secondary"
-                                android:textSize="13sp" />
-                            <TextView
-                                android:id="@+id/txtReportUtilities"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="LKR 0.00"
-                                android:textColor="@color/text_on_dark_secondary"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
                     </LinearLayout>
 
                     <!-- 1. Loans Chart -->
@@ -397,21 +376,6 @@
                         android:layout_marginBottom="8dp" />
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/chartSubscriptions"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginBottom="16dp" />
-
-                    <!-- 3. Utility Bills Chart -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Utility Bills"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/chartUtilityBills"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginBottom="16dp" />

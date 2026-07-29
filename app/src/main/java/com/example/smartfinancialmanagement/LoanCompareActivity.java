@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import java.io.IOException;
@@ -65,6 +67,9 @@ public class LoanCompareActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private String uid;
 
+    private ActivityResultLauncher<String> createPdfLauncher;
+    private List<ComparisonData> currentDataListForPdf;
+
     private static class ComparisonData {
         String optionLabel;
         String bankName;
@@ -79,6 +84,17 @@ public class LoanCompareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loan_compare);
+
+        createPdfLauncher = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("application/pdf"),
+                uri -> {
+                    if (uri != null && currentDataListForPdf != null) {
+                        writePdfToUri(uri, currentDataListForPdf);
+                    } else {
+                        Toast.makeText(this, "Save cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         initViews();
         fetchFinancialData();
@@ -208,6 +224,12 @@ public class LoanCompareActivity extends AppCompatActivity {
     }
 
     private void generateDetailedComparisonReport(List<ComparisonData> dataList) {
+        currentDataListForPdf = dataList;
+        String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
+        createPdfLauncher.launch(fileName);
+    }
+
+    private void writePdfToUri(Uri uri, List<ComparisonData> dataList) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -329,26 +351,12 @@ public class LoanCompareActivity extends AppCompatActivity {
         pieBitmap.recycle();
 
         document.finishPage(page);
-        String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
-
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-
-                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                if (uri != null) {
-                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
-                    if (outputStream != null) {
-                        document.writeTo(outputStream);
-                        outputStream.close();
-                        Toast.makeText(this, "Analytical Suitability Report saved to Downloads", Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Download feature requires Android 10+", Toast.LENGTH_SHORT).show();
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            if (outputStream != null) {
+                document.writeTo(outputStream);
+                outputStream.close();
+                Toast.makeText(this, "Analytical Suitability Report saved successfully!", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             Toast.makeText(this, "Failed to save report: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -434,19 +442,19 @@ public class LoanCompareActivity extends AppCompatActivity {
         titleView.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         titleView.setTextColor(Color.parseColor("#FFFFFF"));
         titleView.setPadding(40, 40, 40, 20);
-        titleView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        titleView.setBackgroundColor(Color.parseColor("#0B1B3D"));
         builder.setCustomTitle(titleView);
 
         android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
         container.setPadding(30, 30, 30, 30);
-        container.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        container.setBackgroundColor(Color.parseColor("#0B1B3D"));
 
         TextView introText = new TextView(this);
         introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
                 userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
-        introText.setTextColor(Color.parseColor("#BCE0FF"));
+        introText.setTextColor(Color.parseColor("#9CA3AF"));
         introText.setTextSize(13f);
         introText.setPadding(0, 0, 0, 30);
         container.addView(introText);
@@ -512,8 +520,8 @@ public class LoanCompareActivity extends AppCompatActivity {
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#4ADE80"));
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
-        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#FFFFFF")));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#9CA3AF"));
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#0B1B3D")));
     }
 
     private boolean validateAllCards() {

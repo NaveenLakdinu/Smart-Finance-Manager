@@ -79,11 +79,12 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
             finish();
+        });
+
         View btnNotifications = findViewById(R.id.btnNotifications);
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(notifBtn -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(notifBtn -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
-        });
         setupSecurityButton();
         setupSavingsWidget();
     }

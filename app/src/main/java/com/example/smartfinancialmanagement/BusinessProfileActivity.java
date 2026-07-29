@@ -39,7 +39,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
 
-    private MaterialCardView menuAddBusiness, menuInvoices, menuAccountSettings, cardSignOut;
+    private MaterialCardView menuAddBusiness, menuInvoices, menuFinancialReports, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -112,6 +112,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
 
         menuAddBusiness = findViewById(R.id.menuAddBusiness);
         menuInvoices = findViewById(R.id.menuInvoices);
+        menuFinancialReports = findViewById(R.id.menuFinancialReports);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
 
@@ -263,6 +264,10 @@ public class BusinessProfileActivity extends AppCompatActivity {
 
         if (menuInvoices != null) {
             menuInvoices.setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
+        }
+
+        if (menuFinancialReports != null) {
+            menuFinancialReports.setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
         }
 
         if (menuAccountSettings != null) {
