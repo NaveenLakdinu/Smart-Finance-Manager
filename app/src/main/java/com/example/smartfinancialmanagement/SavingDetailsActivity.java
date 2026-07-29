@@ -154,6 +154,7 @@ public class SavingDetailsActivity extends AppCompatActivity {
     // ─── Firestore listeners ──────────────────────────────────────────────────
 
     private void startListening() {
+        if (savingId == null || savingId.isEmpty()) return;
         goalListener = db.collection("users").document(userId)
                 .collection("savings").document(savingId)
                 .addSnapshotListener((snap, err) -> {
@@ -169,6 +170,7 @@ public class SavingDetailsActivity extends AppCompatActivity {
     }
 
     private void startLogListening() {
+        if (savingId == null || savingId.isEmpty()) return;
         logListener = db.collection("users").document(userId)
                 .collection("savings").document(savingId)
                 .collection("log")

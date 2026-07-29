@@ -1,16 +1,16 @@
 package com.example.smartfinancialmanagement;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.animation.OvershootInterpolator;
 import android.util.Log;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -26,6 +26,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import android.widget.ScrollView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,10 +47,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private static final int NOTIFICATION_PERMISSION_CODE = 101;
     private RecyclerView recyclerBusinessFilters;
     private View btnTopLogout;
+    private ImageView btnManageBusinesses;
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-
-    private static final String PREF_PROFILE = "ProfilePrefs";
 
     private List<String> businessNamesList = new ArrayList<>();
     private List<String> businessIdsList = new ArrayList<>();
@@ -73,68 +75,71 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         loadAvatarImage();
+        loadUserData();
+        loadAvatarImage();
 
         NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
 
+    
     private void loadUserData() {
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser != null ? currentUser.getUid() : null;
 
         if (userId == null) return;
 
-        FirebaseFirestore.getInstance().collection("users").document(userId).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    TextView tvStudentName = findViewById(R.id.tvStudentName);
-                    TextView tvInitials = findViewById(R.id.tvInitials);
-
-                    String displayName = null;
-                    if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
-                        displayName = documentSnapshot.getString("name");
+        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
+            .addOnSuccessListener(documentSnapshot -> {
+                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
+                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+                
+                String displayName = null;
+                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                    displayName = documentSnapshot.getString("name");
+                }
+                
+                if (displayName == null || displayName.trim().isEmpty()) {
+                    if (currentUser.getEmail() != null) {
+                        displayName = currentUser.getEmail();
                     }
-
-                    if (displayName == null || displayName.trim().isEmpty()) {
-                        if (currentUser.getEmail() != null) {
-                            displayName = currentUser.getEmail();
-                        }
+                }
+                
+                if (displayName != null && !displayName.trim().isEmpty()) {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText(displayName);
                     }
-
-                    if (displayName != null && !displayName.trim().isEmpty()) {
-                        if (tvStudentName != null) {
-                            tvStudentName.setText(displayName);
-                        }
-                        if (tvInitials != null) {
-                            tvInitials.setText(displayName.substring(0, 1).toUpperCase());
-                        }
-                    } else {
-                        if (tvStudentName != null) {
-                            tvStudentName.setText("User");
-                        }
-                        if (tvInitials != null) {
-                            tvInitials.setText("U");
-                        }
+                    if (tvInitials != null) {
+                        tvInitials.setText(displayName.substring(0, 1).toUpperCase());
                     }
-                });
+                } else {
+                    if (tvStudentName != null) {
+                        tvStudentName.setText("User");
+                    }
+                    if (tvInitials != null) {
+                        tvInitials.setText("U");
+                    }
+                }
+            });
     }
 
     private void loadAvatarImage() {
-        SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
+        android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
-        ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
         TextView tvInitials = findViewById(R.id.txtProfileLetter);
         if (uriStr != null && imgDashboardAvatar != null) {
             try {
                 imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
             } catch (Exception e) {
-                getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+                getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
             }
-            imgDashboardAvatar.setVisibility(View.VISIBLE);
-            if (tvInitials != null) tvInitials.setVisibility(View.GONE);
+            imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
         } else {
-            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(View.GONE);
-            if (tvInitials != null) tvInitials.setVisibility(View.VISIBLE);
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(android.view.View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(android.view.View.VISIBLE);
         }
     }
 
@@ -203,6 +208,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
     private void loadBusinessWorkspaces() {
         FirebaseUser user = mAuth.getCurrentUser();
+        // 💡 Use UID instead of Email
         if (user == null) return;
         String currentUserId = user.getUid();
 
@@ -232,6 +238,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     }
 
                     Log.d(TAG, "Total isolated businesses fetched: " + (businessNamesList.size() - 1));
+                    // Pass the UID to the next data segment pipeline
                     calculateInvoiceMetricsPipeline(currentUserId);
                 })
                 .addOnFailureListener(e -> {
@@ -241,6 +248,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void calculateInvoiceMetricsPipeline(String currentUserId) {
+        // 💡 Server-Side Filter: Only fetch invoices belonging to this specific user
         db.collection("invoices")
                 .whereEqualTo("userId", currentUserId)
                 .get()
@@ -274,6 +282,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             if (status != null && (status.equalsIgnoreCase("pending") || status.equalsIgnoreCase("unpaid"))) {
 
                 if (selectedBusinessScope.equals("ALL WORKSPACES")) {
+                    // Since both pipelines are filtered to this user on the server,
+                    // we can safely accumulate without heavy loops
                     pendingTotal += amount;
                 } else {
                     int selectedIndex = businessNamesList.indexOf(selectedBusinessScope);
@@ -289,13 +299,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             }
         }
 
-        // 💡 Uses CurrencyHelper to fetch active currency saved from AccountSettingsActivity
-        String currencySymbol = CurrencyHelper.getCurrencySymbol(this);
-        if (currencySymbol == null || currencySymbol.trim().isEmpty()) {
-            currencySymbol = "Rs.";
-        }
-
-        txtTotalCount.setText(String.format(Locale.getDefault(), "%s %,.2f", currencySymbol, pendingTotal));
+        txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", pendingTotal));
 
         if (selectedBusinessScope.equals("ALL WORKSPACES")) {
             txtSubMessage.setText("Total pending invoices across all registered workspaces");
@@ -375,12 +379,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
-                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
-                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -414,12 +418,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 cards[i].setTranslationY(40f);
                 final int delay = i * 100;
                 cards[i].animate()
-                        .alpha(1f)
-                        .translationY(0f)
-                        .setDuration(400)
-                        .setStartDelay(delay)
-                        .setInterpolator(new OvershootInterpolator(1.2f))
-                        .start();
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(400)
+                    .setStartDelay(delay)
+                    .setInterpolator(new OvershootInterpolator(1.2f))
+                    .start();
             }
         }
     }
