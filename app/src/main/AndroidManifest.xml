@@ -32,7 +32,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/fb_login_protocol_scheme" />
+            android:value="@string/facebook_client_token" />
 
         <activity
             android:name=".MainActivity"
@@ -46,6 +46,24 @@
 
         <activity
             android:name=".LoginFormActivity"
+            android:exported="true" />
+
+        <!--
+            FacebookActivity handles the Facebook Login UI web dialog.
+            REQUIRED by the Facebook Android SDK — without this the app will crash.
+        -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:exported="true" />
+
+        <!--
+            CustomTabActivity handles the OAuth redirect URI for Facebook Login.
+            The fb_login_protocol_scheme (e.g. fb1234567890) must live here, NOT on LoginFormActivity.
+        -->
+        <activity
+            android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />

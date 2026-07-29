@@ -578,6 +578,12 @@ public class StudentDashboardActivity extends AppCompatActivity {
         if (txtCurrentBalanceValue != null) {
             txtCurrentBalanceValue.setText(CurrencyHelper.formatMoney(this, currentBalance));
         }
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .update("currentBalance", String.valueOf(currentBalance));
+        }
     }
 
     private void updateBudgetLeft(double currentBalance) {

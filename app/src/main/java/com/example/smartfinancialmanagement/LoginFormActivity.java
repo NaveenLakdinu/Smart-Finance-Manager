@@ -66,7 +66,6 @@ public class LoginFormActivity extends AppCompatActivity {
 
     // Activity Result Launchers
     private ActivityResultLauncher<Intent> googleSignInLauncher;
-    private ActivityResultLauncher<Intent> appleSignInLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -147,10 +146,9 @@ public class LoginFormActivity extends AppCompatActivity {
             );
         });
 
-        // Apple Sign-In
-        appleBtn.setOnClickListener(v -> {
-            handleAppleSignIn();
-        });
+        // Apple Sign-In — requires paid Apple Developer account ($99/yr)
+        // Firebase OAuthProvider is free but Apple blocks auth without a configured Services ID
+        appleBtn.setOnClickListener(v -> showAppleUnavailableDialog());
     }
 
     private void handleForgotPassword() {
@@ -344,10 +342,18 @@ public class LoginFormActivity extends AppCompatActivity {
                             navigateByRole(role);
                             saveFcmToken();
                         } else {
-                            // User authenticated via Auth but has no Firestore profile (e.g. new Social Login)
-                            Toast.makeText(this, "Welcome! Let's complete your profile.", Toast.LENGTH_SHORT).show();
+                            // User authenticated via Firebase Auth but has no Firestore profile yet.
+                            // This happens for brand-new Google / Facebook sign-ins.
+                            // Save display name + email as Intent extras so ChooseRoleActivity
+                            // can pre-fill them and link the profile to the correct Auth UID.
+                            FirebaseUser socialUser = mAuth.getCurrentUser();
+                            String displayName = socialUser != null ? socialUser.getDisplayName() : "";
+                            String email = socialUser != null ? socialUser.getEmail() : "";
+                            Toast.makeText(this, "Welcome! Let's set up your profile.", Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
                             intent.putExtra("IS_SOCIAL_LOGIN", true);
+                            intent.putExtra("SOCIAL_DISPLAY_NAME", displayName);
+                            intent.putExtra("SOCIAL_EMAIL", email);
                             startActivity(intent);
                             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
@@ -514,19 +520,14 @@ public class LoginFormActivity extends AppCompatActivity {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
                             firebaseAuthWithGoogle(account.getIdToken());
                         } catch (ApiException e) {
-                            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(this, getFriendlyGoogleError(e.getStatusCode()), Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        // User pressed back or cancelled
+                        if (result.getResultCode() != RESULT_CANCELED) {
+                            Toast.makeText(this, "Google Sign-In was cancelled", Toast.LENGTH_SHORT).show();
                         }
                     }
-                }
-        );
-
-        // Apple Sign-In Result Launcher
-        appleSignInLauncher = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                result -> {
-                    // Apple Sign-In result handling would go here
-                    // Note: Full Apple Sign-In implementation requires additional setup
-                    Toast.makeText(this, "Apple Sign-In requires additional configuration", Toast.LENGTH_SHORT).show();
                 }
         );
     }
@@ -585,44 +586,47 @@ public class LoginFormActivity extends AppCompatActivity {
     }
 
     // ──────────────────────────────────────────────────────────────
-    // Apple Sign-In Implementation
+    // Apple Sign-In — Not available without Apple Developer Account
     // ──────────────────────────────────────────────────────────────
-    private void handleAppleSignIn() {
-        OAuthProvider provider = OAuthProvider.newBuilder("apple.com")
-                .setScopes(Arrays.asList("email", "name"))
-                .build();
+    private void showAppleUnavailableDialog() {
+        new androidx.appcompat.app.AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog)
+                .setTitle("Apple Sign-In")
+                .setMessage("Apple Sign-In requires an Apple Developer account ($99/yr) to configure.\n\n" +
+                        "Please use Google Sign-In or Email & Password to log in.")
+                .setPositiveButton("OK", null)
+                .show();
+    }
 
-        Task<AuthResult> pendingResultTask = mAuth.getPendingAuthResult();
-        if (pendingResultTask != null) {
-            // There's already a pending result, wait for it
-            pendingResultTask.addOnSuccessListener(authResult -> {
-                FirebaseUser user = authResult.getUser();
-                if (user != null) {
-                    checkUserInFirestore(user.getUid());
-                }
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-            });
-        } else {
-            // Start the sign-in flow
-            mAuth.startActivityForSignInWithProvider(this, provider)
-                    .addOnSuccessListener(authResult -> {
-                        FirebaseUser user = authResult.getUser();
-                        if (user != null) {
-                            checkUserInFirestore(user.getUid());
-                        }
-                    })
-                    .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Apple Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                    });
+    // ──────────────────────────────────────────────────────────────
+    // Google ApiException status code → human-readable error
+    // ──────────────────────────────────────────────────────────────
+    private String getFriendlyGoogleError(int statusCode) {
+        switch (statusCode) {
+            case 10:
+                return "Google Sign-In setup error (code 10). The SHA-1 fingerprint of this device is not registered in Firebase Console. " +
+                       "Go to Firebase Console → Project Settings → Your App → Add fingerprint: " +
+                       "88:2D:3E:FC:45:A5:13:E3:56:0E:25:1A:DF:5A:25:06:41:26:04:E2";
+            case 4:
+                return "Google Sign-In failed: network error. Please check your internet connection.";
+            case 5:
+                return "Google Sign-In was cancelled.";
+            case 7:
+                return "Google Play Services is not available or outdated. Please update Google Play Services.";
+            case 12500:
+                return "Google Sign-In is not enabled. Enable Google provider in Firebase Console → Authentication → Sign-in method.";
+            case 12501:
+                return "Google Sign-In was cancelled by the user.";
+            case 12502:
+                return "Google Sign-In is currently in progress. Please wait.";
+            default:
+                return "Google Sign-In failed (code " + statusCode + "). Please try again.";
         }
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        // Pass result to Facebook SDK
+        // Pass result to Facebook SDK callback manager
         callbackManager.onActivityResult(requestCode, resultCode, data);
     }
 }

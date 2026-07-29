@@ -61,6 +61,7 @@ public class LoanCompareActivity extends AppCompatActivity {
     private com.google.android.material.button.MaterialButton btnCompare;
 
     private double userMonthlyIncome = 0.0;
+    private String currentUserRole = "";
     private double activeLoansMonthlyTotal = 0.0;
     private double utilitiesMonthlyTotal = 0.0;
     private double subscriptionsMonthlyTotal = 0.0;
@@ -252,7 +253,11 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         paint.setTextSize(11f);
         paint.setFakeBoldText(false);
-        canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            canvas.drawText(String.format(Locale.US, "• Current Balance (Adjusted Base): Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        } else {
+            canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        }
 
         double existingCommitments = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
         canvas.drawText(String.format(Locale.US, "• Existing Commitments: Rs %.2f", existingCommitments), 45, 150, paint);
@@ -376,15 +381,28 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                String monthlySavingStr = documentSnapshot.getString("currentSavings");
-                if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
-                    try {
-                        userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
-                    } catch (NumberFormatException ignored) {}
+                String role = documentSnapshot.getString("role");
+                if (role != null) {
+                    currentUserRole = role;
+                }
+                
+                if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+                    String balanceStr = documentSnapshot.getString("currentBalance");
+                    if (balanceStr != null && !balanceStr.trim().isEmpty()) {
+                        try {
+                            userMonthlyIncome = Double.parseDouble(balanceStr.trim());
+                        } catch (NumberFormatException ignored) {}
+                    }
+                } else {
+                    String monthlySavingStr = documentSnapshot.getString("currentSavings");
+                    if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
+                        try {
+                            userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
+                        } catch (NumberFormatException ignored) {}
+                    }
                 }
 
-                String role = documentSnapshot.getString("role");
-                if (userMonthlyIncome <= 0 && "Company worker".equals(role)) {
+                if (userMonthlyIncome <= 0 && "Company worker".equals(currentUserRole)) {
                     db.collection("users").document(uid).collection("worker_profile").document("profile_data")
                             .get()
                             .addOnSuccessListener(profileDoc -> {
@@ -451,15 +469,27 @@ public class LoanCompareActivity extends AppCompatActivity {
         container.setPadding(30, 30, 30, 30);
         container.setBackgroundColor(Color.parseColor("#0B1B3D"));
 
+        double existingExpenses = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
+        
+        // For Student and Hybrid, userMonthlyIncome is already the net current balance (which has expenses subtracted).
+        // To show the base resource amount correctly in the UI and make the math work (since existingExpenses are subtracted again below),
+        // we must add existingExpenses back to userMonthlyIncome here.
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            userMonthlyIncome += existingExpenses;
+        }
+
         TextView introText = new TextView(this);
-        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
-                userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            introText.setText(String.format(Locale.US, "Your Current Balance (Adjusted Base): Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
+                    userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        } else {
+            introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
+                    userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        }
         introText.setTextColor(Color.parseColor("#9CA3AF"));
         introText.setTextSize(13f);
         introText.setPadding(0, 0, 0, 30);
         container.addView(introText);
-
-        double existingExpenses = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
 
         for (ComparisonData data : dataList) {
             com.google.android.material.card.MaterialCardView card = new com.google.android.material.card.MaterialCardView(this);
