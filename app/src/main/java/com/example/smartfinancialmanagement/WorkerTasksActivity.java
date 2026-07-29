@@ -48,6 +48,7 @@ public class WorkerTasksActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private String uid;
+    private com.google.firebase.firestore.ListenerRegistration tasksListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +72,16 @@ public class WorkerTasksActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        loadTasksFromFirestore();
+        setupRealtimeTaskListener();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // Remove Firestore listener to prevent memory leaks
+        if (tasksListener != null) {
+            tasksListener.remove();
+        }
     }
 
     private void initViews() {
@@ -120,6 +130,16 @@ public class WorkerTasksActivity extends AppCompatActivity {
                         updateStats();
                         applyFiltersAndSearch();
                     });
+        }, new TaskAdapter.OnTaskActionListener() {
+            @Override
+            public void onEditTask(Task task) {
+                showEditTaskDialog(task);
+            }
+
+            @Override
+            public void onDeleteTask(Task task) {
+                showDeleteConfirmationDialog(task);
+            }
         });
 
         recyclerTasks.setLayoutManager(new LinearLayoutManager(this));
@@ -227,7 +247,7 @@ public class WorkerTasksActivity extends AppCompatActivity {
                             .collection("tasks").add(taskData)
                             .addOnSuccessListener(docRef -> {
                                 Toast.makeText(this, "Task added!", Toast.LENGTH_SHORT).show();
-                                loadTasksFromFirestore();
+                                // Real-time listener will automatically update the UI
                             })
                             .addOnFailureListener(e ->
                                     Toast.makeText(this, "Failed to add task: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -236,47 +256,207 @@ public class WorkerTasksActivity extends AppCompatActivity {
                 .show();
     }
 
-    private void loadTasksFromFirestore() {
+    /**
+     * Show delete confirmation dialog for a task
+     */
+    private void showDeleteConfirmationDialog(Task task) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Task")
+                .setMessage("Are you sure you want to delete this task?")
+                .setPositiveButton("Delete", (dialog, which) -> {
+                    deleteTaskFromFirestore(task.getId());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * Delete task from Firestore
+     * Real-time listener will automatically update the UI
+     */
+    private void deleteTaskFromFirestore(String taskId) {
+        db.collection("users").document(uid)
+                .collection("tasks").document(taskId)
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Task deleted successfully", Toast.LENGTH_SHORT).show();
+                    // Real-time listener will automatically update the UI
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to delete task: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * Show edit task dialog with pre-filled data
+     */
+    private void showEditTaskDialog(Task task) {
+        View dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_add_task, null);
+
+        EditText etTitle = dialogView.findViewById(R.id.etTaskTitle);
+        EditText etDescription = dialogView.findViewById(R.id.etTaskDescription);
+        Spinner spinnerPriority = dialogView.findViewById(R.id.spinnerPriority);
+        TextView tvDueDate = dialogView.findViewById(R.id.tvDueDate);
+
+        // Pre-fill with existing task data
+        etTitle.setText(task.getTitle());
+        etDescription.setText(task.getDescription());
+        tvDueDate.setText(task.getDueDate());
+
+        String[] priorities = {"High", "Medium", "Low"};
+        spinnerPriority.setAdapter(new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, priorities));
+        
+        // Set current priority
+        for (int i = 0; i < priorities.length; i++) {
+            if (priorities[i].equalsIgnoreCase(task.getPriority())) {
+                spinnerPriority.setSelection(i);
+                break;
+            }
+        }
+
+        final String[] selectedDate = {task.getDueDate()};
+        tvDueDate.setOnClickListener(v -> {
+            Calendar cal = Calendar.getInstance();
+            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                selectedDate[0] = String.format(Locale.US, "%02d/%02d/%04d", dayOfMonth, month + 1, year);
+                tvDueDate.setText(selectedDate[0]);
+            }, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)).show();
+        });
+
+        new AlertDialog.Builder(this)
+                .setTitle("Edit Task")
+                .setView(dialogView)
+                .setPositiveButton("Update", (dialog, which) -> {
+                    String title = etTitle.getText().toString().trim();
+                    String description = etDescription.getText().toString().trim();
+                    String priority = spinnerPriority.getSelectedItem().toString();
+
+                    if (title.isEmpty()) {
+                        Toast.makeText(this, "Title is required", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+
+                    String dueDate = selectedDate[0].isEmpty() ? "No due date" : selectedDate[0];
+
+                    java.util.Map<String, Object> taskData = new java.util.HashMap<>();
+                    taskData.put("title", title);
+                    taskData.put("description", description.isEmpty() ? "No description" : description);
+                    taskData.put("priority", priority);
+                    taskData.put("dueDate", dueDate);
+
+                    updateTaskInFirestore(task.getId(), taskData);
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+    }
+
+    /**
+     * Update task in Firestore
+     * Real-time listener will automatically update the UI
+     */
+    private void updateTaskInFirestore(String taskId, java.util.Map<String, Object> taskData) {
+        db.collection("users").document(uid)
+                .collection("tasks").document(taskId)
+                .update(taskData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Task updated successfully", Toast.LENGTH_SHORT).show();
+                    // Real-time listener will automatically update the UI
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to update task: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    /**
+     * Setup real-time Firestore listener for tasks
+     * This automatically updates the UI when tasks are added, updated, or deleted
+     */
+    private void setupRealtimeTaskListener() {
         if (uid == null) return;
 
-        db.collection("users").document(uid)
+        // Remove existing listener if any
+        if (tasksListener != null) {
+            tasksListener.remove();
+        }
+
+        // Add real-time snapshot listener to tasks subcollection
+        tasksListener = db.collection("users").document(uid)
                 .collection("tasks")
                 .orderBy("createdAt", com.google.firebase.firestore.Query.Direction.DESCENDING)
-                .get()
-                .addOnSuccessListener(querySnapshot -> {
-                    allTasks.clear();
-                    for (QueryDocumentSnapshot doc : querySnapshot) {
-                        String id = doc.getId();
-                        String title = doc.getString("title");
-                        String description = doc.getString("description");
-                        String priority = doc.getString("priority");
-                        String status = doc.getString("status");
-                        String dueDate = doc.getString("dueDate");
-                        Long progressLong = doc.getLong("progress");
-                        Long subtasksCompletedLong = doc.getLong("subtasksCompleted");
-                        Long subtasksTotalLong = doc.getLong("subtasksTotal");
-
-                        int progress = progressLong != null ? progressLong.intValue() : 0;
-                        int subtasksCompleted = subtasksCompletedLong != null ? subtasksCompletedLong.intValue() : 0;
-                        int subtasksTotal = subtasksTotalLong != null ? subtasksTotalLong.intValue() : 0;
-
-                        if (title == null) title = "Untitled Task";
-                        if (description == null) description = "No description";
-                        if (priority == null) priority = "Medium";
-                        if (status == null) status = "Pending";
-                        if (dueDate == null) dueDate = "No due date";
-
-                        String subtaskText = subtasksTotal > 0 ?
-                                subtasksCompleted + "/" + subtasksTotal + " subtasks" : "No subtasks";
-
-                        Task task = new Task(id, title, description, priority, status, dueDate, subtaskText, progress);
-                        allTasks.add(task);
+                .addSnapshotListener((querySnapshot, error) -> {
+                    if (error != null) {
+                        Toast.makeText(this, "Error loading tasks: " + error.getMessage(), Toast.LENGTH_SHORT).show();
+                        return;
                     }
-                    applyFiltersAndSearch();
-                    updateStats();
-                })
-                .addOnFailureListener(e ->
-                        Toast.makeText(this, "Failed to load tasks", Toast.LENGTH_SHORT).show());
+
+                    if (querySnapshot != null) {
+                        allTasks.clear();
+                        for (com.google.firebase.firestore.QueryDocumentSnapshot doc : querySnapshot) {
+                            Task task = doc.toObject(Task.class);
+                            task.setId(doc.getId()); // Set document ID
+                            
+                            // Handle null fields
+                            if (task.getTitle() == null) task.setTitle("Untitled Task");
+                            if (task.getDescription() == null) task.setDescription("No description");
+                            if (task.getPriority() == null) task.setPriority("Medium");
+                            if (task.getStatus() == null) task.setStatus("Pending");
+                            if (task.getDueDate() == null) task.setDueDate("No due date");
+                            
+                            // Build subtask text
+                            int subtasksCompleted = task.getSubtasksCompleted();
+                            int subtasksTotal = task.getSubtasksTotal();
+                            String subtaskText = subtasksTotal > 0 ?
+                                    subtasksCompleted + "/" + subtasksTotal + " subtasks" : "No subtasks";
+                            task.setSubtaskText(subtaskText);
+
+                            allTasks.add(task);
+                        }
+                        
+                        // Apply filters and update UI
+                        applyFiltersAndSearch();
+                        updateStats();
+                        updateFilterChipCounts(allTasks);
+                    }
+                });
+    }
+
+    /**
+     * Legacy method - kept for reference but no longer used
+     * Real-time listener setupRealtimeTaskListener() replaces this
+     */
+    @Deprecated
+    private void loadTasksFromFirestore() {
+        // This method is deprecated - use setupRealtimeTaskListener() instead
+        setupRealtimeTaskListener();
+    }
+
+    /**
+     * Update filter chip counts dynamically based on task priorities
+     * Called whenever tasks are loaded from Firestore
+     */
+    private void updateFilterChipCounts(List<Task> taskList) {
+        int total = taskList.size();
+        int high = 0;
+        int medium = 0;
+        int low = 0;
+
+        for (Task task : taskList) {
+            if (task.getPriority() != null) {
+                if (task.getPriority().equalsIgnoreCase("High")) {
+                    high++;
+                } else if (task.getPriority().equalsIgnoreCase("Medium")) {
+                    medium++;
+                } else if (task.getPriority().equalsIgnoreCase("Low")) {
+                    low++;
+                }
+            }
+        }
+
+        // Dynamically update filter button text with counts
+        filterAll.setText("All (" + total + ")");
+        filterHigh.setText("High (" + high + ")");
+        filterMedium.setText("Medium (" + medium + ")");
+        filterLow.setText("Low (" + low + ")");
     }
 
     private void applyFiltersAndSearch() {

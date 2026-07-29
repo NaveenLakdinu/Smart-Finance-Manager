@@ -233,7 +233,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                         task.setCompleted(isChecked);
                         loadPendingTasks();
                     });
-        });
+        }, null); // No edit/delete actions needed in dashboard preview
 
         recyclerWorkerTasks.setLayoutManager(new LinearLayoutManager(this));
         recyclerWorkerTasks.setAdapter(pendingTaskAdapter);
