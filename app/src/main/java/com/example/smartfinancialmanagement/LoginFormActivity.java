@@ -344,8 +344,12 @@ public class LoginFormActivity extends AppCompatActivity {
                             navigateByRole(role);
                             saveFcmToken();
                         } else {
-                            mAuth.signOut();
-                            Toast.makeText(this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
+                            // User authenticated via Auth but has no Firestore profile (e.g. new Social Login)
+                            Toast.makeText(this, "Welcome! Let's complete your profile.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
+                            intent.putExtra("IS_SOCIAL_LOGIN", true);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
                     } else {
                         if (loginButton.isEnabled()) {
