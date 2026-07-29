@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp" />
 
@@ -112,7 +112,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_input_dark"
+                        android:background="@android:color/transparent"
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp" />
 
