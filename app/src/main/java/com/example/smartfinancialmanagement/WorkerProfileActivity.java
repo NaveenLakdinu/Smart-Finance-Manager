@@ -36,7 +36,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
 
-    private MaterialCardView menuEditIncome, menuPayslips, menuAccountSettings, cardSignOut;
+    private MaterialCardView menuEditIncome, menuPayslips, menuFinancialReports, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -109,6 +109,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
 
         menuEditIncome = findViewById(R.id.menuEditIncome);
         menuPayslips = findViewById(R.id.menuPayslips);
+        menuFinancialReports = findViewById(R.id.menuFinancialReports);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
 
@@ -215,6 +216,10 @@ public class WorkerProfileActivity extends AppCompatActivity {
 
         if (menuPayslips != null) {
             menuPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+        }
+
+        if (menuFinancialReports != null) {
+            menuFinancialReports.setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
         }
 
         if (menuAccountSettings != null) {
