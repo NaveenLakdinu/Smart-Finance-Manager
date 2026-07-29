@@ -74,6 +74,9 @@ public class ChooseRoleActivity extends AppCompatActivity {
             // 💡 FIXED: Sending the selected role explicitly via Intent Extra to RegisterActivity
             Intent intent = new Intent(this, RegisterActivity.class);
             intent.putExtra("USER_ROLE", selectedRole);
+            if (getIntent().hasExtra("isOAuthSignIn")) {
+                intent.putExtra("isOAuthSignIn", getIntent().getBooleanExtra("isOAuthSignIn", false));
+            }
             startActivity(intent);
         });
 
