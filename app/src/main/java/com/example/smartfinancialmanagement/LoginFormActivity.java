@@ -344,31 +344,12 @@ public class LoginFormActivity extends AppCompatActivity {
                             navigateByRole(role);
                             saveFcmToken();
                         } else {
-                            // Check if the user signed in with an OAuth provider (Google/Facebook/Apple)
-                            FirebaseUser currentUser = mAuth.getCurrentUser();
-                            boolean isOAuthSignIn = false;
-                            if (currentUser != null) {
-                                for (com.google.firebase.auth.UserInfo userInfo : currentUser.getProviderData()) {
-                                    String providerId = userInfo.getProviderId();
-                                    if (GoogleAuthProvider.PROVIDER_ID.equals(providerId) ||
-                                        FacebookAuthProvider.PROVIDER_ID.equals(providerId) ||
-                                        "apple.com".equals(providerId)) {
-                                        isOAuthSignIn = true;
-                                        break;
-                                    }
-                                }
-                            }
-
-                            if (isOAuthSignIn) {
-                                Toast.makeText(LoginFormActivity.this, "Please complete your profile.", Toast.LENGTH_SHORT).show();
-                                Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
-                                intent.putExtra("isOAuthSignIn", true);
-                                startActivity(intent);
-                                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-                            } else {
-                                mAuth.signOut();
-                                Toast.makeText(LoginFormActivity.this, "User profile not found. Please register.", Toast.LENGTH_LONG).show();
-                            }
+                            // User authenticated via Auth but has no Firestore profile (e.g. new Social Login)
+                            Toast.makeText(this, "Welcome! Let's complete your profile.", Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(LoginFormActivity.this, ChooseRoleActivity.class);
+                            intent.putExtra("IS_SOCIAL_LOGIN", true);
+                            startActivity(intent);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         }
                     } else {
                         if (loginButton.isEnabled()) {
@@ -527,17 +508,14 @@ public class LoginFormActivity extends AppCompatActivity {
         googleSignInLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    if (result.getData() != null) {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(result.getData());
                         try {
                             GoogleSignInAccount account = task.getResult(ApiException.class);
                             firebaseAuthWithGoogle(account.getIdToken());
                         } catch (ApiException e) {
-                            Toast.makeText(this, "Google Sign-In failed: " + e.getStatusCode() + " - " + e.getMessage(), Toast.LENGTH_LONG).show();
-                            System.err.println("Google Sign-In ApiException: " + e.getStatusCode());
+                            Toast.makeText(this, "Google Sign-In failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
-                    } else {
-                        Toast.makeText(this, "Google Sign-In cancelled or failed (Result code: " + result.getResultCode() + ")", Toast.LENGTH_SHORT).show();
                     }
                 }
         );

@@ -152,7 +152,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="textCapSentences"
-                        android:background="@drawable/bg_input_dark" />
+                        android:background="@android:color/transparent" />
                 </LinearLayout>
 
                 <!-- ── TARGET AMOUNT ── -->
@@ -192,7 +192,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@drawable/bg_input_dark" />
+                        android:background="@android:color/transparent" />
                 </LinearLayout>
 
                 <!-- ── TARGET DATE ── -->
@@ -272,7 +272,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@drawable/bg_input_dark" />
+                        android:background="@android:color/transparent" />
                 </LinearLayout>
 
                 <!-- ── MONTHLY SAVING AMOUNT ── -->
@@ -312,7 +312,7 @@
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="14sp"
                         android:inputType="numberDecimal"
-                        android:background="@drawable/bg_input_dark" />
+                        android:background="@android:color/transparent" />
                 </LinearLayout>
 
                 <!-- ── SAVING FREQUENCY SPINNER ── -->

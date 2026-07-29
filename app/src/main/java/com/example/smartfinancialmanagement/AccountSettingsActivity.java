@@ -63,6 +63,9 @@ public class AccountSettingsActivity extends AppCompatActivity {
         String role = getSharedPreferences("UserData", MODE_PRIVATE).getString("user_role", "Student");
         if (role.equals("Company worker") || role.equals("Multiple account holder")) {
             if (llWorkerInfo != null) llWorkerInfo.setVisibility(android.view.View.VISIBLE);
+        } else if (role.equals("student_worker_hybrid")) {
+            if (llWorkerInfo != null) llWorkerInfo.setVisibility(android.view.View.VISIBLE);
+            if (llStudentInfo != null) llStudentInfo.setVisibility(android.view.View.VISIBLE);
         } else if (role.equals("Business owner")) {
             // Leave both hidden
         } else {
@@ -127,6 +130,24 @@ public class AccountSettingsActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "Failed to load multi account info", Toast.LENGTH_SHORT).show());
+        } else if (role.equals("student_worker_hybrid")) {
+            db.collection("users").document(uid).collection("worker_profile").document("profile_data").get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.contains("monthlySalary")) {
+                                Double sal = documentSnapshot.getDouble("monthlySalary");
+                                if (sal != null) etEditMonthlyIncome.setText(String.valueOf(sal));
+                            }
+                        }
+                    });
+            db.collection("users").document(uid).collection("student_profile").document("profile_data").get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.contains("university")) etEditUniversity.setText(documentSnapshot.getString("university"));
+                            if (documentSnapshot.contains("course")) etEditCourse.setText(documentSnapshot.getString("course"));
+                            if (documentSnapshot.contains("studentId")) etEditStudentId.setText(documentSnapshot.getString("studentId"));
+                        }
+                    });
         } else if (role.equals("Business owner")) {
             // Nothing extra to load
         } else {
@@ -275,6 +296,23 @@ public class AccountSettingsActivity extends AppCompatActivity {
             Map<String, Object> multiUpdates = new HashMap<>();
             multiUpdates.put("monthlySalary", income);
             batch.set(multiRef, multiUpdates, com.google.firebase.firestore.SetOptions.merge());
+        } else if (role.equals("student_worker_hybrid")) {
+            String incomeStr = etEditMonthlyIncome.getText().toString().trim();
+            double income = incomeStr.isEmpty() ? 0.0 : Double.parseDouble(incomeStr);
+            DocumentReference workerRef = db.collection("users").document(user.getUid()).collection("worker_profile").document("profile_data");
+            Map<String, Object> workerUpdates = new HashMap<>();
+            workerUpdates.put("monthlySalary", income);
+            batch.set(workerRef, workerUpdates, com.google.firebase.firestore.SetOptions.merge());
+
+            String university = etEditUniversity.getText().toString().trim();
+            String course = etEditCourse.getText().toString().trim();
+            String studentId = etEditStudentId.getText().toString().trim();
+            DocumentReference studentRef = db.collection("users").document(user.getUid()).collection("student_profile").document("profile_data");
+            Map<String, Object> studentUpdates = new HashMap<>();
+            studentUpdates.put("university", university);
+            studentUpdates.put("course", course);
+            studentUpdates.put("studentId", studentId);
+            batch.set(studentRef, studentUpdates, com.google.firebase.firestore.SetOptions.merge());
         } else if (!role.equals("Business owner")) {
             String university = etEditUniversity.getText().toString().trim();
             String course = etEditCourse.getText().toString().trim();

@@ -441,6 +441,45 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         loadUserData();
         loadAvatarImage();
         loadAchievementBadge();
+        loadBadgeData();
+    }
+
+    private void loadBadgeData() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user == null) return;
+        String uid = user.getUid();
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("users").document(uid).collection("loans").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                TextView txtLoanBadge = findViewById(R.id.txtLoanBadge);
+                if (txtLoanBadge != null) {
+                    txtLoanBadge.setText(queryDocumentSnapshots.size() + " Active");
+                }
+            });
+
+        db.collection("users").document(uid).collection("subscriptions").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                TextView txtSubscriptionBadge = findViewById(R.id.txtSubscriptionBadge);
+                if (txtSubscriptionBadge != null) {
+                    txtSubscriptionBadge.setText(queryDocumentSnapshots.size() + " Plans");
+                }
+            });
+
+        db.collection("utilityBill").whereEqualTo("userId", uid).get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                TextView txtUtilityBadge = findViewById(R.id.txtUtilityBadge);
+                if (txtUtilityBadge != null) {
+                    int dueCount = 0;
+                    for (com.google.firebase.firestore.QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                        String status = doc.getString("status");
+                        if (!"Paid".equalsIgnoreCase(status) && !"PAID".equalsIgnoreCase(status)) {
+                            dueCount++;
+                        }
+                    }
+                    txtUtilityBadge.setText(dueCount + " Due");
+                }
+            });
     }
 
     private void loadAchievementBadge() {

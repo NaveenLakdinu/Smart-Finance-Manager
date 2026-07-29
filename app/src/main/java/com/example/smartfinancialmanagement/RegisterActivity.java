@@ -31,11 +31,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
-    
-    // OAuth fields
-    private boolean isOAuthSignIn = false;
-    private android.widget.LinearLayout passwordContainer;
-    private android.widget.TextView tvPasswordLabel, tvPasswordHint;
 
     // Variable to store the passed user role from UserRoleActivity
     private String userRole;
@@ -79,34 +74,6 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile = findViewById(R.id.etMobile);
         etPassword = findViewById(R.id.etPassword);
         passwordToggle = findViewById(R.id.passwordToggle);
-        
-        passwordContainer = findViewById(R.id.passwordContainer);
-        tvPasswordLabel = findViewById(R.id.tvPasswordLabel);
-        tvPasswordHint = findViewById(R.id.tvPasswordHint);
-
-        isOAuthSignIn = getIntent().getBooleanExtra("isOAuthSignIn", false);
-
-        if (isOAuthSignIn) {
-            // Hide password fields
-            if (passwordContainer != null) passwordContainer.setVisibility(android.view.View.GONE);
-            if (tvPasswordLabel != null) tvPasswordLabel.setVisibility(android.view.View.GONE);
-            if (tvPasswordHint != null) tvPasswordHint.setVisibility(android.view.View.GONE);
-
-            // Pre-fill user data from Firebase Auth
-            com.google.firebase.auth.FirebaseUser user = mAuth.getCurrentUser();
-            if (user != null) {
-                UserRegistrationData data = UserRegistrationData.getInstance();
-                if (user.getDisplayName() != null) {
-                    etFullName.setText(user.getDisplayName());
-                    data.fullName = user.getDisplayName();
-                }
-                if (user.getEmail() != null) {
-                    etEmail.setText(user.getEmail());
-                    data.email = user.getEmail();
-                    etEmail.setEnabled(false); // Make it read-only
-                }
-            }
-        }
 
         etFullName.addTextChangedListener(new android.text.TextWatcher() {
             @Override
@@ -144,6 +111,25 @@ public class RegisterActivity extends AppCompatActivity {
             isPasswordVisible = !isPasswordVisible;
             etPassword.setSelection(etPassword.getText().length());
         });
+
+        // 2.1 Handle Social Login setup
+        boolean isSocialLogin = getIntent().getBooleanExtra("IS_SOCIAL_LOGIN", false);
+        if (isSocialLogin) {
+            etPassword.setVisibility(android.view.View.GONE);
+            passwordToggle.setVisibility(android.view.View.GONE);
+
+            if (mAuth.getCurrentUser() != null) {
+                String socialEmail = mAuth.getCurrentUser().getEmail();
+                String socialName = mAuth.getCurrentUser().getDisplayName();
+                if (socialEmail != null) {
+                    etEmail.setText(socialEmail);
+                    etEmail.setEnabled(false); // Make it read-only
+                }
+                if (socialName != null && etFullName.getText().toString().isEmpty()) {
+                    etFullName.setText(socialName);
+                }
+            }
+        }
 
         // 3. CheckBox Click Listeners
         termsCheckbox.setOnClickListener(v -> {
@@ -213,14 +199,16 @@ public class RegisterActivity extends AppCompatActivity {
         };
         timeoutHandler.postDelayed(timeoutRunnable, 20000);
 
-        if (isOAuthSignIn) {
-            saveUserToFirestore(timeoutHandler, timeoutRunnable, data);
+        boolean isSocialLogin = getIntent().getBooleanExtra("IS_SOCIAL_LOGIN", false);
+
+        if (isSocialLogin) {
+            executeFirestoreRegistration(data, timeoutHandler, timeoutRunnable, true);
         } else {
             mAuth.createUserWithEmailAndPassword(email, password)
                     .addOnCompleteListener(task -> {
                         if (task.isSuccessful()) {
                             System.out.println("✅ Firebase Auth successful");
-                            saveUserToFirestore(timeoutHandler, timeoutRunnable, data);
+                            executeFirestoreRegistration(data, timeoutHandler, timeoutRunnable, false);
                         } else {
                             timeoutHandler.removeCallbacks(timeoutRunnable);
                             setLoadingState(false);
@@ -239,13 +227,13 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
-    private void saveUserToFirestore(android.os.Handler timeoutHandler, Runnable timeoutRunnable, UserRegistrationData data) {
+    private void executeFirestoreRegistration(UserRegistrationData data, android.os.Handler timeoutHandler, Runnable timeoutRunnable, boolean isSocialLogin) {
         try {
             String uid = mAuth.getCurrentUser() != null ? mAuth.getCurrentUser().getUid() : null;
             
             if (uid == null) {
-                                throw new Exception("Failed to retrieve user ID after successful auth");
-                            }
+                throw new Exception("Failed to retrieve user ID after successful auth");
+            }
 
                             System.out.println("User UID: " + uid);
 
@@ -415,8 +403,8 @@ public class RegisterActivity extends AppCompatActivity {
                                         System.err.println("❌ Firestore Batch Commit Error: " + e.getMessage());
                                         e.printStackTrace();
                                         
-                                        // Rollback: Delete the Auth user if Firestore save fails
-                                        if (mAuth.getCurrentUser() != null) {
+                                        // Rollback: Delete the Auth user if Firestore save fails (only for non-social)
+                                        if (!isSocialLogin && mAuth.getCurrentUser() != null) {
                                             mAuth.getCurrentUser().delete();
                                         }
                                         
@@ -429,8 +417,8 @@ public class RegisterActivity extends AppCompatActivity {
                             System.err.println("❌ Logic Error during registration: " + e.getMessage());
                             e.printStackTrace();
                             
-                            // Rollback: Delete the Auth user if an exception occurs
-                            if (mAuth.getCurrentUser() != null) {
+                            // Rollback: Delete the Auth user if an exception occurs (only for non-social)
+                            if (!isSocialLogin && mAuth.getCurrentUser() != null) {
                                 mAuth.getCurrentUser().delete();
                             }
                             
@@ -451,75 +439,65 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
     private boolean validateInputs() {
-        String fullName = etFullName.getText().toString().trim();
-        String ageStr = etAge.getText().toString().trim();
-        String email = etEmail.getText().toString().trim();
-        String mobile = etMobile.getText().toString().trim();
-        String password = etPassword.getText().toString().trim();
+        boolean isSocialLogin = getIntent().getBooleanExtra("IS_SOCIAL_LOGIN", false);
 
-        if (fullName.isEmpty()) {
-            etFullName.setError("Full Name is required");
+        if (etFullName.getText().toString().trim().isEmpty()) {
+            etFullName.setError("Full name is required");
+            etFullName.requestFocus();
+            return false;
+        }
+        
+        if (!etFullName.getText().toString().matches("^[a-zA-Z\\s]+$")) {
+            etFullName.setError("Please enter a valid name");
             etFullName.requestFocus();
             return false;
         }
 
-        if (!fullName.matches("^[a-zA-Z\\s]+$")) {
-            etFullName.setError("Please enter a valid name (letters and spaces only)");
-            etFullName.requestFocus();
-            return false;
-        }
-
-        if (ageStr.isEmpty()) {
+        if (etAge.getText().toString().trim().isEmpty()) {
             etAge.setError("Age is required");
             etAge.requestFocus();
             return false;
         }
-
+        
         try {
-            int age = Integer.parseInt(ageStr);
-            if (age < 1 || age > 120) {
-                etAge.setError("Please enter a valid age (1-120)");
+            int age = Integer.parseInt(etAge.getText().toString().trim());
+            if (age < 18) {
+                etAge.setError("Must be at least 18 years old");
                 etAge.requestFocus();
                 return false;
             }
         } catch (NumberFormatException e) {
-            etAge.setError("Please enter a valid numeric age");
+            etAge.setError("Invalid age format");
             etAge.requestFocus();
             return false;
         }
 
-        if (email.isEmpty()) {
+        if (etEmail.getText().toString().trim().isEmpty()) {
             etEmail.setError("Email is required");
             etEmail.requestFocus();
             return false;
         }
 
-        if (!android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            etEmail.setError("Please enter a valid email address");
-            etEmail.requestFocus();
-            return false;
-        }
-
-        if (mobile.isEmpty()) {
+        if (etMobile.getText().toString().trim().isEmpty()) {
             etMobile.setError("Mobile number is required");
             etMobile.requestFocus();
             return false;
         }
-
-        if (mobile.length() < 10) {
-            etMobile.setError("Please enter a valid mobile number (min 10 digits)");
+        
+        if (!etMobile.getText().toString().matches("^\\d{10}$")) {
+            etMobile.setError("Enter a valid 10-digit mobile number");
             etMobile.requestFocus();
             return false;
         }
 
-        if (!isOAuthSignIn) {
-            if (password.isEmpty()) {
+        if (!isSocialLogin) {
+            if (etPassword.getText().toString().trim().isEmpty()) {
                 etPassword.setError("Password is required");
                 etPassword.requestFocus();
                 return false;
             }
 
-            if (password.length() < 6) {
+            if (etPassword.getText().toString().trim().length() < 6) {
                 etPassword.setError("Password must be at least 6 characters");
                 etPassword.requestFocus();
                 return false;
@@ -527,7 +505,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!termsCheckbox.isChecked()) {
-            Toast.makeText(this, "Please accept Terms and Conditions", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please accept the Terms and Conditions", Toast.LENGTH_SHORT).show();
             return false;
         }
 
