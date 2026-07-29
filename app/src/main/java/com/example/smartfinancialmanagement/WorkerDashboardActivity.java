@@ -50,6 +50,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     private List<Task> pendingTasks = new ArrayList<>();
     private TaskAdapter pendingTaskAdapter;
     private int currentPayday = 0;
+    private int currentPayMonth = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -160,39 +161,75 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     }
 
     private void updatePayrollStatus() {
+        if (currentPayday == 0) {
+            txtPayrollStatus.setText("Next payday: Not set");
+            return;
+        }
+
         Calendar cal = Calendar.getInstance();
-        int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
-        int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
         
-        int targetPayday = currentPayday;
-        if (targetPayday <= 0 || targetPayday > 31) {
-             targetPayday = daysInMonth;
-        } else if (targetPayday > daysInMonth) {
-             targetPayday = daysInMonth;
-        }
-
-        int daysUntilPayday;
-        if (dayOfMonth <= targetPayday) {
-             daysUntilPayday = targetPayday - dayOfMonth;
+        if (currentPayMonth > 0 && currentPayMonth <= 12) {
+            Calendar target = Calendar.getInstance();
+            target.set(Calendar.MONTH, currentPayMonth - 1);
+            int daysInTargetMonth = target.getActualMaximum(Calendar.DAY_OF_MONTH);
+            target.set(Calendar.DAY_OF_MONTH, Math.min(currentPayday, daysInTargetMonth));
+            target.set(Calendar.HOUR_OF_DAY, 0);
+            target.set(Calendar.MINUTE, 0);
+            target.set(Calendar.SECOND, 0);
+            target.set(Calendar.MILLISECOND, 0);
+            
+            if (target.before(cal)) {
+                target.add(Calendar.YEAR, 1);
+            }
+            
+            long diff = target.getTimeInMillis() - cal.getTimeInMillis();
+            int daysUntilPayday = (int) (diff / (1000 * 60 * 60 * 24));
+            
+            if (daysUntilPayday == 0) {
+                txtPayrollStatus.setText("Payday is today!");
+            } else if (daysUntilPayday == 1) {
+                txtPayrollStatus.setText("Next payday: tomorrow");
+            } else {
+                txtPayrollStatus.setText(String.format(Locale.US, "Next payday in %d days", daysUntilPayday));
+            }
         } else {
-             Calendar nextMonth = Calendar.getInstance();
-             nextMonth.add(Calendar.MONTH, 1);
-             int nextMonthDays = nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
-             int nextTarget = currentPayday;
-             if (nextTarget <= 0 || nextTarget > 31) {
-                  nextTarget = nextMonthDays;
-             } else if (nextTarget > nextMonthDays) {
-                  nextTarget = nextMonthDays;
-             }
-             daysUntilPayday = (daysInMonth - dayOfMonth) + nextTarget;
-        }
+            int dayOfMonth = cal.get(Calendar.DAY_OF_MONTH);
+            int daysInMonth = cal.getActualMaximum(Calendar.DAY_OF_MONTH);
+            
+            int targetPayday = currentPayday;
+            if (targetPayday <= 0 || targetPayday > 31) {
+                 targetPayday = daysInMonth;
+            } else if (targetPayday > daysInMonth) {
+                 targetPayday = daysInMonth;
+            }
 
-        if (daysUntilPayday == 0) {
-            txtPayrollStatus.setText("Payday is today!");
-        } else if (daysUntilPayday == 1) {
-            txtPayrollStatus.setText("Next payday: tomorrow");
-        } else {
-            txtPayrollStatus.setText(String.format(Locale.US, "Next payday in %d days", daysUntilPayday));
+            int daysUntilPayday;
+            if (dayOfMonth <= targetPayday) {
+                 daysUntilPayday = targetPayday - dayOfMonth;
+            } else {
+                 Calendar nextMonth = Calendar.getInstance();
+                 nextMonth.add(Calendar.MONTH, 1);
+                 int nextMonthDays = nextMonth.getActualMaximum(Calendar.DAY_OF_MONTH);
+                 int nextTarget = currentPayday;
+                 if (nextTarget <= 0 || nextTarget > 31) {
+                      nextTarget = nextMonthDays;
+                 } else if (nextTarget > nextMonthDays) {
+                      nextTarget = nextMonthDays;
+                 }
+                 daysUntilPayday = (daysInMonth - dayOfMonth) + nextTarget;
+            }
+
+            if (daysUntilPayday == 0) {
+                txtPayrollStatus.setText("Payday is today!");
+            } else if (daysUntilPayday == 1) {
+                txtPayrollStatus.setText("Next payday: tomorrow");
+            } else {
+                txtPayrollStatus.setText(String.format(Locale.US, "Next payday in %d days", daysUntilPayday));
+            }
         }
     }
 
@@ -414,6 +451,13 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                         } else {
                             currentPayday = 0;
                         }
+                        
+                        Long payMonthLong = documentSnapshot.getLong("payMonth");
+                        if (payMonthLong != null) {
+                            currentPayMonth = payMonthLong.intValue();
+                        } else {
+                            currentPayMonth = 0;
+                        }
                     } else {
                         txtEarnings.setText("LKR 0.00");
                         currentPayday = 0;
@@ -444,37 +488,95 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         inputSalary.setHint("Monthly Salary (LKR)");
         layout.addView(inputSalary);
 
+        LinearLayout dateLayout = new LinearLayout(this);
+        dateLayout.setOrientation(LinearLayout.HORIZONTAL);
+        dateLayout.setLayoutParams(new LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT, 
+            LinearLayout.LayoutParams.WRAP_CONTENT
+        ));
+
         final EditText inputPayday = new EditText(this);
         inputPayday.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
-        inputPayday.setHint("Payday (1-31)");
-        layout.addView(inputPayday);
+        inputPayday.setHint("Day (1-31)");
+        LinearLayout.LayoutParams dayParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        inputPayday.setLayoutParams(dayParams);
+        dateLayout.addView(inputPayday);
+
+        final EditText inputPayMonth = new EditText(this);
+        inputPayMonth.setInputType(android.text.InputType.TYPE_CLASS_NUMBER);
+        inputPayMonth.setHint("Month (1-12)");
+        LinearLayout.LayoutParams monthParams = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1.0f);
+        monthParams.setMarginStart((int)(8 * getResources().getDisplayMetrics().density));
+        inputPayMonth.setLayoutParams(monthParams);
+        dateLayout.addView(inputPayMonth);
+
+        layout.addView(dateLayout);
 
         builder.setView(layout);
 
         builder.setPositiveButton("Save", (dialog, which) -> {
             String salaryStr = inputSalary.getText().toString().trim();
             String paydayStr = inputPayday.getText().toString().trim();
+            String payMonthStr = inputPayMonth.getText().toString().trim();
             
             double salary = 0;
             int payday = 0;
+            int payMonth = 0;
             
             try {
                 if (!salaryStr.isEmpty()) salary = Double.parseDouble(salaryStr);
                 if (!paydayStr.isEmpty()) payday = Integer.parseInt(paydayStr);
+                if (!payMonthStr.isEmpty()) payMonth = Integer.parseInt(payMonthStr);
             } catch (NumberFormatException e) {
                 Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            
+            if (payday != 0 && (payday < 1 || payday > 31)) {
+                Toast.makeText(this, "Date must be between 1 and 31", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            if (payMonth != 0 && (payMonth < 1 || payMonth > 12)) {
+                Toast.makeText(this, "Month must be between 1 and 12", Toast.LENGTH_SHORT).show();
                 return;
             }
 
             java.util.Map<String, Object> updates = new java.util.HashMap<>();
             updates.put("monthlySalary", salary);
             updates.put("payday", payday);
+            updates.put("payMonth", payMonth);
+
+            final double finalSalary = salary;
 
             FirebaseFirestore.getInstance().collection("users").document(user.getUid())
                     .collection("worker_profile").document("profile_data")
                     .set(updates, com.google.firebase.firestore.SetOptions.merge())
                     .addOnSuccessListener(aVoid -> {
                         loadSalaryFromFirestore(user.getUid());
+                        
+                        // Add to Incomes (for Budget Planner and AddIncomeActivity/Wallet)
+                        String incomeId = FirebaseFirestore.getInstance().collection("users").document(user.getUid()).collection("incomes").document().getId();
+                        java.util.Calendar cal = java.util.Calendar.getInstance();
+                        String dateStr = String.format(java.util.Locale.getDefault(), "%02d/%02d/%d", cal.get(java.util.Calendar.DAY_OF_MONTH), cal.get(java.util.Calendar.MONTH) + 1, cal.get(java.util.Calendar.YEAR));
+                        IncomeModel incomeModel = new IncomeModel(incomeId, finalSalary, "Updated Salary", dateStr, System.currentTimeMillis());
+                        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).collection("incomes").document(incomeId).set(incomeModel);
+                        
+                        // Add to current savings
+                        FirebaseFirestore.getInstance().collection("users").document(user.getUid()).get().addOnSuccessListener(doc -> {
+                            double current = 0;
+                            if (doc.exists() && doc.contains("currentSavings")) {
+                                try {
+                                    current = Double.parseDouble(doc.getString("currentSavings"));
+                                } catch(Exception ignored){}
+                            }
+                            double updatedSavings = current + finalSalary;
+                            FirebaseFirestore.getInstance().collection("users").document(user.getUid()).update("currentSavings", String.valueOf(updatedSavings));
+                            TextView txtSavings = findViewById(R.id.txtCurrentSavingsValue);
+                            if (txtSavings != null) {
+                                txtSavings.setText(String.format(java.util.Locale.US, "LKR %.2f", updatedSavings));
+                            }
+                        });
+
                         Toast.makeText(this, "Profile updated!", Toast.LENGTH_SHORT).show();
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
