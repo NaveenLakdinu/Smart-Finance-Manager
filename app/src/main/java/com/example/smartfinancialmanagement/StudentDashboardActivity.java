@@ -37,7 +37,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
     private double mTotalSavings = 0;
     private double mTotalLoans = 0;
     private double mTotalUtilityBills = 0;
-    private double mCurrentSavingsWidgetValue = 0;
     private double mTotalSubscriptions = 0;
     
     private NotificationRepository notificationRepo;
@@ -52,7 +51,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
         notificationRepo = new NotificationRepository();
         
         initViews();
-        setupSavingsWidget();
         setupNotificationBell();
     }
 
@@ -573,7 +571,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     private void updateUIWithTotalIncome() {
-        double currentBalance = mTotalIncome - mTotalSubscriptions - mTotalSavings - mTotalLoans - mTotalUtilityBills - mCurrentSavingsWidgetValue;
+        double currentBalance = mTotalIncome - mTotalSubscriptions - mTotalSavings - mTotalLoans - mTotalUtilityBills;
         // If currentBalance goes negative, that's fine to show mathematically.
         
         updateBudgetLeft(currentBalance);
@@ -648,89 +646,5 @@ public class StudentDashboardActivity extends AppCompatActivity {
                     .start();
             }
         }
-    }
-
-    private void setupSavingsWidget() {
-        TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
-        android.view.View btnUpdateSavings = findViewById(R.id.btnUpdateSavings);
-        android.view.View cardSavingsWidget = findViewById(R.id.cardSavingsWidget);
-
-        if (txtCurrentSavingsValue != null && btnUpdateSavings != null) {
-            loadSavingsFromFirestore(txtCurrentSavingsValue);
-            btnUpdateSavings.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
-            if (cardSavingsWidget != null) {
-                cardSavingsWidget.setOnClickListener(v -> showUpdateSavingsDialog(txtCurrentSavingsValue));
-            }
-        }
-    }
-
-    private void loadSavingsFromFirestore(TextView txtValue) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-        FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String currentSavings = documentSnapshot.getString("currentSavings");
-                        if (currentSavings != null && !currentSavings.trim().isEmpty()) {
-                            try {
-                                double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
-                                mCurrentSavingsWidgetValue = amt;
-                            } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
-                            }
-                        } else {
-                            txtValue.setText("LKR 0.00");
-                            mCurrentSavingsWidgetValue = 0;
-                        }
-                        recalculateTotalIncome();
-                    }
-                });
-    }
-
-    private void showUpdateSavingsDialog(TextView txtValue) {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-
-        android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
-        builder.setTitle("Update Current Savings");
-
-        final android.widget.EditText input = new android.widget.EditText(this);
-        input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Enter amount (LKR)");
-
-        int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
-        android.widget.FrameLayout container = new android.widget.FrameLayout(this);
-        android.widget.FrameLayout.LayoutParams params = new android.widget.FrameLayout.LayoutParams(
-                android.view.ViewGroup.LayoutParams.MATCH_PARENT, android.view.ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.leftMargin = paddingPx;
-        params.rightMargin = paddingPx;
-        input.setLayoutParams(params);
-        container.addView(input);
-        builder.setView(container);
-
-        builder.setPositiveButton("Save", (dialog, which) -> {
-            String val = input.getText().toString().trim();
-            if (!val.isEmpty()) {
-                try {
-                    double amt = Double.parseDouble(val);
-                    FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                            .update("currentSavings", String.valueOf(amt))
-                            .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
-                                mCurrentSavingsWidgetValue = amt;
-                                recalculateTotalIncome();
-                                Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-                } catch (NumberFormatException e) {
-                    Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-
-        builder.setNegativeButton("Cancel", null);
-        builder.show();
     }
 }

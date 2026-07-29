@@ -42,7 +42,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private TextView tvInitials, txtGreeting, txtCurrentAccountName, txtAccountBalance, txtAccountNumber;
     private LinearLayout btnSwitchAccount;
     private View btnTopLogout;
-    private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
+    private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardAddAccount;
     private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager, cardFinancialReport;
 
     private List<AccountInfo> accountsList = new ArrayList<>();
@@ -168,7 +168,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         cardTransfer = findViewById(R.id.cardTransfer);
         cardStatements = findViewById(R.id.cardStatements);
         cardLoanManager = findViewById(R.id.cardLoanManager);
-        cardCards = findViewById(R.id.cardCards);
+
         cardAddAccount = findViewById(R.id.cardAddAccount);
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         cardSavingManager = findViewById(R.id.cardSavingManager);
@@ -209,7 +209,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
-        cardCards.setOnClickListener(v -> Toast.makeText(this, "Card Management - Coming Soon", Toast.LENGTH_SHORT).show());
+
         cardAddAccount.setOnClickListener(v -> showAddAccountDialog());
 
         cardLoanManager.setOnClickListener(v -> {
