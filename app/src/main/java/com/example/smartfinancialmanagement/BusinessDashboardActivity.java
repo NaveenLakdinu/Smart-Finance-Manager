@@ -75,8 +75,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         loadAvatarImage();
-        loadUserData();
-        loadAvatarImage();
 
         NotificationPanelHelper.checkAndShowOnResume(this);
 
@@ -89,7 +87,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         loadBusinessWorkspaces();
     }
 
-    
+    // Helper method to get the user's preferred currency
+    private String getCurrencySymbol() {
+        String rawSymbol = CurrencyHelper.getCurrencySymbol(this);
+        return (rawSymbol != null && !rawSymbol.trim().isEmpty()) ? rawSymbol : "LKR";
+    }
+
     private void loadUserData() {
         com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
         String userId = currentUser != null ? currentUser.getUid() : null;
@@ -97,37 +100,37 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         if (userId == null) return;
 
         com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
-            .addOnSuccessListener(documentSnapshot -> {
-                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
-                
-                String displayName = null;
-                if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
-                    displayName = documentSnapshot.getString("name");
-                }
-                
-                if (displayName == null || displayName.trim().isEmpty()) {
-                    if (currentUser.getEmail() != null) {
-                        displayName = currentUser.getEmail();
+                .addOnSuccessListener(documentSnapshot -> {
+                    android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
+                    android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+
+                    String displayName = null;
+                    if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
+                        displayName = documentSnapshot.getString("name");
                     }
-                }
-                
-                if (displayName != null && !displayName.trim().isEmpty()) {
-                    if (tvStudentName != null) {
-                        tvStudentName.setText(displayName);
+
+                    if (displayName == null || displayName.trim().isEmpty()) {
+                        if (currentUser.getEmail() != null) {
+                            displayName = currentUser.getEmail();
+                        }
                     }
-                    if (tvInitials != null) {
-                        tvInitials.setText(displayName.substring(0, 1).toUpperCase());
+
+                    if (displayName != null && !displayName.trim().isEmpty()) {
+                        if (tvStudentName != null) {
+                            tvStudentName.setText(displayName);
+                        }
+                        if (tvInitials != null) {
+                            tvInitials.setText(displayName.substring(0, 1).toUpperCase());
+                        }
+                    } else {
+                        if (tvStudentName != null) {
+                            tvStudentName.setText("User");
+                        }
+                        if (tvInitials != null) {
+                            tvInitials.setText("U");
+                        }
                     }
-                } else {
-                    if (tvStudentName != null) {
-                        tvStudentName.setText("User");
-                    }
-                    if (tvInitials != null) {
-                        tvInitials.setText("U");
-                    }
-                }
-            });
+                });
     }
 
     private void loadAvatarImage() {
@@ -175,7 +178,10 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         findViewById(R.id.cardManageUtility).setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
         findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
         findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
-        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
+
+        // Changed to AnalyticActivity
+        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
+
         findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
 
         setupSecurityButton();
@@ -218,6 +224,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private void loadSavingsFromFirestore(TextView txtValue) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
+
+        final String currencySymbol = getCurrencySymbol(); // Effectively final for lambda
+
         FirebaseFirestore.getInstance().collection("users").document(user.getUid())
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -226,12 +235,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                         if (currentSavings != null && !currentSavings.trim().isEmpty()) {
                             try {
                                 double amt = Double.parseDouble(currentSavings.trim());
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "%s %.2f", currencySymbol, amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
+                                txtValue.setText(currencySymbol + " " + currentSavings);
                             }
                         } else {
-                            txtValue.setText("LKR 0.00");
+                            txtValue.setText(currencySymbol + " 0.00");
                         }
                     }
                 });
@@ -241,12 +250,14 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         if (user == null) return;
 
+        final String currencySymbol = getCurrencySymbol(); // Effectively final for lambda
+
         android.app.AlertDialog.Builder builder = new android.app.AlertDialog.Builder(this);
         builder.setTitle("Update Current Savings");
 
         final android.widget.EditText input = new android.widget.EditText(this);
         input.setInputType(android.text.InputType.TYPE_CLASS_NUMBER | android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL);
-        input.setHint("Enter amount (LKR)");
+        input.setHint("Enter amount (" + currencySymbol + ")");
 
         int paddingPx = (int) (16 * getResources().getDisplayMetrics().density);
         android.widget.FrameLayout container = new android.widget.FrameLayout(this);
@@ -266,7 +277,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     FirebaseFirestore.getInstance().collection("users").document(user.getUid())
                             .update("currentSavings", String.valueOf(amt))
                             .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+                                txtValue.setText(String.format(Locale.US, "%s %.2f", currencySymbol, amt));
                                 Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
                             })
                             .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
@@ -385,7 +396,9 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             }
         }
 
-        txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", pendingTotal));
+        // Dynamically apply currency preference to the hero card display
+        String currencySymbol = getCurrencySymbol();
+        txtTotalCount.setText(String.format(Locale.US, "%s %,.2f", currencySymbol, pendingTotal));
 
         if (selectedBusinessScope.equals("ALL WORKSPACES")) {
             txtSubMessage.setText("Total pending invoices across all registered workspaces");
@@ -465,12 +478,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     if (!isPinSet) {
                         Intent intent = new Intent(this, PinSetupActivity.class);
                         startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
                             Intent intent = new Intent(this, PinSetupActivity.class);
                             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
                             PinHelper.clearPin(this);
                             Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
@@ -504,12 +517,12 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 cards[i].setTranslationY(40f);
                 final int delay = i * 100;
                 cards[i].animate()
-                    .alpha(1f)
-                    .translationY(0f)
-                    .setDuration(400)
-                    .setStartDelay(delay)
-                    .setInterpolator(new OvershootInterpolator(1.2f))
-                    .start();
+                        .alpha(1f)
+                        .translationY(0f)
+                        .setDuration(400)
+                        .setStartDelay(delay)
+                        .setInterpolator(new OvershootInterpolator(1.2f))
+                        .start();
             }
         }
     }
