@@ -184,9 +184,7 @@
             android:name=".ExpenseManagementActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".AnalyticsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UtilityManagerActivity"
             android:exported="false" />

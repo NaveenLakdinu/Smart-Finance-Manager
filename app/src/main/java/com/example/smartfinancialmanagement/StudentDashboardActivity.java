@@ -267,7 +267,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         // Notification button
         View btnNotifications = findViewById(R.id.btnNotifications);
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
 
         loadAchievementData();
@@ -391,9 +391,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void showNotificationPanelDialog() {
-        startActivity(new Intent(this, NotificationListActivity.class));
-    }
+
 
 
 

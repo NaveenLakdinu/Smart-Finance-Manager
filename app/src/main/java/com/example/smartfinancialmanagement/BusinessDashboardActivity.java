@@ -181,7 +181,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         setupSecurityButton();
         setupSavingsWidget();
 
-        btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        btnNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationListActivity.class)));
         btnTopLogout.setOnClickListener(v -> {
             mAuth.signOut();
             Toast.makeText(this, "Logged Out Safely", Toast.LENGTH_SHORT).show();
@@ -483,9 +483,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void showNotificationPanelDialog() {
-        startActivity(new Intent(this, NotificationListActivity.class));
-    }
+
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {
         MaterialCardView cardView;

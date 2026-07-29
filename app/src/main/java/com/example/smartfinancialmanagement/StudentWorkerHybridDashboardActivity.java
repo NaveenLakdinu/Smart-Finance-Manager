@@ -213,7 +213,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         }
 
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
 
         if (btnTopLogout != null) {
@@ -425,9 +425,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         builder.show();
     }
 
-    private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
-    }
+
 
     @Override
     protected void onResume() {

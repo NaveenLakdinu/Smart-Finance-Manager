@@ -61,7 +61,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         setupPendingTasks();
         View btnNotifications = findViewById(R.id.btnNotifications);
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(notifBtn -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(notifBtn -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
     }
 
@@ -469,8 +469,6 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
-    }
+
 }
 

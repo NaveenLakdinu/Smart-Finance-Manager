@@ -545,8 +545,6 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
-    }
+
 }
 
