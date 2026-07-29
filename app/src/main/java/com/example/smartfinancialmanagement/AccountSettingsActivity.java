@@ -61,7 +61,7 @@ public class AccountSettingsActivity extends AppCompatActivity {
         llWorkerInfo = findViewById(R.id.llWorkerInfo);
 
         String role = getSharedPreferences("UserData", MODE_PRIVATE).getString("user_role", "Student");
-        if (role.equals("Company worker")) {
+        if (role.equals("Company worker") || role.equals("Multiple account holder")) {
             if (llWorkerInfo != null) llWorkerInfo.setVisibility(android.view.View.VISIBLE);
         } else if (role.equals("Business owner")) {
             // Leave both hidden
@@ -116,6 +116,17 @@ public class AccountSettingsActivity extends AppCompatActivity {
                         }
                     })
                     .addOnFailureListener(e -> Toast.makeText(this, "Failed to load worker info", Toast.LENGTH_SHORT).show());
+        } else if (role.equals("Multiple account holder")) {
+            db.collection("users").document(uid).collection("multi_profile").document("profile_data").get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            if (documentSnapshot.contains("monthlySalary")) {
+                                Double sal = documentSnapshot.getDouble("monthlySalary");
+                                if (sal != null) etEditMonthlyIncome.setText(String.valueOf(sal));
+                            }
+                        }
+                    })
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to load multi account info", Toast.LENGTH_SHORT).show());
         } else if (role.equals("Business owner")) {
             // Nothing extra to load
         } else {
@@ -257,6 +268,13 @@ public class AccountSettingsActivity extends AppCompatActivity {
             Map<String, Object> workerUpdates = new HashMap<>();
             workerUpdates.put("monthlySalary", income);
             batch.set(workerRef, workerUpdates, com.google.firebase.firestore.SetOptions.merge());
+        } else if (role.equals("Multiple account holder")) {
+            String incomeStr = etEditMonthlyIncome.getText().toString().trim();
+            double income = incomeStr.isEmpty() ? 0.0 : Double.parseDouble(incomeStr);
+            DocumentReference multiRef = db.collection("users").document(user.getUid()).collection("multi_profile").document("profile_data");
+            Map<String, Object> multiUpdates = new HashMap<>();
+            multiUpdates.put("monthlySalary", income);
+            batch.set(multiRef, multiUpdates, com.google.firebase.firestore.SetOptions.merge());
         } else if (!role.equals("Business owner")) {
             String university = etEditUniversity.getText().toString().trim();
             String course = etEditCourse.getText().toString().trim();

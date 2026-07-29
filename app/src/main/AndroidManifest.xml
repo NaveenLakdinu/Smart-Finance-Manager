@@ -85,6 +85,9 @@
             android:name=".MultiAccountDashboardActivity"
             android:exported="false" />
         <activity
+            android:name=".MultiAccountProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".LoanFormActivity"
             android:exported="false" />
         <activity

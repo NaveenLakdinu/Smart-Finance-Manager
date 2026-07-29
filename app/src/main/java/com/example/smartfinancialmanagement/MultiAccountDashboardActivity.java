@@ -43,7 +43,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     private LinearLayout btnSwitchAccount;
     private View btnTopLogout;
     private MaterialCardView cardTransfer, cardStatements, cardLoanManager, cardCards, cardAddAccount;
-    private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
+    private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager, cardFinancialReport;
 
     private List<AccountInfo> accountsList = new ArrayList<>();
     private int currentAccountIndex = 0;
@@ -154,7 +154,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         tvInitials = findViewById(R.id.txtProfileLetter);
         if (tvInitials != null) {
             tvInitials.setOnClickListener(v -> {
-                startActivity(new android.content.Intent(this, AccountSettingsActivity.class));
+                startActivity(new android.content.Intent(this, MultiAccountProfileActivity.class));
             });
         }
         txtGreeting = findViewById(R.id.txtGreeting);
@@ -172,6 +172,7 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         cardSavingManager = findViewById(R.id.cardSavingManager);
         cardUtilityManager = findViewById(R.id.cardUtilityManager);
+        cardFinancialReport = findViewById(R.id.cardFinancialReport);
 
         setupActionCards();
     }
@@ -230,6 +231,14 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
             startActivity(intent);
             overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
         });
+
+        if (cardFinancialReport != null) {
+            cardFinancialReport.setOnClickListener(v -> {
+                Intent intent = new Intent(this, FinancialReportsActivity.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+            });
+        }
     }
 
     private void setupUserDetails() {

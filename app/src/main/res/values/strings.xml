@@ -233,6 +233,7 @@
     <string name="business_stat_profit">Profit</string>
     <string name="business_menu_edit_revenue">Edit Revenue Details</string>
     <string name="business_menu_invoices">My Invoices</string>
+    <string name="business_menu_financial_reports">Financial Reports</string>
     <string name="business_income_title">Revenue Details</string>
     <string name="business_income_biz_info">Business Information</string>
     <string name="business_income_name">Business Name</string>

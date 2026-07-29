@@ -29,14 +29,14 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Locale;
 
-public class BusinessProfileActivity extends AppCompatActivity {
+public class MultiAccountProfileActivity extends AppCompatActivity {
 
     private EditText etProfileName;
-    private TextView txtProfileEmail, txtProfileBusiness, txtStatRevenueValue, txtStatExpensesValue, txtStatProfitValue;
+    private TextView txtProfileEmail, txtProfileType, txtStatAccountsValue, txtStatTotalBalanceValue;
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
 
-    private MaterialCardView menuEditRevenue, menuInvoices, menuAccountSettings, cardSignOut, menuFinancialReports;
+    private MaterialCardView menuFinancialReports, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -84,7 +84,7 @@ public class BusinessProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_business_profile);
+        setContentView(R.layout.activity_multi_account_profile);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -99,16 +99,13 @@ public class BusinessProfileActivity extends AppCompatActivity {
     private void initViews() {
         etProfileName = findViewById(R.id.txtProfileName);
         txtProfileEmail = findViewById(R.id.txtProfileEmail);
-        txtProfileBusiness = findViewById(R.id.txtProfileBusiness);
+        txtProfileType = findViewById(R.id.txtProfileType);
         imgProfileAvatar = findViewById(R.id.imgProfileAvatar);
         btnEditAvatar = findViewById(R.id.btnEditAvatar);
 
-        txtStatRevenueValue = findViewById(R.id.txtStatRevenueValue);
-        txtStatExpensesValue = findViewById(R.id.txtStatExpensesValue);
-        txtStatProfitValue = findViewById(R.id.txtStatProfitValue);
+        txtStatAccountsValue = findViewById(R.id.txtStatAccountsValue);
+        txtStatTotalBalanceValue = findViewById(R.id.txtStatTotalBalanceValue);
 
-        menuEditRevenue = findViewById(R.id.menuEditRevenue);
-        menuInvoices = findViewById(R.id.menuInvoices);
         menuFinancialReports = findViewById(R.id.menuFinancialReports);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
@@ -138,27 +135,6 @@ public class BusinessProfileActivity extends AppCompatActivity {
                     }
                 });
 
-            db.collection("users").document(user.getUid())
-                .collection("business_profile").document("profile_data").get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        String bizName = documentSnapshot.getString("businessName");
-                        String industry = documentSnapshot.getString("industryType");
-
-                        TextView txtBiz = findViewById(R.id.txtProfileBusiness);
-                        if (txtBiz != null) {
-                            if (bizName != null && !bizName.isEmpty()) {
-                                if (industry != null && !industry.isEmpty()) {
-                                    txtBiz.setText(bizName + " - " + industry);
-                                } else {
-                                    txtBiz.setText(bizName);
-                                }
-                            } else {
-                                txtBiz.setText("Business not set");
-                            }
-                        }
-                    }
-                });
         }
 
         SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
@@ -177,30 +153,24 @@ public class BusinessProfileActivity extends AppCompatActivity {
         if (user == null) return;
 
         db.collection("users").document(user.getUid())
-            .collection("business_profile").document("profile_data").get()
-            .addOnSuccessListener(documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    Double revenue = documentSnapshot.getDouble("averageMonthlyRevenue");
-                    Double expenses = documentSnapshot.getDouble("businessExpenses");
-                    Double profitMargin = documentSnapshot.getDouble("profitMargin");
-
-                    if (revenue != null && revenue > 0) {
-                        txtStatRevenueValue.setText(String.format(Locale.US, "LKR %,.0f", revenue));
-                    } else {
-                        txtStatRevenueValue.setText("LKR 0");
+            .collection("accounts").get()
+            .addOnSuccessListener(queryDocumentSnapshots -> {
+                int totalAccounts = queryDocumentSnapshots.size();
+                double totalBalance = 0;
+                
+                for (DocumentSnapshot doc : queryDocumentSnapshots) {
+                    Double bal = doc.getDouble("balance");
+                    if (bal != null) {
+                        totalBalance += bal;
                     }
+                }
 
-                    if (expenses != null && expenses > 0) {
-                        txtStatExpensesValue.setText(String.format(Locale.US, "LKR %,.0f", expenses));
-                    } else {
-                        txtStatExpensesValue.setText("LKR 0");
-                    }
-
-                    if (profitMargin != null) {
-                        txtStatProfitValue.setText(String.format(Locale.US, "%.1f%%", profitMargin));
-                    } else {
-                        txtStatProfitValue.setText("0%");
-                    }
+                if (txtStatAccountsValue != null) {
+                    txtStatAccountsValue.setText(String.valueOf(totalAccounts));
+                }
+                
+                if (txtStatTotalBalanceValue != null) {
+                    txtStatTotalBalanceValue.setText(String.format(Locale.US, "LKR %,.0f", totalBalance));
                 }
             });
     }
@@ -213,14 +183,6 @@ public class BusinessProfileActivity extends AppCompatActivity {
 
         if (btnEditAvatar != null) btnEditAvatar.setOnClickListener(v -> pickImage());
         if (imgProfileAvatar != null) imgProfileAvatar.setOnClickListener(v -> pickImage());
-
-        if (menuEditRevenue != null) {
-            menuEditRevenue.setOnClickListener(v -> startActivity(new Intent(this, BusinessIncomeActivity.class)));
-        }
-
-        if (menuInvoices != null) {
-            menuInvoices.setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
-        }
 
         if (menuFinancialReports != null) {
             menuFinancialReports.setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
