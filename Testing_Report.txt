@@ -1,0 +1,39 @@
+=========================================================
+SMART FINANCE MANAGER - TESTING & RESOLUTION REPORT
+Date: July 31, 2026
+Branch: main (Merged from boseth-branch)
+=========================================================
+
+1. AUTOMATED TEST SUITE & COMPILATION RESULTS
+---------------------------------------------------------
+- Build Compilation: SUCCESS (Execution via AGP 8.7.0 and JDK 17 / JBR)
+- Unit Testing Suite: SUCCESS (Task: `:app:testDebugUnitTest`, `:app:testReleaseUnitTest`)
+- Android Linting: FAILED due to a known `LintDriver.kt` internal compiler bug isolated to the Lint worker runtime environment, but unrelated to app codebase integrity.
+- Code successfully merged to `main` without conflicts.
+
+2. ADDRESSED ISSUES & MANUAL TESTING FIXES
+---------------------------------------------------------
+
+A. Worker Expense Claims Workflow
+- Error/Feedback: The Expense Claims system had non-functional buttons to "Approve/Reject" expenses, and unnecessary UI elements prompting the user to upload receipt attachments, which wasn't supported by the backend.
+- Resolution: We entirely stripped out the receipt attachment UI, removed the Firebase Storage logic, and simplified the dashboard to purely log expenses.
+
+B. Dashboard Crash & Compilation Symbol Errors
+- Error/Feedback: App crashed fetching user savings due to a `ClassCastException` (Double vs String) inside `WorkerDashboardActivity`. Additionally, `StudentWorkerHybridDashboardActivity` failed to compile due to a missing symbol (`WorkerPayslipActivity`) and `OTEntryAdapter` had unresolved view IDs.
+- Resolution: Handled the Firestore data cast safely in Java. Renamed the deprecated `WorkerPayslipActivity` to the correct `OTManagerActivity` and updated routing. Removed the non-existent view blocks from `OTEntryAdapter` to ensure smooth compilation.
+
+C. "Failed to load entries" (OT Manager)
+- Error/Feedback: When opening the OT Manager, the app displayed a toast saying "Failed to load entries" and couldn't populate the list. 
+- Resolution: The Firebase query was executing a `whereEqualTo` paired with an `orderBy` on different fields. This automatically demands a predefined Firestore Composite Index. Because one did not exist, the query was blocking the request (`FAILED_PRECONDITION`). I removed the `orderBy` constraint from the query, and wrote lightweight client-side sorting in Java (`Collections.sort()`) instead. The list now loads seamlessly.
+
+D. UI Misalignments in OT Manager
+- Error/Feedback: The "ADD" button in the form was floating above the bottom input line, and the red trashcan delete button on the OT cards was pushing the card height downwards.
+- Resolution: Modified `activity_ot_manager.xml` to anchor the button's wrapper to `match_parent` height with bottom gravity. Rebuilt the `ConstraintLayout` rules in `item_ot_entry.xml` to perfectly align the delete button and the amount horizontally (side-by-side) on the far right.
+
+E. Hybrid Dashboard Salary Computation Error
+- Error/Feedback: The Student-Worker Hybrid dashboard neglected to include OT earnings in the final monthly salary.
+- Resolution: Altered `StudentWorkerHybridDashboardActivity` to actively fetch the current month's `ot_summary` document. The app now adds `totalOtPay` directly onto the base `monthlySalary` dynamically, matching the calculation logic used in the standalone Worker Dashboard.
+
+=========================================================
+STATUS: All requested fixes successfully integrated, tested, and pushed to the main production branch.
+=========================================================
