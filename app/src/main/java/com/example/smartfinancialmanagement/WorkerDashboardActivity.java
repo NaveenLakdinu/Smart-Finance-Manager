@@ -429,8 +429,10 @@ public class WorkerDashboardActivity extends AppCompatActivity {
             if (!val.isEmpty()) {
                 try {
                     double amt = Double.parseDouble(val);
+                    java.util.Map<String, Object> data = new java.util.HashMap<>();
+                    data.put("currentSavings", amt);
                     FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-        .update("currentSavings", amt) // store as numeric double
+        .set(data, com.google.firebase.firestore.SetOptions.merge()) // store as numeric double
         .addOnSuccessListener(aVoid -> {
             txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
             Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
