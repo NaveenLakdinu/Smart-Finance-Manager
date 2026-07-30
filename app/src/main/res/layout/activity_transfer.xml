@@ -195,7 +195,7 @@
             android:textColor="@color/text_on_dark_primary"
             android:textColorHint="@color/text_on_dark_muted"
             android:textSize="16sp"
-            android:background="@drawable/bg_input_dark"
+            android:background="@android:color/transparent"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:layout_marginBottom="8dp" />
@@ -228,7 +228,7 @@
             android:textColor="@color/text_on_dark_primary"
             android:textColorHint="@color/text_on_dark_muted"
             android:textSize="14sp"
-            android:background="@drawable/bg_input_dark"
+            android:background="@android:color/transparent"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:layout_marginBottom="32dp" />

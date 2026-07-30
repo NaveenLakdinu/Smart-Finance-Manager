@@ -15,8 +15,7 @@
     <!-- ── Hero header card ────────────────────────────────────────────── -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="0.38"
+        android:layout_height="wrap_content"
         android:background="@drawable/bg_hero_green"
         android:gravity="center"
         android:orientation="vertical"
@@ -62,7 +61,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="0.62"
+        android:layout_weight="1"
         android:overScrollMode="never"
         android:fillViewport="true">
 

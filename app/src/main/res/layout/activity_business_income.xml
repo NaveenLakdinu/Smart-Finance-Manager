@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bg_dashboard"
+    tools:context=".BusinessIncomeActivity">
+
+    <!-- Header -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:padding="16dp">
+
+        <ImageButton
+            android:id="@+id/btnBack"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:src="@drawable/ic_arrow_back"
+            android:contentDescription="@string/cd_navigate_back"
+            app:tint="@color/text_on_dark_primary" />
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/business_income_title"
+            android:textColor="@color/text_on_dark_primary"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginStart="12dp" />
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="20dp">
+
+            <!-- Business Info Card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/business_income_biz_info"
+                android:textColor="@color/text_on_dark_secondary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/forest_600">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Business Name -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_name"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etBusinessName"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_name_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:layout_marginBottom="14dp" />
+
+                    <!-- Registration Number -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_reg"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etRegNumber"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_reg_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="text"
+                        android:singleLine="true"
+                        android:layout_marginBottom="14dp" />
+
+                    <!-- Industry Type -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_industry"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etIndustryType"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_industry_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="text"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Revenue Details Card -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/business_income_revenue_info"
+                android:textColor="@color/text_on_dark_secondary"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="0dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/forest_600">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="16dp">
+
+                    <!-- Average Monthly Revenue -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_monthly_revenue"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etMonthlyRevenue"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_revenue_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:layout_marginBottom="14dp" />
+
+                    <!-- Business Expenses -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_expenses"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etBusinessExpenses"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_expenses_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true"
+                        android:layout_marginBottom="14dp" />
+
+                    <!-- Profit Margin -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/business_income_profit_margin"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="12sp"
+                        android:layout_marginBottom="6dp" />
+
+                    <EditText
+                        android:id="@+id/etProfitMargin"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:background="@android:color/transparent"
+                        android:padding="12dp"
+                        android:hint="@string/business_income_profit_hint"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="14sp"
+                        android:inputType="numberDecimal"
+                        android:singleLine="true" />
+
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Save Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSave"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:text="@string/business_income_save"
+                android:textColor="@color/forest_900"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:backgroundTint="@color/forest_300"
+                app:cornerRadius="14dp"
+                android:layout_marginBottom="16dp" />
+
+            <!-- Loading indicator -->
+            <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/forest_300"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

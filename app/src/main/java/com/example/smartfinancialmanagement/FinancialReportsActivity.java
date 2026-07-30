@@ -47,16 +47,14 @@ public class FinancialReportsActivity extends AppCompatActivity {
     private MaterialButton btnGenerateReport;
     
     private PieChart chartLoans, chartSubscriptions;
-    private BarChart chartUtilityBills;
     private HorizontalBarChart chartSavings;
 
-    private TextView txtReportBalance, txtReportIncome, txtReportSavings, txtReportLoans, txtReportSubscriptions, txtReportUtilities;
+    private TextView txtReportBalance, txtReportIncome, txtReportSavings, txtReportLoans, txtReportSubscriptions;
 
     private double mTotalIncome = 0;
     private double mTotalSavings = 0;
     private double mTotalLoans = 0;
     private double mTotalSubscriptions = 0;
-    private double mTotalUtilities = 0;
     private double mDirectIncome = 0;
     private double mBudgetIncome = 0;
     
@@ -97,12 +95,10 @@ public class FinancialReportsActivity extends AppCompatActivity {
 
         chartLoans = findViewById(R.id.chartLoans);
         chartSubscriptions = findViewById(R.id.chartSubscriptions);
-        chartUtilityBills = findViewById(R.id.chartUtilityBills);
         chartSavings = findViewById(R.id.chartSavings);
 
         stylePieChart(chartLoans);
         stylePieChart(chartSubscriptions);
-        styleBarChart(chartUtilityBills);
         styleBarChart(chartSavings);
 
         txtReportBalance = findViewById(R.id.txtReportBalance);
@@ -110,7 +106,6 @@ public class FinancialReportsActivity extends AppCompatActivity {
         txtReportSavings = findViewById(R.id.txtReportSavings);
         txtReportLoans = findViewById(R.id.txtReportLoans);
         txtReportSubscriptions = findViewById(R.id.txtReportSubscriptions);
-        txtReportUtilities = findViewById(R.id.txtReportUtilities);
 
         mAuth = FirebaseAuth.getInstance();
         db = FirebaseFirestore.getInstance();
@@ -178,16 +173,38 @@ public class FinancialReportsActivity extends AppCompatActivity {
         mTotalSavings = 0;
         mTotalLoans = 0;
         mTotalSubscriptions = 0;
-        mTotalUtilities = 0;
         mDirectIncome = 0;
         mBudgetIncome = 0;
         updateSummaryUI();
 
-        // Fetch Direct Incomes
+        // Fetch Direct Incomes (Students/Default)
         db.collection("users").document(uid).collection("incomes").get().addOnSuccessListener(queryDocumentSnapshots -> {
             for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
                 if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
                 Double amount = doc.getDouble("amount");
+                if (amount != null) mDirectIncome += amount;
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Invoices (Business Owners)
+        db.collection("invoices").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                String status = doc.getString("status");
+                if (status != null && status.equalsIgnoreCase("paid")) {
+                    Double amount = doc.getDouble("grandTotal");
+                    if (amount != null) mDirectIncome += amount;
+                }
+            }
+            recalculateTotalIncome();
+        });
+
+        // Fetch Payslips (Workers)
+        db.collection("users").document(uid).collection("payslips").get().addOnSuccessListener(queryDocumentSnapshots -> {
+            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
+                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
+                Double amount = doc.getDouble("netPay");
                 if (amount != null) mDirectIncome += amount;
             }
             recalculateTotalIncome();
@@ -286,43 +303,7 @@ public class FinancialReportsActivity extends AppCompatActivity {
             updateSummaryUI();
         });
 
-        // 3. Fetch Utility Bills
-        db.collection("utilityBill").whereEqualTo("userId", uid).get().addOnSuccessListener(queryDocumentSnapshots -> {
-            List<BarEntry> entries = new ArrayList<>();
-            List<String> labels = new ArrayList<>();
-            float i = 0f;
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
-                Double amount = doc.getDouble("amount");
-                String name = doc.getString("billName");
-                if (amount != null) {
-                    entries.add(new BarEntry(i++, amount.floatValue()));
-                    labels.add(name != null ? name : "Bill");
-                }
-            }
-            if (!entries.isEmpty()) {
-                BarDataSet dataSet = new BarDataSet(entries, "Utility Bills");
-                dataSet.setColors(ColorTemplate.MATERIAL_COLORS);
-                dataSet.setValueTextColor(android.graphics.Color.WHITE);
-                dataSet.setValueTextSize(10f);
-                chartUtilityBills.setData(new BarData(dataSet));
-                
-                chartUtilityBills.getXAxis().setValueFormatter(new com.github.mikephil.charting.formatter.IndexAxisValueFormatter(labels));
-                chartUtilityBills.getXAxis().setGranularity(1f);
-            } else {
-                chartUtilityBills.clear();
-            }
-            chartUtilityBills.getDescription().setEnabled(false);
-            chartUtilityBills.invalidate();
-
-            mTotalUtilities = 0;
-            for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                if (!matchesDateFilter(doc, isYearly, selectedMonth, selectedYear)) continue;
-                Double amount = doc.getDouble("amount");
-                if (amount != null) mTotalUtilities += amount;
-            }
-            updateSummaryUI();
-        });
+        // Utilities fetching logic removed
 
         // 4. Fetch Savings
         db.collection("users").document(uid).collection("savings").get().addOnSuccessListener(queryDocumentSnapshots -> {
@@ -373,9 +354,8 @@ public class FinancialReportsActivity extends AppCompatActivity {
         if (txtReportSavings != null) txtReportSavings.setText(CurrencyHelper.formatMoney(this, mTotalSavings));
         if (txtReportLoans != null) txtReportLoans.setText(CurrencyHelper.formatMoney(this, mTotalLoans));
         if (txtReportSubscriptions != null) txtReportSubscriptions.setText(CurrencyHelper.formatMoney(this, mTotalSubscriptions));
-        if (txtReportUtilities != null) txtReportUtilities.setText(CurrencyHelper.formatMoney(this, mTotalUtilities));
 
-        double currentBalance = mTotalIncome - mTotalSavings - mTotalLoans - mTotalSubscriptions - mTotalUtilities;
+        double currentBalance = mTotalIncome - mTotalSavings - mTotalLoans - mTotalSubscriptions;
         if (txtReportBalance != null) txtReportBalance.setText(CurrencyHelper.formatMoney(this, currentBalance));
     }
 

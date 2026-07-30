@@ -1,14 +1,20 @@
 package com.example.smartfinancialmanagement;
 
+import android.Manifest;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,17 +22,12 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class UtilityBillActivity extends AppCompatActivity {
 
@@ -37,7 +38,15 @@ public class UtilityBillActivity extends AppCompatActivity {
     private UtilityAdapter adapter;
     private ArrayList<UtilityBill> billList;
     private FirebaseFirestore db;
-    private android.view.View btnManageUtility;
+
+    // Supported date formats for automatic parsing fallback
+    private static final String[] DATE_FORMATS = {
+            "yyyy-MM-dd",
+            "dd/MM/yyyy",
+            "dd-MM-yyyy",
+            "MM/dd/yyyy",
+            "yyyy/MM/dd"
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,19 +69,11 @@ public class UtilityBillActivity extends AppCompatActivity {
         btnBack = findViewById(R.id.backButton);
         btnBack.setOnClickListener(v -> finish());
 
-        btnManageUtility = findViewById(R.id.recyclerBills);
-        if (btnManageUtility != null) {
-            btnManageUtility.setOnClickListener(v -> {
-                // Open your management/form activity layout to add a new bill
-                Intent intent = new Intent(UtilityBillActivity.this, UtilityReportFormActivity.class);
-                startActivity(intent);
-            });
-        }
-
+        // Set up RecyclerView
         recyclerBills = findViewById(R.id.recyclerBills);
         recyclerBills.setLayoutManager(new LinearLayoutManager(this));
 
-        // FIX: Replaced the single-parameter lambda with the fully fleshed-out interface listener instance
+        // Listener handling: Only delete button and full card click
         adapter = new UtilityAdapter(this, billList, new UtilityAdapter.OnUtilityClickListener() {
             @Override
             public void onDeleteClick(UtilityBill bill) {
@@ -81,13 +82,14 @@ public class UtilityBillActivity extends AppCompatActivity {
 
             @Override
             public void onCardClick(UtilityBill bill) {
-                // Tapping anywhere on the item card or the edit button routes here
+                // Tapping anywhere on the item card routes to UpdateBillActivity
                 if (bill.getId() != null) {
                     Intent intent = new Intent(UtilityBillActivity.this, UpdateBillActivity.class);
                     intent.putExtra("BILL_ID", bill.getId());
+                    intent.putExtra("DOCUMENT_ID", bill.getId());
                     startActivity(intent);
                 } else {
-                    Toast.makeText(UtilityBillActivity.this, "Error: Missing bill tracking code ID", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(UtilityBillActivity.this, "Error: Missing bill document ID", Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -137,7 +139,7 @@ public class UtilityBillActivity extends AppCompatActivity {
                                 bill.setId(doc.getId());
                                 billList.add(bill);
 
-                                // Refresh system notification engine
+                                // Refresh monthly recurring notification alarm
                                 scheduleBillNotification(bill.getBillName(), bill.getPaymentDate());
                             }
                         }
@@ -147,62 +149,74 @@ public class UtilityBillActivity extends AppCompatActivity {
     }
 
     /**
-     * FIX: Calculates the next upcoming occurrence exactly 1 day before the target monthly day.
-     * Prevents security crashes while safely rolling over target timelines automatically.
+     * Parses the stored bill due date string using fallback parsers and calculates
+     * the exact reminder trigger time (1 day before the monthly due date at 09:00 AM).
+     * If the current month's reminder has passed, it rolls forward to next month.
      */
     private void scheduleBillNotification(String billName, String dueDateStr) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
-        try {
-            Date date = sdf.parse(dueDateStr);
-            if (date != null) {
-                Calendar baseCalendar = Calendar.getInstance();
-                baseCalendar.setTime(date);
+        if (dueDateStr == null || dueDateStr.trim().isEmpty()) return;
 
-                // Get the base day configuration (e.g., the 25th)
-                int targetDayOfMonth = baseCalendar.get(Calendar.DAY_OF_MONTH);
-
-                Calendar reminderCalendar = Calendar.getInstance();
-                // Match the target day, but place it in the current month and year
-                reminderCalendar.set(Calendar.DAY_OF_MONTH, targetDayOfMonth);
-                reminderCalendar.set(Calendar.HOUR_OF_DAY, 9);
-                reminderCalendar.set(Calendar.MINUTE, 0);
-                reminderCalendar.set(Calendar.SECOND, 0);
-                reminderCalendar.set(Calendar.MILLISECOND, 0);
-
-                // FIX 1: Shift back by exactly 1 day (due tomorrow logic)
-                reminderCalendar.add(Calendar.DAY_OF_YEAR, -1);
-
-                // FIX 2: Monthly rollover logic. If the calculated reminder day for this month
-                // has already passed, automatically push it forward to next month.
-                if (reminderCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
-                    reminderCalendar.add(Calendar.MONTH, 1);
-                }
-
-                AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-                Intent intent = new Intent(this, NotificationReceiver.class);
-                intent.putExtra("BILL_NAME", billName);
-
-                int uniqueIntentId = billName.hashCode();
-
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                        this, uniqueIntentId, intent,
-                        PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
-
-                if (alarmManager != null) {
-                    try {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
-                            alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
-                        } else {
-                            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
-                        }
-                    } catch (SecurityException se) {
-                        se.printStackTrace();
-                        alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
-                    }
-                }
+        Date originalDate = null;
+        for (String format : DATE_FORMATS) {
+            try {
+                SimpleDateFormat parser = new SimpleDateFormat(format, Locale.getDefault());
+                parser.setLenient(false);
+                originalDate = parser.parse(dueDateStr);
+                if (originalDate != null) break;
+            } catch (ParseException ignored) {
             }
-        } catch (Exception e) {
-            e.printStackTrace();
+        }
+
+        if (originalDate == null) {
+            Log.w(TAG, "Unparseable date format for bill: " + billName + " (" + dueDateStr + ")");
+            return;
+        }
+
+        Calendar baseCalendar = Calendar.getInstance();
+        baseCalendar.setTime(originalDate);
+
+        // Target day of the month (e.g., 25th)
+        int targetDayOfMonth = baseCalendar.get(Calendar.DAY_OF_MONTH);
+
+        Calendar reminderCalendar = Calendar.getInstance();
+        reminderCalendar.set(Calendar.DAY_OF_MONTH, targetDayOfMonth);
+        reminderCalendar.set(Calendar.HOUR_OF_DAY, 9);
+        reminderCalendar.set(Calendar.MINUTE, 0);
+        reminderCalendar.set(Calendar.SECOND, 0);
+        reminderCalendar.set(Calendar.MILLISECOND, 0);
+
+        // Shift back by 1 day (due tomorrow notification)
+        reminderCalendar.add(Calendar.DAY_OF_YEAR, -1);
+
+        // If this month's reminder date/time has passed, advance to next month
+        if (reminderCalendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            reminderCalendar.add(Calendar.MONTH, 1);
+        }
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(this, NotificationReceiver.class);
+        intent.putExtra("BILL_NAME", billName);
+
+        int uniqueIntentId = billName.hashCode();
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this,
+                uniqueIntentId,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        if (alarmManager != null) {
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarmManager.canScheduleExactAlarms()) {
+                    alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
+                } else {
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
+                }
+            } catch (SecurityException se) {
+                Log.e(TAG, "SecurityException scheduling alarm", se);
+                alarmManager.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, reminderCalendar.getTimeInMillis(), pendingIntent);
+            }
         }
     }
 }

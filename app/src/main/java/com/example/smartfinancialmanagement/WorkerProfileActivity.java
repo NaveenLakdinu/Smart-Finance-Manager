@@ -11,10 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.View;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
+import android.widget.ImageButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -23,17 +20,23 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Locale;
 
 public class WorkerProfileActivity extends AppCompatActivity {
 
     private EditText etProfileName;
-    private TextView txtProfileEmail, txtStatGoalsValue, txtStatSavedValue, txtStatScoreValue;
+    private TextView txtProfileEmail, txtProfileCompany, txtStatSalaryValue, txtStatBonusValue, txtStatScoreValue;
     private ImageView imgProfileAvatar;
     private View btnEditAvatar;
-    
-    private MaterialCardView menuAchievements, menuFinancialReports, menuAccountSettings, cardSignOut;
+
+    private MaterialCardView menuEditIncome, menuPayslips, menuFinancialReports, menuAccountSettings, cardSignOut;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -67,7 +70,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
                 }
                 outputStream.close();
                 inputStream.close();
-                
+
                 Uri internalUri = Uri.fromFile(file);
                 updateAvatarImage(internalUri);
                 saveAvatarUri(internalUri.toString());
@@ -96,20 +99,20 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void initViews() {
         etProfileName = findViewById(R.id.txtProfileName);
         txtProfileEmail = findViewById(R.id.txtProfileEmail);
+        txtProfileCompany = findViewById(R.id.txtProfileCompany);
         imgProfileAvatar = findViewById(R.id.imgProfileAvatar);
         btnEditAvatar = findViewById(R.id.btnEditAvatar);
-        
-        txtStatGoalsValue = findViewById(R.id.txtStatGoalsValue);
-        txtStatSavedValue = findViewById(R.id.txtStatSavedValue);
-        txtStatScoreValue = findViewById(R.id.txtStatScoreValue);
-        
 
-        menuAchievements = findViewById(R.id.menuAchievements);
+        txtStatSalaryValue = findViewById(R.id.txtStatSalaryValue);
+        txtStatBonusValue = findViewById(R.id.txtStatBonusValue);
+        txtStatScoreValue = findViewById(R.id.txtStatScoreValue);
+
+        menuEditIncome = findViewById(R.id.menuEditIncome);
+        menuPayslips = findViewById(R.id.menuPayslips);
         menuFinancialReports = findViewById(R.id.menuFinancialReports);
         menuAccountSettings = findViewById(R.id.menuAccountSettings);
         cardSignOut = findViewById(R.id.cardSignOut);
-        
-        // Disable inline editing of name as it is now managed elsewhere or read-only
+
         if (etProfileName != null) {
             etProfileName.setFocusable(false);
             etProfileName.setClickable(false);
@@ -127,8 +130,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void loadUserData() {
         if (user != null) {
             txtProfileEmail.setText(user.getEmail());
-            
-            // Load Name from Firestore
+
             db.collection("users").document(user.getUid()).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
@@ -136,18 +138,18 @@ public class WorkerProfileActivity extends AppCompatActivity {
                     }
                 });
 
-            // Load Company and Designation from Firestore
-            db.collection("users").document(user.getUid()).collection("worker_profile").document("profile_data").get()
+            db.collection("users").document(user.getUid())
+                .collection("worker_profile").document("profile_data").get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String company = documentSnapshot.getString("companyName");
                         String designation = documentSnapshot.getString("designation");
-                        
+
                         TextView txtCompany = findViewById(R.id.txtProfileCompany);
                         if (txtCompany != null) {
                             if (company != null && !company.isEmpty()) {
                                 if (designation != null && !designation.isEmpty()) {
-                                    txtCompany.setText(company + " • " + designation);
+                                    txtCompany.setText(company + " - " + designation);
                                 } else {
                                     txtCompany.setText(company);
                                 }
@@ -159,7 +161,6 @@ public class WorkerProfileActivity extends AppCompatActivity {
                 });
         }
 
-        // Load local avatar
         SharedPreferences prefs = getSharedPreferences(PREF_PROFILE, Context.MODE_PRIVATE);
         String uriStr = prefs.getString(KEY_AVATAR_URI, null);
         if (uriStr != null) {
@@ -175,49 +176,54 @@ public class WorkerProfileActivity extends AppCompatActivity {
     private void loadStats() {
         if (user == null) return;
 
-        // Load Savings Stats
-        db.collection("users").document(user.getUid()).collection("savings")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    double totalSaved = 0;
-                    int activeGoals = 0;
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        SavingModel saving = doc.toObject(SavingModel.class);
-                        totalSaved += saving.getCurrentAmount();
-                        if (!"COMPLETED".equals(saving.getStatus())) {
-                            activeGoals++;
-                        }
+        db.collection("users").document(user.getUid())
+            .collection("worker_profile").document("profile_data").get()
+            .addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    Double salary = documentSnapshot.getDouble("monthlySalary");
+                    Double bonus = documentSnapshot.getDouble("bonusAmount");
+
+                    if (salary != null && salary > 0) {
+                        txtStatSalaryValue.setText(String.format(Locale.US, "LKR %,.0f", salary));
+                    } else {
+                        txtStatSalaryValue.setText("LKR 0");
                     }
-                    txtStatGoalsValue.setText(String.valueOf(activeGoals));
-                    txtStatSavedValue.setText(CurrencyHelper.formatMoney(this, totalSaved));
-                    
-                    // Simple points system: 1 point per 1000 saved
-                    int points = (int) (totalSaved / 1000);
-                    txtStatScoreValue.setText(String.valueOf(points) + " Pts");
-                });
+
+                    if (bonus != null && bonus > 0) {
+                        txtStatBonusValue.setText(String.format(Locale.US, "LKR %,.0f", bonus));
+                    } else {
+                        txtStatBonusValue.setText("LKR 0");
+                    }
+
+                    int points = (int) ((salary != null ? salary : 0) / 1000);
+                    txtStatScoreValue.setText(points + " Pts");
+                }
+            });
     }
 
     private void setupListeners() {
-        android.widget.ImageButton btnBackToHome = findViewById(R.id.btnBackToHome);
+        ImageButton btnBackToHome = findViewById(R.id.btnBackToHome);
         if (btnBackToHome != null) {
             btnBackToHome.setOnClickListener(v -> finish());
         }
 
         if (btnEditAvatar != null) btnEditAvatar.setOnClickListener(v -> pickImage());
         if (imgProfileAvatar != null) imgProfileAvatar.setOnClickListener(v -> pickImage());
-        
 
-        
-        if (menuAchievements != null) {
-            menuAchievements.setOnClickListener(v -> startActivity(new Intent(this, SavingsPassportActivity.class)));
+        if (menuEditIncome != null) {
+            menuEditIncome.setOnClickListener(v -> startActivity(new Intent(this, WorkerIncomeActivity.class)));
         }
-        
+
+        if (menuPayslips != null) {
+            menuPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+        }
+
         if (menuFinancialReports != null) {
             menuFinancialReports.setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
         }
-        
+
         if (menuAccountSettings != null) {
-            menuAccountSettings.setOnClickListener(v -> startActivity(new Intent(this, WorkerAccountSettingsActivity.class)));
+            menuAccountSettings.setOnClickListener(v -> startActivity(new Intent(this, AccountSettingsActivity.class)));
         }
 
         if (cardSignOut != null) {
@@ -238,14 +244,18 @@ public class WorkerProfileActivity extends AppCompatActivity {
     }
 
     private void updateAvatarImage(Uri uri) {
-        imgProfileAvatar.setImageURI(uri);
+        try {
+            imgProfileAvatar.setImageURI(uri);
+        } catch (SecurityException e) {
+            getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+        }
         imgProfileAvatar.setImageTintList(null);
         android.view.ViewGroup.LayoutParams params = imgProfileAvatar.getLayoutParams();
         params.width = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
         params.height = android.view.ViewGroup.LayoutParams.MATCH_PARENT;
         imgProfileAvatar.setLayoutParams(params);
         imgProfileAvatar.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        
+
         android.view.View parent = (android.view.View) imgProfileAvatar.getParent();
         if (parent != null) {
             parent.setClipToOutline(true);

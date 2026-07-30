@@ -9,6 +9,13 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
+    <queries>
+        <package android:name="com.google.android.gms" />
+        <intent>
+            <action android:name="com.google.android.gms.auth.GOOGLE_SIGN_IN" />
+        </intent>
+    </queries>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -25,7 +32,7 @@
             android:value="@string/facebook_app_id" />
         <meta-data
             android:name="com.facebook.sdk.ClientToken"
-            android:value="@string/fb_login_protocol_scheme" />
+            android:value="@string/facebook_client_token" />
 
         <activity
             android:name=".MainActivity"
@@ -39,6 +46,24 @@
 
         <activity
             android:name=".LoginFormActivity"
+            android:exported="true" />
+
+        <!--
+            FacebookActivity handles the Facebook Login UI web dialog.
+            REQUIRED by the Facebook Android SDK — without this the app will crash.
+        -->
+        <activity
+            android:name="com.facebook.FacebookActivity"
+            android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
+            android:label="@string/app_name"
+            android:exported="true" />
+
+        <!--
+            CustomTabActivity handles the OAuth redirect URI for Facebook Login.
+            The fb_login_protocol_scheme (e.g. fb1234567890) must live here, NOT on LoginFormActivity.
+        -->
+        <activity
+            android:name="com.facebook.CustomTabActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -76,6 +101,9 @@
             android:exported="false" />
         <activity
             android:name=".MultiAccountDashboardActivity"
+            android:exported="false" />
+        <activity
+            android:name=".MultiAccountProfileActivity"
             android:exported="false" />
         <activity
             android:name=".LoanFormActivity"
@@ -146,6 +174,15 @@
         <activity
             android:name=".WorkerProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".WorkerIncomeActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BusinessProfileActivity"
+            android:exported="false" />
+        <activity
+            android:name=".BusinessIncomeActivity"
+            android:exported="false" />
 
         <activity
             android:name=".AddIncomeActivity"
@@ -154,11 +191,11 @@
             android:name=".AccountSettingsActivity"
             android:exported="false" />
         <activity
-            android:name=".WorkerAccountSettingsActivity"
-            android:exported="false" />
-        <activity
             android:name=".FinancialReportsActivity"
             android:exported="true" />
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
 
 
         <activity
@@ -168,9 +205,7 @@
             android:name=".ExpenseManagementActivity"
             android:exported="false" />
 
-        <activity
-            android:name=".AnalyticsActivity"
-            android:exported="false" />
+
         <activity
             android:name=".UtilityManagerActivity"
             android:exported="false" />

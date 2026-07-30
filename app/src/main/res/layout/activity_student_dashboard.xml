@@ -294,6 +294,8 @@
                         android:layout_marginTop="20dp"
                         android:orientation="horizontal"
                         android:weightSum="2"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/txtCurrentBalanceValue">
 
                         <!-- Achievement Capsule -->
@@ -419,6 +421,7 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
             </com.google.android.material.card.MaterialCardView>
+
 
 
             <!-- Role Upgrade Card -->

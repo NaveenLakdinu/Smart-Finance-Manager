@@ -1,0 +1,114 @@
+====================================================================
+SMART FINANCE MANAGER - PROJECT DOCUMENTATION & TEST CASES
+====================================================================
+
+1. AUTHENTICATION & ROLE-BASED ROUTING
+--------------------------------------------------------------------
+Functions & Workflow:
+- MainActivity: Acts as the entry point. It checks the Firebase authentication state. If authenticated, it checks if a PIN is set. If no PIN is set, it routes to PinSetupActivity. If a PIN is set, it routes to PinLockActivity.
+- LoginFormActivity: Handles user sign-in via Firebase Auth. Checks user status (active vs suspended).
+- RegisterActivity & ChooseRoleActivity: Handles new user registration. Uses a Firestore WriteBatch to atomically write the base profile and role-specific subcollections.
+- Role-Based Routing: Once authenticated and unlocked, the app routes the user to a specific dashboard based on their Firestore 'role' field (StudentDashboardActivity, WorkerDashboardActivity, BusinessDashboardActivity, or MultiAccountDashboardActivity).
+
+Test Case: Verify Role-Based Routing
+- Precondition: User account created with role "Business owner".
+- Steps:
+  1. Launch the app and authenticate via LoginFormActivity.
+  2. Complete or bypass PIN entry.
+- Expected Result: The app successfully parses the "Business owner" role and routes the user to BusinessDashboardActivity.
+
+2. PIN LOCK SECURITY SYSTEM
+--------------------------------------------------------------------
+Functions & Workflow:
+- PinHelper: A utility class that securely hashes the PIN using String.hashCode() and stores it in Android SharedPreferences. It provides methods to verify, save, and clear the PIN.
+- PinSetupActivity: A two-stage setup screen (Enter -> Confirm) for new users to register a 4-digit numeric PIN.
+- PinLockActivity: Intercepts app entry. Requires the user to enter their PIN. It includes a shake animation for wrong attempts and a fallback "Forgot PIN" option which clears the PIN and forces a re-login.
+- Lockout Mechanism: After 5 consecutive incorrect attempts, the app clears the PIN and forces the user back to the login screen.
+
+Test Case: Verify 5-Attempt Lockout
+- Precondition: User is logged in and has a PIN set.
+- Steps:
+  1. Launch the app to trigger PinLockActivity.
+  2. Enter an incorrect PIN 5 times consecutively.
+- Expected Result: On the 5th failed attempt, the PIN is cleared from SharedPreferences, Auth state is cleared, and the user is redirected to LoginFormActivity.
+
+3. LOAN MANAGEMENT & COMPARISON
+--------------------------------------------------------------------
+Functions & Workflow:
+- LoanFormActivity: Fetches and displays a list of active loans from the `users/{uid}/loans` subcollection.
+- LoanAddActivity: Allows users to input new loans, calculating EMI (Equated Monthly Installment) dynamically on the fly based on Principal, Interest, and Duration.
+- LoanReportActivity: Uses Android's MediaStore API and iTextPDF to export the active loans list into PDF and CSV formats.
+- LoanCompareActivity (How it gets the best loan): 
+  - Allows adding up to 10 loan options dynamically.
+  - Users input Principal, Rate, and Duration for each.
+  - The app calculates the EMI for each loan (supporting both Flat Rate and Reducing Balance).
+  - Suitability Logic: It fetches the user's Monthly Income (or Savings) and existing commitments (Active Loans + Utility Bills + Subscriptions) from Firestore.
+  - It calculates `Net Cash Flow = Income - (Existing Commitments + Proposed EMI)`.
+  - If Net Cash Flow >= 0, the loan is marked as "SUITABLE (AFFORDABLE)" in green. If < 0, it is marked as "NOT SUITABLE (BURDEN)" in red.
+  - It visualizes the Total Payable amounts in a PieChart and generates a detailed PDF report comparing the loans.
+
+Test Case: Verify Loan Comparison Affordability Logic
+- Precondition: User has 50,000 monthly income and 20,000 in existing commitments recorded in Firestore.
+- Steps:
+  1. Open LoanCompareActivity.
+  2. Add Option A: Principal 100,000, 5% interest, 12 months (EMI approx 8,500).
+  3. Add Option B: Principal 500,000, 10% interest, 12 months (EMI approx 43,000).
+  4. Click Compare.
+- Expected Result: Option A should display "SUITABLE" (Net Cash Flow = 50,000 - 28,500 = 21,500). Option B should display "NOT SUITABLE" (Net Cash Flow = 50,000 - 63,000 = -13,000).
+
+4. SAVING MANAGER
+--------------------------------------------------------------------
+Functions & Workflow:
+- SavingManagerActivity & SavingPlanActivity: Allows users to set target saving milestones. Updates dynamic progress bars.
+- Dashboard Savings Widget: All role dashboards contain a `cardSavingsWidget`. It provides an "Update Savings" button that immediately writes the new savings balance to Firestore. This balance is instantly used across the app (like in LoanCompareActivity) to determine affordability.
+
+Test Case: Verify Global Savings Sync
+- Precondition: User is on their respective Dashboard.
+- Steps:
+  1. Click the "Update Savings" button on the Savings Widget.
+  2. Input a new value (e.g., 15000) and save.
+  3. Navigate to LoanCompareActivity and generate a report.
+- Expected Result: The report should reflect the updated "Monthly Income / Savings: Rs 15000.00".
+
+5. SUBSCRIPTION MANAGER
+--------------------------------------------------------------------
+Functions & Workflow:
+- SubscriptionActivity: Defines notification preferences for recurring subscriptions (e.g., Netflix, Gym).
+- Background Layer: Uses `WorkManager` (SubscriptionWorker) for daily background checks and `AlarmManager` (SubscriptionNotificationScheduler) for exact, reliable alarms (e.g., 3 days before renewal).
+- Requires POST_NOTIFICATIONS (Android 13+) and SCHEDULE_EXACT_ALARM permissions.
+
+Test Case: Verify Subscription Renewal Alarms
+- Precondition: App has notification permissions granted.
+- Steps:
+  1. Create a subscription for $15, set to renew on the 30th of the current month.
+- Expected Result: The system schedules an AlarmManager intent to fire 3 days prior (27th) and triggers a local notification reminding the user of the impending charge.
+
+6. UTILITY BILL MANAGER & B2B INVOICE HUB
+--------------------------------------------------------------------
+Functions & Workflow:
+- UtilityManagerActivity: UI shells and forms for registering monthly utility bills (Water, Electricity, Internet). The totals are pulled by the Loan Manager to calculate existing financial commitments.
+- InvoiceHubActivity: A dashboard meant for the "Business owner" role to track corporate outstanding balances and generate mock data reports.
+
+Test Case: Verify Utility Commitment Calculation
+- Precondition: User has 0 utilities recorded.
+- Steps:
+  1. Navigate to UtilityManagerActivity and register a Water bill for $50 and Electricity for $100.
+  2. Navigate to LoanCompareActivity and click Compare.
+- Expected Result: The detailed PDF report or dialog should show "Utility Bills: Rs 150.00" deducted from the Net Cash Flow.
+
+
+7. PROBLEMS ENCOUNTERED & SOLUTIONS
+--------------------------------------------------------------------
+During the development and review of this project, several key issues were identified and successfully mitigated:
+
+Problem 1: Double Background Rendering on Input Fields
+- Issue: In the glassmorphic UI redesign, 'EditText' fields were placed inside a 'LinearLayout' wrapper. Both the parent layout and the child EditText were assigned the '@drawable/bg_input_dark' background. This resulted in an ugly double-box overlapping border effect on screens like "Add New Loan".
+- Solution: We wrote a Python script to scan all 100+ XML files in the layout directory. It safely removed the background from the inner EditText fields (replacing it with '@android:color/transparent'), allowing only the outer layout wrapper to draw the stroke. This successfully fixed the UI bug across 21 different screens.
+
+Problem 2: Hardcoded View Flashes
+- Issue: Hardcoded text in XML layout files would flash briefly on screen before the Firestore data finished loading over the network.
+- Solution: We established a convention to remove hardcoded placeholder data from the XML definitions and instead leave them blank or handle the "loading" state programmatically until the Firestore 'addOnSuccessListener' returns the live user data.
+
+Problem 3: Sandboxed Execution Constraints for Bulk Edits
+- Issue: When attempting to use standard shell commands (like 'find' or 'grep') to bulk-modify the XML layout files, macOS TCC sandboxing restrictions threw "Operation not permitted" errors, blocking automated fixes.
+- Solution: We mitigated this by requesting elevated unsandboxed execution rights specifically for our Python fix script. By executing 'python3' outside the constrained sandbox, the script was able to successfully iterate over the 'res/layout' directory and replace the 80 instances of the double-border bug without getting blocked by OS-level file protections.

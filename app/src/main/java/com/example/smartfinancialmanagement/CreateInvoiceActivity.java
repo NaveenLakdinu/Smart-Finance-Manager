@@ -43,7 +43,7 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     private static final String TAG = "CreateInvoiceActivity";
     private AutoCompleteTextView spinnerBusinessDropdown;
     private EditText etClientName, etClientBRN, etItemName, etQty, etPrice, etPaymentDueDate;
-    private TextView txtSubtotal, txtGrandTotal;
+    private TextView txtGrandTotal;
     private ImageView btnBack;
     private MaterialButton btnGenerateInvoice;
 
@@ -52,7 +52,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     private List<String> businessNamesList = new ArrayList<>();
     private String chosenBusinessName = "";
 
-    private double calculatedSubtotal = 0.00;
     private double calculatedGrandTotal = 0.00;
     private final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
@@ -98,7 +97,6 @@ public class CreateInvoiceActivity extends AppCompatActivity {
         etQty = findViewById(R.id.etQty);
         etPrice = findViewById(R.id.etPrice);
         etPaymentDueDate = findViewById(R.id.etPaymentDueDate);
-        txtSubtotal = findViewById(R.id.txtSubtotal);
         txtGrandTotal = findViewById(R.id.txtGrandTotal);
         btnGenerateInvoice = findViewById(R.id.btnGenerateInvoice);
     }
@@ -162,18 +160,15 @@ public class CreateInvoiceActivity extends AppCompatActivity {
     private void calculateTotals() {
         String qtyString = etQty.getText().toString().trim();
         String priceString = etPrice.getText().toString().trim();
-        calculatedSubtotal = 0.00;
         calculatedGrandTotal = 0.00;
 
         if (!qtyString.isEmpty() && !priceString.isEmpty()) {
             try {
                 int quantity = Integer.parseInt(qtyString);
                 double unitPrice = Double.parseDouble(priceString);
-                calculatedSubtotal = quantity * unitPrice;
-                calculatedGrandTotal = calculatedSubtotal;
+                calculatedGrandTotal = quantity * unitPrice;
             } catch (NumberFormatException ignored) {}
         }
-        txtSubtotal.setText(String.format(Locale.getDefault(), "Rs. %.2f", calculatedSubtotal));
         txtGrandTotal.setText(String.format(Locale.getDefault(), "Rs. %.2f", calculatedGrandTotal));
     }
 
@@ -227,10 +222,11 @@ public class CreateInvoiceActivity extends AppCompatActivity {
                     double finalPrice = Double.parseDouble(etPrice.getText().toString().trim());
                     String dueDate = etPaymentDueDate.getText().toString().trim();
 
-                    // 💡 FIXED: currentUserId passed directly here to match the 12-argument constructor signature perfectly
+                    // 💡 FIXED: currentUserId passed directly here to match the 12-argument constructor signature perfectly.
+                    // Note: calculatedGrandTotal is passed twice here to cover the old 'subtotal' parameter if InvoiceModel wasn't updated yet.
                     InvoiceModel invoice = new InvoiceModel(
                             chosenBusinessName, client, brn, item, finalQty, finalPrice,
-                            calculatedSubtotal, calculatedGrandTotal, dueDate, isEmailReminderEnabled, "pending", currentUserId
+                            calculatedGrandTotal, calculatedGrandTotal, dueDate, isEmailReminderEnabled, "pending", currentUserId
                     );
 
                     invoice.setBusinessEmail(targetBusinessEmail);

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,9 +8,6 @@
     android:background="@drawable/bg_dashboard"
     tools:context=".WorkerProfileActivity">
 
-    <!-- ══════════════════════════════════════════ -->
-    <!--   SCROLLABLE CONTENT AREA                 -->
-    <!-- ══════════════════════════════════════════ -->
     <ScrollView
         android:id="@+id/profileScrollView"
         android:layout_width="match_parent"
@@ -30,7 +26,7 @@
             android:orientation="vertical">
 
             <!-- ══════════════════════════════════════════ -->
-            <!--   HERO HEADER: Avatar + Name + Stats      -->
+            <!--   HERO HEADER: Avatar + Name + Info        -->
             <!-- ══════════════════════════════════════════ -->
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layoutProfileHeader"
@@ -60,7 +56,7 @@
                     android:layout_height="40dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:src="@drawable/ic_arrow_back"
-                    android:contentDescription="Back to Home"
+                    android:contentDescription="@string/cd_navigate_back"
                     app:tint="@color/text_on_dark_primary"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
@@ -75,13 +71,11 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
-                    <!-- Outer white ring -->
                     <View
                         android:layout_width="84dp"
                         android:layout_height="84dp"
                         android:background="@drawable/bg_avatar_ring" />
 
-                    <!-- Avatar background circle -->
                     <FrameLayout
                         android:layout_width="74dp"
                         android:layout_height="74dp"
@@ -94,12 +88,11 @@
                             android:layout_height="40dp"
                             android:layout_gravity="center"
                             android:src="@drawable/ic_person"
-                            android:contentDescription="Profile Avatar"
+                            android:contentDescription="@string/worker_profile_avatar"
                             app:tint="@color/text_on_dark_primary" />
 
                     </FrameLayout>
 
-                    <!-- Edit badge -->
                     <FrameLayout
                         android:id="@+id/btnEditAvatar"
                         android:layout_width="24dp"
@@ -128,7 +121,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
                     android:gravity="center"
-                    tools:text="Dulani Perera"
+                    android:text=""
                     android:textColor="@color/text_on_dark_primary"
                     android:textSize="20sp"
                     android:textStyle="bold"
@@ -145,14 +138,14 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
                     android:gravity="center"
-                    tools:text="dulani@university.lk"
+                    android:text=""
                     android:textColor="@color/text_on_dark_secondary"
                     android:textSize="13sp"
                     app:layout_constraintTop_toBottomOf="@id/txtProfileName"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <!-- Company Info -->
+                <!-- Company & Designation -->
                 <TextView
                     android:id="@+id/txtProfileCompany"
                     android:layout_width="0dp"
@@ -178,43 +171,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 
-                    <!-- Goals Stat -->
+                    <!-- Monthly Salary Stat -->
                     <LinearLayout
-                        android:id="@+id/layoutStatGoals"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:layout_marginEnd="8dp"
-                        android:background="@drawable/bg_stat_chip"
-                        android:gravity="center"
-                        android:orientation="vertical"
-                        android:padding="12dp"
-                        android:clickable="true"
-                        android:focusable="true"
-                        tools:ignore="RtlHardcoded">
-
-                        <TextView
-                            android:id="@+id/txtStatGoalsValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="3"
-                            android:textColor="@color/text_on_dark_primary"
-                            android:textSize="18sp"
-                            android:textStyle="bold" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="2dp"
-                            android:text="Goals"
-                            android:textColor="@color/text_on_dark_secondary"
-                            android:textSize="10sp" />
-
-                    </LinearLayout>
-
-                    <!-- Saved Stat -->
-                    <LinearLayout
-                        android:id="@+id/layoutStatSaved"
+                        android:id="@+id/layoutStatSalary"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
@@ -227,19 +186,52 @@
                         android:focusable="true">
 
                         <TextView
-                            android:id="@+id/txtStatSavedValue"
+                            android:id="@+id/txtStatSalaryValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Rs.1.2L"
+                            android:text="LKR 0"
                             android:textColor="@color/text_on_dark_primary"
-                            android:textSize="17sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:text="Saved"
+                            android:text="@string/worker_stat_salary"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <!-- Bonus Stat -->
+                    <LinearLayout
+                        android:id="@+id/layoutStatBonus"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/bg_stat_chip"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:padding="12dp"
+                        android:clickable="true"
+                        android:focusable="true">
+
+                        <TextView
+                            android:id="@+id/txtStatBonusValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="LKR 0"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/worker_stat_bonus"
                             android:textColor="@color/text_on_dark_secondary"
                             android:textSize="10sp" />
 
@@ -262,9 +254,9 @@
                             android:id="@+id/txtStatScoreValue"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="85"
+                            android:text="0 Pts"
                             android:textColor="@color/text_on_dark_primary"
-                            android:textSize="18sp"
+                            android:textSize="15sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -291,10 +283,9 @@
                 android:padding="20dp"
                 android:background="@color/forest_800">
 
-
-                <!-- My Achievements Menu Row -->
+                <!-- Edit Income Card -->
                 <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/menuAchievements"
+                    android:id="@+id/menuEditIncome"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
@@ -304,7 +295,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-        app:strokeColor="@color/forest_600">
+                    app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -312,11 +303,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="16dp">
-                        
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="🏅"
+                            android:text="💰"
                             android:textSize="22sp"
                             android:layout_marginEnd="16dp" />
 
@@ -324,7 +315,53 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="My Achievements"
+                            android:text="@string/worker_menu_edit_income"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textSize="16sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="›"
+                            android:textColor="@color/text_on_dark_muted"
+                            android:textSize="24sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <!-- Payslips Menu Row -->
+                <com.google.android.material.card.MaterialCardView
+                    android:id="@+id/menuPayslips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="12dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    app:cardBackgroundColor="@color/forest_700"
+                    app:cardCornerRadius="16dp"
+                    app:cardElevation="0dp"
+                    app:strokeWidth="1dp"
+                    app:strokeColor="@color/forest_600">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="📊"
+                            android:textSize="22sp"
+                            android:layout_marginEnd="16dp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/worker_menu_payslips"
                             android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -350,7 +387,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-        app:strokeColor="@color/forest_600">
+                    app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -358,11 +395,11 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="16dp">
-                        
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="📊"
+                            android:text="📑"
                             android:textSize="22sp"
                             android:layout_marginEnd="16dp" />
 
@@ -370,7 +407,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Financial Reports"
+                            android:text="Financial Report"
                             android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -396,7 +433,7 @@
                     app:cardCornerRadius="16dp"
                     app:cardElevation="0dp"
                     app:strokeWidth="1dp"
-        app:strokeColor="@color/forest_600">
+                    app:strokeColor="@color/forest_600">
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -404,7 +441,7 @@
                         android:orientation="horizontal"
                         android:gravity="center_vertical"
                         android:padding="16dp">
-                        
+
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
@@ -416,7 +453,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="Account Settings"
+                            android:text="@string/worker_menu_account_settings"
                             android:textColor="@color/text_on_dark_primary"
                             android:textSize="16sp"
                             android:textStyle="bold" />
@@ -457,14 +494,14 @@
                             android:layout_height="20dp"
                             android:layout_marginEnd="10dp"
                             android:src="@drawable/ic_power"
-                            android:contentDescription="Sign Out"
+                            android:contentDescription="@string/cd_logout"
                             app:tint="@color/danger_text" />
 
                         <TextView
                             android:id="@+id/txtSignOut"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Sign Out"
+                            android:text="@string/sign_out"
                             android:textColor="@color/danger_text"
                             android:textSize="15sp"
                             android:textStyle="bold" />
@@ -495,7 +532,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Second Year Project • 2026"
+                        android:text="Second Year Project - 2026"
                         android:textColor="@color/text_on_dark_secondary"
                         android:textSize="11sp"
                         android:gravity="center" />
