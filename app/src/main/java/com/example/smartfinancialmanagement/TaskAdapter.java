@@ -27,9 +27,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         void onCheckedChanged(Task task, boolean isChecked);
     }
 
-    public TaskAdapter(List<Task> taskList, OnTaskCheckedChangeListener listener) {
+    public interface OnTaskActionListener {
+        void onEditTask(Task task);
+        void onDeleteTask(Task task);
+    }
+
+    private final OnTaskActionListener actionListener;
+
+    public TaskAdapter(List<Task> taskList, OnTaskCheckedChangeListener listener, OnTaskActionListener actionListener) {
         this.taskList = taskList;
         this.listener = listener;
+        this.actionListener = actionListener;
     }
 
     @NonNull
@@ -117,6 +125,33 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
         holder.cbTask.setOnCheckedChangeListener(null);
         holder.cbTask.setChecked(task.isCompleted());
         holder.cbTask.setOnCheckedChangeListener((buttonView, isChecked) -> listener.onCheckedChanged(task, isChecked));
+
+        // Set long-click listener for edit/delete menu
+        holder.itemView.setOnLongClickListener(v -> {
+            if (actionListener != null) {
+                showActionMenu(v, task);
+            }
+            return true;
+        });
+    }
+
+    private void showActionMenu(View view, Task task) {
+        android.widget.PopupMenu popup = new android.widget.PopupMenu(view.getContext(), view);
+        popup.getMenuInflater().inflate(R.menu.task_action_menu, popup.getMenu());
+        
+        popup.setOnMenuItemClickListener(item -> {
+            int itemId = item.getItemId();
+            if (itemId == R.id.action_edit) {
+                if (actionListener != null) actionListener.onEditTask(task);
+                return true;
+            } else if (itemId == R.id.action_delete) {
+                if (actionListener != null) actionListener.onDeleteTask(task);
+                return true;
+            }
+            return false;
+        });
+        
+        popup.show();
     }
 
     @Override

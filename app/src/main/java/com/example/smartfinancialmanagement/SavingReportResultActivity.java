@@ -18,6 +18,8 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.List;
 import java.util.ArrayList;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.pdf.PdfDocument;
@@ -36,11 +38,36 @@ public class SavingReportResultActivity extends AppCompatActivity {
     private String reportType, monthYear, startDateStr, endDateStr;
     private SimpleDateFormat dateFormat;
     private List<SavingModel> filteredSavings = new ArrayList<>();
+    
+    private ActivityResultLauncher<String> createPdfLauncher;
+    private ActivityResultLauncher<String> createCsvLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_saving_report_result);
+
+        createPdfLauncher = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("application/pdf"),
+                uri -> {
+                    if (uri != null) {
+                        savePdfToUri(uri);
+                    } else {
+                        Toast.makeText(this, "Export cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+
+        createCsvLauncher = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("text/csv"),
+                uri -> {
+                    if (uri != null) {
+                        saveCsvToUri(uri);
+                    } else {
+                        Toast.makeText(this, "Export cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         reportType = getIntent().getStringExtra("REPORT_TYPE");
         monthYear = getIntent().getStringExtra("MONTH_YEAR");
@@ -89,7 +116,8 @@ public class SavingReportResultActivity extends AppCompatActivity {
                 Toast.makeText(this, "No data to export", Toast.LENGTH_SHORT).show();
                 return;
             }
-            generatePdfReport(filteredSavings);
+            String fileName = "Saving_Report_" + System.currentTimeMillis() + ".pdf";
+            createPdfLauncher.launch(fileName);
         });
 
         findViewById(R.id.btnExportCsv).setOnClickListener(v -> {
@@ -97,7 +125,8 @@ public class SavingReportResultActivity extends AppCompatActivity {
                 Toast.makeText(this, "No data to export", Toast.LENGTH_SHORT).show();
                 return;
             }
-            generateCsvReport(filteredSavings);
+            String fileName = "Saving_Report_" + System.currentTimeMillis() + ".csv";
+            createCsvLauncher.launch(fileName);
         });
     }
 
@@ -251,11 +280,25 @@ public class SavingReportResultActivity extends AppCompatActivity {
         }
     }
 
-    private void generateCsvReport(List<SavingModel> savings) {
+    private void saveCsvToUri(android.net.Uri uri) {
         StringBuilder csvData = new StringBuilder();
+        
+        // Add summary to CSV
+        csvData.append("Saving Report Summary\n");
+        csvData.append("Period,").append(tvReportPeriod.getText().toString().replace("Period: ", "")).append("\n");
+        csvData.append("Health Score,").append(tvHealthScore.getText().toString()).append("\n");
+        csvData.append("Total Goals,").append(tvTotalGoals.getText().toString()).append("\n");
+        csvData.append("Active Goals,").append(tvActiveGoals.getText().toString()).append("\n");
+        csvData.append("Completed Goals,").append(tvCompletedGoals.getText().toString()).append("\n");
+        
+        // Remove currency symbols and commas for raw numbers in CSV, or just put the raw text
+        csvData.append("Total Target,").append("\"").append(tvTotalTarget.getText().toString()).append("\"\n");
+        csvData.append("Total Saved,").append("\"").append(tvTotalSaved.getText().toString()).append("\"\n");
+        csvData.append("Average Progress,").append(tvAvgProgress.getText().toString()).append("\n\n");
+
         csvData.append("Saving Name,Target Amount,Current Amount,Start Date,Target Date,Status\n");
 
-        for (SavingModel saving : savings) {
+        for (SavingModel saving : filteredSavings) {
             csvData.append(String.format(Locale.US, "\"%s\",%.2f,%.2f,%s,%s,%s\n",
                     saving.getSavingTitle() != null ? saving.getSavingTitle().replace("\"", "\"\"") : "",
                     saving.getTargetAmount(),
@@ -265,11 +308,19 @@ public class SavingReportResultActivity extends AppCompatActivity {
                     saving.getStatus() != null ? saving.getStatus() : "Active"));
         }
 
-        String fileName = "Saving_Report_" + System.currentTimeMillis() + ".csv";
-        saveFileToDownloads(fileName, "text/csv", csvData.toString().getBytes());
+        try {
+            java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            if (outputStream != null) {
+                outputStream.write(csvData.toString().getBytes());
+                outputStream.close();
+                Toast.makeText(this, "CSV saved successfully!", Toast.LENGTH_LONG).show();
+            }
+        } catch (Exception e) {
+            Toast.makeText(this, "Failed to save CSV: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
     }
 
-    private void generatePdfReport(List<SavingModel> savings) {
+    private void savePdfToUri(android.net.Uri uri) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create(); // A4 size
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -292,7 +343,23 @@ public class SavingReportResultActivity extends AppCompatActivity {
 
         // Table Headers
         paint.setFakeBoldText(true);
-        int y = 140;
+        int y = 130;
+        canvas.drawText("Summary", 50, y, paint);
+        
+        paint.setFakeBoldText(false);
+        y += 20;
+        canvas.drawText("Health Score: " + tvHealthScore.getText().toString() + " (" + tvHealthScoreValue.getText().toString() + ")", 50, y, paint);
+        y += 20;
+        canvas.drawText("Total Goals: " + tvTotalGoals.getText().toString() + " | Active: " + tvActiveGoals.getText().toString() + " | Done: " + tvCompletedGoals.getText().toString(), 50, y, paint);
+        y += 20;
+        canvas.drawText("Total Target: " + tvTotalTarget.getText().toString(), 50, y, paint);
+        y += 20;
+        canvas.drawText("Total Saved: " + tvTotalSaved.getText().toString(), 50, y, paint);
+        y += 20;
+        canvas.drawText("Average Progress: " + tvAvgProgress.getText().toString(), 50, y, paint);
+        
+        y += 40;
+        paint.setFakeBoldText(true);
         canvas.drawText("Saving Name", 50, y, paint);
         canvas.drawText("Target", 250, y, paint);
         canvas.drawText("Current", 350, y, paint);
@@ -304,7 +371,7 @@ public class SavingReportResultActivity extends AppCompatActivity {
         // Table Content
         paint.setFakeBoldText(false);
         y += 40;
-        for (SavingModel saving : savings) {
+        for (SavingModel saving : filteredSavings) {
             if (y > 800) { 
                 document.finishPage(page);
                 page = document.startPage(pageInfo);
@@ -314,64 +381,25 @@ public class SavingReportResultActivity extends AppCompatActivity {
             String title = saving.getSavingTitle() != null ? saving.getSavingTitle() : "Unnamed";
             if (title.length() > 20) title = title.substring(0, 17) + "...";
             canvas.drawText(title, 50, y, paint);
-            canvas.drawText(String.format(Locale.US, "$%.2f", saving.getTargetAmount()), 250, y, paint);
-            canvas.drawText(String.format(Locale.US, "$%.2f", saving.getCurrentAmount()), 350, y, paint);
+            canvas.drawText(CurrencyHelper.formatMoney(this, saving.getTargetAmount()), 250, y, paint);
+            canvas.drawText(CurrencyHelper.formatMoney(this, saving.getCurrentAmount()), 350, y, paint);
             canvas.drawText(saving.getStatus() != null ? saving.getStatus() : "Active", 450, y, paint);
             y += 30;
         }
 
         document.finishPage(page);
 
-        String fileName = "Saving_Report_" + System.currentTimeMillis() + ".pdf";
-        
         try {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                android.content.ContentValues contentValues = new android.content.ContentValues();
-                contentValues.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-                contentValues.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                contentValues.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS);
-
-                android.net.Uri uri = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                if (uri != null) {
-                    java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
-                    if (outputStream != null) {
-                        document.writeTo(outputStream);
-                        outputStream.close();
-                        Toast.makeText(this, "PDF saved to Downloads", Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Legacy saving not supported in this version", Toast.LENGTH_SHORT).show();
+            java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            if (outputStream != null) {
+                document.writeTo(outputStream);
+                outputStream.close();
+                Toast.makeText(this, "PDF saved successfully!", Toast.LENGTH_LONG).show();
             }
         } catch (Exception e) {
             Toast.makeText(this, "Failed to save PDF: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         } finally {
             document.close();
-        }
-    }
-
-    private void saveFileToDownloads(String fileName, String mimeType, byte[] content) {
-        try {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q) {
-                android.content.ContentValues contentValues = new android.content.ContentValues();
-                contentValues.put(android.provider.MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-                contentValues.put(android.provider.MediaStore.MediaColumns.MIME_TYPE, mimeType);
-                contentValues.put(android.provider.MediaStore.MediaColumns.RELATIVE_PATH, android.os.Environment.DIRECTORY_DOWNLOADS);
-
-                android.net.Uri uri = getContentResolver().insert(android.provider.MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                if (uri != null) {
-                    java.io.OutputStream outputStream = getContentResolver().openOutputStream(uri);
-                    if (outputStream != null) {
-                        outputStream.write(content);
-                        outputStream.close();
-                        Toast.makeText(this, "File saved to Downloads: " + fileName, Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Legacy saving not supported", Toast.LENGTH_SHORT).show();
-            }
-        } catch (Exception e) {
-            Toast.makeText(this, "Failed to save file: " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 }

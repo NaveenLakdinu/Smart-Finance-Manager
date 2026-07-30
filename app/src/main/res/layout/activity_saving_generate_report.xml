@@ -75,7 +75,6 @@
                     android:layout_height="wrap_content"
                     android:text="By Selected Month"
                     android:textColor="@color/text_on_dark_primary"
-                    android:checked="true"
                     android:buttonTint="@color/qa_secondary_icon"/>
 
                 <RadioButton
