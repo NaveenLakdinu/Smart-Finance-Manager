@@ -229,46 +229,7 @@
                         android:background="@drawable/bg_input"
                         android:layout_marginBottom="24dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Security"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="16dp"/>
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Update Password"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp"/>
-
-                    <EditText
-                        android:id="@+id/etNewPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:hint="New Password (optional)"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:inputType="textPassword"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:layout_marginBottom="12dp"/>
-
-                    <EditText
-                        android:id="@+id/etConfirmPassword"
-                        android:layout_width="match_parent"
-                        android:layout_height="48dp"
-                        android:hint="Confirm Password"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:inputType="textPassword"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:layout_marginBottom="24dp"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSaveSettings"

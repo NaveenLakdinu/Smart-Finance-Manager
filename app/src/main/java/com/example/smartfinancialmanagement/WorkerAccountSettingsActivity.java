@@ -22,7 +22,6 @@ import java.util.Map;
 public class WorkerAccountSettingsActivity extends AppCompatActivity {
 
     private Spinner spinnerCurrency;
-    private EditText etNewPassword, etConfirmPassword;
     private EditText etEditName, etEditAge, etEditMobile, etEditCompanyName, etEditDesignation, etEditMonthlySalary;
     private MaterialButton btnSaveSettings;
     
@@ -45,8 +44,6 @@ public class WorkerAccountSettingsActivity extends AppCompatActivity {
         if (btnBack != null) btnBack.setOnClickListener(v -> finish());
 
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
-        etNewPassword = findViewById(R.id.etNewPassword);
-        etConfirmPassword = findViewById(R.id.etConfirmPassword);
         btnSaveSettings = findViewById(R.id.btnSaveSettings);
 
         etEditName = findViewById(R.id.etEditName);
@@ -107,8 +104,6 @@ public class WorkerAccountSettingsActivity extends AppCompatActivity {
     }
 
     private void saveSettings() {
-        String newPass = etNewPassword.getText().toString().trim();
-        String confirmPass = etConfirmPassword.getText().toString().trim();
         String selectedCurrency = spinnerCurrency.getSelectedItem().toString();
 
         // 1. Save Currency
@@ -154,30 +149,8 @@ public class WorkerAccountSettingsActivity extends AppCompatActivity {
 
         batch.commit().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                // 3. Update Password (if provided)
-                if (!newPass.isEmpty()) {
-                    if (newPass.equals(confirmPass)) {
-                        if (user != null) {
-                            user.updatePassword(newPass)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Toast.makeText(this, "Profile and Password updated successfully", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        btnSaveSettings.setEnabled(true);
-                                        btnSaveSettings.setText("Save Changes");
-                                        Toast.makeText(this, "Failed to update password: " + e.getMessage(), Toast.LENGTH_LONG).show();
-                                    });
-                        }
-                    } else {
-                        btnSaveSettings.setEnabled(true);
-                        btnSaveSettings.setText("Save Changes");
-                        etConfirmPassword.setError("Passwords do not match");
-                    }
-                } else {
-                    Toast.makeText(this, "Settings updated successfully", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
+                Toast.makeText(this, "Settings updated successfully", Toast.LENGTH_SHORT).show();
+                finish();
             } else {
                 btnSaveSettings.setEnabled(true);
                 btnSaveSettings.setText("Save Changes");

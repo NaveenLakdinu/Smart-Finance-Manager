@@ -323,6 +323,11 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
             cardWorkerEarnings.setOnClickListener(v -> showUpdateSalaryDialog());
         }
 
+        View cardUndoUpgrade = findViewById(R.id.cardUndoUpgrade);
+        if (cardUndoUpgrade != null) {
+            cardUndoUpgrade.setOnClickListener(v -> undoUpgrade());
+        }
+
         setupSavingsWidget();
     }
 
@@ -399,6 +404,30 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
 
         builder.setNegativeButton("Cancel", null);
         builder.show();
+    }
+
+    private void undoUpgrade() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user == null) return;
+
+        new AlertDialog.Builder(this)
+                .setTitle("Undo Upgrade")
+                .setMessage("Are you sure you want to revert to the standard Student Dashboard? You will lose access to the worker features on your main screen.")
+                .setPositiveButton("Confirm", (dialog, which) -> {
+                    db.collection("users").document(user.getUid())
+                            .update("role", "Student")
+                            .addOnSuccessListener(aVoid -> {
+                                android.content.SharedPreferences prefs = getSharedPreferences("UserData", MODE_PRIVATE);
+                                prefs.edit().putString("user_role", "Student").apply();
+                                Intent intent = new Intent(this, StudentDashboardActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            })
+                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to undo upgrade", Toast.LENGTH_SHORT).show());
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
     }
 
     private void showUpdateSalaryDialog() {
