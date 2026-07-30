@@ -34,7 +34,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
 
     // UI refs
     private TextView tvLevel, tvEarnedCount, tvEarnedLabel, tvLockedLabel;
-    private LinearLayout containerEarned, containerLocked, containerGoals, streakSegments;
+    private LinearLayout containerEarned, containerLocked, containerGoals;
 
     // Achievement data model
     private static class Achievement {
@@ -65,7 +65,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
         containerEarned  = findViewById(R.id.containerEarned);
         containerLocked  = findViewById(R.id.containerLocked);
         containerGoals   = findViewById(R.id.containerGoals);
-        streakSegments   = findViewById(R.id.streakSegments);
+
 
         // Back button
         findViewById(R.id.btnBack).setOnClickListener(v -> finish());
@@ -74,7 +74,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
         findViewById(R.id.btnAddGoal).setOnClickListener(v ->
                 startActivity(new Intent(this, SavingAddGoalActivity.class)));
 
-        buildStreakSegments(1, 6); // 1 out of 6 months (hardcoded like Compose)
+
 
         listener = db.collection("users").document(userId).collection("savings")
                 .addSnapshotListener((snapshot, error) -> {
@@ -213,20 +213,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
         row.addView(card);
     }
 
-    private void buildStreakSegments(int lit, int total) {
-        streakSegments.removeAllViews();
-        for (int i = 0; i < total; i++) {
-            View seg = new View(this);
-            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(0, dp(5), 1f);
-            lp.setMarginEnd(i < total - 1 ? dp(5) : 0);
-            seg.setLayoutParams(lp);
-            android.graphics.drawable.GradientDrawable gd = new android.graphics.drawable.GradientDrawable();
-            gd.setCornerRadius(dp(4));
-            gd.setColor(i < lit ? Color.parseColor("#00D4AA") : Color.parseColor("#2EFFFFFF"));
-            seg.setBackground(gd);
-            streakSegments.addView(seg);
-        }
-    }
+
 
     private void buildGoalsList(List<SavingModel> savings) {
         containerGoals.removeAllViews();
@@ -280,8 +267,7 @@ public class SavingsPassportActivity extends AppCompatActivity {
         list.add(new Achievement("goal_master", "Goal Master", "Complete 3 saving goals", "🏆",
                 Color.parseColor("#9C7A16"), completedCount >= 3, masterPct));
 
-        list.add(new Achievement("consistent_saver", "Consistent Saver", "Save every month for 6 months", "💧",
-                Color.parseColor("#1F8A5F"), false, 16));
+
 
         return list;
     }
