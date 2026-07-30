@@ -179,8 +179,8 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
         findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
 
-        // Changed to AnalyticActivity
-        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
+        // Changed to FinancialReportsActivity
+        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, FinancialReportsActivity.class)));
 
         findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
 
