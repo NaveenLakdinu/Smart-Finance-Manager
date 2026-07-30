@@ -252,6 +252,9 @@
             android:name=".InvoiceHubActivity"
             android:exported="false" />
         <activity
+            android:name=".ExpenseApprovalDashboardActivity"
+            android:exported="false" />
+        <activity
             android:name=".CreateInvoiceActivity"
             android:exported="false" />
         <activity

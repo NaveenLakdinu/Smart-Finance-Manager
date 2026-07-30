@@ -18,6 +18,8 @@ public class ExpenseClaim implements Serializable {
     private String approvedBy;
     private String approvedDate;
     private String workerEmail;
+    private String receiptUrl;
+    private String documentId; // Firestore document ID to allow updates
 
     public ExpenseClaim() {
     }
@@ -72,6 +74,12 @@ public class ExpenseClaim implements Serializable {
 
     public String getWorkerEmail() { return workerEmail; }
     public void setWorkerEmail(String workerEmail) { this.workerEmail = workerEmail; }
+
+    public String getReceiptUrl() { return receiptUrl; }
+    public void setReceiptUrl(String receiptUrl) { this.receiptUrl = receiptUrl; }
+
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
 
     public String getFormattedAmount() {
         return String.format(Locale.getDefault(), "Rs %,.2f", amount);
