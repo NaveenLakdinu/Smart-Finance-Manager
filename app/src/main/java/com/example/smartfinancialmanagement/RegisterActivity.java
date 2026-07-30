@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,6 +41,7 @@ public class RegisterActivity extends AppCompatActivity {
     // Variable to store the passed user role from UserRoleActivity
     private String userRole;
     private boolean isPasswordVisible = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,7 +81,7 @@ public class RegisterActivity extends AppCompatActivity {
         etMobile = findViewById(R.id.etMobile);
         etPassword = findViewById(R.id.etPassword);
         passwordToggle = findViewById(R.id.passwordToggle);
-        
+
         passwordContainer = findViewById(R.id.passwordContainer);
         tvPasswordLabel = findViewById(R.id.tvPasswordLabel);
         tvPasswordHint = findViewById(R.id.tvPasswordHint);
@@ -157,6 +159,16 @@ public class RegisterActivity extends AppCompatActivity {
 
         // 3. Register Button Click
         btnRegister.setOnClickListener(v -> registerUser());
+
+        // 4. Sign In Navigation Listener (ADDED THIS CODE)
+        TextView loginLink = findViewById(R.id.loginLink);
+        if (loginLink != null) {
+            loginLink.setOnClickListener(v -> {
+                Intent intent = new Intent(RegisterActivity.this, LoginFormActivity.class);
+                startActivity(intent);
+                finish();
+            });
+        }
     }
 
     private void saveDataToSingleton() {
