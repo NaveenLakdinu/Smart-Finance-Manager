@@ -562,9 +562,9 @@
                     android:layout_marginTop="12dp"
                     android:orientation="horizontal">
 
-                    <!-- Payslips -->
+                    <!-- OT Manager -->
                     <com.google.android.material.card.MaterialCardView
-                        android:id="@+id/cardPayslips"
+                        android:id="@+id/cardOtManager"
                         android:layout_width="0dp"
                         android:layout_height="100dp"
                         android:layout_weight="1"
@@ -589,14 +589,14 @@
                                 android:layout_height="40dp"
                                 android:background="@drawable/bg_function_icon_orange"
                                 android:gravity="center"
-                                android:text="📄"
+                                android:text="⏱️"
                                 android:textSize="20sp" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="6dp"
-                                android:text="My Payslips"
+                                android:text="OT Manager"
                                 android:textColor="@color/text_on_dark_primary"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />

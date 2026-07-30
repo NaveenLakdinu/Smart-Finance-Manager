@@ -26,7 +26,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
     private TextView txtEarnings, txtPayrollStatus, txtCurrentSavingsValue;
     private View btnUpdateSavings, cardSavingsWidget, btnSecurity, btnTopLogout;
     private View cardDashboardHeaderAchievement, cardDashboardHeaderBudget, cardLoanManager, cardSavingManager, cardSubscriptionManager, cardUtilityManager;
-    private View cardWorkTasks, cardExpenseClaims, cardPayslips;
+    private View cardWorkTasks, cardExpenseClaims, cardOtManager;
 
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
@@ -68,7 +68,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         cardUtilityManager = findViewById(R.id.cardUtilityManager);
         cardWorkTasks = findViewById(R.id.cardWorkTasks);
         cardExpenseClaims = findViewById(R.id.cardExpenseClaims);
-        cardPayslips = findViewById(R.id.cardPayslips);
+        cardOtManager = findViewById(R.id.cardOtManager);
     }
 
     private void setupUserDetails() {
@@ -133,26 +133,42 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         db.collection("users").document(uid)
                 .collection("worker_profile").document("profile_data")
                 .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Double salary = documentSnapshot.getDouble("monthlySalary");
-                        if (salary != null && salary > 0) {
-                            txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, salary));
-                        } else {
-                            txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
-                        }
+                .addOnSuccessListener(profileSnap -> {
+                    final double baseSalary;
+                    if (profileSnap.exists()) {
+                        Double salary = profileSnap.getDouble("monthlySalary");
+                        baseSalary = (salary != null) ? salary : 0;
                         
-                        Long paydayLong = documentSnapshot.getLong("payday");
+                        Long paydayLong = profileSnap.getLong("payday");
                         if (paydayLong != null) {
                             currentPayday = paydayLong.intValue();
                         } else {
                             currentPayday = 0;
                         }
                     } else {
-                        txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
+                        baseSalary = 0;
                         currentPayday = 0;
                     }
+                    
                     txtPayrollStatus.setText(getNextPaydayText());
+
+                    // Fetch current month OT pay
+                    String monthKey = new java.text.SimpleDateFormat("yyyy-MM", java.util.Locale.US).format(new java.util.Date());
+                    db.collection("users").document(uid)
+                            .collection("ot_summary").document(monthKey)
+                            .get()
+                            .addOnSuccessListener(otSnap -> {
+                                double otPay = 0;
+                                if (otSnap.exists()) {
+                                    Double ot = otSnap.getDouble("totalOtPay");
+                                    if (ot != null) otPay = ot;
+                                }
+                                double effective = baseSalary + otPay;
+                                txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, effective));
+                            })
+                            .addOnFailureListener(e -> {
+                                txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, baseSalary));
+                            });
                 })
                 .addOnFailureListener(e -> {
                     txtEarnings.setText(CurrencyHelper.formatMoney(StudentWorkerHybridDashboardActivity.this, 0));
@@ -281,8 +297,8 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         if (cardExpenseClaims != null) {
             cardExpenseClaims.setOnClickListener(v -> startActivity(new Intent(this, ExpenseClaimsActivity.class)));
         }
-        if (cardPayslips != null) {
-            cardPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+        if (cardOtManager != null) {
+            cardOtManager.setOnClickListener(v -> startActivity(new Intent(this, OTManagerActivity.class)));
         }
 
         View cardWorkerEarnings = findViewById(R.id.cardWorkerEarnings);
