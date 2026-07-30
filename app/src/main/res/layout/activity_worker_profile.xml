@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/bg_dashboard"
-    tools:context=".StudentProfileActivity">
+    tools:context=".WorkerProfileActivity">
 
     <!-- ══════════════════════════════════════════ -->
     <!--   SCROLLABLE CONTENT AREA                 -->
@@ -152,9 +152,9 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent" />
 
-                <!-- University Info -->
+                <!-- Company Info -->
                 <TextView
-                    android:id="@+id/txtProfileUniversity"
+                    android:id="@+id/txtProfileCompany"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="3dp"
@@ -174,7 +174,7 @@
                     android:layout_marginTop="20dp"
                     android:orientation="horizontal"
                     android:gravity="center"
-                    app:layout_constraintTop_toBottomOf="@id/txtProfileUniversity"
+                    app:layout_constraintTop_toBottomOf="@id/txtProfileCompany"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintEnd_toEndOf="parent">
 

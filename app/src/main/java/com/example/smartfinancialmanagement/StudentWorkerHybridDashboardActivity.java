@@ -242,7 +242,7 @@ public class StudentWorkerHybridDashboardActivity extends AppCompatActivity {
         View btnNotifications = findViewById(R.id.btnNotifications);
         View btnProfileAvatar = findViewById(R.id.btnProfileAvatar);
         if (btnProfileAvatar != null) {
-            btnProfileAvatar.setOnClickListener(v -> startActivity(new Intent(this, StudentProfileActivity.class)));
+            btnProfileAvatar.setOnClickListener(v -> startActivity(new Intent(this, WorkerProfileActivity.class)));
         }
 
         if (btnNotifications != null) {

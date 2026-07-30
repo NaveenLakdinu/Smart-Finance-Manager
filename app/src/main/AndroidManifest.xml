@@ -143,12 +143,18 @@
         <activity
             android:name=".StudentProfileActivity"
             android:exported="false" />
+        <activity
+            android:name=".WorkerProfileActivity"
+            android:exported="false" />
 
         <activity
             android:name=".AddIncomeActivity"
             android:exported="false" />
         <activity
             android:name=".AccountSettingsActivity"
+            android:exported="false" />
+        <activity
+            android:name=".WorkerAccountSettingsActivity"
             android:exported="false" />
         <activity
             android:name=".FinancialReportsActivity"
