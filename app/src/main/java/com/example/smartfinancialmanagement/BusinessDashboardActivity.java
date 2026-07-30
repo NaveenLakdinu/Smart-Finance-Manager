@@ -182,6 +182,18 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                 finish();
             });
         }
+        
+        View.OnClickListener profileClickListener = v -> {
+            startActivity(new Intent(BusinessDashboardActivity.this, BusinessProfileActivity.class));
+        };
+        
+        if (tvInitials != null) {
+            tvInitials.setOnClickListener(profileClickListener);
+        }
+        ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        if (imgDashboardAvatar != null) {
+            imgDashboardAvatar.setOnClickListener(profileClickListener);
+        }
     }
 
     private void checkNotificationPermission() {
