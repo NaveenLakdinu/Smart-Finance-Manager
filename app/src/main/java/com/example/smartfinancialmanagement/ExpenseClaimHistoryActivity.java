@@ -103,6 +103,16 @@ public class ExpenseClaimHistoryActivity extends AppCompatActivity {
             public void onItemLongClick(ExpenseClaim claim, int position) {
                 showDeleteDialog(claim);
             }
+
+            @Override
+            public void onApproveClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "APPROVED");
+            }
+
+            @Override
+            public void onRejectClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "REJECTED");
+            }
         });
         recyclerClaims.setLayoutManager(new LinearLayoutManager(this));
         recyclerClaims.setAdapter(adapter);
@@ -154,8 +164,6 @@ public class ExpenseClaimHistoryActivity extends AppCompatActivity {
 
                             Long amt = doc.getLong("amount");
                             claim.setAmount(amt != null ? amt.doubleValue() : 0);
-                            Long rc = doc.getLong("receiptCount");
-                            claim.setReceiptCount(rc != null ? rc.intValue() : 0);
 
                             if (claim.getTitle() == null) claim.setTitle("Untitled");
                             if (claim.getCategory() == null) claim.setCategory("Other");
@@ -212,15 +220,31 @@ public class ExpenseClaimHistoryActivity extends AppCompatActivity {
     }
 
     private void showClaimDetail(ExpenseClaim claim) {
-        new AlertDialog.Builder(this)
+        AlertDialog.Builder builder = new AlertDialog.Builder(this)
                 .setTitle(claim.getTitle())
                 .setMessage(String.format(Locale.US,
                         "Category: %s\nAmount: Rs %,.2f\nDate: %s\nStatus: %s\n\n%s",
                         claim.getCategoryLabel(), claim.getAmount(),
                         claim.getExpenseDate(), claim.getStatusLabel(),
-                        claim.getDescription() != null ? claim.getDescription() : ""))
-                .setPositiveButton("OK", null)
-                .show();
+                        claim.getDescription() != null ? claim.getDescription() : ""));
+
+        builder.setPositiveButton("OK", null);
+        builder.show();
+    }
+
+    private void updateClaimStatus(ExpenseClaim claim, String newStatus) {
+        if (uid == null || claim.getClaimId() == null || db == null) return;
+
+        db.collection("users").document(uid)
+                .collection("expense_claims").document(claim.getClaimId())
+                .update("status", newStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Claim " + newStatus.toLowerCase(Locale.US), Toast.LENGTH_SHORT).show();
+                    loadClaims();
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(this, "Failed to update claim: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
     }
 
     private void showDeleteDialog(ExpenseClaim claim) {

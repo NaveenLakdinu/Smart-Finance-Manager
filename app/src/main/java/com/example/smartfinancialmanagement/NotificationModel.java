@@ -1,5 +1,9 @@
 package com.example.smartfinancialmanagement;
 
+import com.google.firebase.firestore.IgnoreExtraProperties;
+import com.google.firebase.firestore.PropertyName;
+
+@IgnoreExtraProperties
 public class NotificationModel {
 
     private String id;
@@ -58,7 +62,10 @@ public class NotificationModel {
     public String getRelatedEntityId() { return relatedEntityId; }
     public void setRelatedEntityId(String relatedEntityId) { this.relatedEntityId = relatedEntityId; }
 
+    @PropertyName("read")
     public boolean isRead() { return isRead; }
+
+    @PropertyName("read")
     public void setRead(boolean read) { isRead = read; }
 
     public long getCreatedAt() { return createdAt; }

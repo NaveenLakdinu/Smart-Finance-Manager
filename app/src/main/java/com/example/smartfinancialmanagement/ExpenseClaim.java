@@ -12,23 +12,23 @@ public class ExpenseClaim implements Serializable {
     private double amount;
     private String expenseDate;
     private String description;
-    private int receiptCount;
     private String status;
     private String rejectedReason;
     private String approvedBy;
     private String approvedDate;
     private String workerEmail;
+    private String receiptUrl;
+    private String documentId; // Firestore document ID to allow updates
 
     public ExpenseClaim() {
     }
 
-    public ExpenseClaim(String title, String category, double amount, String expenseDate, String description, int receiptCount, String status, String workerEmail) {
+    public ExpenseClaim(String title, String category, double amount, String expenseDate, String description, String status, String workerEmail) {
         this.title = title;
         this.category = category;
         this.amount = amount;
         this.expenseDate = expenseDate;
         this.description = description;
-        this.receiptCount = receiptCount;
         this.status = status;
         this.workerEmail = workerEmail;
         this.claimId = "EXP-" + new java.text.SimpleDateFormat("yyyy", Locale.getDefault()).format(new java.util.Date()) + "-" + String.format(Locale.getDefault(), "%03d", (int) (Math.random() * 900) + 100);
@@ -55,9 +55,6 @@ public class ExpenseClaim implements Serializable {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public int getReceiptCount() { return receiptCount; }
-    public void setReceiptCount(int receiptCount) { this.receiptCount = receiptCount; }
-
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
 
@@ -72,6 +69,12 @@ public class ExpenseClaim implements Serializable {
 
     public String getWorkerEmail() { return workerEmail; }
     public void setWorkerEmail(String workerEmail) { this.workerEmail = workerEmail; }
+
+    public String getReceiptUrl() { return receiptUrl; }
+    public void setReceiptUrl(String receiptUrl) { this.receiptUrl = receiptUrl; }
+
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
 
     public String getFormattedAmount() {
         return String.format(Locale.getDefault(), "Rs %,.2f", amount);

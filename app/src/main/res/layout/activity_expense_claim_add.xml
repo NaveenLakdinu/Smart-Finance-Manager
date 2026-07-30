@@ -72,7 +72,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:hint="e.g. Travel Reimbursement"
                     android:inputType="text"
                     android:paddingStart="14dp"
@@ -95,7 +95,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp" />
 
@@ -113,7 +113,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:hint="0.00"
                     android:inputType="numberDecimal"
                     android:paddingStart="14dp"
@@ -163,7 +163,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="100dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:hint="Describe the expense..."
                     android:inputType="textMultiLine"
                     android:gravity="top"
@@ -173,6 +173,49 @@
                     android:textColor="@color/text_on_dark_primary"
                     android:textColorHint="@color/text_on_dark_muted"
                     android:textSize="14sp" />
+
+                <!-- Receipt Attachment -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="Receipt Attachment"
+                    android:textColor="@color/text_on_dark_secondary"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="6dp"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnAttachReceipt"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Upload Image"
+                        android:backgroundTint="@color/forest_600"
+                        app:cornerRadius="10dp"
+                        android:textAllCaps="false" />
+
+                    <TextView
+                        android:id="@+id/txtReceiptStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:text="No receipt attached"
+                        android:textColor="@color/text_on_dark_muted"
+                        android:textSize="12sp" />
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/imgReceiptPreview"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone"
+                    android:scaleType="centerCrop" />
 
             </LinearLayout>
         </com.google.android.material.card.MaterialCardView>

@@ -90,7 +90,6 @@ public class NotificationPanelHelper {
         FirebaseFirestore.getInstance().collection("users")
             .document(currentUser.getUid())
             .collection("notifications")
-            .orderBy("createdAt", Query.Direction.DESCENDING)
             .get()
             .addOnSuccessListener(querySnapshot -> {
                 container.removeAllViews();
@@ -99,7 +98,15 @@ public class NotificationPanelHelper {
                     emptyView.setPadding(0, dp(activity, 24), 0, dp(activity, 24));
                     container.addView(emptyView);
                 } else {
-                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                    java.util.List<DocumentSnapshot> docs = new java.util.ArrayList<>(querySnapshot.getDocuments());
+                    java.util.Collections.sort(docs, (a, b) -> {
+                        Object objA = a.get("createdAt");
+                        Object objB = b.get("createdAt");
+                        long valA = (objA instanceof Number) ? ((Number) objA).longValue() : 0L;
+                        long valB = (objB instanceof Number) ? ((Number) objB).longValue() : 0L;
+                        return Long.compare(valB, valA); // descending
+                    });
+                    for (DocumentSnapshot doc : docs) {
                         container.addView(buildNotificationCard(activity, doc));
                     }
                 }
@@ -122,10 +129,10 @@ public class NotificationPanelHelper {
         Boolean isRead = doc.getBoolean("read");
         if (isRead == null) isRead = doc.getBoolean("isRead");
         
-        Long createdAtLong = doc.getLong("createdAt");
+        Object createdAtObj = doc.get("createdAt");
         Date createdDate = null;
-        if (createdAtLong != null) {
-            createdDate = new Date(createdAtLong);
+        if (createdAtObj instanceof Number) {
+            createdDate = new Date(((Number) createdAtObj).longValue());
         }
 
         int dp8 = dp(activity, 8);

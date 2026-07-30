@@ -7,7 +7,6 @@ public class InvoiceModel {
     private String itemName;
     private int quantity;
     private double unitPrice;
-    private double subtotal;
     private double grandTotal;
     private String paymentDueDate;
     private boolean emailReminderEnabled;
@@ -28,7 +27,6 @@ public class InvoiceModel {
         this.itemName = itemName;
         this.quantity = quantity;
         this.unitPrice = unitPrice;
-        this.subtotal = subtotal;
         this.grandTotal = grandTotal;
         this.paymentDueDate = paymentDueDate;
         this.emailReminderEnabled = emailReminderEnabled;
@@ -54,9 +52,6 @@ public class InvoiceModel {
 
     public double getUnitPrice() { return unitPrice; }
     public void setUnitPrice(double unitPrice) { this.unitPrice = unitPrice; }
-
-    public double getSubtotal() { return subtotal; }
-    public void setSubtotal(double subtotal) { this.subtotal = subtotal; }
 
     public double getGrandTotal() { return grandTotal; }
     public void setGrandTotal(double grandTotal) { this.grandTotal = grandTotal; }

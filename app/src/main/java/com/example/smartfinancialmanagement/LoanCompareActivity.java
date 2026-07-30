@@ -19,6 +19,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.card.MaterialCardView;
 import java.io.IOException;
@@ -59,11 +61,15 @@ public class LoanCompareActivity extends AppCompatActivity {
     private com.google.android.material.button.MaterialButton btnCompare;
 
     private double userMonthlyIncome = 0.0;
+    private String currentUserRole = "";
     private double activeLoansMonthlyTotal = 0.0;
     private double utilitiesMonthlyTotal = 0.0;
     private double subscriptionsMonthlyTotal = 0.0;
     private FirebaseFirestore db;
     private String uid;
+
+    private ActivityResultLauncher<String> createPdfLauncher;
+    private List<ComparisonData> currentDataListForPdf;
 
     private static class ComparisonData {
         String optionLabel;
@@ -79,6 +85,17 @@ public class LoanCompareActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_loan_compare);
+
+        createPdfLauncher = registerForActivityResult(
+                new ActivityResultContracts.CreateDocument("application/pdf"),
+                uri -> {
+                    if (uri != null && currentDataListForPdf != null) {
+                        writePdfToUri(uri, currentDataListForPdf);
+                    } else {
+                        Toast.makeText(this, "Save cancelled", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
 
         initViews();
         fetchFinancialData();
@@ -208,6 +225,12 @@ public class LoanCompareActivity extends AppCompatActivity {
     }
 
     private void generateDetailedComparisonReport(List<ComparisonData> dataList) {
+        currentDataListForPdf = dataList;
+        String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
+        createPdfLauncher.launch(fileName);
+    }
+
+    private void writePdfToUri(Uri uri, List<ComparisonData> dataList) {
         PdfDocument document = new PdfDocument();
         PdfDocument.PageInfo pageInfo = new PdfDocument.PageInfo.Builder(595, 842, 1).create();
         PdfDocument.Page page = document.startPage(pageInfo);
@@ -230,7 +253,11 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         paint.setTextSize(11f);
         paint.setFakeBoldText(false);
-        canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            canvas.drawText(String.format(Locale.US, "• Current Balance (Adjusted Base): Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        } else {
+            canvas.drawText(String.format(Locale.US, "• Monthly Income / Savings: Rs %.2f", userMonthlyIncome), 45, 130, paint);
+        }
 
         double existingCommitments = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
         canvas.drawText(String.format(Locale.US, "• Existing Commitments: Rs %.2f", existingCommitments), 45, 150, paint);
@@ -329,26 +356,12 @@ public class LoanCompareActivity extends AppCompatActivity {
         pieBitmap.recycle();
 
         document.finishPage(page);
-        String fileName = "Loan_Suitability_Report_" + System.currentTimeMillis() + ".pdf";
-
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                ContentValues contentValues = new ContentValues();
-                contentValues.put(MediaStore.MediaColumns.DISPLAY_NAME, fileName);
-                contentValues.put(MediaStore.MediaColumns.MIME_TYPE, "application/pdf");
-                contentValues.put(MediaStore.MediaColumns.RELATIVE_PATH, Environment.DIRECTORY_DOWNLOADS);
-
-                Uri uri = getContentResolver().insert(MediaStore.Downloads.EXTERNAL_CONTENT_URI, contentValues);
-                if (uri != null) {
-                    OutputStream outputStream = getContentResolver().openOutputStream(uri);
-                    if (outputStream != null) {
-                        document.writeTo(outputStream);
-                        outputStream.close();
-                        Toast.makeText(this, "Analytical Suitability Report saved to Downloads", Toast.LENGTH_LONG).show();
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Download feature requires Android 10+", Toast.LENGTH_SHORT).show();
+            OutputStream outputStream = getContentResolver().openOutputStream(uri);
+            if (outputStream != null) {
+                document.writeTo(outputStream);
+                outputStream.close();
+                Toast.makeText(this, "Analytical Suitability Report saved successfully!", Toast.LENGTH_LONG).show();
             }
         } catch (IOException e) {
             Toast.makeText(this, "Failed to save report: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -368,15 +381,28 @@ public class LoanCompareActivity extends AppCompatActivity {
 
         db.collection("users").document(uid).get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
-                String monthlySavingStr = documentSnapshot.getString("monthlySavingAmount");
-                if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
-                    try {
-                        userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
-                    } catch (NumberFormatException ignored) {}
+                String role = documentSnapshot.getString("role");
+                if (role != null) {
+                    currentUserRole = role;
+                }
+                
+                if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+                    String balanceStr = documentSnapshot.getString("currentBalance");
+                    if (balanceStr != null && !balanceStr.trim().isEmpty()) {
+                        try {
+                            userMonthlyIncome = Double.parseDouble(balanceStr.trim());
+                        } catch (NumberFormatException ignored) {}
+                    }
+                } else {
+                    String monthlySavingStr = documentSnapshot.getString("currentSavings");
+                    if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
+                        try {
+                            userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
+                        } catch (NumberFormatException ignored) {}
+                    }
                 }
 
-                String role = documentSnapshot.getString("role");
-                if (userMonthlyIncome <= 0 && "Company worker".equals(role)) {
+                if (userMonthlyIncome <= 0 && "Company worker".equals(currentUserRole)) {
                     db.collection("users").document(uid).collection("worker_profile").document("profile_data")
                             .get()
                             .addOnSuccessListener(profileDoc -> {
@@ -434,24 +460,36 @@ public class LoanCompareActivity extends AppCompatActivity {
         titleView.setTypeface(android.graphics.Typeface.DEFAULT_BOLD);
         titleView.setTextColor(Color.parseColor("#FFFFFF"));
         titleView.setPadding(40, 40, 40, 20);
-        titleView.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        titleView.setBackgroundColor(Color.parseColor("#0B1B3D"));
         builder.setCustomTitle(titleView);
 
         android.widget.ScrollView scrollView = new android.widget.ScrollView(this);
         LinearLayout container = new LinearLayout(this);
         container.setOrientation(LinearLayout.VERTICAL);
         container.setPadding(30, 30, 30, 30);
-        container.setBackgroundColor(Color.parseColor("#FFFFFF"));
+        container.setBackgroundColor(Color.parseColor("#0B1B3D"));
+
+        double existingExpenses = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
+        
+        // For Student and Hybrid, userMonthlyIncome is already the net current balance (which has expenses subtracted).
+        // To show the base resource amount correctly in the UI and make the math work (since existingExpenses are subtracted again below),
+        // we must add existingExpenses back to userMonthlyIncome here.
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            userMonthlyIncome += existingExpenses;
+        }
 
         TextView introText = new TextView(this);
-        introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
-                userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
-        introText.setTextColor(Color.parseColor("#BCE0FF"));
+        if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
+            introText.setText(String.format(Locale.US, "Your Current Balance (Adjusted Base): Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
+                    userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        } else {
+            introText.setText(String.format(Locale.US, "Your Monthly Resource Base: Rs %.2f\nExisting commitments: Loans (Rs %.2f) + Utilities (Rs %.2f) + Subscriptions (Rs %.2f)",
+                    userMonthlyIncome, activeLoansMonthlyTotal, utilitiesMonthlyTotal, subscriptionsMonthlyTotal));
+        }
+        introText.setTextColor(Color.parseColor("#9CA3AF"));
         introText.setTextSize(13f);
         introText.setPadding(0, 0, 0, 30);
         container.addView(introText);
-
-        double existingExpenses = activeLoansMonthlyTotal + utilitiesMonthlyTotal + subscriptionsMonthlyTotal;
 
         for (ComparisonData data : dataList) {
             com.google.android.material.card.MaterialCardView card = new com.google.android.material.card.MaterialCardView(this);
@@ -512,8 +550,8 @@ public class LoanCompareActivity extends AppCompatActivity {
         dialog.show();
 
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(Color.parseColor("#4ADE80"));
-        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.WHITE);
-        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#FFFFFF")));
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(Color.parseColor("#9CA3AF"));
+        dialog.getWindow().setBackgroundDrawable(new android.graphics.drawable.ColorDrawable(Color.parseColor("#0B1B3D")));
     }
 
     private boolean validateAllCards() {
@@ -620,6 +658,10 @@ public class LoanCompareActivity extends AppCompatActivity {
         EditText etInterest = cardView.findViewById(R.id.etInterest);
         EditText etDuration = cardView.findViewById(R.id.etDuration);
         TextView txtResult = cardView.findViewById(R.id.txtComparisonResult);
+        TextView txtEmiResult = cardView.findViewById(R.id.txtEmiResult);
+        TextView txtInterestResult = cardView.findViewById(R.id.txtInterestResult);
+        TextView txtTotalResult = cardView.findViewById(R.id.txtTotalResult);
+        android.widget.RadioGroup rgInterestType = cardView.findViewById(R.id.rgCardInterestType);
 
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -627,7 +669,7 @@ public class LoanCompareActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                calculateCardEMI(etPrincipal, etInterest, etDuration, txtResult);
+                calculateCardEMI(etPrincipal, etInterest, etDuration, txtEmiResult, txtInterestResult, txtTotalResult, txtResult, rgInterestType);
             }
 
             @Override
@@ -637,9 +679,12 @@ public class LoanCompareActivity extends AppCompatActivity {
         etPrincipal.addTextChangedListener(watcher);
         etInterest.addTextChangedListener(watcher);
         etDuration.addTextChangedListener(watcher);
+        rgInterestType.setOnCheckedChangeListener((group, checkedId) -> {
+            calculateCardEMI(etPrincipal, etInterest, etDuration, txtEmiResult, txtInterestResult, txtTotalResult, txtResult, rgInterestType);
+        });
     }
 
-    private void calculateCardEMI(EditText etP, EditText etI, EditText etD, TextView txtRes) {
+    private void calculateCardEMI(EditText etP, EditText etI, EditText etD, TextView txtEmi, TextView txtInt, TextView txtTot, TextView txtRes, android.widget.RadioGroup rgGroup) {
         try {
             String pStr = etP.getText().toString();
             String iStr = etI.getText().toString();
@@ -649,22 +694,48 @@ public class LoanCompareActivity extends AppCompatActivity {
                 double p = Double.parseDouble(pStr);
                 double annualRate = Double.parseDouble(iStr);
                 int n = Integer.parseInt(dStr);
+                
+                boolean isFlat = rgGroup != null && rgGroup.getCheckedRadioButtonId() == R.id.rbCardFlat;
 
-                double r = annualRate / (12 * 100);
                 double emi;
-                if (r == 0) {
-                    emi = p / n;
+                double totalInterest;
+                double total;
+
+                if (isFlat) {
+                    double r = annualRate / 100.0;
+                    totalInterest = p * r * (n / 12.0);
+                    total = p + totalInterest;
+                    emi = total / n;
                 } else {
-                    emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                    double r = annualRate / (12 * 100.0);
+                    if (r == 0) {
+                        emi = p / n;
+                        total = p;
+                        totalInterest = 0;
+                    } else {
+                        emi = (p * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
+                        total = emi * n;
+                        totalInterest = total - p;
+                    }
                 }
 
-                double total = emi * n;
-                txtRes.setText(String.format(Locale.US, "EMI: Rs %.2f | Total: Rs %.2f", emi, total));
+                txtEmi.setText(String.format(Locale.US, "Rs %.2f", emi));
+                txtInt.setText(String.format(Locale.US, "Rs %.2f", totalInterest));
+                txtTot.setText(String.format(Locale.US, "Rs %.2f", total));
+                
+                // For compatibility with extractComparisonData
+                txtRes.setText(String.format(Locale.US, "EMI: LKR %.2f | Total: LKR %.2f", emi, total));
             } else {
-                txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
+                txtEmi.setText("Rs 0.00");
+                txtInt.setText("Rs 0.00");
+                txtTot.setText("Rs 0.00");
+                txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
             }
         } catch (Exception e) {
-            txtRes.setText("EMI: Rs 0.00 | Total: Rs 0.00");
+            txtEmi.setText("Rs 0.00");
+            txtInt.setText("Rs 0.00");
+            txtTot.setText("Rs 0.00");
+            txtRes.setText("EMI: LKR 0.00 | Total: LKR 0.00");
         }
     }
 }

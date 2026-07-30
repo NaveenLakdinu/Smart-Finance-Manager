@@ -71,7 +71,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:background="@drawable/bg_input_dark"
+                android:background="@android:color/transparent"
                 android:hint="Search goals..."
                 android:textColor="@color/text_on_dark_primary"
                 android:textColorHint="@color/goal_text_dim"

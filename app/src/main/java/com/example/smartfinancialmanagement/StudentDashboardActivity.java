@@ -193,7 +193,11 @@ public class StudentDashboardActivity extends AppCompatActivity {
         ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
         TextView tvInitials = findViewById(R.id.tvInitials);
         if (uriStr != null && imgDashboardAvatar != null) {
-            imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            try {
+                imgDashboardAvatar.setImageURI(Uri.parse(uriStr));
+            } catch (SecurityException e) {
+                getSharedPreferences("ProfilePrefs", Context.MODE_PRIVATE).edit().remove("avatar_uri").apply();
+            }
             imgDashboardAvatar.setVisibility(View.VISIBLE);
             if (tvInitials != null) tvInitials.setVisibility(View.GONE);
         } else {
@@ -262,7 +266,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         // Notification button
         View btnNotifications = findViewById(R.id.btnNotifications);
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(v -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
 
         loadAchievementData();
@@ -386,9 +390,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
         });
     }
 
-    private void showNotificationPanelDialog() {
-        startActivity(new Intent(this, NotificationListActivity.class));
-    }
+
 
 
 
@@ -594,6 +596,12 @@ public class StudentDashboardActivity extends AppCompatActivity {
         TextView txtCurrentBalanceValue = findViewById(R.id.txtCurrentBalanceValue);
         if (txtCurrentBalanceValue != null) {
             txtCurrentBalanceValue.setText(CurrencyHelper.formatMoney(this, currentBalance));
+        }
+
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        if (user != null) {
+            FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                    .update("currentBalance", String.valueOf(currentBalance));
         }
     }
 

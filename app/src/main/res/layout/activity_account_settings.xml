@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/surface_primary"
+    android:background="@drawable/bg_dashboard"
     tools:context=".AccountSettingsActivity">
 
     <!-- Top Bar -->
@@ -16,6 +16,8 @@
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:padding="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageButton
@@ -40,6 +42,8 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topBar"
         app:layout_constraintBottom_toBottomOf="parent">
 
@@ -86,7 +90,7 @@
                         android:id="@+id/etEditName"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
+                        android:background="@android:color/transparent"
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/text_on_dark_primary"
                         android:textColorHint="@color/text_on_dark_muted"
@@ -107,7 +111,7 @@
                         android:id="@+id/etEditAge"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
+                        android:background="@android:color/transparent"
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/text_on_dark_primary"
                         android:textColorHint="@color/text_on_dark_muted"
@@ -128,7 +132,7 @@
                         android:id="@+id/etEditMobile"
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
+                        android:background="@android:color/transparent"
                         android:paddingHorizontal="16dp"
                         android:textColor="@color/text_on_dark_primary"
                         android:textColorHint="@color/text_on_dark_muted"
@@ -136,68 +140,105 @@
                         android:inputType="phone"
                         android:layout_marginBottom="16dp" />
 
-                    <!-- University -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="University"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditUniversity"
+                    <LinearLayout
+                        android:id="@+id/llStudentInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. University of Colombo"
-                        android:inputType="text"
-                        android:layout_marginBottom="16dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <!-- Course -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Course"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditCourse"
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. BSc Computer Science"
-                        android:inputType="text"
-                        android:layout_marginBottom="16dp" />
+                        <!-- University -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="University"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditUniversity"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@android:color/transparent"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. University of Colombo"
+                            android:inputType="text"
+                            android:layout_marginBottom="16dp" />
 
-                    <!-- Student ID -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Student ID"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:layout_marginBottom="8dp" />
-                    
-                    <EditText
-                        android:id="@+id/etEditStudentId"
+                        <!-- Course -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Course"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditCourse"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@android:color/transparent"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. BSc Computer Science"
+                            android:inputType="text"
+                            android:layout_marginBottom="16dp" />
+
+                        <!-- Student ID -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Student ID"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditStudentId"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@android:color/transparent"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. STU12345"
+                            android:inputType="text"
+                            android:layout_marginBottom="32dp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/llWorkerInfo"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:background="@drawable/bg_input"
-                        android:paddingHorizontal="16dp"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textColorHint="@color/text_on_dark_muted"
-                        android:hint="e.g. STU12345"
-                        android:inputType="text"
-                        android:layout_marginBottom="32dp" />
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:visibility="gone">
+
+                        <!-- Monthly Income -->
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly Income"
+                            android:textColor="@color/text_on_dark_secondary"
+                            android:textSize="14sp"
+                            android:layout_marginBottom="8dp" />
+                        
+                        <EditText
+                            android:id="@+id/etEditMonthlyIncome"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:background="@android:color/transparent"
+                            android:paddingHorizontal="16dp"
+                            android:textColor="@color/text_on_dark_primary"
+                            android:textColorHint="@color/text_on_dark_muted"
+                            android:hint="e.g. 5000"
+                            android:inputType="numberDecimal"
+                            android:layout_marginBottom="32dp" />
+                    </LinearLayout>
 
                     <View
                         android:layout_width="match_parent"
@@ -226,10 +267,49 @@
                         android:id="@+id/spinnerCurrency"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:background="@drawable/bg_input"
+                        android:background="@android:color/transparent"
                         android:layout_marginBottom="24dp"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Security"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="16dp"/>
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Update Password"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="14sp"
+                        android:layout_marginBottom="8dp"/>
+
+                    <EditText
+                        android:id="@+id/etNewPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="New Password (optional)"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:inputType="textPassword"
+                        android:background="@android:color/transparent"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginBottom="12dp"/>
+
+                    <EditText
+                        android:id="@+id/etConfirmPassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="48dp"
+                        android:hint="Confirm Password"
+                        android:textColorHint="@color/text_on_dark_muted"
+                        android:textColor="@color/text_on_dark_primary"
+                        android:inputType="textPassword"
+                        android:background="@android:color/transparent"
+                        android:paddingHorizontal="16dp"
+                        android:layout_marginBottom="24dp"/>
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnSaveSettings"

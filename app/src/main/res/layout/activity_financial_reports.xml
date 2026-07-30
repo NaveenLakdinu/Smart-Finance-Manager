@@ -88,7 +88,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/bg_input_dark"
+                    android:background="@android:color/transparent"
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp" />
 
@@ -112,7 +112,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="50dp"
                         android:layout_marginTop="6dp"
-                        android:background="@drawable/bg_input_dark"
+                        android:background="@android:color/transparent"
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp" />
 
@@ -242,20 +242,20 @@
                                 android:layout_weight="1"
                                 android:text="Current Balance"
                                 android:textStyle="bold"
-                                android:textColor="#374151" />
+                                android:textColor="@color/text_on_dark_primary" />
                             <TextView
                                 android:id="@+id/txtReportBalance"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="LKR 0.00"
                                 android:textStyle="bold"
-                                android:textColor="#374151" />
+                                android:textColor="@color/text_on_dark_primary" />
                         </LinearLayout>
 
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="1dp"
-                            android:background="#E5E7EB"
+                            android:background="@color/forest_600"
                             android:layout_marginTop="8dp"
                             android:layout_marginBottom="8dp" />
 
@@ -270,14 +270,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Total Income"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                             <TextView
                                 android:id="@+id/txtReportIncome"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="LKR 0.00"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -292,14 +292,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Total Savings"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                             <TextView
                                 android:id="@+id/txtReportSavings"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="LKR 0.00"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -314,14 +314,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Total Loans"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                             <TextView
                                 android:id="@+id/txtReportLoans"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="LKR 0.00"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -336,35 +336,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:text="Total Subscriptions"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                             <TextView
                                 android:id="@+id/txtReportSubscriptions"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="LKR 0.00"
-                                android:textColor="#6B7280"
-                                android:textSize="13sp" />
-                        </LinearLayout>
-
-                        <!-- Utilities -->
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-                            <TextView
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:text="Total Utility Bills"
-                                android:textColor="#6B7280"
-                                android:textSize="13sp" />
-                            <TextView
-                                android:id="@+id/txtReportUtilities"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="LKR 0.00"
-                                android:textColor="#6B7280"
+                                android:textColor="@color/text_on_dark_secondary"
                                 android:textSize="13sp" />
                         </LinearLayout>
 
@@ -397,21 +376,6 @@
                         android:layout_marginBottom="8dp" />
                     <com.github.mikephil.charting.charts.PieChart
                         android:id="@+id/chartSubscriptions"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dp"
-                        android:layout_marginBottom="16dp" />
-
-                    <!-- 3. Utility Bills Chart -->
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Utility Bills"
-                        android:textColor="@color/text_on_dark_secondary"
-                        android:textSize="14sp"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="8dp" />
-                    <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/chartUtilityBills"
                         android:layout_width="match_parent"
                         android:layout_height="200dp"
                         android:layout_marginBottom="16dp" />

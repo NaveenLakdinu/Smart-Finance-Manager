@@ -150,14 +150,35 @@
                 android:orientation="vertical"
                 android:padding="24dp">
 
-                <!-- Label -->
-                <TextView
-                    android:layout_width="wrap_content"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="CURRENT BALANCE"
-                    android:textColor="@color/text_on_dark_secondary"
-                    android:textSize="11sp"
-                    android:letterSpacing="0.12" />
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- Label -->
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="CURRENT BALANCE"
+                        android:textColor="@color/text_on_dark_secondary"
+                        android:textSize="11sp"
+                        android:letterSpacing="0.12" />
+
+                    <!-- Delete Account Button -->
+                    <TextView
+                        android:id="@+id/btnDeleteAccount"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="🗑️"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
 
                 <!-- Balance amount row -->
                 <LinearLayout
@@ -532,40 +553,7 @@
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
 
-            <!-- Cards -->
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/cardCards"
-                android:layout_width="0dp"
-                android:layout_height="100dp"
-                android:layout_columnWeight="1"
-                android:layout_margin="6dp"
-                app:cardBackgroundColor="@color/forest_700"
-                app:cardCornerRadius="20dp"
-                app:strokeColor="@color/forest_600"
-                app:strokeWidth="1dp"
-                app:cardElevation="0dp">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="44dp"
-                        android:layout_height="44dp"
-                        android:background="@drawable/bg_function_icon_dark"
-                        android:gravity="center"
-                        android:text="💳"
-                        android:textSize="22sp" />
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="Cards"
-                        android:textColor="@color/text_on_dark_primary"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+
 
             <!-- Add Account -->
             <com.google.android.material.card.MaterialCardView
@@ -596,6 +584,40 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:text="Add Account"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Financial Report -->
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardFinancialReport"
+                android:layout_width="0dp"
+                android:layout_height="100dp"
+                android:layout_columnWeight="1"
+                android:layout_margin="6dp"
+                app:cardBackgroundColor="@color/forest_700"
+                app:cardCornerRadius="20dp"
+                app:strokeColor="@color/forest_600"
+                app:strokeWidth="1dp"
+                app:cardElevation="0dp">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
+                        android:background="@drawable/bg_function_icon_green"
+                        android:gravity="center"
+                        android:text="📈"
+                        android:textSize="22sp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:text="Reports"
                         android:textColor="@color/text_on_dark_primary"
                         android:textSize="12sp"
                         android:textStyle="bold" />

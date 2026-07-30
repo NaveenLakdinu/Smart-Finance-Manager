@@ -6,12 +6,12 @@ plugins {
 
 android {
     namespace = "com.example.smartfinancialmanagement"
-    compileSdk = 36
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.smartfinancialmanagement"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -65,7 +65,7 @@ dependencies {
     implementation(libs.googleid)
     
     // Google Play Services Auth for Google Sign-In
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
+    implementation("com.google.android.gms:play-services-auth:21.3.0")
     
     // Guava for ListenableFuture (required by WorkManager)
     implementation("com.google.guava:guava:32.1.3-android")
@@ -88,6 +88,7 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
     implementation("com.itextpdf:itextg:5.5.10")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.sun.mail:android-mail:1.6.6")

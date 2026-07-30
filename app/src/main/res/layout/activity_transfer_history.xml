@@ -8,17 +8,18 @@
     <!-- Toolbar -->
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="48dp"
+        android:layout_height="?attr/actionBarSize"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="16dp">
+        android:paddingHorizontal="8dp">
 
         <ImageView
             android:id="@+id/btnBack"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="12dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:src="@android:drawable/ic_menu_revert"
-            android:padding="4dp"
             android:contentDescription="Back" />
 
         <TextView
@@ -29,7 +30,7 @@
             android:textColor="@color/text_on_dark_primary"
             android:textSize="22sp"
             android:textStyle="bold"
-            android:layout_marginStart="12dp" />
+            android:layout_marginStart="16dp" />
     </LinearLayout>
 
     <!-- Empty State -->

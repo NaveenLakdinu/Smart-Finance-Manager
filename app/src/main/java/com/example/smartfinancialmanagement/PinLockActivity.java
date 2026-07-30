@@ -35,7 +35,24 @@ public class PinLockActivity extends AppCompatActivity {
     // ──────────────────────────────────────────────────────────────────────
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Crash reporting logic
+        final Thread.UncaughtExceptionHandler defaultHandler = Thread.getDefaultUncaughtExceptionHandler();
+        Thread.setDefaultUncaughtExceptionHandler((thread, e) -> {
+            String errorMsg = android.util.Log.getStackTraceString(e);
+            getSharedPreferences("CrashLog", MODE_PRIVATE).edit().putString("last_crash", errorMsg).commit();
+            if (defaultHandler != null) defaultHandler.uncaughtException(thread, e);
+        });
         super.onCreate(savedInstanceState);
+        
+        String lastCrash = getSharedPreferences("CrashLog", MODE_PRIVATE).getString("last_crash", null);
+        if (lastCrash != null) {
+            getSharedPreferences("CrashLog", MODE_PRIVATE).edit().remove("last_crash").apply();
+            new androidx.appcompat.app.AlertDialog.Builder(this)
+                .setTitle("Crash Log")
+                .setMessage(lastCrash)
+                .setPositiveButton("OK", null)
+                .show();
+        }
         setContentView(R.layout.activity_pin_lock);
 
         // Dots

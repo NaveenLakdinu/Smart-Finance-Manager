@@ -66,7 +66,7 @@ public class DashboardActivity extends AppCompatActivity {
         loadUserSubscriptions();
         View btnNotifications = findViewById(R.id.btnNotifications);
         if (btnNotifications != null) {
-            btnNotifications.setOnClickListener(notifBtn -> showNotificationPanelDialog());
+            btnNotifications.setOnClickListener(notifBtn -> startActivity(new Intent(this, NotificationListActivity.class)));
         }
     }
 
@@ -354,8 +354,6 @@ public class DashboardActivity extends AppCompatActivity {
         }
     }
 
-    private void showNotificationPanelDialog() {
-        NotificationPanelHelper.show(this);
-    }
+
 }
 
