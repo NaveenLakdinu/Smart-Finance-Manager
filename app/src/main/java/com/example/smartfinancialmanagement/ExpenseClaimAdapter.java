@@ -17,6 +17,8 @@ public class ExpenseClaimAdapter extends RecyclerView.Adapter<ExpenseClaimAdapte
     public interface OnItemClickListener {
         void onItemClick(ExpenseClaim claim, int position);
         void onItemLongClick(ExpenseClaim claim, int position);
+        void onApproveClick(ExpenseClaim claim, int position);
+        void onRejectClick(ExpenseClaim claim, int position);
     }
 
     private final List<ExpenseClaim> claimList;
@@ -53,7 +55,20 @@ public class ExpenseClaimAdapter extends RecyclerView.Adapter<ExpenseClaimAdapte
         holder.txtStatusPill.setBackgroundColor(claim.getStatusBgColor());
 
         holder.txtClaimAmount.setText(claim.getFormattedAmount());
-        holder.txtReceiptCount.setText(String.format(Locale.getDefault(), "%d receipts", claim.getReceiptCount()));
+
+        if ("PENDING".equalsIgnoreCase(claim.getStatus())) {
+            holder.actionButtonsLayout.setVisibility(View.VISIBLE);
+        } else {
+            holder.actionButtonsLayout.setVisibility(View.GONE);
+        }
+
+        holder.btnApprove.setOnClickListener(v -> {
+            if (listener != null) listener.onApproveClick(claim, position);
+        });
+
+        holder.btnReject.setOnClickListener(v -> {
+            if (listener != null) listener.onRejectClick(claim, position);
+        });
 
         holder.itemView.setOnClickListener(v -> {
             if (listener != null) listener.onItemClick(claim, position);
@@ -71,7 +86,9 @@ public class ExpenseClaimAdapter extends RecyclerView.Adapter<ExpenseClaimAdapte
     }
 
     static class ClaimViewHolder extends RecyclerView.ViewHolder {
-        TextView txtCategoryIcon, txtClaimTitle, txtClaimMeta, txtStatusPill, txtClaimAmount, txtReceiptCount;
+        TextView txtCategoryIcon, txtClaimTitle, txtClaimMeta, txtStatusPill, txtClaimAmount;
+        View actionButtonsLayout;
+        View btnApprove, btnReject;
 
         public ClaimViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -80,7 +97,9 @@ public class ExpenseClaimAdapter extends RecyclerView.Adapter<ExpenseClaimAdapte
             txtClaimMeta = itemView.findViewById(R.id.txtClaimMeta);
             txtStatusPill = itemView.findViewById(R.id.txtStatusPill);
             txtClaimAmount = itemView.findViewById(R.id.txtClaimAmount);
-            txtReceiptCount = itemView.findViewById(R.id.txtReceiptCount);
+            actionButtonsLayout = itemView.findViewById(R.id.actionButtonsLayout);
+            btnApprove = itemView.findViewById(R.id.btnApprove);
+            btnReject = itemView.findViewById(R.id.btnReject);
         }
     }
 }

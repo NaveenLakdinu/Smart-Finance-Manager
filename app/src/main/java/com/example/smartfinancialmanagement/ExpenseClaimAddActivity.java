@@ -22,14 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import android.content.Intent;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.view.View;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import java.util.UUID;
 
 public class ExpenseClaimAddActivity extends AppCompatActivity {
 
@@ -41,25 +34,6 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private String uid;
-
-    private MaterialButton btnAttachReceipt;
-    private TextView txtReceiptStatus;
-    private ImageView imgReceiptPreview;
-    private Uri selectedImageUri = null;
-
-    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    selectedImageUri = result.getData().getData();
-                    if (selectedImageUri != null) {
-                        imgReceiptPreview.setImageURI(selectedImageUri);
-                        imgReceiptPreview.setVisibility(View.VISIBLE);
-                        txtReceiptStatus.setText("Receipt attached");
-                    }
-                }
-            }
-    );
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -84,16 +58,8 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
         spinnerCategory = findViewById(R.id.spinnerCategory);
         tvExpenseDate = findViewById(R.id.tvExpenseDate);
         btnSubmitClaim = findViewById(R.id.btnSubmitClaim);
-        btnAttachReceipt = findViewById(R.id.btnAttachReceipt);
-        txtReceiptStatus = findViewById(R.id.txtReceiptStatus);
-        imgReceiptPreview = findViewById(R.id.imgReceiptPreview);
 
         btnBack.setOnClickListener(v -> finish());
-
-        btnAttachReceipt.setOnClickListener(v -> {
-            Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-            imagePickerLauncher.launch(intent);
-        });
     }
 
     private void setupCategorySpinner() {
@@ -178,7 +144,6 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
         claimData.put("amount", amount);
         claimData.put("expenseDate", date.equals("Tap to select date") ? "N/A" : date);
         claimData.put("description", description.isEmpty() ? "No description" : description);
-        claimData.put("receiptCount", selectedImageUri != null ? 1 : 0);
         claimData.put("status", "PENDING");
         claimData.put("workerEmail", email != null ? email : "");
         claimData.put("createdAt", System.currentTimeMillis());
@@ -192,44 +157,11 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
                     if (company != null && !company.trim().isEmpty()) {
                         claimData.put("companyName", company);
                     }
-
-                    if (selectedImageUri != null) {
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        StorageReference receiptRef = storageRef.child("receipts/" + uid + "/" + UUID.randomUUID().toString() + ".jpg");
-
-                        receiptRef.putFile(selectedImageUri)
-                                .addOnSuccessListener(taskSnapshot -> receiptRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    claimData.put("receiptUrl", uri.toString());
-                                    saveClaimToDb(claimData);
-                                }))
-                                .addOnFailureListener(e -> {
-                                    Toast.makeText(this, "Failed to upload receipt: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                                    btnSubmitClaim.setEnabled(true);
-                                    btnSubmitClaim.setText("Submit Claim");
-                                });
-                    } else {
-                        saveClaimToDb(claimData);
-                    }
+                    saveClaimToDb(claimData);
                 })
                 .addOnFailureListener(e -> {
                     // Fallback if worker profile fetch fails
-                    if (selectedImageUri != null) {
-                        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-                        StorageReference receiptRef = storageRef.child("receipts/" + uid + "/" + UUID.randomUUID().toString() + ".jpg");
-
-                        receiptRef.putFile(selectedImageUri)
-                                .addOnSuccessListener(taskSnapshot -> receiptRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                                    claimData.put("receiptUrl", uri.toString());
-                                    saveClaimToDb(claimData);
-                                }))
-                                .addOnFailureListener(e2 -> {
-                                    Toast.makeText(this, "Failed to upload receipt: " + e2.getMessage(), Toast.LENGTH_SHORT).show();
-                                    btnSubmitClaim.setEnabled(true);
-                                    btnSubmitClaim.setText("Submit Claim");
-                                });
-                    } else {
-                        saveClaimToDb(claimData);
-                    }
+                    saveClaimToDb(claimData);
                 });
     }
 

@@ -107,6 +107,16 @@ public class ExpenseClaimListActivity extends AppCompatActivity {
             public void onItemLongClick(ExpenseClaim claim, int position) {
                 showDeleteDialog(claim);
             }
+
+            @Override
+            public void onApproveClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "APPROVED");
+            }
+
+            @Override
+            public void onRejectClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "REJECTED");
+            }
         });
 
         recyclerClaims.setLayoutManager(new LinearLayoutManager(this));
@@ -172,8 +182,6 @@ public class ExpenseClaimListActivity extends AppCompatActivity {
 
                             Long amountLong = doc.getLong("amount");
                             claim.setAmount(amountLong != null ? amountLong.doubleValue() : 0);
-                            Long receiptLong = doc.getLong("receiptCount");
-                            claim.setReceiptCount(receiptLong != null ? receiptLong.intValue() : 0);
 
                             if (claim.getTitle() == null) claim.setTitle("Untitled");
                             if (claim.getCategory() == null) claim.setCategory("Other");
@@ -257,14 +265,7 @@ public class ExpenseClaimListActivity extends AppCompatActivity {
                         claim.getExpenseDate(), claim.getStatusLabel(),
                         claim.getDescription() != null ? claim.getDescription() : ""));
 
-        if ("PENDING".equalsIgnoreCase(claim.getStatus())) {
-            builder.setPositiveButton("Approve", (dialog, which) -> updateClaimStatus(claim, "APPROVED"))
-                   .setNegativeButton("Reject", (dialog, which) -> updateClaimStatus(claim, "REJECTED"))
-                   .setNeutralButton("Cancel", null);
-        } else {
-            builder.setPositiveButton("OK", null);
-        }
-        
+        builder.setPositiveButton("OK", null);
         builder.show();
     }
 
