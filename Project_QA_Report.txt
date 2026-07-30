@@ -1,0 +1,117 @@
+================================================================================
+                        PROJECT QA & TESTING REPORT
+================================================================================
+Project: Smart-Finance-Manager
+Date: July 31, 2026
+Prepared by: QA/Test Engineering Team
+================================================================================
+
+1. EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+This report provides a comprehensive analysis of the issues, bugs, and workflow 
+interruptions encountered during the development of the Smart-Finance-Manager 
+application. The report details the root causes and the specific resolutions 
+implemented to ensure application stability, seamless user experience, and 
+cross-platform build consistency.
+
+2. BUILD & SYNCHRONIZATION ISSUES
+--------------------------------------------------------------------------------
+[Issue 2.1] Cross-Platform Gradle Sync Failures
+- Problem Description: Team members encountered build synchronization failures 
+  when pulling the codebase on different operating systems.
+- Root Cause: A hardcoded `org.gradle.java.home` property was committed, 
+  forcing the build to look for a JDK path that only existed on one developer's 
+  machine.
+- Resolution: Removed the hardcoded JDK path from the Gradle configuration, 
+  allowing Gradle to fall back to the system's default JAVA_HOME.
+
+[Issue 2.2] Compilation Errors in Hybrid Dashboard
+- Problem Description: The application failed to compile after merging the hybrid 
+  dashboard feature.
+- Root Cause: Unresolved merge conflicts and syntax errors were introduced 
+  during naive Git conflict resolution.
+- Resolution: Manually resolved conflicts, fixed syntax errors, and validated 
+  compilation.
+
+3. UI/UX & LAYOUT DEFECTS
+--------------------------------------------------------------------------------
+[Issue 3.1] OT Entries Cut Off in NestedScrollView
+- Problem Description: Users could not scroll to see all their Overtime (OT) 
+  entries. The list was getting cut off.
+- Root Cause: The RecyclerView inside the NestedScrollView was not properly 
+  measuring its height.
+- Resolution: Adjusted layout constraints and nested scrolling configurations 
+  to allow full expansion of the OT list. 
+
+[Issue 3.2] Hidden Financial Reports Layout & Checkbox Visibility
+- Problem Description: The Financial Reports layout was rendering as invisible, 
+  and task checkboxes were not visible on the UI.
+- Root Cause: Incorrect layout visibility states and missing color/theme 
+  references in the XML.
+- Resolution: Fixed visibility flags, added auto-fetch functionality to ensure 
+  data populated the layout, and updated color references to use transparent 
+  input backgrounds and appropriate theme colors.
+
+[Issue 3.3] Duplicate XML Attributes
+- Problem Description: App crashed during layout inflation for the Student 
+  Saving screen.
+- Root Cause: Duplicate XML attributes existed due to unresolved merge conflicts.
+- Resolution: Cleaned up the XML layout files and removed duplicate attributes.
+
+4. LOGIC, CRASHES & FUNCTIONAL BUGS
+--------------------------------------------------------------------------------
+[Issue 4.1] Worker Dashboard & OT Manager Crashes
+- Problem Description: The worker dashboard occasionally crashed on load, and 
+  the OT manager crashed due to index out-of-bounds exceptions.
+- Root Cause: Null pointer exceptions on missing fields, duplicate `onResume` 
+  lifecycle calls, and unhandled array bounds in the OT list.
+- Resolution: Hardened null-safety across the dashboard activities, removed 
+  duplicate lifecycle overrides, added safe avatar image loading, and implemented 
+  crash logging.
+
+[Issue 4.2] Current Savings Widget Overwriting Firestore Data
+- Problem Description: Updating the current savings widget wiped out other 
+  unrelated fields in the user's Firestore document.
+- Root Cause: The update operation was overwriting the entire document instead 
+  of merging the new field.
+- Resolution: Implemented `SetOptions.merge()` on the Firestore save operation 
+  to safely update only the savings amount. Wired up the widget correctly on the 
+  Business Dashboard.
+
+[Issue 4.3] Missing Callbacks in Expense Approval
+- Problem Description: The application threw exceptions when trying to approve 
+  or reject an expense claim in the dashboard.
+- Root Cause: Missing interface methods in the `ExpenseApprovalDashboardActivity` 
+  adapter listener.
+- Resolution: Implemented the missing interface methods and added inline 
+  Approve/Reject functionality.
+
+[Issue 4.4] Missing Click Listeners
+- Problem Description: Users could not navigate to the `BusinessProfileActivity`.
+- Root Cause: The click listener for the navigation button was never instantiated.
+- Resolution: Wired up the missing click listeners for seamless navigation.
+
+5. FEATURE & WORKFLOW OVERHAULS (QA DRIVEN)
+--------------------------------------------------------------------------------
+[Improvement 5.1] Expense Claims Approval Flow
+- Observation: The previous workflow forced users to attach a receipt before 
+  processing, which caused friction for simple claims.
+- Action: Removed the mandatory receipt attachment requirement and implemented 
+  a streamlined inline approve/reject workflow.
+
+[Improvement 5.2] Unified Notification System
+- Observation: Notification handling was fragmented across activities, and FCM 
+  (Firebase Cloud Messaging) deep-linking was failing.
+- Action: Refactored the codebase to extract a shared, centralized notification 
+  panel. Fixed the "mark-as-read" state management and resolved the deep-link 
+  routing logic.
+
+6. CONCLUSION
+--------------------------------------------------------------------------------
+The application has undergone significant stabilization. The removal of hardcoded 
+environment variables has restored CI/CD and local build reliability. UI layouts 
+have been audited for theme consistency and scrolling capability. Furthermore, 
+critical data-loss bugs related to Firestore overwrites have been patched using 
+merge options, ensuring robust data integrity moving forward.
+
+- End of Report -

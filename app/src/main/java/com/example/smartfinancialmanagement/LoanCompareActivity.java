@@ -387,17 +387,21 @@ public class LoanCompareActivity extends AppCompatActivity {
                 }
                 
                 if (currentUserRole.toLowerCase().contains("student") || currentUserRole.toLowerCase().contains("hybrid")) {
-                    String balanceStr = documentSnapshot.getString("currentBalance");
-                    if (balanceStr != null && !balanceStr.trim().isEmpty()) {
+                    Object balanceObj = documentSnapshot.get("currentBalance");
+                    if (balanceObj instanceof Number) {
+                        userMonthlyIncome = ((Number) balanceObj).doubleValue();
+                    } else if (balanceObj instanceof String) {
                         try {
-                            userMonthlyIncome = Double.parseDouble(balanceStr.trim());
+                            userMonthlyIncome = Double.parseDouble(((String) balanceObj).trim());
                         } catch (NumberFormatException ignored) {}
                     }
                 } else {
-                    String monthlySavingStr = documentSnapshot.getString("currentSavings");
-                    if (monthlySavingStr != null && !monthlySavingStr.trim().isEmpty()) {
+                    Object savingsObj = documentSnapshot.get("currentSavings");
+                    if (savingsObj instanceof Number) {
+                        userMonthlyIncome = ((Number) savingsObj).doubleValue();
+                    } else if (savingsObj instanceof String) {
                         try {
-                            userMonthlyIncome = Double.parseDouble(monthlySavingStr.trim());
+                            userMonthlyIncome = Double.parseDouble(((String) savingsObj).trim());
                         } catch (NumberFormatException ignored) {}
                     }
                 }
