@@ -193,6 +193,9 @@
         <activity
             android:name=".FinancialReportsActivity"
             android:exported="true" />
+        <activity
+            android:name=".AnalyticsActivity"
+            android:exported="false" />
 
 
         <activity
