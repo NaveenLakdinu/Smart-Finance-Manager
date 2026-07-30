@@ -67,6 +67,16 @@ public class ExpenseApprovalDashboardActivity extends AppCompatActivity {
             public void onItemLongClick(ExpenseClaim claim, int position) {
                 // Not used
             }
+
+            @Override
+            public void onApproveClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "APPROVED");
+            }
+
+            @Override
+            public void onRejectClick(ExpenseClaim claim, int position) {
+                updateClaimStatus(claim, "REJECTED");
+            }
         });
     }
 
