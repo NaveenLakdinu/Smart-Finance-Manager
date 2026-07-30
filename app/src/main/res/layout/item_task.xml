@@ -31,7 +31,7 @@
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:padding="13dp"
-                android:button="@drawable/bg_checkbox_dark" />
+                app:buttonTint="@color/hero_accent" />
 
             <TextView
                 android:id="@+id/tvTitle"
