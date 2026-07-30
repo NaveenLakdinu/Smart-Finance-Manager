@@ -1,16 +1,18 @@
 package com.example.smartfinancialmanagement;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.animation.OvershootInterpolator;
 import android.util.Log;
 import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -18,6 +20,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,19 +30,10 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-import android.widget.ScrollView;
-import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import android.Manifest;
-import android.content.pm.PackageManager;
-import android.os.Build;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 public class BusinessDashboardActivity extends AppCompatActivity {
 
@@ -75,27 +70,19 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         super.onResume();
         loadUserData();
         loadAvatarImage();
-        loadUserData();
-        loadAvatarImage();
 
         NotificationPanelHelper.checkAndShowOnResume(this);
         Log.d(TAG, "onResume triggered: Fetching fresh data...");
         loadBusinessWorkspaces();
     }
 
-    
     private void loadUserData() {
-        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser != null ? currentUser.getUid() : null;
+        FirebaseUser currentUser = mAuth.getCurrentUser();
+        if (currentUser == null) return;
+        String userId = currentUser.getUid();
 
-        if (userId == null) return;
-
-        com.google.firebase.firestore.FirebaseFirestore.getInstance().collection("users").document(userId).get()
+        db.collection("users").document(userId).get()
             .addOnSuccessListener(documentSnapshot -> {
-                android.widget.TextView tvStudentName = findViewById(R.id.tvStudentName);
-                android.widget.TextView tvInitials = findViewById(R.id.txtProfileLetter);
-                if (tvInitials == null) tvInitials = findViewById(R.id.tvInitials);
-                
                 String displayName = null;
                 if (documentSnapshot.exists() && documentSnapshot.contains("name")) {
                     displayName = documentSnapshot.getString("name");
@@ -128,15 +115,16 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     private void loadAvatarImage() {
         android.content.SharedPreferences prefs = getSharedPreferences("ProfilePrefs", android.content.Context.MODE_PRIVATE);
         String uriStr = prefs.getString("avatar_uri", null);
-        android.widget.ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
-        android.widget.TextView tvInitials = findViewById(R.id.tvInitials);
+        
+        ImageView imgDashboardAvatar = findViewById(R.id.imgDashboardAvatar);
+        
         if (uriStr != null && imgDashboardAvatar != null) {
             imgDashboardAvatar.setImageURI(android.net.Uri.parse(uriStr));
-            imgDashboardAvatar.setVisibility(android.view.View.VISIBLE);
-            if (tvInitials != null) tvInitials.setVisibility(android.view.View.GONE);
+            imgDashboardAvatar.setVisibility(View.VISIBLE);
+            if (tvInitials != null) tvInitials.setVisibility(View.GONE);
         } else {
-            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(android.view.View.GONE);
-            if (tvInitials != null) tvInitials.setVisibility(android.view.View.VISIBLE);
+            if (imgDashboardAvatar != null) imgDashboardAvatar.setVisibility(View.GONE);
+            if (tvInitials != null) tvInitials.setVisibility(View.VISIBLE);
         }
     }
 
@@ -149,35 +137,44 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         btnNotifications = findViewById(R.id.btnNotifications);
         btnTopLogout = findViewById(R.id.btnTopLogout);
         recyclerBusinessFilters = findViewById(R.id.recyclerBusinessFilters);
+        btnManageBusinesses = findViewById(R.id.btnManageBusinesses);
 
-        ImageView btnManageBusinesses = findViewById(R.id.btnManageBusinesses);
-        btnManageBusinesses.setOnClickListener(v -> {
-            startActivity(new Intent(this, ManageBusinessActivity.class));
-        });
+        if (btnManageBusinesses != null) {
+            btnManageBusinesses.setOnClickListener(v -> {
+                startActivity(new Intent(BusinessDashboardActivity.this, ManageBusinessActivity.class));
+            });
+        }
 
-        recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        if (recyclerBusinessFilters != null) {
+            recyclerBusinessFilters.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
+        }
 
         // Click listeners
-        findViewById(R.id.cardManageLoan).setOnClickListener(v -> startActivity(new Intent(this, LoanFormActivity.class)));
-        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> startActivity(new Intent(this, SubscriptionManagerActivity.class)));
-        findViewById(R.id.cardManageUtility).setOnClickListener(v -> startActivity(new Intent(this, UtilityManagerActivity.class)));
-        findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(this, SavingManagerActivity.class)));
-        findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(this, InvoiceHubActivity.class)));
-        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(this, AnalyticsActivity.class)));
-        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(this, AddBusinessActivity.class)));
+        findViewById(R.id.cardManageLoan).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, LoanFormActivity.class)));
+        findViewById(R.id.cardManageSubscription).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, SubscriptionManagerActivity.class)));
+        findViewById(R.id.cardManageUtility).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, UtilityManagerActivity.class)));
+        findViewById(R.id.cardSavingManager).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, SavingManagerActivity.class)));
+        findViewById(R.id.B2BInvoice).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, InvoiceHubActivity.class)));
+        findViewById(R.id.cardAnalytics).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, AnalyticsActivity.class)));
+        findViewById(R.id.cardStaticBizAdd).setOnClickListener(v -> startActivity(new Intent(BusinessDashboardActivity.this, AddBusinessActivity.class)));
 
         setupSecurityButton();
 
-        btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
-        btnTopLogout.setOnClickListener(v -> {
-            mAuth.signOut();
-            Toast.makeText(this, "Logged Out Safely", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(this, LoginFormActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
-            finish();
-        });
+        if (btnNotifications != null) {
+            btnNotifications.setOnClickListener(v -> showNotificationPanelDialog());
+        }
+        
+        if (btnTopLogout != null) {
+            btnTopLogout.setOnClickListener(v -> {
+                mAuth.signOut();
+                Toast.makeText(this, "Logged Out Safely", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BusinessDashboardActivity.this, LoginFormActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                finish();
+            });
+        }
     }
 
     private void checkNotificationPermission() {
@@ -202,7 +199,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
 
     private void loadBusinessWorkspaces() {
         FirebaseUser user = mAuth.getCurrentUser();
-        // 💡 Use UID instead of Email
         if (user == null) return;
         String currentUserId = user.getUid();
 
@@ -232,7 +228,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     }
 
                     Log.d(TAG, "Total isolated businesses fetched: " + (businessNamesList.size() - 1));
-                    // Pass the UID to the next data segment pipeline
                     calculateInvoiceMetricsPipeline(currentUserId);
                 })
                 .addOnFailureListener(e -> {
@@ -242,7 +237,6 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void calculateInvoiceMetricsPipeline(String currentUserId) {
-        // 💡 Server-Side Filter: Only fetch invoices belonging to this specific user
         db.collection("invoices")
                 .whereEqualTo("userId", currentUserId)
                 .get()
@@ -274,10 +268,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             double amount = invoice.getGrandTotal();
 
             if (status != null && (status.equalsIgnoreCase("pending") || status.equalsIgnoreCase("unpaid"))) {
-
                 if (selectedBusinessScope.equals("ALL WORKSPACES")) {
-                    // Since both pipelines are filtered to this user on the server,
-                    // we can safely accumulate without heavy loops
                     pendingTotal += amount;
                 } else {
                     int selectedIndex = businessNamesList.indexOf(selectedBusinessScope);
@@ -293,16 +284,23 @@ public class BusinessDashboardActivity extends AppCompatActivity {
             }
         }
 
-        txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", pendingTotal));
+        if (txtTotalCount != null) {
+            txtTotalCount.setText(String.format(Locale.getDefault(), "Rs. %,.2f", pendingTotal));
+        }
 
-        if (selectedBusinessScope.equals("ALL WORKSPACES")) {
-            txtSubMessage.setText("Total pending invoices across all registered workspaces");
-        } else {
-            txtSubMessage.setText("Pending balances isolated for: " + selectedBusinessScope);
+        if (txtSubMessage != null) {
+            if (selectedBusinessScope.equals("ALL WORKSPACES")) {
+                txtSubMessage.setText("Total pending invoices across all registered workspaces");
+            } else {
+                txtSubMessage.setText("Pending balances isolated for: " + selectedBusinessScope);
+            }
         }
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void setupFilterRecyclerView() {
+        if (recyclerBusinessFilters == null) return;
+        
         RecyclerView.Adapter<FilterViewHolder> adapter = new RecyclerView.Adapter<FilterViewHolder>() {
             @NonNull
             @Override
@@ -359,7 +357,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
         View btnSecurity = findViewById(R.id.btnSecurity);
         if (btnSecurity != null) {
             btnSecurity.setOnClickListener(v -> {
-                boolean isPinSet = PinHelper.isPinSet(this);
+                boolean isPinSet = PinHelper.isPinSet(BusinessDashboardActivity.this);
                 String[] options;
                 if (isPinSet) {
                     options = new String[]{"Change PIN Lock", "Disable PIN Lock"};
@@ -367,21 +365,21 @@ public class BusinessDashboardActivity extends AppCompatActivity {
                     options = new String[]{"Enable PIN Lock"};
                 }
 
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                AlertDialog.Builder builder = new AlertDialog.Builder(BusinessDashboardActivity.this);
                 builder.setTitle("PIN Lock Security");
                 builder.setItems(options, (dialog, which) -> {
                     if (!isPinSet) {
-                        Intent intent = new Intent(this, PinSetupActivity.class);
+                        Intent intent = new Intent(BusinessDashboardActivity.this, PinSetupActivity.class);
                         startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                        overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                     } else {
                         if (which == 0) {
-                            Intent intent = new Intent(this, PinSetupActivity.class);
+                            Intent intent = new Intent(BusinessDashboardActivity.this, PinSetupActivity.class);
                             startActivity(intent);
-            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+                            overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
                         } else if (which == 1) {
-                            PinHelper.clearPin(this);
-                            Toast.makeText(this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
+                            PinHelper.clearPin(BusinessDashboardActivity.this);
+                            Toast.makeText(BusinessDashboardActivity.this, "PIN Lock disabled successfully!", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -392,7 +390,7 @@ public class BusinessDashboardActivity extends AppCompatActivity {
     }
 
     private void showNotificationPanelDialog() {
-        startActivity(new Intent(this, NotificationListActivity.class));
+        startActivity(new Intent(BusinessDashboardActivity.this, NotificationListActivity.class));
     }
 
     static class FilterViewHolder extends RecyclerView.ViewHolder {
