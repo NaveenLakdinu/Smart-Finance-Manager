@@ -97,7 +97,7 @@
             android:name=".WorkerTasksActivity"
             android:exported="false" />
         <activity
-            android:name=".WorkerPayslipActivity"
+            android:name=".OTManagerActivity"
             android:exported="false" />
         <activity
             android:name=".MultiAccountDashboardActivity"

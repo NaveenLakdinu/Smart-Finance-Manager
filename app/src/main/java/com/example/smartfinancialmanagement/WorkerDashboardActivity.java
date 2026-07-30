@@ -41,7 +41,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     private TextView tvInitials, txtGreeting, tvStudentName;
     private TextView txtEarnings, txtPayrollStatus;
-    private MaterialCardView cardWorkTasks, cardExpenseClaims, cardPayslips, cardLoanManager;
+    private MaterialCardView cardWorkTasks, cardExpenseClaims, cardOtManager, cardLoanManager;
     private MaterialCardView cardSubscriptionManager, cardSavingManager, cardUtilityManager;
     private android.view.View btnTopLogout;
 
@@ -69,8 +69,8 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
     
     private void loadUserData() {
-        com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
-        String userId = currentUser != null ? currentUser.getUid() : null;
+        final com.google.firebase.auth.FirebaseUser currentUser = com.google.firebase.auth.FirebaseAuth.getInstance().getCurrentUser();
+        final String userId = currentUser != null ? currentUser.getUid() : null;
 
         if (userId == null) return;
 
@@ -136,7 +136,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
 
         cardWorkTasks = findViewById(R.id.cardWorkTasks);
         cardExpenseClaims = findViewById(R.id.cardExpenseClaims);
-        cardPayslips = findViewById(R.id.cardPayslips);
+        cardOtManager = findViewById(R.id.cardOtManager);
         cardLoanManager = findViewById(R.id.cardLoanManager);
         cardSubscriptionManager = findViewById(R.id.cardSubscriptionManager);
         cardSavingManager = findViewById(R.id.cardSavingManager);
@@ -196,8 +196,8 @@ public class WorkerDashboardActivity extends AppCompatActivity {
         cardExpenseClaims.setOnClickListener(v -> {
             startActivity(new Intent(this, ExpenseClaimsActivity.class));
         });
-        cardPayslips.setOnClickListener(v -> {
-            startActivity(new Intent(this, WorkerPayslipActivity.class));
+        cardOtManager.setOnClickListener(v -> {
+            startActivity(new Intent(this, OTManagerActivity.class));
         });
         cardLoanManager.setOnClickListener(v -> {
             startActivity(new Intent(this, LoanFormActivity.class));
@@ -354,13 +354,13 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String currentSavings = documentSnapshot.getString("currentSavings");
-                        if (currentSavings != null && !currentSavings.trim().isEmpty()) {
+                        Object savingsObj = documentSnapshot.get("currentSavings");
+                        if (savingsObj != null) {
                             try {
-                                double amt = Double.parseDouble(currentSavings.trim());
+                                double amt = Double.parseDouble(savingsObj.toString());
                                 txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
                             } catch (NumberFormatException e) {
-                                txtValue.setText("LKR " + currentSavings);
+                                txtValue.setText("LKR " + savingsObj.toString());
                             }
                         } else {
                             txtValue.setText("LKR 0.00");
@@ -370,23 +370,38 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     }
 
     private void loadSalaryFromFirestore(String uid) {
-        FirebaseFirestore.getInstance().collection("users").document(uid)
-                .collection("worker_profile").document("profile_data")
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Double salary = documentSnapshot.getDouble("monthlySalary");
-                        if (salary != null && salary > 0) {
-                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", salary));
-                        } else {
-                            txtEarnings.setText("LKR 0.00");
-                        }
-                    } else {
-                        txtEarnings.setText("LKR 0.00");
-                    }
-                })
-                .addOnFailureListener(e -> txtEarnings.setText("LKR 0.00"));
-    }
+    FirebaseFirestore.getInstance().collection("users").document(uid)
+            .collection("worker_profile").document("profile_data")
+            .get()
+            .addOnSuccessListener(profileSnap -> {
+                final double baseSalary;
+                if (profileSnap.exists()) {
+                    Double salary = profileSnap.getDouble("monthlySalary");
+                    baseSalary = (salary != null) ? salary : 0;
+                } else {
+                    baseSalary = 0;
+                }
+                // Fetch current month OT pay
+                String monthKey = new java.text.SimpleDateFormat("yyyy-MM", java.util.Locale.US).format(new java.util.Date());
+                FirebaseFirestore.getInstance().collection("users").document(uid)
+                        .collection("ot_summary").document(monthKey)
+                        .get()
+                        .addOnSuccessListener(otSnap -> {
+                            double otPay = 0;
+                            if (otSnap.exists()) {
+                                Double ot = otSnap.getDouble("totalOtPay");
+                                if (ot != null) otPay = ot;
+                            }
+                            double effective = baseSalary + otPay;
+                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", effective));
+                        })
+                        .addOnFailureListener(e -> {
+                            // fallback to base salary only
+                            txtEarnings.setText(String.format(Locale.US, "LKR %.2f", baseSalary));
+                        });
+            })
+            .addOnFailureListener(e -> txtEarnings.setText("LKR 0.00"));
+}
 
     private void showUpdateSavingsDialog(TextView txtValue) {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -415,12 +430,12 @@ public class WorkerDashboardActivity extends AppCompatActivity {
                 try {
                     double amt = Double.parseDouble(val);
                     FirebaseFirestore.getInstance().collection("users").document(user.getUid())
-                            .update("currentSavings", String.valueOf(amt))
-                            .addOnSuccessListener(aVoid -> {
-                                txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
-                                Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
-                            })
-                            .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+        .update("currentSavings", amt) // store as numeric double
+        .addOnSuccessListener(aVoid -> {
+            txtValue.setText(String.format(Locale.US, "LKR %.2f", amt));
+            Toast.makeText(this, "Savings updated!", Toast.LENGTH_SHORT).show();
+        })
+        .addOnFailureListener(e -> Toast.makeText(this, "Failed to update: " + e.getMessage(), Toast.LENGTH_SHORT).show());
                 } catch (NumberFormatException e) {
                     Toast.makeText(this, "Invalid number entered", Toast.LENGTH_SHORT).show();
                 }
@@ -435,10 +450,7 @@ public class WorkerDashboardActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadUserData();
-        loadAvatarImage();
-        loadUserData();
-        loadAvatarImage();
-
+loadAvatarImage();
         NotificationPanelHelper.checkAndShowOnResume(this);
         TextView txtCurrentSavingsValue = findViewById(R.id.txtCurrentSavingsValue);
         if (txtCurrentSavingsValue != null) {

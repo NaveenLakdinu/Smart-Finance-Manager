@@ -215,7 +215,7 @@ public class WorkerProfileActivity extends AppCompatActivity {
         }
 
         if (menuPayslips != null) {
-            menuPayslips.setOnClickListener(v -> startActivity(new Intent(this, WorkerPayslipActivity.class)));
+            menuPayslips.setOnClickListener(v -> startActivity(new Intent(this, OTManagerActivity.class)));
         }
 
         if (menuFinancialReports != null) {
