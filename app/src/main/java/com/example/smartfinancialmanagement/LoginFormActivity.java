@@ -152,20 +152,8 @@ public class LoginFormActivity extends AppCompatActivity {
     }
 
     private void handleForgotPassword() {
-        String email = usernameInput.getText().toString().trim();
-        if (email.isEmpty()) {
-            Toast.makeText(this, "Enter your email to reset password", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        mAuth.sendPasswordResetEmail(email)
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Password reset email sent!", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Error: " + task.getException().getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-                });
+        Intent intent = new Intent(LoginFormActivity.this, ForgotPasswordActivity.class);
+        startActivity(intent);
     }
 
     private void checkIfUserLoggedIn() {
