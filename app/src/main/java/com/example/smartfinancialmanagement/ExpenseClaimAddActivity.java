@@ -21,6 +21,9 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import android.content.Intent;
+import android.view.View;
+
 public class ExpenseClaimAddActivity extends AppCompatActivity {
 
     private ImageView btnBack;
@@ -145,6 +148,24 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
         claimData.put("workerEmail", email != null ? email : "");
         claimData.put("createdAt", System.currentTimeMillis());
 
+        // Fetch company name before saving to enable Business Owner filtering
+        db.collection("users").document(uid)
+                .collection("worker_profile").document("profile_data")
+                .get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    String company = documentSnapshot.getString("companyName");
+                    if (company != null && !company.trim().isEmpty()) {
+                        claimData.put("companyName", company);
+                    }
+                    saveClaimToDb(claimData);
+                })
+                .addOnFailureListener(e -> {
+                    // Fallback if worker profile fetch fails
+                    saveClaimToDb(claimData);
+                });
+    }
+
+    private void saveClaimToDb(Map<String, Object> claimData) {
         db.collection("users").document(uid)
                 .collection("expense_claims")
                 .add(claimData)

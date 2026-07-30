@@ -209,65 +209,6 @@
 
         <View android:layout_width="match_parent" android:layout_height="16dp"/>
 
-        <!-- ── Streak Banner ── -->
-        <LinearLayout
-            android:id="@+id/streakBanner"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:background="@drawable/bg_glass_card"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:padding="16dp">
-
-            <TextView
-                android:layout_width="44dp"
-                android:layout_height="44dp"
-                android:background="@drawable/bg_pill"
-                android:gravity="center"
-                android:text="🔥"
-                android:textSize="20sp"/>
-
-            <View android:layout_width="14dp" android:layout_height="1dp"/>
-
-            <LinearLayout
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1-Month Saving Streak"
-                    android:textColor="@android:color/white"
-                    android:textSize="15sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="Keep going to unlock Consistent Saver in 5 more months"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="11.5sp"
-                    android:lineSpacingExtra="3dp"/>
-
-                <View android:layout_width="match_parent" android:layout_height="10dp"/>
-
-                <!-- Streak segments -->
-                <LinearLayout
-                    android:id="@+id/streakSegments"
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp"
-                    android:orientation="horizontal"
-                    android:weightSum="6">
-                    <!-- 6 segments filled programmatically -->
-                </LinearLayout>
-            </LinearLayout>
-        </LinearLayout>
-
-        <View android:layout_width="match_parent" android:layout_height="14dp"/>
 
         <!-- ── Goals Section ── -->
         <LinearLayout

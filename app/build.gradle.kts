@@ -88,6 +88,7 @@ dependencies {
 
 
     implementation("com.google.firebase:firebase-firestore:25.0.0")
+    implementation("com.google.firebase:firebase-storage:21.0.1")
     implementation("com.itextpdf:itextg:5.5.10")
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     implementation("com.sun.mail:android-mail:1.6.6")

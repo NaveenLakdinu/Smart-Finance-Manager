@@ -447,7 +447,15 @@ public class LoginFormActivity extends AppCompatActivity {
             case "Multiple account holder":
                 navigateToMultiAccountDashboard(role);
                 break;
+            case "student":
             case "Student":
+                if ("student".equals(role)) {
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    if (user != null) {
+                        db.collection("users").document(user.getUid()).update("role", "Student");
+                    }
+                    role = "Student";
+                }
                 navigateToStudentDashboard(role);
                 break;
             case "Business owner":

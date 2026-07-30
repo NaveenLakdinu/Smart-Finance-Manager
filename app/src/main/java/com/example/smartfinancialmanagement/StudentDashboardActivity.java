@@ -63,7 +63,6 @@ public class StudentDashboardActivity extends AppCompatActivity {
         recalculateTotalIncome();
         loadAvatarImage();
         checkUpcomingDeadlines();
-        loadBadgeData();
     }
 
     @Override
@@ -407,11 +406,31 @@ public class StudentDashboardActivity extends AppCompatActivity {
                 if (error != null || snapshot == null) return;
                 
                 List<SavingModel> savings = new ArrayList<>();
+                java.text.SimpleDateFormat dateFormat = new java.text.SimpleDateFormat("dd/MM/yyyy", java.util.Locale.getDefault());
                 int activeGoals = 0;
                 for (QueryDocumentSnapshot doc : snapshot) {
                     SavingModel saving = doc.toObject(SavingModel.class);
                     savings.add(saving);
-                    if (!"COMPLETED".equalsIgnoreCase(saving.getStatus())) {
+                    
+                    double currentAmount = saving.getCurrentAmount();
+                    if (currentAmount == 0.0 && doc.contains("currentSavings")) {
+                        Double cs = doc.getDouble("currentSavings");
+                        if (cs != null) currentAmount = cs;
+                    }
+
+                    boolean isCompleted = currentAmount >= saving.getTargetAmount();
+                    boolean isPassedDate = false;
+                    try {
+                        String targetDateStr = saving.getTargetDate();
+                        if (targetDateStr != null) {
+                            java.util.Date tDate = dateFormat.parse(targetDateStr);
+                            if (tDate != null && tDate.before(new java.util.Date())) {
+                                isPassedDate = true;
+                            }
+                        }
+                    } catch (Exception ignored) {}
+
+                    if (!isCompleted && !isPassedDate) {
                         activeGoals++;
                     }
                 }
@@ -599,41 +618,7 @@ public class StudentDashboardActivity extends AppCompatActivity {
     }
 
     
-    private void loadBadgeData() {
-        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        if (user == null) return;
-        String uid = user.getUid();
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        db.collection("users").document(uid).collection("loans").get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (txtLoanBadge != null) {
-                    txtLoanBadge.setText(queryDocumentSnapshots.size() + " Active");
-                }
-            });
-
-        db.collection("users").document(uid).collection("subscriptions").get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (txtSubscriptionBadge != null) {
-                    txtSubscriptionBadge.setText(queryDocumentSnapshots.size() + " Plans");
-                }
-            });
-
-        db.collection("utilityBill").whereEqualTo("userId", uid).get()
-            .addOnSuccessListener(queryDocumentSnapshots -> {
-                if (txtUtilityBadge != null) {
-                    int dueCount = 0;
-                    for (QueryDocumentSnapshot doc : queryDocumentSnapshots) {
-                        String status = doc.getString("status");
-                        if (!"Paid".equalsIgnoreCase(status) && !"PAID".equalsIgnoreCase(status)) {
-                            dueCount++;
-                        }
-                    }
-                    txtUtilityBadge.setText(dueCount + " Due");
-                }
-            });
-
-    }
 
     private void animateCards(View... cards) {
         for (int i = 0; i < cards.length; i++) {
