@@ -165,6 +165,11 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
         btnSwitchAccount = findViewById(R.id.btnSwitchAccount);
         btnTopLogout = findViewById(R.id.btnTopLogout);
 
+        View btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
+        if (btnDeleteAccount != null) {
+            btnDeleteAccount.setOnClickListener(v -> deleteCurrentAccount());
+        }
+
         cardTransfer = findViewById(R.id.cardTransfer);
         cardStatements = findViewById(R.id.cardStatements);
         cardLoanManager = findViewById(R.id.cardLoanManager);
@@ -261,16 +266,51 @@ public class MultiAccountDashboardActivity extends AppCompatActivity {
     }
 
     private void updateAccountUI() {
+        View btnDeleteAccount = findViewById(R.id.btnDeleteAccount);
         if (accountsList.isEmpty()) {
             txtCurrentAccountName.setText("No Account");
             txtAccountBalance.setText("Rs 0.00");
             txtAccountNumber.setText("----");
+            if (btnDeleteAccount != null) btnDeleteAccount.setVisibility(View.GONE);
         } else {
             AccountInfo info = accountsList.get(currentAccountIndex);
             txtCurrentAccountName.setText(info.name);
             txtAccountBalance.setText(String.format(Locale.US, "Rs %.2f", info.balance));
             txtAccountNumber.setText(info.number);
+            if (btnDeleteAccount != null) btnDeleteAccount.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void deleteCurrentAccount() {
+        if (accountsList.isEmpty()) {
+            Toast.makeText(this, "No account to delete.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        AccountInfo currentAccount = accountsList.get(currentAccountIndex);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(this, R.style.Theme_SmartFinance_Dialog);
+        builder.setTitle("Delete Account");
+        builder.setMessage("Are you sure you want to delete '" + currentAccount.name + "'? This action cannot be undone.");
+        builder.setPositiveButton("Delete", (dialog, which) -> {
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            if (user != null) {
+                FirebaseFirestore.getInstance().collection("users").document(user.getUid())
+                        .collection("accounts").document(currentAccount.documentId)
+                        .delete()
+                        .addOnSuccessListener(aVoid -> {
+                            Toast.makeText(this, "Account deleted successfully", Toast.LENGTH_SHORT).show();
+                            accountsList.remove(currentAccountIndex);
+                            if (currentAccountIndex >= accountsList.size()) {
+                                currentAccountIndex = Math.max(0, accountsList.size() - 1);
+                            }
+                            updateAccountUI();
+                        })
+                        .addOnFailureListener(e -> Toast.makeText(this, "Failed to delete account: " + e.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+        builder.setNegativeButton("Cancel", null);
+        builder.show();
     }
 
     private void showAccountSwitchDialog() {
