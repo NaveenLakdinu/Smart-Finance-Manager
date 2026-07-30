@@ -141,7 +141,6 @@ public class ExpenseClaimAddActivity extends AppCompatActivity {
         claimData.put("amount", amount);
         claimData.put("expenseDate", date.equals("Tap to select date") ? "N/A" : date);
         claimData.put("description", description.isEmpty() ? "No description" : description);
-        claimData.put("receiptCount", 0);
         claimData.put("status", "PENDING");
         claimData.put("workerEmail", email != null ? email : "");
         claimData.put("createdAt", System.currentTimeMillis());

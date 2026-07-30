@@ -12,7 +12,6 @@ public class ExpenseClaim implements Serializable {
     private double amount;
     private String expenseDate;
     private String description;
-    private int receiptCount;
     private String status;
     private String rejectedReason;
     private String approvedBy;
@@ -22,13 +21,12 @@ public class ExpenseClaim implements Serializable {
     public ExpenseClaim() {
     }
 
-    public ExpenseClaim(String title, String category, double amount, String expenseDate, String description, int receiptCount, String status, String workerEmail) {
+    public ExpenseClaim(String title, String category, double amount, String expenseDate, String description, String status, String workerEmail) {
         this.title = title;
         this.category = category;
         this.amount = amount;
         this.expenseDate = expenseDate;
         this.description = description;
-        this.receiptCount = receiptCount;
         this.status = status;
         this.workerEmail = workerEmail;
         this.claimId = "EXP-" + new java.text.SimpleDateFormat("yyyy", Locale.getDefault()).format(new java.util.Date()) + "-" + String.format(Locale.getDefault(), "%03d", (int) (Math.random() * 900) + 100);
@@ -54,9 +52,6 @@ public class ExpenseClaim implements Serializable {
 
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
-
-    public int getReceiptCount() { return receiptCount; }
-    public void setReceiptCount(int receiptCount) { this.receiptCount = receiptCount; }
 
     public String getStatus() { return status; }
     public void setStatus(String status) { this.status = status; }
